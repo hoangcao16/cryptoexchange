@@ -8,7 +8,7 @@ export const lightTheme: DefaultTheme = {
 };
 export const darkTheme: DefaultTheme = {
   body: '#363537',
-  text: '#FAFAFA',
+  text: '#ffffff',
   toggleBorder: '#6B8096',
   background: '#1e2329',
   backgroundDropdown: '#2b3139',

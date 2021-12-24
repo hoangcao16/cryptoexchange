@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { NavDropdown } from 'react-bootstrap';
 
 export const StyledNavDropdown = styled(NavDropdown)`
+  margin: 0 8px;
   &:hover {
     .dropdown-toggle:hover {
       color: ${({ theme }) => theme.colors?.secondary};

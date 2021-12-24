@@ -6,7 +6,7 @@ import {
   DropdownItemGroup,
   DropdownItemTitle,
 } from './style';
-
+import { data } from './data';
 const DerivativesNav = () => {
   const [show, setShow] = useState(false);
   const showDropdown = e => {
@@ -17,93 +17,26 @@ const DerivativesNav = () => {
   };
   return (
     <StyledNavDropdown
-      title="Buy Crypto"
+      title="Derivatives"
       id="collasible-nav-dropdown"
       show={show}
       onMouseEnter={showDropdown}
       onMouseLeave={hideDropdown}
     >
       <DropdownItemGroup>
-        <NavDropdown.Item href="#action/3.1">
-          <DropdownItemTitle>
-            <span>Binance Futures Overview</span>
-            <br></br>
-            <span className="title_description">
-              View our full range of crypto-derivative
-            </span>
-          </DropdownItemTitle>
-          <FaArrowRight className="arrow-right" />
-          <br />
-        </NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.2">
-          <DropdownItemTitle>
-            <span>Classic</span>
-            <br></br>
-            <span className="title_description">
-              Simple and easy-to-use interface
-            </span>
-          </DropdownItemTitle>
-          <FaArrowRight className="arrow-right" />
-        </NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.3">
-          <DropdownItemTitle>
-            <span>Advanced</span>
-            <br></br>
-            <span className="title_description">
-              Full access to all trading tools
-            </span>
-          </DropdownItemTitle>
-          <FaArrowRight className="arrow-right" />
-        </NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.4">
-          <DropdownItemTitle>
-            <span>Margin</span>
-            <br></br>
-            <span className="title_description">
-              Increase your profits with leverage
-            </span>
-          </DropdownItemTitle>
-          <FaArrowRight className="arrow-right" />
-        </NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.4">
-          <DropdownItemTitle>
-            <span>P2P</span>
-            <br></br>
-            <span className="title_description">
-              Bank transfer and 100+ options
-            </span>
-          </DropdownItemTitle>
-          <FaArrowRight className="arrow-right" />
-        </NavDropdown.Item>
-
-        <NavDropdown.Item href="#action/3.4">
-          <DropdownItemTitle>
-            <span>Strategy Trading</span>
-            <br></br>
-            <span className="title_description">
-              Trading made easy, trade like a pro
-            </span>
-          </DropdownItemTitle>
-          <FaArrowRight className="arrow-right" />
-        </NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.4">
-          <DropdownItemTitle>
-            <span>Swap Farming</span>
-            <br></br>
-            <span className="title_description">Swap to earn BNB</span>
-          </DropdownItemTitle>
-          <FaArrowRight className="arrow-right" />
-        </NavDropdown.Item>
-        <NavDropdown.Item href="#action/3.4">
-          <DropdownItemTitle>
-            <span>Fan Token</span>
-            <br></br>
-            <span className="title_description">
-              Upgrade your fan experience
-            </span>
-          </DropdownItemTitle>
-          <FaArrowRight className="arrow-right" />
-        </NavDropdown.Item>
+        {data.map((e, index) => {
+          return (
+            <NavDropdown.Item href="#action/3.1" key={index}>
+              <DropdownItemTitle>
+                <span>{e.name}</span>
+                <br></br>
+                <span className="title_description">{e.description}</span>
+              </DropdownItemTitle>
+              <FaArrowRight className="arrow-right" />
+              <br />
+            </NavDropdown.Item>
+          );
+        })}
       </DropdownItemGroup>
     </StyledNavDropdown>
   );

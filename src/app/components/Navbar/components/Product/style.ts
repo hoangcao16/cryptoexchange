@@ -2,7 +2,15 @@ import styled from 'styled-components';
 import { NavDropdown } from 'react-bootstrap';
 
 export const StyledNavDropdown = styled(NavDropdown)`
-  margin: 0 8px;
+  margin: 0;
+  .dropdown-toggle {
+    position: relative;
+    /* padding: 0; */
+    &::after {
+      position: absolute;
+      top: 50%;
+    }
+  }
   &:hover {
     .dropdown-toggle:hover {
       color: ${({ theme }) => theme.colors?.secondary};
@@ -15,13 +23,16 @@ export const StyledNavDropdown = styled(NavDropdown)`
   }
   .dropdown-menu {
     background-color: ${({ theme }) => theme.background};
-    min-width: 300px;
+    width: 1200px;
+    /* min-width: 600px; */
+    overflow: hidden;
     .dropdown-item {
       padding: 16px;
       color: ${({ theme }) => theme.text};
       border-radius: 8px;
       display: flex;
       align-items: center;
+      width: 33.33%;
       &:hover {
         background-color: ${({ theme }) => theme.backgroundDropdown};
         .arrow-right {
@@ -31,15 +42,14 @@ export const StyledNavDropdown = styled(NavDropdown)`
     }
   }
 `;
-export const DropdownHeader = styled.div`
-  margin: 0 0 0 16px;
-  color: ${({ theme }) => theme.text};
-`;
 export const DropdownItemGroup = styled.div`
   margin: 0 16px 16px;
+  display: flex;
+  flex-wrap: wrap;
 `;
 export const DropdownItemTitle = styled.div`
   flex: 1;
+
   .title_description {
     color: ${({ theme }) => theme.colorDescription};
     font-size: 12px;

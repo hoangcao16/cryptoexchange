@@ -10,28 +10,33 @@ import TradeNav from './components/Trade';
 import DerivativesNav from './components/Derivatives';
 import EarnNav from './components/Earn';
 import FinanceNav from './components/Finance';
+import ProductNav from './components/Product';
+import { StyledNavLink, AuthGroup, StyledNavBrand } from './style';
 const NavMenu = () => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container fluid>
-        <Navbar.Brand href="#home">BINANCE</Navbar.Brand>
+        <StyledNavBrand href="#home">BINANCE</StyledNavBrand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
+            <ProductNav />
             <BuyCrypto />
-            <Nav.Link href="#pricing">Markets</Nav.Link>
+            <StyledNavLink href="#pricing">Markets</StyledNavLink>
             <TradeNav />
             <DerivativesNav />
             <EarnNav />
             <FinanceNav />
-            <Nav.Link href="#pricing">NFT</Nav.Link>
+            <StyledNavLink href="#pricing">NFT</StyledNavLink>
           </Nav>
         </Navbar.Collapse>
         <Nav>
-          <Nav.Link href="#deets">Login</Nav.Link>
-          <Nav.Link eventKey={2} href="#memes">
-            Register
-          </Nav.Link>
+          <AuthGroup>
+            <Nav.Link href="#deets">Log In</Nav.Link>
+            <Nav.Link eventKey={2} href="#memes">
+              Register
+            </Nav.Link>
+          </AuthGroup>
           <Nav.Link href="#pricing">Download</Nav.Link>
           <Nav.Link href="#pricing">English</Nav.Link>
           <Nav.Link href="#pricing">USD</Nav.Link>
