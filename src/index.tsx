@@ -14,7 +14,7 @@ import { Provider } from 'react-redux';
 
 // Use consistent styling
 import 'sanitize.css/sanitize.css';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 // Import root app
 import { App } from 'app';
 
@@ -23,6 +23,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { configureAppStore } from 'store/configureStore';
 
 import reportWebVitals from 'reportWebVitals';
+import { ThemeContextProvider } from 'app/components/common/themeContext';
 
 // Initialize languages
 import './locales/i18n';
@@ -33,9 +34,11 @@ const MOUNT_NODE = document.getElementById('root') as HTMLElement;
 ReactDOM.render(
   <Provider store={store}>
     <HelmetProvider>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
+      <ThemeContextProvider>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </ThemeContextProvider>
     </HelmetProvider>
   </Provider>,
   MOUNT_NODE,
