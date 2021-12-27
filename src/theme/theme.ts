@@ -7,7 +7,7 @@ export const lightTheme: DefaultTheme = {
   background: '#363537',
 };
 export const darkTheme: DefaultTheme = {
-  body: '#363537',
+  body: '#161a1e',
   text: '#ffffff',
   toggleBorder: '#6B8096',
   background: '#1e2329',

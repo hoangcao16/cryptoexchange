@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import { Nav, Navbar } from 'react-bootstrap';
 
+export const StyledNavBar = styled(Navbar)`
+  background-color: ${({ theme }) => theme.body};
+`;
 export const StyledNavLink = styled(Nav.Link)`
   margin: 0 8px;
 `;

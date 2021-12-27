@@ -1,4 +1,4 @@
-import { Navbar, Container, Nav, Offcanvas } from 'react-bootstrap';
+import { Container, Nav, Offcanvas } from 'react-bootstrap';
 import BuyCrypto from './components/BuyCrypto';
 import TradeNav from './components/Trade';
 import DerivativesNav from './components/Derivatives';
@@ -14,6 +14,7 @@ import {
   RegisterButton,
   NavbarToggle,
   NavbarOffcanvas,
+  StyledNavBar,
 } from './style';
 import { BsFillQuestionSquareFill } from 'react-icons/bs';
 import { AiOutlineSetting } from 'react-icons/ai';
@@ -28,7 +29,7 @@ const Title = () => {
 };
 const NavMenu = () => {
   return (
-    <Navbar collapseOnSelect expand="xl" bg="dark" variant="dark">
+    <StyledNavBar collapseOnSelect expand="xl" bg="dark" variant="dark">
       <Container fluid style={{ height: '64px' }}>
         <StyledNavBrand href="#home">
           <Logo className="Logo" />
@@ -86,7 +87,7 @@ const NavMenu = () => {
           </Nav.Link>
         </StyledNav>
       </Container>
-    </Navbar>
+    </StyledNavBar>
   );
 };
 
