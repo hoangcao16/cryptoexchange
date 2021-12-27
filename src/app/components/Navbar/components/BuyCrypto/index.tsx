@@ -6,9 +6,17 @@ import {
   DropdownHeader,
   DropdownItemGroup,
   DropdownItemTitle,
+  Tag,
 } from './style';
 import { data } from './data';
-
+const Title = () => {
+  return (
+    <>
+      <span>Buy Crypto</span>
+      <Tag>EUR</Tag>
+    </>
+  );
+};
 const BuyCryptoNav = () => {
   const [show, setShow] = useState(false);
   const showDropdown = e => {
@@ -19,7 +27,7 @@ const BuyCryptoNav = () => {
   };
   return (
     <StyledNavDropdown
-      title="Buy Crypto"
+      title={<Title />}
       id="collasible-nav-dropdown"
       show={show}
       onMouseEnter={showDropdown}
@@ -30,6 +38,13 @@ const BuyCryptoNav = () => {
         {data.map((item, index) => {
           return (
             <NavDropdown.Item href="#action/3.1" key={index}>
+              <item.icon
+                style={{
+                  fontSize: '24px',
+                  color: '#f0b90b',
+                  marginRight: '16px',
+                }}
+              />
               <DropdownItemTitle>
                 <span>{item.name}</span>
                 <br></br>

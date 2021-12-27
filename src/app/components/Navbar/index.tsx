@@ -1,48 +1,67 @@
-import {
-  Navbar,
-  Container,
-  Nav,
-  NavDropdown,
-  Offcanvas,
-} from 'react-bootstrap';
+import { Navbar, Container, Nav, Offcanvas } from 'react-bootstrap';
 import BuyCrypto from './components/BuyCrypto';
 import TradeNav from './components/Trade';
 import DerivativesNav from './components/Derivatives';
 import EarnNav from './components/Earn';
 import FinanceNav from './components/Finance';
 import ProductNav from './components/Product';
-import { StyledNavLink, AuthGroup, StyledNavBrand } from './style';
+import {
+  StyledNavLink,
+  AuthGroup,
+  StyledNavBrand,
+  Tag,
+  StyledNav,
+  RegisterButton,
+  NavbarToggle,
+  NavbarOffcanvas,
+} from './style';
+import { BsFillQuestionSquareFill } from 'react-icons/bs';
+import { AiOutlineSetting } from 'react-icons/ai';
+import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
+const Title = () => {
+  return (
+    <>
+      <span>NFT</span>
+      <Tag>New</Tag>
+    </>
+  );
+};
 const NavMenu = () => {
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Container fluid>
-        <StyledNavBrand href="#home">BINANCE</StyledNavBrand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
-            <ProductNav />
-            <BuyCrypto />
-            <StyledNavLink href="#pricing">Markets</StyledNavLink>
-            <TradeNav />
-            <DerivativesNav />
-            <EarnNav />
-            <FinanceNav />
-            <StyledNavLink href="#pricing">NFT</StyledNavLink>
-          </Nav>
-        </Navbar.Collapse>
-        <Nav>
+    <Navbar collapseOnSelect expand="xl" bg="dark" variant="dark">
+      <Container fluid style={{ height: '64px' }}>
+        <StyledNavBrand href="#home">
+          <Logo className="Logo" />
+        </StyledNavBrand>
+        {/* <Navbar.Collapse id="responsive-navbar-nav"> */}
+        <StyledNav className="me-auto">
+          <ProductNav />
+          <BuyCrypto />
+          <StyledNavLink href="#pricing">Markets</StyledNavLink>
+          <TradeNav />
+          <DerivativesNav />
+          <EarnNav />
+          <FinanceNav />
+          <StyledNavLink href="#pricing">
+            <Title />
+          </StyledNavLink>
+        </StyledNav>
+        {/* </Navbar.Collapse> */}
+        <StyledNav>
           <AuthGroup>
             <Nav.Link href="#deets">Log In</Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
+            <RegisterButton eventKey={2} href="#memes">
               Register
-            </Nav.Link>
+            </RegisterButton>
           </AuthGroup>
-          <Nav.Link href="#pricing">Download</Nav.Link>
-          <Nav.Link href="#pricing">English</Nav.Link>
+          <Nav.Link href="#pricing">Downloads</Nav.Link>
+          <Nav.Link href="#pricing" className="language">
+            English
+          </Nav.Link>
+          <i className="border"></i>
           <Nav.Link href="#pricing">USD</Nav.Link>
-
-          <Navbar.Toggle aria-controls="offcanvasNavbar" />
-          <Navbar.Offcanvas
+          <NavbarToggle aria-controls="offcanvasNavbar" />
+          <NavbarOffcanvas
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
             placement="end"
@@ -56,20 +75,16 @@ const NavMenu = () => {
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link href="#action1">Home</Nav.Link>
                 <Nav.Link href="#action2">Link</Nav.Link>
-                <NavDropdown title="Dropdown" id="offcanvasNavbarDropdown">
-                  <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action4">
-                    Another action
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action5">
-                    Something else here
-                  </NavDropdown.Item>
-                </NavDropdown>
               </Nav>
             </Offcanvas.Body>
-          </Navbar.Offcanvas>
-        </Nav>
+          </NavbarOffcanvas>
+          <Nav.Link href="#pricing">
+            <BsFillQuestionSquareFill />
+          </Nav.Link>
+          <Nav.Link href="#pricing">
+            <AiOutlineSetting />
+          </Nav.Link>
+        </StyledNav>
       </Container>
     </Navbar>
   );

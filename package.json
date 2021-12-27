@@ -20,6 +20,7 @@
     "@types/testing-library__jest-dom": "5.14.0",
     "@types/webpack": "5.28.0",
     "@types/webpack-env": "1.16.2",
+    "animate.css": "4.1.1",
     "bootstrap": "5.1.3",
     "chalk": "4.1.1",
     "cross-env": "7.0.3",

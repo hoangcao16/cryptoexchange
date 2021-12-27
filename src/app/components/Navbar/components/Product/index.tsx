@@ -25,13 +25,20 @@ const ProductNav = () => {
       onMouseLeave={hideDropdown}
     >
       <DropdownItemGroup>
-        {data.map((e, index) => {
+        {data.map((item, index) => {
           return (
             <NavDropdown.Item href="#action/3.1" key={index}>
+              <item.icon
+                style={{
+                  fontSize: '24px',
+                  color: '#f0b90b',
+                  marginRight: '16px',
+                }}
+              />
               <DropdownItemTitle>
-                <span>{e.name}</span>
+                <span>{item.name}</span>
                 <br></br>
-                <span className="title_description">{e.description}</span>
+                <span className="title_description">{item.description}</span>
               </DropdownItemTitle>
               <FaArrowRight className="arrow-right" />
               <br />

@@ -28,6 +28,13 @@ const TradeNav = () => {
         {data.map((item, index) => {
           return (
             <NavDropdown.Item href="#action/3.1" key={index}>
+              <item.icon
+                style={{
+                  fontSize: '24px',
+                  color: '#f0b90b',
+                  marginRight: '16px',
+                }}
+              />
               <DropdownItemTitle>
                 <span>{item.name}</span>
                 <br></br>

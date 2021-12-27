@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { NavDropdown } from 'react-bootstrap';
 
 export const StyledNavDropdown = styled(NavDropdown)`
-  margin: 0;
+  margin: 0 8px 0 0;
   .dropdown-toggle {
     position: relative;
     /* padding: 0; */
@@ -12,8 +12,16 @@ export const StyledNavDropdown = styled(NavDropdown)`
     }
   }
   &:hover {
-    .dropdown-toggle:hover {
-      color: ${({ theme }) => theme.colors?.secondary};
+    .dropdown-toggle {
+      &:hover {
+        color: ${({ theme }) => theme.colors?.secondary};
+      }
+      &::after {
+        border-bottom: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-top: 0;
+        border-left: 0.3em solid transparent;
+      }
     }
   }
   .arrow-right {
