@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Dropdown } from 'react-bootstrap';
 
 export const Container = styled.div`
   border: ${props => props.theme.borderOrderBook};
@@ -23,6 +24,7 @@ export const Header = styled.div`
       color: rgb(132, 142, 156);
     }
   }
+
   //css select
   .react-select-container {
     outline: none;
@@ -79,3 +81,90 @@ export const Header = styled.div`
   }
 `;
 export const GroupButton = styled.div``;
+export const MoreButton = styled.div`
+  position: relative;
+  .more-icon {
+    box-sizing: border-box;
+    margin-right: -8px;
+    margin-left: 8px;
+    fill: currentcolor;
+    font-size: 20px;
+    cursor: pointer;
+    color: rgb(61, 70, 83);
+    width: 1em;
+    height: 1em;
+    &:hover {
+      color: rgb(132, 142, 156);
+    }
+  }
+`;
+export const StyledDropdown = styled(Dropdown)`
+  .dropdown-toggle {
+    padding: 0px;
+    margin: 0px;
+    min-width: 0px;
+    &::after {
+      display: none;
+    }
+  }
+  .dropdown-menu {
+    background-color: #1e2026;
+    padding: 0px;
+    min-width: 160px;
+    inset: -4px auto auto -140px !important;
+    .label {
+      padding: 14px;
+      .checkmark:after {
+        content: '';
+        position: absolute;
+        display: none;
+      }
+      .labelView {
+        font-size: 12px;
+        position: relative;
+        padding-left: 24px;
+        color: ${({ theme }) => theme.text};
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        &:hover input ~ .checkmark {
+          background-color: #ccc;
+        }
+        input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0;
+          &:checked ~ .checkmark {
+            background-color: ${({ theme }) => theme.colors?.secondary};
+          }
+          :checked ~ .checkmark:after {
+            display: block;
+          }
+        }
+        .checkmark {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 17px;
+          width: 17px;
+          background-color: #eee;
+          &:after {
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid black;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+          }
+        }
+      }
+    }
+  }
+`;

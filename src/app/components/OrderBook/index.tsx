@@ -2,14 +2,28 @@ import { useState } from 'react';
 import OrderBookAsk from './components/OrderBookAsk';
 import OrderBookBid from './components/OrderBookBid';
 import OrderBookTHeader from './components/OrderBookHeader';
-import { Container, Header, GroupButton } from './style';
+import {
+  Container,
+  Header,
+  GroupButton,
+  MoreButton,
+  StyledDropdown,
+} from './style';
 import { ReactComponent as OrderBookIcon } from 'app/assets/img/Orderbook/orderbook.svg';
 import { ReactComponent as BuyOrderIcon } from 'app/assets/img/Orderbook/buyorder.svg';
 import { ReactComponent as SellOrderIcon } from 'app/assets/img/Orderbook/sellorder.svg';
-import { AiOutlineMore } from 'react-icons/ai';
+import { ReactComponent as MoreIcon } from 'app/assets/img/more.svg';
 import Select from 'react-select';
+import { Dropdown } from 'react-bootstrap';
 const OrderBook = () => {
   const [Layout, setLayout] = useState(1);
+  const [show, setShow] = useState(false);
+  const showDropdown = e => {
+    setShow(!show);
+  };
+  const hideDropdown = e => {
+    setShow(false);
+  };
   const options = [
     { value: '1', label: '0.01' },
     { value: '2', label: '0.1' },
@@ -58,9 +72,29 @@ const OrderBook = () => {
             className="react-select-container"
             classNamePrefix="react-select"
             options={options}
+            isSearchable={false}
             defaultValue={options[0]}
           />
-          <AiOutlineMore />
+          <MoreButton>
+            <StyledDropdown
+              show={show}
+              onMouseEnter={showDropdown}
+              onMouseLeave={hideDropdown}
+            >
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                <MoreIcon className="more-icon" />
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <div className="label">
+                  <label htmlFor="AVGsum" className="labelView">
+                    <input id="AVGsum" type="checkbox" />
+                    <span className="checkmark"></span>
+                    Display AVG&sum
+                  </label>
+                </div>
+              </Dropdown.Menu>
+            </StyledDropdown>
+          </MoreButton>
         </div>
       </Header>
       {Layout === 1 ? (

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Row, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 export const THeader = styled(Row)`
   height: 20px;
   font-size: 12px;
