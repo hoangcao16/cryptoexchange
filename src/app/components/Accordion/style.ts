@@ -75,7 +75,7 @@ export const StyledArrow = styled.div<{ Show: boolean }>`
   top: 16px;
   transition: all 0.3s ease 0s;
   cursor: pointer;
-  transform: ${props => (props.Show ? 'rotate(90deg)' : 'rotate(270deg)')};
+  transform: ${props => (props.Show ? 'rotate(270deg)' : 'rotate(90deg)')};
   svg {
     box-sizing: border-box;
     margin: 0px;

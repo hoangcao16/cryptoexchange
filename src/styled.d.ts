@@ -12,7 +12,7 @@ declare module 'styled-components' {
     toggleBorder?: any;
     backgroundDropdown?: any;
     colorDescription?: any;
-    borderOrderBook?: any;
+    borderGray?: any;
     colors?: {
       main?: string;
       secondary?: string;

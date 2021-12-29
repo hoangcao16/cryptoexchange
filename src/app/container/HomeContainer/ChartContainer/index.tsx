@@ -3,13 +3,17 @@ import { Container, Row, Col } from 'react-bootstrap';
 import ContentHeader from 'app/components/ContentHeader';
 import OrderBook from 'app/components/OrderBook';
 import Chart from 'app/components/Chart';
+import Market from 'app/components/Market';
+import Trades from 'app/components/Trades';
 const HomeContentContainer = () => {
   return (
     <Container>
       <StyledRow>
-        <StyledCol md={8}>
+        <Col md={9}>
           <StyledRow>
             <ContentHeader />
+          </StyledRow>
+          <StyledRow>
             <StyledCol md={4}>
               <OrderBook />
             </StyledCol>
@@ -17,8 +21,11 @@ const HomeContentContainer = () => {
               <Chart />
             </StyledCol>
           </StyledRow>
+        </Col>
+        <StyledCol md={3}>
+          <Market />
+          <Trades />
         </StyledCol>
-        <StyledCol md={4}></StyledCol>
       </StyledRow>
     </Container>
   );

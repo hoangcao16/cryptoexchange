@@ -2,8 +2,10 @@ import styled from 'styled-components';
 import { Dropdown } from 'react-bootstrap';
 
 export const Container = styled.div`
-  border: ${props => props.theme.borderOrderBook};
+  border: ${props => props.theme.borderGray};
   padding: 16px;
+  border-top: none;
+  /* height: 840px; */
 `;
 export const Header = styled.div`
   display: flex;
@@ -103,8 +105,13 @@ export const StyledDropdown = styled(Dropdown)`
     padding: 0px;
     margin: 0px;
     min-width: 0px;
+    box-shadow: none;
+
     &::after {
       display: none;
+    }
+    &:active:focus {
+      box-shadow: none;
     }
   }
   .dropdown-menu {

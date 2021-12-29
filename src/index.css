@@ -20,3 +20,28 @@ body {
   font-family: BinancePlex, sans-serif;
   font-size: 14px;
 }
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+/* @media screen and (min-width: 1400px) {
+  .container {
+    max-width: 1500px;
+  }
+} */

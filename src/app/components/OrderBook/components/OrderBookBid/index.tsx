@@ -1,5 +1,5 @@
 import { data } from './data';
-import { Price, Amount, Total, OrderBookBidHeader } from './style';
+import { Price, Amount, Total, OrderBookBidHeader, Table } from './style';
 import { BsArrowUp } from 'react-icons/bs';
 const OrderBookBid = () => {
   return (
@@ -16,15 +16,17 @@ const OrderBookBid = () => {
           More
         </a>
       </OrderBookBidHeader>
-      {data.map((item, index) => {
-        return (
-          <div key={index} className="d-flex">
-            <Price>{item.price}</Price>
-            <Amount>{item.amount}</Amount>
-            <Total>{item.total}</Total>
-          </div>
-        );
-      })}
+      <Table>
+        {data.map((item, index) => {
+          return (
+            <div key={index} className="d-flex table-item">
+              <Price>{item.price}</Price>
+              <Amount>{item.amount}</Amount>
+              <Total>{item.total}</Total>
+            </div>
+          );
+        })}
+      </Table>
     </div>
   );
 };

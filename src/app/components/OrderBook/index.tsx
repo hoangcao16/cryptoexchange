@@ -105,11 +105,11 @@ const OrderBook = () => {
         </>
       ) : Layout === 2 ? (
         <>
-          <OrderBookTHeader /> <OrderBookAsk />
+          <OrderBookTHeader /> <OrderBookBid />
         </>
       ) : (
         <>
-          <OrderBookTHeader /> <OrderBookBid />
+          <OrderBookTHeader /> <OrderBookAsk />
         </>
       )}
     </Container>

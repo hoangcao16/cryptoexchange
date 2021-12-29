@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { Nav, Navbar } from 'react-bootstrap';
 
 export const StyledNavBar = styled(Navbar)`
-  background-color: ${({ theme }) => theme.body};
+  background-color: ${({ theme }) => theme.body} !important;
+  padding: 0px !important;
 `;
 export const StyledNavLink = styled(Nav.Link)`
-  margin: 0 8px;
+  margin: 0 4px;
 `;
 export const AuthGroup = styled.div`
   margin: 0 16px;
@@ -71,7 +72,7 @@ export const RegisterButton = styled(Nav.Link)`
   text-align: center;
   text-decoration: none;
   outline: none;
-  padding: 6px 12px;
+  padding: 6px 12px !important;
   min-width: 52px;
   font-size: 14px;
   line-height: 20px;

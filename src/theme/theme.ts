@@ -13,7 +13,7 @@ export const darkTheme: DefaultTheme = {
   background: '#1e2329',
   backgroundDropdown: '#2b3139',
   colorDescription: '#666',
-  borderOrderBook: '1px solid rgba(255, 255, 255, 0.1)',
+  borderGray: '1px solid rgba(255, 255, 255, 0.1)',
   colors: {
     secondary: '#f0b90b',
   },

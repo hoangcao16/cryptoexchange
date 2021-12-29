@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 export const Container = styled.div`
   padding: 10px 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: ${({ theme }) => theme.borderGray};
   border-top: none;
+  border-right: none;
 `;
 export const Div = styled.div`
   box-sizing: border-box;

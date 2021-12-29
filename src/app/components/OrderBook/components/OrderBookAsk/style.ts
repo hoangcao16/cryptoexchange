@@ -20,3 +20,8 @@ export const Total = styled(Col)`
   padding: 0;
   text-align: right;
 `;
+export const Table = styled.div`
+  .table-item {
+    height: 20px;
+  }
+`;
