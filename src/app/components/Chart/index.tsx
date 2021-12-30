@@ -1,4 +1,5 @@
+import { Container } from './style';
 const Chart = () => {
-  return <h1>Here is chart</h1>;
+  return <Container>Here is chart</Container>;
 };
 export default Chart;

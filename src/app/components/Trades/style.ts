@@ -19,18 +19,11 @@ export const Tabs = styled.div`
       color: ${({ theme }) => theme?.colors?.secondary};
     }
   }
-  .btn-my {
+  .btn-myTrades {
     padding-left: 48px;
   }
   .btn-active {
     font-weight: 600;
-    color: ${({ theme }) => theme?.colors?.secondary};
-  }
-`;
-export const Span = styled.a`
-  color: ${({ theme }) => theme?.colors?.secondary};
-  text-decoration: none;
-  &:hover {
     color: ${({ theme }) => theme?.colors?.secondary};
   }
 `;
@@ -63,7 +56,7 @@ export const Table = styled.div`
   }
 `;
 export const MyTradesComponent = styled.div`
-  height: 300px;
+  height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;

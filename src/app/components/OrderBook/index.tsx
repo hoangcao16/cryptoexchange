@@ -9,10 +9,11 @@ import {
   MoreButton,
   StyledDropdown,
 } from './style';
-import { ReactComponent as OrderBookIcon } from 'app/assets/img/Orderbook/orderbook.svg';
-import { ReactComponent as BuyOrderIcon } from 'app/assets/img/Orderbook/buyorder.svg';
-import { ReactComponent as SellOrderIcon } from 'app/assets/img/Orderbook/sellorder.svg';
+// import { ReactComponent as OrderBookIcon } from 'app/assets/img/Orderbook/orderbook.svg';
+// import { ReactComponent as BuyOrderIcon } from 'app/assets/img/Orderbook/buyorder.svg';
+// import { ReactComponent as SellOrderIcon } from 'app/assets/img/Orderbook/sellorder.svg';
 import { ReactComponent as MoreIcon } from 'app/assets/img/more.svg';
+import OrderBookIcon from 'app/assets/img/Orderbook';
 import Select from 'react-select';
 import { Dropdown } from 'react-bootstrap';
 const OrderBook = () => {
@@ -38,6 +39,7 @@ const OrderBook = () => {
         <GroupButton>
           <button onClick={() => setLayout(1)}>
             <OrderBookIcon
+              name="orderbook"
               style={{
                 width: '1em',
                 height: '1em',
@@ -47,7 +49,8 @@ const OrderBook = () => {
             />
           </button>
           <button onClick={() => setLayout(2)}>
-            <BuyOrderIcon
+            <OrderBookIcon
+              name="buyorder"
               style={{
                 width: '1em',
                 height: '1em',
@@ -57,7 +60,8 @@ const OrderBook = () => {
             />
           </button>
           <button onClick={() => setLayout(3)}>
-            <SellOrderIcon
+            <OrderBookIcon
+              name="sellorder"
               style={{
                 width: '1em',
                 height: '1em',

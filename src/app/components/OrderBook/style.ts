@@ -5,7 +5,8 @@ export const Container = styled.div`
   border: ${props => props.theme.borderGray};
   padding: 16px;
   border-top: none;
-  /* height: 840px; */
+  border-bottom: none;
+  height: 839px;
 `;
 export const Header = styled.div`
   display: flex;

@@ -6,13 +6,13 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     borderRadius?: string;
     theme?: string;
-    body?: any;
-    text?: any;
-    background?: any;
-    toggleBorder?: any;
-    backgroundDropdown?: any;
-    colorDescription?: any;
-    borderGray?: any;
+    body?: string;
+    text?: string;
+    background?: string;
+    toggleBorder?: string;
+    backgroundDropdown?: string;
+    colorDescription?: string;
+    borderGray?: string;
     colors?: {
       main?: string;
       secondary?: string;

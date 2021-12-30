@@ -1,7 +1,7 @@
 import NavMenu from 'app/components/Navbar';
 import WarningAlert from 'app/components/Alert';
 import AccordionNav from 'app/components/Accordion';
-import ChartContainer from 'app/container/HomeContainer/ChartContainer';
+import DataViewContainer from 'app/container/HomeContainer/DataViewContainer';
 import TradeFormContainer from 'app/container/HomeContainer/TradeFormContainer';
 const HomeContainer = () => {
   return (
@@ -11,7 +11,7 @@ const HomeContainer = () => {
         <WarningAlert></WarningAlert>
         <AccordionNav></AccordionNav>
       </header>
-      <ChartContainer></ChartContainer>
+      <DataViewContainer></DataViewContainer>
       <TradeFormContainer></TradeFormContainer>
     </>
   );
