@@ -15,7 +15,7 @@ const HomeContentContainer = () => {
             <ContentHeader />
           </StyledRow>
           <StyledRow>
-            <StyledCol md={4}>
+            <StyledCol md={4} className="orderbook-section">
               <OrderBook />
             </StyledCol>
             <StyledCol md={8} className="d-flex flex-column">
