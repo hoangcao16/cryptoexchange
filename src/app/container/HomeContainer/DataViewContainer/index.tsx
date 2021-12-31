@@ -24,7 +24,7 @@ const HomeContentContainer = () => {
             </StyledCol>
           </StyledRow>
         </Col>
-        <StyledCol md={3}>
+        <StyledCol md={3} className="right-menu">
           <Market />
           <Trades />
         </StyledCol>
@@ -35,6 +35,10 @@ const HomeContentContainer = () => {
 export default HomeContentContainer;
 const StyledRow = styled(Row)`
   padding: 0;
+  .orderbook-section,
+  .right-menu {
+    border: ${({ theme }) => theme.borderGray};
+  }
 `;
 const StyledCol = styled(Col)`
   padding: 0;
