@@ -1,17 +1,17 @@
 import { Container } from './style';
 import React, { useState, useEffect } from 'react';
-import { widget } from './charting_library'
-import Datafeed1 from './api/datafeeds'
-const Chart = (props) => {
+import { widget } from './charting_library';
+import Datafeed1 from './api/datafeeds';
+const Chart = props => {
   const [symbol, setSymbol] = useState('Bitfinex:BTC/USD');
-  const tv_chart_container = 'tv_chart_container'
-  const libraryPath = '/custom_scripts/chart_main/'
+  const tv_chart_container = 'tv_chart_container';
+  const libraryPath = '/custom_scripts/chart_main/';
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     initTradingView();
   }, []);
 
-  const initTradingView = () =>{
+  const initTradingView = () => {
     const widgetOptions = {
       fullscreen: false,
       autosize: true,
@@ -34,50 +34,54 @@ const Chart = (props) => {
       time_frames: [
         {
           text: '1y',
-          resolution: '1W'
+          resolution: '1W',
         },
         {
           text: '6m',
-          resolution: '3D'
+          resolution: '3D',
         },
         {
           text: '3m',
-          resolution: '1D'
+          resolution: '1D',
         },
         {
           text: '1m',
-          resolution: '1D'
+          resolution: '1D',
         },
         {
           text: '1w',
-          resolution: '30'
+          resolution: '30',
         },
         {
           text: '3d',
-          resolution: '30'
+          resolution: '30',
         },
         {
           text: '1d',
-          resolution: '30'
+          resolution: '30',
         },
         {
           text: '6h',
-          resolution: '15'
+          resolution: '15',
         },
         {
           text: '1h',
-          resolution: '1'
-        }],
+          resolution: '1',
+        },
+      ],
       drawings_access: {
         type: 'black',
         // tools: [{name: "Regression Trend"}]//todo: moje
-        tools: [{
-          name: 'Trend Line',
-          grayed: true
-        }, {
-          name: 'Trend Angle',
-          grayed: true
-        }] //todo: bb
+        tools: [
+          {
+            name: 'Trend Line',
+            grayed: true,
+          },
+          {
+            name: 'Trend Angle',
+            grayed: true,
+          },
+        ], //todo: bb
       },
       disabled_features: [
         // 'header_symbol_search',
@@ -124,9 +128,9 @@ const Chart = (props) => {
         'compare_symbol',
         'border_around_the_chart',
         'timezone_menu',
-        'header_resolutions',//todo: przetestowac
-        'control_bar',//todo: przetestowac
-        'edit_buttons_in_legend',//todo: przetestowac
+        'header_resolutions', //todo: przetestowac
+        'control_bar', //todo: przetestowac
+        'edit_buttons_in_legend', //todo: przetestowac
         'remove_library_container_border',
 
         'dont_show_boolean_study_arguments',
@@ -135,7 +139,7 @@ const Chart = (props) => {
         'save_chart_properties_to_local_storage',
         'side_toolbar_in_fullscreen_mode',
         'hide_last_na_study_output',
-        'constraint_dialogs_movement',//todo: nie do końca jestem pewien
+        'constraint_dialogs_movement', //todo: nie do końca jestem pewien
       ],
       studies_overrides: {
         'volume.volume.color.0': '#fe4761',
@@ -158,8 +162,14 @@ const Chart = (props) => {
         'mainSeriesProperties.lockScale': false,
         'mainSeriesProperties.minTick': 'default',
         'mainSeriesProperties.extendedHours': false,
-        'volumePaneSize': 'tiny',
-        editorFontsList: ['Lato', 'Arial', 'Verdana', 'Courier New', 'Times New Roman'],
+        volumePaneSize: 'tiny',
+        editorFontsList: [
+          'Lato',
+          'Arial',
+          'Verdana',
+          'Courier New',
+          'Times New Roman',
+        ],
         'paneProperties.topMargin': 5,
         'paneProperties.bottomMargin': 5,
         'paneProperties.leftAxisProperties.autoScale': true,
@@ -236,26 +246,29 @@ const Chart = (props) => {
       },
       custom_css_url: 'chart.css',
       // custom_css_url: 'custom_scripts/chart_main/static/chart.css',
-    }
+    };
 
-    const tvWidget = new widget(widgetOptions)
+    const tvWidget = new widget(widgetOptions);
     tvWidget.onChartReady(() => {
-      console.log('mounted:onChartReady')
-      const button = tvWidget.createButton()
-          .attr('title', 'Click to show a notification popup')
-          .addClass('apply-common-tooltip')
-          .on('click', () => widget.showNoticeDialog({
+      console.log('mounted:onChartReady');
+      const button = tvWidget
+        .createButton()
+        .attr('title', 'Click to show a notification popup')
+        .addClass('apply-common-tooltip')
+        .on('click', () =>
+          widget.showNoticeDialog({
             title: 'Notification',
             body: 'TradingView Charting Library API works correctly',
             callback: () => {
               // eslint-disable-next-line no-console
-              console.log('Noticed!')
+              console.log('Noticed!');
             },
-          }))
+          }),
+        );
 
-      button[0].innerHTML = 'Check API'
-    })
-  }
+      button[0].innerHTML = 'Check API';
+    });
+  };
   return <Container id={tv_chart_container}> Here is chart</Container>;
 };
 export default Chart;
