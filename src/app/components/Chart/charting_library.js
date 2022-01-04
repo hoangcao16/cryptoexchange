@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 // eslint-disable-next-line no-unused-expressions
 !(function (t, e) {
   'object' == typeof exports && 'undefined' != typeof module
