@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 export const Container = styled.div`
-  border: ${({ theme }) => theme.borderGray};
-  border-top: none;
-  border-bottom: none;
+  /* border: ${({ theme }) => theme.borderGray}; */
+  /* border-top: none;
+  border-bottom: none; */
 `;
 export const Head = styled.div`
   display: flex;

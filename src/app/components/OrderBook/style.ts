@@ -2,10 +2,8 @@ import styled from 'styled-components';
 import { Dropdown } from 'react-bootstrap';
 
 export const Container = styled.div`
-  border: ${props => props.theme.borderGray};
+  border: none;
   padding: 16px;
-  border-top: none;
-  border-bottom: none;
   height: 839px;
 `;
 export const Header = styled.div`

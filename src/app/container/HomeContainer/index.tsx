@@ -2,7 +2,7 @@ import NavMenu from 'app/components/Navbar';
 import WarningAlert from 'app/components/Alert';
 import AccordionNav from 'app/components/Accordion';
 import DataViewContainer from 'app/container/HomeContainer/DataViewContainer';
-import TradeFormContainer from 'app/container/HomeContainer/TradeFormContainer';
+import TradeFormContainer from 'app/container/TradeFormContainer';
 const HomeContainer = () => {
   return (
     <>

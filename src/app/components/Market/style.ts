@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 import { Col } from 'react-bootstrap';
 export const Container = styled.div`
-  border: ${props => props.theme.borderGray};
+  /* border: ${props => props.theme.borderGray}; */
   padding: 16px;
   border-top: none;
   border-bottom: none;

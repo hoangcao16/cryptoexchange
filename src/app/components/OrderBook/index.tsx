@@ -9,9 +9,6 @@ import {
   MoreButton,
   StyledDropdown,
 } from './style';
-// import { ReactComponent as OrderBookIcon } from 'app/assets/img/Orderbook/orderbook.svg';
-// import { ReactComponent as BuyOrderIcon } from 'app/assets/img/Orderbook/buyorder.svg';
-// import { ReactComponent as SellOrderIcon } from 'app/assets/img/Orderbook/sellorder.svg';
 import { ReactComponent as MoreIcon } from 'app/assets/img/more.svg';
 import OrderBookIcon from 'app/assets/img/Orderbook';
 import Select from 'react-select';

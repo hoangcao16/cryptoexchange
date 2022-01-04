@@ -3,7 +3,12 @@ import { Col } from 'react-bootstrap';
 
 export const Container = styled.div`
   border: ${props => props.theme.borderGray};
+  border-left: none;
+  border-right: none;
   padding: 16px 8px 16px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 export const Tabs = styled.div`
   padding: 0 0 8px 0;
@@ -48,8 +53,9 @@ export const Time = styled(Col)`
   text-align: right;
 `;
 export const Table = styled.div`
-  height: 300px;
+  max-height: 300px;
   overflow-y: scroll;
+  flex: 1;
   padding-right: 6px;
   .table-item {
     height: 20px;

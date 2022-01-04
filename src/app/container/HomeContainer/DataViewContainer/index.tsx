@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import ContentHeader from 'app/components/ContentHeader';
 import OrderBook from 'app/components/OrderBook';
 import Chart from 'app/components/Chart';
-import OrderFormContainer from 'app/container/HomeContainer/OrderFormContainer';
+import OrderFormContainer from 'app/container/OrderFormContainer';
 import Market from 'app/components/Market';
 import Trades from 'app/components/Trades';
 const HomeContentContainer = () => {
@@ -38,6 +38,12 @@ const StyledRow = styled(Row)`
   .orderbook-section,
   .right-menu {
     border: ${({ theme }) => theme.borderGray};
+    border-top: none;
+    border-bottom: none;
+  }
+  .right-menu {
+    display: flex;
+    flex-direction: column;
   }
 `;
 const StyledCol = styled(Col)`
