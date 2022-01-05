@@ -1,6 +1,14 @@
 import styled from 'styled-components';
 import { Col, Toast } from 'react-bootstrap';
 export const Main = styled.main`
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  overflow: hidden;
+  margin-top: 0;
+  align-items: center;
+  flex: 1;
+  flex-direction: column;
   @media screen and (min-width: 768px) {
     margin-top: 64px;
   }

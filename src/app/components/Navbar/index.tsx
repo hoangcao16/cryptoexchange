@@ -18,7 +18,9 @@ import {
 } from './style';
 import { BsFillQuestionSquareFill } from 'react-icons/bs';
 import { AiOutlineSetting } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
+
 const Title = () => {
   return (
     <>
@@ -31,9 +33,11 @@ const NavMenu = () => {
   return (
     <StyledNavBar collapseOnSelect expand="xl" bg="dark" variant="dark">
       <Container fluid style={{ height: '64px' }}>
-        <StyledNavBrand href="#home">
-          <Logo className="Logo" />
-        </StyledNavBrand>
+        <Link to="/">
+          <StyledNavBrand>
+            <Logo className="Logo" />
+          </StyledNavBrand>
+        </Link>
         {/* <Navbar.Collapse id="responsive-navbar-nav"> */}
         <StyledNav className="me-auto">
           <ProductNav />
@@ -50,10 +54,10 @@ const NavMenu = () => {
         {/* </Navbar.Collapse> */}
         <StyledNav>
           <AuthGroup>
-            <Nav.Link href="#deets">Log In</Nav.Link>
-            <RegisterButton eventKey={2} href="#memes">
-              Register
-            </RegisterButton>
+            <Link to="/login" className="linktoLogin-button">
+              Log In
+            </Link>
+            <RegisterButton to="/register">Register</RegisterButton>
           </AuthGroup>
           <Nav.Link href="#pricing">Downloads</Nav.Link>
           <Nav.Link href="#pricing" className="language">

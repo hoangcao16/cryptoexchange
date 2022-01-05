@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Nav, Navbar } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 export const StyledNavBar = styled(Navbar)`
   background-color: ${({ theme }) => theme.body} !important;
@@ -11,6 +12,17 @@ export const StyledNavLink = styled(Nav.Link)`
 export const AuthGroup = styled.div`
   margin: 0 16px;
   display: flex;
+  .linktoLogin-button {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: ${({ theme }) => theme.text};
+    text-decoration: none;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+      border-color 0.15s ease-in-out;
+    &:hover {
+      color: ${({ theme }) => theme.secondary};
+    }
+  }
 `;
 export const StyledNavBrand = styled(Navbar.Brand)`
   display: flex;
@@ -54,7 +66,7 @@ export const Tag = styled.span`
     border-right-color: ${({ theme }) => theme.secondary};
   }
 `;
-export const RegisterButton = styled(Nav.Link)`
+export const RegisterButton = styled(Link)`
   margin: 0px;
   appearance: none;
   user-select: none;

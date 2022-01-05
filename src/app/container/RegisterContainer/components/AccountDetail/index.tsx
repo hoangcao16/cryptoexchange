@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import ShowIcon from 'app/assets/img/showpassIcon';
 import UpDownIcon from 'app/assets/img/UpDownIcon';
 import { useState } from 'react';
-import { useGlobalContext } from 'app/components/common/context';
 import {
   Form,
   EmailSection,
@@ -19,10 +18,9 @@ type UserSubmitFormSignup = {
   password: string;
 };
 
-const AccountDetail = () => {
+const AccountDetail = ({ stepchanger, emailregis }: any) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRef, setShowRef] = useState(false);
-  const { setStepRegister, setEmailRegister } = useGlobalContext();
   //Validate
   const validation = Yup.object().shape({
     email: Yup.string().required('Invalid email').email('Invalid email'),
@@ -56,10 +54,8 @@ const AccountDetail = () => {
   });
   // submit form
   const onSubmitSignup = (data: UserSubmitFormSignup) => {
-    // console.log(JSON.stringify(data, null, 2));
-    // console.log(data.email);
-    setEmailRegister(data.email);
-    setStepRegister(2);
+    emailregis(data.email);
+    stepchanger(2);
   };
   return (
     <>

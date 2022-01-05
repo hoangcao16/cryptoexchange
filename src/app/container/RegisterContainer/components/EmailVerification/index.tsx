@@ -7,16 +7,15 @@ import {
   Input,
   ConfirmCodeButton,
 } from './style';
-import { useGlobalContext } from 'app/components/common/context';
-const EmailVerification = () => {
-  const { emailRegister } = useGlobalContext();
+
+const EmailVerification = ({ email }) => {
   return (
     <>
       <Title>Email Verification</Title>
       <Description>
         <div className="subtitle--content">
           Please enter the 6-digit verification code that was sent to &nbsp;
-          {emailRegister}. The code is valid for 30 minutes.
+          {email}. The code is valid for 30 minutes.
         </div>
       </Description>
       <SubTitle>Email Verification Code</SubTitle>
