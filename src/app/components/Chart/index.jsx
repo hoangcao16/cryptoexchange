@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { Container } from './style';
 import React, { useState, useEffect } from 'react';
 import { widget } from './charting_library';

@@ -13,6 +13,7 @@ import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { GlobalStyles } from 'styles/global-styles';
 
 import { HomePage } from './pages/HomePage/Loadable';
+import { RegisterPage } from './pages/RegisterPage/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
 // Theme
@@ -35,6 +36,7 @@ export function App() {
         </Helmet>
         <Switch>
           <Route exact path="/" component={HomePage} />
+          <Route path="/register" component={RegisterPage} />
           <Route component={NotFoundPage} />
         </Switch>
         <GlobalStyles />
