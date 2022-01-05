@@ -7,39 +7,39 @@ export const OrderBookBidHeader = styled.div`
   padding-top: 4px;
   padding-bottom: 4px;
   .contractPrice {
-    color: rgb(116, 167, 0);
+    color: ${({ theme }) => theme.greenColor};
     font-size: 20px;
     display: flex;
     align-items: center;
   }
   .markPrice {
     font-size: 12px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
   }
   .readmore {
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     font-size: 12px;
     text-decoration: none;
     &:hover {
-      color: ${({ theme }) => theme.colors?.secondary};
+      color: ${({ theme }) => theme.secondary};
     }
   }
 `;
 export const Price = styled(Col)`
-  color: rgb(116, 167, 0);
+  color: ${({ theme }) => theme.greenColor};
   padding: 0;
   font-size: 12px;
   cursor: pointer;
 `;
 export const Amount = styled(Col)`
-  color: rgb(183, 189, 198);
+  color: ${({ theme }) => theme.colorDescription};
   cursor: pointer;
   font-size: 12px;
   padding: 0;
   text-align: right;
 `;
 export const Total = styled(Col)`
-  color: rgb(183, 189, 198);
+  color: ${({ theme }) => theme.colorDescription};
   cursor: pointer;
   font-size: 12px;
   padding: 0;

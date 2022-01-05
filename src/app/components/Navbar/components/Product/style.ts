@@ -14,7 +14,7 @@ export const StyledNavDropdown = styled(NavDropdown)`
   &:hover {
     .dropdown-toggle {
       &:hover {
-        color: ${({ theme }) => theme.colors?.secondary};
+        color: ${({ theme }) => theme.secondary};
       }
       &::after {
         border-bottom: 0.3em solid;
@@ -27,7 +27,7 @@ export const StyledNavDropdown = styled(NavDropdown)`
   .arrow-right {
     display: none;
     float: right;
-    color: ${({ theme }) => theme.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
   .dropdown-menu {
     background-color: ${({ theme }) => theme.background};

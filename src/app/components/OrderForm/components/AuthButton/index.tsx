@@ -14,7 +14,7 @@ export const Container = styled.div`
   margin: 0px;
   min-width: 0px;
   font-size: 14px;
-  background-color: rgb(43, 49, 57);
+  background-color: ${({ theme }) => theme.backgroundDropdown};
   border-radius: 4px;
   height: 40px;
   display: flex;
@@ -22,9 +22,9 @@ export const Container = styled.div`
   justify-content: center;
 `;
 export const Span = styled.a`
-  color: ${({ theme }) => theme?.colors?.secondary};
+  color: ${({ theme }) => theme.secondary};
   text-decoration: none;
   &:hover {
-    color: ${({ theme }) => theme?.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
 `;

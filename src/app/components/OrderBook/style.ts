@@ -22,7 +22,7 @@ export const Header = styled.div`
     border-radius: 4px;
     min-width: 52px;
     svg {
-      color: rgb(132, 142, 156);
+      color: ${({ theme }) => theme.grayColor};
     }
   }
 
@@ -68,17 +68,17 @@ export const Header = styled.div`
   }
   .react-select__menu-list {
     background-color: ${({ theme }) => theme.body};
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: ${({ theme }) => theme.borderGray};
     border-radius: 8px;
     font-size: 12px;
     text-align: center;
   }
   .react-select__option--is-selected {
     background-color: transparent;
-    color: ${({ theme }) => theme.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
   .react-select__option--is-focused {
-    background-color: rgb(43, 49, 57);
+    background-color: ${({ theme }) => theme.backgroundDropdown};
   }
 `;
 export const GroupButton = styled.div``;
@@ -91,11 +91,11 @@ export const MoreButton = styled.div`
     fill: currentcolor;
     font-size: 20px;
     cursor: pointer;
-    color: rgb(61, 70, 83);
+    color: ${({ theme }) => theme.darkerGrayColor};
     width: 1em;
     height: 1em;
     &:hover {
-      color: rgb(132, 142, 156);
+      color: ${({ theme }) => theme.grayColor};
     }
   }
 `;
@@ -114,7 +114,7 @@ export const StyledDropdown = styled(Dropdown)`
     }
   }
   .dropdown-menu {
-    background-color: #1e2026;
+    background-color: ${({ theme }) => theme.backgroundFooter};
     padding: 0px;
     min-width: 160px;
     inset: -4px auto auto -140px !important;
@@ -136,7 +136,7 @@ export const StyledDropdown = styled(Dropdown)`
         -ms-user-select: none;
         user-select: none;
         &:hover input ~ .checkmark {
-          background-color: #ccc;
+          background-color: ${({ theme }) => theme.brightGrayColor};
         }
         input {
           position: absolute;
@@ -145,7 +145,7 @@ export const StyledDropdown = styled(Dropdown)`
           height: 0;
           width: 0;
           &:checked ~ .checkmark {
-            background-color: ${({ theme }) => theme.colors?.secondary};
+            background-color: ${({ theme }) => theme.secondary};
           }
           :checked ~ .checkmark:after {
             display: block;
@@ -157,7 +157,7 @@ export const StyledDropdown = styled(Dropdown)`
           left: 0;
           height: 17px;
           width: 17px;
-          background-color: #eee;
+          background-color: ${({ theme }) => theme.matteWhiteColor};
           &:after {
             left: 6px;
             top: 2px;

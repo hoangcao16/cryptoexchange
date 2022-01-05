@@ -21,7 +21,7 @@ export const Tabs = styled.div`
     font-size: 14px;
     font-weight: 400;
     &:hover {
-      color: ${({ theme }) => theme?.colors?.secondary};
+      color: ${({ theme }) => theme.secondary};
     }
   }
   .btn-myTrades {
@@ -29,24 +29,24 @@ export const Tabs = styled.div`
   }
   .btn-active {
     font-weight: 600;
-    color: ${({ theme }) => theme?.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
 `;
 export const Price = styled(Col)`
-  color: rgb(234, 0, 112);
+  color: ${({ theme }) => theme.darkPinkColor};
   padding: 0;
   font-size: 12px;
   cursor: pointer;
 `;
 export const Amount = styled(Col)`
-  color: rgb(183, 189, 198);
+  color: ${({ theme }) => theme.colorDescription};
   cursor: pointer;
   font-size: 12px;
   padding: 0;
   text-align: right;
 `;
 export const Time = styled(Col)`
-  color: rgb(183, 189, 198);
+  color: ${({ theme }) => theme.colorDescription};
   cursor: pointer;
   font-size: 12px;
   padding: 0;

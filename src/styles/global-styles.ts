@@ -11,7 +11,7 @@ export const GlobalStyles = createGlobalStyle`
   .navbar-dark .navbar-nav .nav-link {
     color: ${({ theme }) => theme.text};
     &:hover {
-      color: ${({ theme }) => theme.colors?.secondary};
+      color: ${({ theme }) => theme.secondary};
     }
 }
   `;

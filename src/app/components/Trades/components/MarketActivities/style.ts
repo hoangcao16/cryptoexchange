@@ -16,12 +16,12 @@ export const ExtendButton = styled.div<{ extend: boolean }>`
   margin: 0px;
   min-width: 0px;
   display: flex;
-  color: rgb(94, 102, 115);
+  color: ${({ theme }) => theme.darkGrayColor};
   transition: all 0.3s ease 0s;
   cursor: pointer;
   transform: rotate(${({ extend }) => (extend ? '0deg' : '180deg')});
   &:hover {
-    color: ${({ theme }) => theme?.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
   .extend-icon {
     box-sizing: border-box;
@@ -66,11 +66,11 @@ export const A = styled.a`
   -webkit-box-pack: justify;
   justify-content: space-between;
   text-decoration: none;
-  border-bottom: 1px solid rgb(31, 33, 36);
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundAccordion};
   .a-infor {
     margin: 0px 0px 2px;
     min-width: 0px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     font-size: 12px;
   }
   .a-rate {
@@ -82,7 +82,7 @@ export const A = styled.a`
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-      color: rgb(14, 203, 129);
+      color: ${({ theme }) => theme.brightGreenColor};
       font-size: 12px;
     }
     &--timeRange {
@@ -92,7 +92,7 @@ export const A = styled.a`
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-      color: rgb(234, 236, 239);
+      color: ${({ theme }) => theme.matteWhiteColor};
       font-size: 12px;
       padding-bottom: 1px;
     }
@@ -123,13 +123,13 @@ export const A = styled.a`
       height: 100%;
       top: 0px;
       left: 0px;
-      background-color: rgb(14, 203, 129);
+      background-color: ${({ theme }) => theme.brightGreenColor};
       border-radius: 4px;
       opacity: 0.15;
     }
     &--svg {
-      color: rgb(14, 203, 129);
-      fill: rgb(14, 203, 129);
+      color: ${({ theme }) => theme.brightGreenColor};
+      fill: ${({ theme }) => theme.brightGreenColor};
       font-size: 44px;
       width: 1em;
       height: 1em;

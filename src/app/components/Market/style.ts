@@ -19,7 +19,7 @@ export const SearchBox = styled.div`
   border: none;
   width: 100%;
   border-radius: 4px;
-  background-color: rgb(43, 49, 57);
+  background-color: ${({ theme }) => theme.backgroundDropdown};
   position: static;
   .search-icon {
     padding-left: 8px;
@@ -34,20 +34,20 @@ export const SearchBox = styled.div`
     font-size: 12px;
     font-weight: 400;
     flex: 1;
-    color: #eaecef;
+    color: ${({ theme }) => theme.matteWhiteColor};
   }
   svg {
     margin: 0px;
     min-width: 0px;
-    color: rgb(94, 102, 115);
+    color: ${({ theme }) => theme.darkGrayColor};
     font-size: 20px;
-    fill: rgb(94, 102, 115);
+    fill: ${({ theme }) => theme.darkGrayColor};
     width: 1em;
     height: 1em;
   }
 `;
 export const StyledSlick = styled(Slider)`
-  color: rgb(132, 142, 156);
+  color: ${({ theme }) => theme.grayColor};
   .star-icon {
     box-sizing: border-box;
     margin: 0px;
@@ -68,7 +68,7 @@ export const StyledSlick = styled(Slider)`
     text-align: right;
     background: linear-gradient(
       to left,
-      rgb(22, 26, 30) 42.24%,
+      ${({ theme }) => theme.backgroundFooter} 42.24%,
       transparent 95.69%
     );
   }
@@ -77,7 +77,7 @@ export const StyledSlick = styled(Slider)`
     left: -4px;
     background: linear-gradient(
       to right,
-      rgb(22, 26, 30) 42.24%,
+      ${({ theme }) => theme.backgroundFooter} 42.24%,
       transparent 95.69%
     );
   }
@@ -102,10 +102,10 @@ export const StyledSlick = styled(Slider)`
       width: 1em;
       height: 1em;
       font-size: 20px;
-      color: rgb(61, 70, 83);
-      fill: rgb(61, 70, 83);
+      color: ${({ theme }) => theme.darkerGrayColor};
+      fill: ${({ theme }) => theme.darkerGrayColor};
       &:hover {
-        color: rgb(132, 142, 156);
+        color: ${({ theme }) => theme.grayColor};
       }
     }
     &::before {
@@ -118,20 +118,20 @@ export const StyledSlick = styled(Slider)`
 `;
 
 export const Pair = styled(Col)`
-  color: rgb(183, 189, 198);
+  color: ${({ theme }) => theme.colorDescription};
   padding: 0;
   font-size: 12px;
   cursor: pointer;
 `;
 export const Price = styled(Col)`
-  color: rgb(183, 189, 198);
+  color: ${({ theme }) => theme.colorDescription};
   cursor: pointer;
   font-size: 12px;
   padding: 0;
   text-align: right;
 `;
 export const Change = styled(Col)`
-  color: rgb(183, 189, 198);
+  color: ${({ theme }) => theme.colorDescription};
   cursor: pointer;
   font-size: 12px;
   padding: 0;

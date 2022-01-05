@@ -9,26 +9,26 @@ export const Tabs = styled.div`
   display: flex;
   font-size: 14px;
   line-height: 12px;
-  border-bottom-color: rgb(37, 41, 48);
+  border-bottom-color: ${({ theme }) => theme.brightBlackColor};
   .item {
     margin-right: 16px;
     padding-top: 8px;
     padding-bottom: 10px;
     font-weight: 500;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     cursor: pointer;
     &:hover {
-      color: ${({ theme }) => theme.colors?.secondary};
+      color: ${({ theme }) => theme.secondary};
     }
   }
   .active {
-    color: ${({ theme }) => theme.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
 `;
 export const StyledDropdown = styled.div`
   .active {
     .btn-primary {
-      color: ${({ theme }) => theme.colors?.secondary};
+      color: ${({ theme }) => theme.secondary};
     }
   }
   .btn-primary {
@@ -36,10 +36,10 @@ export const StyledDropdown = styled.div`
     border: none;
     font-size: 14px;
     line-height: 12px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     padding: 0px 0px 2px 0px;
     &:hover {
-      color: ${({ theme }) => theme.colors?.secondary};
+      color: ${({ theme }) => theme.secondary};
     }
     &:focus {
       box-shadow: none;
@@ -77,14 +77,13 @@ export const Tooltip = styled.div`
     width: max-content;
     word-break: normal;
     background-color: black;
-    color: #fff;
     text-align: center;
     z-index: 1400;
     font-weight: 400;
     font-size: 12px;
     line-height: 18px;
-    color: rgb(255, 255, 255);
-    background-color: rgb(94, 102, 115);
+    color: ${({ theme }) => theme.text};
+    background-color: ${({ theme }) => theme.darkGrayColor};
     border-radius: 4px;
     filter: drop-shadow(rgba(20, 21, 26, 0.08) 0px 3px 6px)
       drop-shadow(rgba(71, 77, 87, 0.08) 0px 7px 14px)
@@ -112,7 +111,7 @@ export const Tooltip = styled.div`
         height: 0;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
-        border-bottom: 8px solid rgb(94, 102, 115);
+        border-bottom: ${({ theme }) => theme.darkGrayColor};
       }
     }
   }
@@ -120,9 +119,9 @@ export const Tooltip = styled.div`
     box-sizing: border-box;
     margin: 0px;
     min-width: 0px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     font-size: 16px;
-    fill: rgb(132, 142, 156);
+    fill: ${({ theme }) => theme.grayColor};
     width: 1em;
     height: 1em;
     &:hover {

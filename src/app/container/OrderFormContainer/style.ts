@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Dropdown } from 'react-bootstrap';
 export const Container = styled.div`
   flex: 1;
-  background-color: rgb(30, 32, 38);
+  background-color: ${({ theme }) => theme.backgroundAccordion};
 `;
 export const Header = styled.div`
   display: flex;
@@ -15,45 +15,45 @@ export const Header = styled.div`
     -webkit-box-align: center;
     align-items: center;
     font-size: 14px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     text-align: center;
-    background-color: rgb(22, 26, 30);
+    background-color: ${({ theme }) => theme.backgroundFooter};
     border-top: 2px solid transparent;
-    border-bottom: 1px solid rgb(43, 49, 58);
+    border-bottom: 1px solid ${({ theme }) => theme.backgroundDropdown};
   }
   .spotTab {
     width: 120px;
   }
   .active {
-    border-top: 2px solid rgb(240, 185, 11);
-    border-right: 1px solid rgb(43, 49, 58);
+    border-top: 2px solid color: ${({ theme }) => theme.secondary};
+    border-right: 1px solid ${({ theme }) => theme.backgroundDropdown};
     border-bottom: 1px solid transparent;
-    color: rgb(234, 236, 239);
-    background-color: rgb(30, 32, 38);
+    color: ${({ theme }) => theme.matteWhiteColor};
+    background-color: ${({ theme }) => theme.backgroundAccordion};
   }
 `;
 export const A = styled.a`
   margin: 0px 16px;
   min-width: 0px;
   display: flex;
-  color: rgb(132, 142, 156);
+  color: ${({ theme }) => theme.grayColor};
   font-size: 12px;
   height: 16px;
   text-decoration: none;
   &:hover {
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
   }
   .hrefText {
     text-decoration: underline;
     &:hover {
-      color: rgb(234, 236, 239);
+      color: ${({ theme }) => theme.matteWhiteColor};
     }
   }
   .marginRatio {
     height: 16px;
     margin-left: 4px;
     padding: 0px 4px;
-    color: rgb(240, 185, 11);
+    color: color: ${({ theme }) => theme.secondary};
     font-size: 12px;
     border-radius: 2px;
     background-color: rgb(60, 46, 16);
@@ -78,11 +78,11 @@ export const StyledDropdown = styled(Dropdown)`
     fill: currentcolor;
     font-size: 20px;
     cursor: pointer;
-    color: rgb(61, 70, 83);
+    color: ${({ theme }) => theme.darkerGrayColor};
     width: 1em;
     height: 1em;
     &:hover {
-      color: rgb(132, 142, 156);
+      color: ${({ theme }) => theme.grayColor};
     }
   }
   .btn-success {
@@ -94,7 +94,7 @@ export const StyledDropdown = styled(Dropdown)`
     }
   }
   .dropdown-menu {
-    background-color: #1e2026;
+    background-color: ${({ theme }) => theme.backgroundAccordion};
     padding: 0px;
     min-width: 160px;
     font-size: 14px;

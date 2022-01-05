@@ -74,7 +74,7 @@ export const Tabs = styled.div`
     box-sizing: border-box;
     user-select: none;
     font-size: 14px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     cursor: pointer;
     @media screen and (min-width: 1279px) {
       margin-right: 24px;
@@ -86,12 +86,12 @@ export const Tabs = styled.div`
       margin-right: 16px;
     }
     &:hover {
-      color: rgb(240, 185, 11);
+      color: ${({ theme }) => theme.secondary};
     }
   }
   .active {
     font-weight: 600;
     border: none;
-    color: rgb(240, 185, 11);
+    color: ${({ theme }) => theme.secondary};
   }
 `;

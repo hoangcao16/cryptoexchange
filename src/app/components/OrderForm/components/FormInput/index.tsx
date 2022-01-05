@@ -64,10 +64,10 @@ export const Container = styled.div`
   line-height: 40px;
   background-color: rgba(43, 47, 54, 0.9);
   .input-disabled {
-    border-color: rgb(71, 77, 87);
-    background-color: rgb(71, 77, 87);
+    border-color: ${({ theme }) => theme.darkBrightGrayColor};
+    background-color: ${({ theme }) => theme.darkBrightGrayColor};
     &:hover {
-      border-color: rgb(71, 77, 87);
+      border-color: ${({ theme }) => theme.darkBrightGrayColor};
     }
     input {
       cursor: default;
@@ -88,10 +88,10 @@ export const Div = styled.div`
   height: 100%;
   font-size: 14px;
   &:hover {
-    border-color: rgb(240, 185, 11);
+    border-color: ${({ theme }) => theme.secondary};
   }
   .inputtext {
-    color: rgb(234, 236, 239);
+    color: ${({ theme }) => theme.matteWhiteColor};
     font-size: 14px;
     padding: 0 6px 0 4px;
     text-align: right;
@@ -111,12 +111,12 @@ export const Div = styled.div`
     margin-left: 8px;
     min-width: 48px;
     font-size: 14px;
-    color: rgb(183, 189, 198);
+    color: ${({ theme }) => theme.colorDescription};
     label {
       margin: 0px;
       min-width: 0px;
       font-size: 14px;
-      color: rgb(132, 142, 156);
+      color: ${({ theme }) => theme.grayColor};
       display: inline-block;
       text-align: right;
     }
@@ -125,12 +125,12 @@ export const Div = styled.div`
     flex-shrink: 0;
     margin-right: 8px;
     font-size: 14px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     label {
       margin: 0px;
       min-width: 0px;
       font-size: 14px;
-      color: rgb(234, 236, 239);
+      color: ${({ theme }) => theme.matteWhiteColor};
       display: inline-block;
       text-align: right;
     }

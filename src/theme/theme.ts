@@ -7,14 +7,28 @@ export const lightTheme: DefaultTheme = {
   background: '#363537',
 };
 export const darkTheme: DefaultTheme = {
+  secondary: '#f0b90b',
+  brightBlackColor: 'rgb(37, 41, 48)',
+  grayColor: '#848E9C', //rgb(132, 142, 156)
+  brightGrayColor: '#B7BDC6',
+  darkGrayColor: '#5E6673', //rgb(94, 102, 115)
+  darkerGrayColor: '#3D4653', //rgb(61, 70, 83)
+  darkBrightGrayColor: '#474D57', //rgb(71, 77, 87)
+  earthBrownColor: 'rgb(59, 38, 1)',
+  matteWhiteColor: 'rgb(234, 236, 239)',
+  greenColor: 'rgb(116,167,0)',
+  brightGreenColor: 'rgb(14, 203, 129)',
+  darkPinkColor: 'rgb(234, 0, 112)', //rgb(234, 0, 112)
   body: '#161a1e',
   text: '#ffffff',
   toggleBorder: '#6B8096',
-  background: '#1e2329',
-  backgroundDropdown: '#2b3139',
-  colorDescription: '#666',
+  background: '#1e2329', //rgb(30, 35, 41)
+  backgroundDropdown: '#2b3139', //rgb(43, 49, 57)
+  backgroundAccordion: 'rgb(30, 32, 38)',
+  backgroundFooter: 'rgb(22, 26, 30)',
+  colorDescription: 'rgb(183, 189, 198)', //#B7BDC6
   borderGray: '1px solid rgba(255, 255, 255, 0.1)',
-  colors: {
-    secondary: '#f0b90b',
-  },
+  borderBlack: '1px solid rgb(37 41 48)',
+  borderSectionFooter: '1px solid rgb(35, 40, 45)',
+  errorColor: '#dc143c',
 };

@@ -1,5 +1,11 @@
 import { Container, Steps, Step } from './style';
-const Stepper = () => {
+
+interface StepperProps {
+  footStep: number;
+}
+const Stepper = (props: StepperProps) => {
+  const { footStep } = props;
+
   return (
     <Container>
       <div>
@@ -13,8 +19,14 @@ const Stepper = () => {
               <div className="css-vdqias"></div>
             </Step>
           </div>
-          <div data-status="wait" className="line"></div>
-          <div className="bn-steps-step" data-status="wait">
+          <div
+            data-status={footStep > 1 ? 'process' : 'wait'}
+            className="line"
+          ></div>
+          <div
+            className="bn-steps-step"
+            data-status={footStep > 1 ? 'process' : 'wait'}
+          >
             <Step className="bn-step">
               <div className="step_marker_column">
                 <span className="step-counter">2</span>
@@ -23,8 +35,14 @@ const Stepper = () => {
               <div className="css-vdqias"></div>
             </Step>
           </div>
-          <div data-status="wait" className="line"></div>
-          <div className="bn-steps-step" data-status="wait">
+          <div
+            data-status={footStep > 2 ? 'process' : 'wait'}
+            className="line"
+          ></div>
+          <div
+            className="bn-steps-step"
+            data-status={footStep > 2 ? 'process' : 'wait'}
+          >
             <Step className="bn-step">
               <div className="step_marker_column">
                 <span className="step-counter">3</span>
@@ -33,8 +51,14 @@ const Stepper = () => {
               <div className="css-vdqias"></div>
             </Step>
           </div>
-          <div data-status="wait" className="line"></div>
-          <div className="bn-steps-step" data-status="wait">
+          <div
+            data-status={footStep > 3 ? 'process' : 'wait'}
+            className="line"
+          ></div>
+          <div
+            className="bn-steps-step"
+            data-status={footStep > 3 ? 'process' : 'wait'}
+          >
             <Step className="bn-step">
               <div className="step_marker_column">
                 <span className="step-counter">4</span>

@@ -12,7 +12,7 @@ export const ColLeft = styled.div`
     &-name {
       margin: 0px 8px 0px 0px;
       min-width: 0px;
-      color: rgb(132, 142, 156);
+      color: ${({ theme }) => theme.grayColor};
       font-size: 12px;
       height: 16px;
     }
@@ -41,7 +41,7 @@ export const ColRight = styled.div`
     &-name {
       margin: 0px 8px 0px 0px;
       min-width: 0px;
-      color: rgb(132, 142, 156);
+      color: ${({ theme }) => theme.grayColor};
       font-size: 12px;
       height: 16px;
     }

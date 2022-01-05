@@ -4,6 +4,8 @@ import 'styled-components';
 // and extend it
 declare module 'styled-components' {
   export interface DefaultTheme {
+    main?: string;
+    secondary?: string;
     borderRadius?: string;
     theme?: string;
     body?: string;
@@ -13,9 +15,21 @@ declare module 'styled-components' {
     backgroundDropdown?: string;
     colorDescription?: string;
     borderGray?: string;
-    colors?: {
-      main?: string;
-      secondary?: string;
-    };
+    borderBlack?: string;
+    backgroundAccordion?: string;
+    grayColor?: string;
+    earthBrownColor?: string;
+    matteWhiteColor?: string;
+    brightGreenColor?: string;
+    brightGrayColor?: string;
+    brightBlackColor?: string;
+    darkGrayColor?: string;
+    darkerGrayColor?: string;
+    darkBrightGrayColor?: string;
+    greenColor?: string;
+    darkPinkColor?: string;
+    backgroundFooter?: string;
+    borderSectionFooter?: string;
+    errorColor?: string;
   }
 }

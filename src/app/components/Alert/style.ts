@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { Alert } from 'react-bootstrap';
 
 export const StyledAlert = styled(Alert)`
-  background-color: rgb(59, 38, 1);
-  color: rgb(234, 236, 239);
+  background-color: ${({ theme }) => theme.earthBrownColor};
+  color: ${({ theme }) => theme.text};
   padding: 0 28px;
   line-height: 36px;
   height: 36px;
@@ -13,18 +13,18 @@ export const StyledAlert = styled(Alert)`
     box-sizing: border-box;
     margin: 0 12px 0 0;
     min-width: 0px;
-    color: rgb(240, 185, 11);
+    color: ${({ theme }) => theme.secondary};
     font-size: 20px;
-    fill: rgb(240, 185, 11);
+    fill: ${({ theme }) => theme.secondary};
     width: 1em;
     height: 1em;
   }
   .btn-close {
     padding: 11px 28px;
     outline: none;
-    color: #ffffff;
+    color: ${({ theme }) => theme.text};
     &:hover {
-      color: #ffffff;
+      color: ${({ theme }) => theme.text};
     }
     &:focus {
       box-shadow: none;
@@ -33,7 +33,7 @@ export const StyledAlert = styled(Alert)`
 `;
 export const StyledAlertLink = styled(Alert.Link)`
   margin-left: 8px;
-  color: rgb(240, 185, 11) !important;
+  color: ${({ theme }) => theme.secondary} !important;
   text-decoration: none;
   cursor: pointer;
   font-weight: 400;
