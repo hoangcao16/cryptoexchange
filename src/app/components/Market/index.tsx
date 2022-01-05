@@ -13,10 +13,10 @@ import {
   Change,
   Table,
 } from './style';
-import { useMarketContext } from './components/context';
+import { useGlobalContext } from '../common/context';
 const Trades = () => {
   const [active, setActive] = useState('USDT');
-  const { activeChange } = useMarketContext();
+  const { activeChangeColumnMarket } = useGlobalContext();
   const MenuSlick = () => {
     const settings = {
       dots: false,
@@ -96,7 +96,7 @@ const Trades = () => {
                 {item.pair}
               </Pair>
               <Price>{item.price}</Price>
-              {activeChange ? (
+              {activeChangeColumnMarket ? (
                 <Change>{item.change}%</Change>
               ) : (
                 <Change>{item.volumn}M</Change>

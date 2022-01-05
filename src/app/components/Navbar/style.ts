@@ -19,7 +19,7 @@ export const StyledNavBrand = styled(Navbar.Brand)`
   height: 24px;
   padding: 0;
   svg {
-    color: ${({ theme }) => theme.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
 `;
 export const Tag = styled.span`
@@ -34,8 +34,8 @@ export const Tag = styled.span`
   padding-right: 4px;
   font-size: 12px;
   line-height: 16px;
-  background-color: rgb(240, 185, 11);
-  color: rgb(30, 35, 41);
+  background-color: ${({ theme }) => theme.secondary};
+  color: ${({ theme }) => theme.background};
   &::before {
     content: '';
     position: absolute;
@@ -51,7 +51,7 @@ export const Tag = styled.span`
     border-bottom-style: solid;
     border-bottom-color: transparent;
     border-right-style: solid;
-    border-right-color: rgb(240, 185, 11);
+    border-right-color: ${({ theme }) => theme.secondary};
   }
 `;
 export const RegisterButton = styled(Nav.Link)`
@@ -77,13 +77,13 @@ export const RegisterButton = styled(Nav.Link)`
   font-size: 14px;
   line-height: 20px;
   word-break: keep-all;
-  color: rgb(33, 40, 51) !important;
+  color: ${({ theme }) => theme.background} !important;
   border-radius: 4px;
   min-height: 24px;
   border: none;
   background-image: linear-gradient(
     rgb(248, 209, 47) 0%,
-    rgb(240, 185, 11) 100%
+    ${({ theme }) => theme.secondary} 100%
   );
   font-weight: 400;
   margin-left: 12px;
@@ -104,7 +104,7 @@ export const StyledNav = styled(Nav)`
     min-width: 0px;
     width: 1px;
     height: 13px;
-    background-color: rgb(94, 102, 115);
+    background-color: ${({ theme }) => theme.darkGrayColor};
   }
 `;
 export const NavbarToggle = styled(Navbar.Toggle)`
@@ -112,5 +112,5 @@ export const NavbarToggle = styled(Navbar.Toggle)`
   border: none;
 `;
 export const NavbarOffcanvas = styled(Navbar.Offcanvas)`
-  background-color: rgb(30, 35, 41);
+  background-color: ${({ theme }) => theme.background};
 `;

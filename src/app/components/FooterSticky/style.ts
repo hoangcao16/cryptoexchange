@@ -4,29 +4,29 @@ export const Container = styled.div`
   position: sticky;
   z-index: 10;
   bottom: 0px;
-  background-color: rgb(22, 26, 30);
+  background-color: ${({ theme }) => theme.backgroundFooter};
   padding: 0px 0px 0px 10px;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: justify;
   justify-content: space-between;
-  border: 1px solid rgb(37, 41, 48);
+  border: ${({ theme }) => theme.borderBlack};
   .connect-title {
     margin: 0px 0px 0px 10px;
     min-width: 0px;
-    color: rgb(14, 203, 129);
+    color: ${({ theme }) => theme.brightGreenColor};
     font-size: 12px;
   }
 `;
 export const SupportSection = styled.div`
   display: flex;
   span {
-    color: rgb(183, 189, 198);
+    color: ${({ theme }) => theme.brightGrayColor};
     font-size: 12px;
   }
   .download-section {
-    border-left: 1px solid rgb(35, 40, 45);
+    border-left: ${({ theme }) => theme.borderSectionFooter};
     padding: 0px 16px;
     .download-icon {
       margin: 0px 10px 0px 0px;
@@ -39,7 +39,7 @@ export const SupportSection = styled.div`
     }
   }
   .online-section {
-    border-left: 1px solid rgb(35, 40, 45);
+    border-left: ${({ theme }) => theme.borderSectionFooter};
     padding: 0px 16px;
     .docs-icon {
       box-sizing: border-box;

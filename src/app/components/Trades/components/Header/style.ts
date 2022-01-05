@@ -4,5 +4,5 @@ export const THeader = styled(Row)`
   height: 20px;
   padding-right: 8px;
   font-size: 12px;
-  color: rgb(132, 142, 156);
+  color: ${({ theme }) => theme.grayColor};
 `;

@@ -16,7 +16,7 @@ export const Step = styled.div`
     line-height: 24px;
     text-align: center;
     border-radius: 100%;
-    background-color: rgb(39, 42, 46);
+    background-color: ${({ theme }) => theme.brightBlackColor};
     user-select: none;
     .step-counter {
       box-sizing: border-box;
@@ -31,7 +31,7 @@ export const Step = styled.div`
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     white-space: nowrap;
   }
 `;
@@ -47,7 +47,7 @@ export const Steps = styled.div`
     left: 18px;
     flex: 1 1 0%;
     position: relative;
-    background-color: rgb(39, 42, 46);
+    background-color: ${({ theme }) => theme.brightBlackColor};
     &::after {
       content: '';
       position: absolute;
@@ -57,6 +57,9 @@ export const Steps = styled.div`
       width: 4px;
       background-color: inherit;
     }
+    &[data-status='process'] {
+      background-color: ${({ theme }) => theme.secondary};
+    }
   }
   .bn-steps-step {
     box-sizing: border-box;
@@ -64,7 +67,7 @@ export const Steps = styled.div`
     min-width: 0px;
     display: flex;
     position: static;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     padding: 8px;
     -webkit-box-flex: 0;
     flex-grow: 0;
@@ -74,11 +77,11 @@ export const Steps = styled.div`
     overflow: hidden;
     &[data-status='process'] {
       .step_marker_column {
-        background-color: ${({ theme }) => theme?.colors?.secondary};
-        color: rgb(24, 26, 32);
+        background-color: ${({ theme }) => theme.secondary};
+        color: ${({ theme }) => theme.backgroundFooter};
       }
       .step-title {
-        color: rgb(234, 236, 239);
+        color: ${({ theme }) => theme.matteWhiteColor};
       }
     }
   }

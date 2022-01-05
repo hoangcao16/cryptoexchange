@@ -27,7 +27,7 @@ import { ThemeContextProvider } from 'app/components/common/themeContext';
 import 'index.css';
 // Initialize languages
 import './locales/i18n';
-import { MarketContextProvider } from 'app/components/Market/components/context';
+import { GlobalContextProvider } from 'app/components/common/context';
 
 const store = configureAppStore();
 const MOUNT_NODE = document.getElementById('root') as HTMLElement;
@@ -36,11 +36,11 @@ ReactDOM.render(
   <Provider store={store}>
     <HelmetProvider>
       <ThemeContextProvider>
-        <MarketContextProvider>
+        <GlobalContextProvider>
           <React.StrictMode>
             <App />
           </React.StrictMode>
-        </MarketContextProvider>
+        </GlobalContextProvider>
       </ThemeContextProvider>
     </HelmetProvider>
   </Provider>,

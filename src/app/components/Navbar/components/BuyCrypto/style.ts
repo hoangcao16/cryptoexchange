@@ -5,13 +5,13 @@ export const StyledNavDropdown = styled(NavDropdown)`
   margin: 0 8px;
   &:hover {
     .dropdown-toggle:hover {
-      color: ${({ theme }) => theme.colors?.secondary};
+      color: ${({ theme }) => theme.secondary};
     }
   }
   .arrow-right {
     display: none;
     float: right;
-    color: ${({ theme }) => theme.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
   .dropdown-menu {
     background-color: ${({ theme }) => theme.background};
@@ -57,8 +57,8 @@ export const Tag = styled.span`
   padding-right: 4px;
   font-size: 12px;
   line-height: 16px;
-  background-color: rgb(240, 185, 11);
-  color: rgb(30, 35, 41);
+  background-color: ${({ theme }) => theme.secondary};
+  color: ${({ theme }) => theme.background};
   &::before {
     content: '';
     position: absolute;
@@ -74,6 +74,6 @@ export const Tag = styled.span`
     border-bottom-style: solid;
     border-bottom-color: transparent;
     border-right-style: solid;
-    border-right-color: rgb(240, 185, 11);
+    border-right-color: ${({ theme }) => theme.secondary};
   }
 `;

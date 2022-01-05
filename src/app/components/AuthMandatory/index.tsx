@@ -8,10 +8,10 @@ const AuthMandatory = () => {
   );
 };
 export const Span = styled.a`
-  color: ${({ theme }) => theme?.colors?.secondary};
+  color: ${({ theme }) => theme.secondary};
   text-decoration: none;
   &:hover {
-    color: ${({ theme }) => theme?.colors?.secondary};
+    color: ${({ theme }) => theme.secondary};
   }
 `;
 export default AuthMandatory;

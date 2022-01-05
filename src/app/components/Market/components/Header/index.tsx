@@ -1,10 +1,11 @@
 import { THeader } from './style';
 import { Col } from 'react-bootstrap';
 import { ReactComponent as ChangeIcon } from 'app/assets/img/change.svg';
-import { useMarketContext } from '../context';
+import { useGlobalContext } from '../../../common/context';
 import SortIcon from 'app/assets/img/sortIcon';
 const OrderBookHeader = () => {
-  const { activeChange, setActiveChange } = useMarketContext();
+  const { activeChangeColumnMarket, setActiveChangeColumnMarket } =
+    useGlobalContext();
   return (
     <>
       <THeader>
@@ -15,11 +16,13 @@ const OrderBookHeader = () => {
           Price <SortIcon name="detail" className="sort-icon" />
         </Col>
         <Col className="text-end">
-          {activeChange ? 'Change' : 'Volume'}{' '}
+          {activeChangeColumnMarket ? 'Change' : 'Volume'}{' '}
           <SortIcon name="detail" className="sort-icon" />
           <ChangeIcon
             className="change-icon"
-            onClick={() => setActiveChange(!activeChange)}
+            onClick={() =>
+              setActiveChangeColumnMarket(!activeChangeColumnMarket)
+            }
           />
         </Col>
       </THeader>

@@ -26,13 +26,13 @@ export const SliderContainer = styled.div`
   display: flex;
   .bn-slider-available-bar {
     position: absolute;
-    background-color: rgb(71, 77, 87);
+    background-color: ${({ theme }) => theme.darkBrightGrayColor};
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     background-clip: padding-box;
     width: 100%;
     .bn-slider-progress-bar {
-      background-color: rgb(183, 189, 198);
+      background-color: ${({ theme }) => theme.colorDescription};
       height: 4px;
       width: 0%;
     }
@@ -42,9 +42,9 @@ export const SliderContainer = styled.div`
     width: 16px;
     height: 16px;
     transform: translateX(-50%) rotate(45deg);
-    background-color: rgb(43, 49, 57);
+    background-color: ${({ theme }) => theme.backgroundDropdown};
     border-radius: 4px;
-    border: 4px solid rgb(183, 189, 198);
+    border: 4px solid ${({ theme }) => theme.colorDescription};
     z-index: 20;
     cursor: grab;
     transition: box-shadow 0.2s ease 0s;
@@ -53,7 +53,7 @@ export const SliderContainer = styled.div`
       display: block;
       width: 16px;
       height: 16px;
-      border: 2px solid rgb(30, 35, 41);
+      border: 2px solid ${({ theme }) => theme.background};
       border-radius: 4px;
       background: transparent;
       position: absolute;
@@ -64,7 +64,7 @@ export const SliderContainer = styled.div`
   }
   .bn-slider-radio-tooltip {
     background-color: transparent;
-    color: rgb(183, 189, 198);
+    color: ${({ theme }) => theme.colorDescription};
     font-size: 14px;
     visibility: hidden;
     opacity: 0;
@@ -83,18 +83,18 @@ export const SliderContainer = styled.div`
     box-sizing: content-box;
     position: absolute;
     transform: translateX(-50%) rotate(45deg);
-    background-color: rgb(24, 26, 32);
-    color: rgb(132, 142, 156);
+    background-color: ${({ theme }) => theme.backgroundFooter};
+    color: ${({ theme }) => theme.grayColor};
     width: 6px;
     height: 6px;
     border-radius: 2px;
-    border: 2px solid rgb(71, 77, 87);
+    border: 2px solid ${({ theme }) => theme.darkBrightGrayColor};
     z-index: 10;
     overflow: visible;
     cursor: pointer;
     &:hover {
-      border-color: rgb(30, 35, 41);
-      background-color: rgb(71, 77, 87);
+      border-color: ${({ theme }) => theme.background};
+      background-color: ${({ theme }) => theme.darkBrightGrayColor};
     }
   }
   .first-step {

@@ -32,16 +32,16 @@ export const SpotTutorial = styled.div`
   margin: 0px;
   min-width: 0px;
   display: flex;
-  color: rgb(132, 142, 156);
+  color: ${({ theme }) => theme.grayColor};
   font-size: 12px;
   cursor: pointer;
   svg {
     box-sizing: border-box;
     margin: 0px;
     min-width: 0px;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     font-size: 16px;
-    fill: rgb(132, 142, 156);
+    fill: ${({ theme }) => theme.grayColor};
     width: 1em;
     height: 1em;
   }
@@ -51,7 +51,7 @@ export const ContentLeft = styled.div`
   margin-right: 24px;
   margin-left: 4px;
   height: 48px;
-  border-right: 1px solid rgb(37 41 48);
+  border-right: ${({ theme }) => theme.borderBlack};
   padding-right: 16px;
   .contentLeft-coin {
     display: flex;
@@ -64,29 +64,29 @@ export const ContentLeft = styled.div`
       svg {
         margin: 0px 4px 0px 0px;
         min-width: 0px;
-        color: rgb(132, 142, 156);
+        color: ${({ theme }) => theme.grayColor};
         font-size: 16px;
-        fill: rgb(132, 142, 156);
+        fill: ${({ theme }) => theme.grayColor};
         width: 1em;
         height: 1em;
       }
       a {
-        color: rgb(132, 142, 156);
+        color: ${({ theme }) => theme.grayColor};
         text-decoration: underline;
       }
       &:hover {
         svg {
-          color: rgb(234, 236, 239);
-          fill: rgb(234, 236, 239);
+          color: ${({ theme }) => theme.matteWhiteColor};
+          fill: ${({ theme }) => theme.matteWhiteColor};
         }
       }
     }
   }
   .showPrice {
-    color: rgb(255, 255, 255);
+    color: ${({ theme }) => theme.text};
   }
   .subPrice {
-    color: rgb(255, 255, 255);
+    color: ${({ theme }) => theme.text};
   }
 `;
 export const ContentRight = styled.div`
@@ -106,12 +106,12 @@ export const ContentRight = styled.div`
     }
     .tickerItemLabel {
       margin-bottom: 2px;
-      color: #848e9c;
+      color: ${({ theme }) => theme.grayColor};
       line-height: 16px;
       font-weight: 400;
     }
     .tickerPriceText {
-      color: #ffffff;
+      color: ${({ theme }) => theme.text};
     }
   }
 `;

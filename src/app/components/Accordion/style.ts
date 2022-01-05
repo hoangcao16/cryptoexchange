@@ -5,10 +5,10 @@ export const Container = styled.div`
   margin: 0px;
   min-width: 0px;
   display: flex;
-  background-color: rgb(30, 32, 38);
+  background-color: ${({ theme }) => theme.backgroundAccordion};
   -webkit-box-pack: center;
   justify-content: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: ${({ theme }) => theme.borderGray};
 `;
 export const Div = styled.div`
   box-sizing: border-box;
@@ -42,9 +42,9 @@ export const Content = styled.div`
     padding-right: 24px;
     text-align: left;
     text-decoration: none;
-    color: rgb(132, 142, 156);
+    color: ${({ theme }) => theme.grayColor};
     &:hover {
-      color: ${({ theme }) => theme.colors?.secondary};
+      color: ${({ theme }) => theme.secondary};
     }
     .title {
       box-sizing: border-box;
@@ -68,7 +68,7 @@ export const StyledArrow = styled.div<{ Show: boolean }>`
   margin: 0px;
   min-width: 0px;
   display: flex;
-  color: rgb(132, 142, 156);
+  color: ${({ theme }) => theme.grayColor};
   flex-shrink: 0;
   align-self: flex-start;
   position: relative;
