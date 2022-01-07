@@ -11,7 +11,8 @@ import {
   MyTradesComponent,
 } from './style';
 import AuthMandatory from 'app/components/AuthMandatory';
-import MarketActivities from './components/MarketActivities';
+import numeral from 'numeral';
+
 const Trades = () => {
   const [active, setActive] = useState(true);
   return (
@@ -36,7 +37,6 @@ const Trades = () => {
         </div>
         {active ? <MarketTrades /> : <MyTrades />}
       </Container>
-      <MarketActivities />
     </>
   );
 };
@@ -51,7 +51,7 @@ const MarketTrades = () => {
             key={index}
             className="d-flex justify-content-between table-item"
           >
-            <Price>{item.price}</Price>
+            <Price>{numeral(item.price).format('0,0.00')}</Price>
             <Amount>{item.amount}</Amount>
             <Time>{item.time}</Time>
           </div>

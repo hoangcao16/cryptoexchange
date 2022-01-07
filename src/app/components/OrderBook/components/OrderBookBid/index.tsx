@@ -1,6 +1,8 @@
 import { data } from './data';
 import { Price, Amount, Total, OrderBookBidHeader, Table } from './style';
+import numeral from 'numeral';
 import { BsArrowUp } from 'react-icons/bs';
+
 const OrderBookBid = () => {
   return (
     <div>
@@ -20,9 +22,9 @@ const OrderBookBid = () => {
         {data.map((item, index) => {
           return (
             <div key={index} className="d-flex table-item">
-              <Price>{item.price}</Price>
+              <Price>{numeral(item.price).format('0,0.00')}</Price>
               <Amount>{item.amount}</Amount>
-              <Total>{item.total}</Total>
+              <Total>{numeral(item.total).format('0,0.00000')}</Total>
             </div>
           );
         })}

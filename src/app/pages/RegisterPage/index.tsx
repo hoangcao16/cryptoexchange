@@ -5,11 +5,8 @@ export function RegisterPage() {
   return (
     <App>
       <Helmet>
-        <title>Register Page</title>
-        <meta
-          name="description"
-          content="A Boilerplate application Register page"
-        />
+        <title>Register Page | Trading View</title>
+        <meta name="description" content="Register Trading View Web" />
       </Helmet>
       <RegisterContainer />
     </App>

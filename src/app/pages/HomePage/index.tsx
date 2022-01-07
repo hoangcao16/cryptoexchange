@@ -7,8 +7,8 @@ export function HomePage() {
   return (
     <>
       <Helmet>
-        <title>Home Page</title>
-        <meta name="description" content="A Boilerplate application homepage" />
+        <title>Home Page | Trading View</title>
+        <meta name="description" content="Home page Trading View Web" />
       </Helmet>
       <HomeContainer />
       <FooterSticky />

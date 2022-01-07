@@ -12,13 +12,23 @@ import {
   RefID,
   ErrorMessage,
 } from './style';
+import { useDispatch } from 'react-redux';
+import { useRegisterSlice } from '../../slice';
+import { useHistory } from 'react-router-dom';
+
 //declare type
 type UserSubmitFormSignup = {
   email: string;
   password: string;
+  referralId: string;
+  allowReceiveEmail: boolean;
+  allowShareData: boolean;
 };
 
-const AccountDetail = ({ stepchanger, emailregis }: any) => {
+const AccountDetail = ({ emailregis }: any) => {
+  const dispatch = useDispatch();
+  let history = useHistory();
+  const { actions } = useRegisterSlice();
   const [showPassword, setShowPassword] = useState(false);
   const [showRef, setShowRef] = useState(false);
   //Validate
@@ -44,6 +54,9 @@ const AccountDetail = ({ stepchanger, emailregis }: any) => {
         /(?=.*?[#?!@$%^&*-])/,
         'Password should contain at least one special character ( @, #, %, &, !, $, etc….).',
       ),
+    referralId: Yup.string(),
+    allowReceiveEmail: Yup.boolean(),
+    allowShareData: Yup.boolean(),
   });
   const {
     register,
@@ -53,9 +66,10 @@ const AccountDetail = ({ stepchanger, emailregis }: any) => {
     resolver: yupResolver(validation),
   });
   // submit form
-  const onSubmitSignup = (data: UserSubmitFormSignup) => {
-    emailregis(data.email);
-    stepchanger(2);
+  const onSubmitSignup = (Item: UserSubmitFormSignup) => {
+    emailregis(Item.email);
+    const defaultData = { ...Item, history: history };
+    dispatch(actions.registerRequest(defaultData));
   };
   return (
     <>
@@ -118,13 +132,17 @@ const AccountDetail = ({ stepchanger, emailregis }: any) => {
               </div>
               <div>
                 <div className={showRef ? 'd-block ref-input' : 'd-none'}>
-                  <input name="refID" autoComplete="off" />
+                  <input autoComplete="off" {...register('referralId')} />
                 </div>
               </div>
             </RefID>
             <StyledCheckbox>
               <label htmlFor="receiveEmail" className="labelView">
-                <input id="receiveEmail" type="checkbox" value="receiveEmail" />
+                <input
+                  id="receiveEmail"
+                  type="checkbox"
+                  {...register('allowReceiveEmail')}
+                />
                 <span className="checkmark"></span>I agree to receive email
                 updates from Binance
               </label>
@@ -134,8 +152,8 @@ const AccountDetail = ({ stepchanger, emailregis }: any) => {
                 <input
                   id="shareData"
                   type="checkbox"
-                  value="shareData"
                   defaultChecked={true}
+                  {...register('allowShareData')}
                 />
                 <span className="checkmark"></span>I agree to share data for
                 marketing purposes
