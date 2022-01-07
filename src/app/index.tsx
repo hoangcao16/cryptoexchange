@@ -29,16 +29,16 @@ export function App() {
     <BrowserRouter>
       <ThemeProvider theme={themeMode}>
         <Helmet
-          titleTemplate="Trading Platform"
-          defaultTitle="Trading Platform"
+          // titleTemplate="Trading Platform"
+          // defaultTitle="Trading Platform"
           htmlAttributes={{ lang: i18n.language }}
         >
-          <meta name="description" content="Trading Platform" />
+          <meta name="description" content="Trading View" />
         </Helmet>
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/login" component={LoginPage} />
-          <Route path="/register" component={RegisterPage} />
+          <Route path="/register" component={RegisterPage}></Route>
           <Route component={NotFoundPage} />
         </Switch>
         <GlobalStyles />

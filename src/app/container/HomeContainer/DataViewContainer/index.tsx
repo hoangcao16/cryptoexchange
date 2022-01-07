@@ -6,6 +6,8 @@ import Chart from 'app/components/Chart';
 import OrderFormContainer from 'app/container/OrderFormContainer';
 import Market from 'app/components/Market';
 import Trades from 'app/components/Trades';
+import MarketActivities from 'app/components/Trades/components/MarketActivities';
+
 const HomeContentContainer = () => {
   return (
     <Container>
@@ -27,6 +29,7 @@ const HomeContentContainer = () => {
         <StyledCol md={3} className="right-menu">
           <Market />
           <Trades />
+          <MarketActivities />
         </StyledCol>
       </StyledRow>
     </Container>

@@ -39,7 +39,7 @@ export const Steps = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-height: 264px;
+  min-height: 140px;
   .line {
     margin: 0px;
     min-width: 0px;

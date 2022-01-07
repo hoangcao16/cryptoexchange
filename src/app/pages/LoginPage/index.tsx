@@ -1,9 +1,14 @@
 import LoginContainer from 'app/container/LoginContainer';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet-async';
 
 export function LoginPage() {
   return (
     <App>
+      <Helmet>
+        <title>Signin Page | Trading View</title>
+        <meta name="description" content="Login Trading View Web" />
+      </Helmet>
       <LoginContainer />
     </App>
   );

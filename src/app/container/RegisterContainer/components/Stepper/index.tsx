@@ -35,7 +35,7 @@ const Stepper = (props: StepperProps) => {
               <div className="css-vdqias"></div>
             </Step>
           </div>
-          <div
+          {/* <div
             data-status={footStep > 2 ? 'process' : 'wait'}
             className="line"
           ></div>
@@ -66,7 +66,7 @@ const Stepper = (props: StepperProps) => {
               <div className="step-title">Phone Verification</div>
               <div className="css-vdqias"></div>
             </Step>
-          </div>
+          </div> */}
         </Steps>
       </div>
     </Container>
