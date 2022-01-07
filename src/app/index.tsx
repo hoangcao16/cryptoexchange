@@ -21,10 +21,64 @@ import { useTranslation } from 'react-i18next';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from 'theme/theme';
 import { useThemeContext } from 'app/components/common/themeContext';
+import { StyledSuccessToast, StyledToastContainer } from './style';
+import { Toast } from 'react-bootstrap';
+import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
+
+//get store redux
+import { useDispatch, useSelector } from 'react-redux';
+import { selectLogin } from 'app/container/LoginContainer/slice/selectors';
+import { useLoginSlice } from 'app/container/LoginContainer/slice';
+import { selectVerifyEmailRegister } from 'app/container/RegisterContainer/components/EmailVerification/slice/selectors';
+import { useVerifyEmailRegisterSlice } from 'app/container/RegisterContainer/components/EmailVerification/slice';
+
 export function App() {
+  const dispatch = useDispatch();
+  const { actions: actionsLogin } = useLoginSlice();
+  const { actions: actionsRegister } = useVerifyEmailRegisterSlice();
+  const dataLogin: any = useSelector(selectLogin);
+  const dataRegister: any = useSelector(selectVerifyEmailRegister);
   const { i18n } = useTranslation();
   const { theme } = useThemeContext();
   const themeMode = theme === 'light' ? lightTheme : darkTheme;
+  //success toast
+  const SuccessLoginToast = () => {
+    return (
+      <StyledSuccessToast
+        onClose={() => {
+          dispatch(actionsLogin.handleOpenFinishToast(false));
+        }}
+        show={dataLogin.openFinishToast}
+        delay={3000}
+        autohide
+      >
+        <Toast.Header>
+          <IoCheckmarkDoneCircleSharp className="icon-success" />
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>Login Successfully</Toast.Body>
+      </StyledSuccessToast>
+    );
+  };
+  const SuccessRegisterToast = () => {
+    return (
+      <StyledSuccessToast
+        onClose={() => {
+          dispatch(actionsRegister.handleOpenFinishToast(false));
+        }}
+        show={dataRegister.openFinishToast}
+        delay={3000}
+        autohide
+      >
+        <Toast.Header>
+          <IoCheckmarkDoneCircleSharp className="icon-success" />
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>Register Successfully</Toast.Body>
+      </StyledSuccessToast>
+    );
+  };
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={themeMode}>
@@ -41,6 +95,10 @@ export function App() {
           <Route path="/register" component={RegisterPage}></Route>
           <Route component={NotFoundPage} />
         </Switch>
+        <StyledToastContainer>
+          <SuccessLoginToast />
+          <SuccessRegisterToast />
+        </StyledToastContainer>
         <GlobalStyles />
       </ThemeProvider>
     </BrowserRouter>

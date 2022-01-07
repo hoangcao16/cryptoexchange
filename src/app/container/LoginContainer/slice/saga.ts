@@ -36,6 +36,7 @@ function* handleVerifyEmailLogin(action) {
     );
     if (response.data.rc === 0) {
       yield put(actions.verifyEmailLoginSuccess(response.data));
+      yield put(actions.handleOpenFinishToast(true));
       history.push('/');
     }
   } catch (err) {
