@@ -14,7 +14,6 @@ import {
 } from './style';
 import { useDispatch } from 'react-redux';
 import { useRegisterSlice } from '../../slice';
-import { useHistory } from 'react-router-dom';
 
 //declare type
 type UserSubmitFormSignup = {
@@ -27,7 +26,6 @@ type UserSubmitFormSignup = {
 
 const AccountDetail = ({ emailregis }: any) => {
   const dispatch = useDispatch();
-  let history = useHistory();
   const { actions } = useRegisterSlice();
   const [showPassword, setShowPassword] = useState(false);
   const [showRef, setShowRef] = useState(false);
@@ -65,11 +63,11 @@ const AccountDetail = ({ emailregis }: any) => {
   } = useForm<UserSubmitFormSignup>({
     resolver: yupResolver(validation),
   });
+
   // submit form
   const onSubmitSignup = (Item: UserSubmitFormSignup) => {
     emailregis(Item.email);
-    const defaultData = { ...Item, history: history };
-    dispatch(actions.registerRequest(defaultData));
+    dispatch(actions.registerRequest(Item));
   };
   return (
     <>

@@ -6,6 +6,10 @@ import { RegisterState } from './types';
 
 export const initialState: RegisterState = {
   data: {},
+  stepRegister: 1,
+  openSuccessToast: false,
+  openErrorToast: false,
+  messageError: '',
 };
 
 const slice = createSlice({
@@ -17,6 +21,18 @@ const slice = createSlice({
       state.data = action.payload;
     },
     registerFail(state, action) {},
+    handleStepRegister(state, action) {
+      state.stepRegister = action.payload;
+    },
+    handleOpenSuccessToast(state, action) {
+      state.openSuccessToast = action.payload;
+    },
+    handleOpenErrorToast(state, action) {
+      state.openErrorToast = action.payload;
+    },
+    handleMessageError(state, action) {
+      state.messageError = action.payload;
+    },
   },
 });
 

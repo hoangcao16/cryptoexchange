@@ -1,5 +1,11 @@
-import { Container, Row, Col, ToastContainer, Toast } from 'react-bootstrap';
-import { Main, LeftMenu, StyledToast } from './style';
+import { Container, Row, Col, Toast } from 'react-bootstrap';
+import {
+  Main,
+  LeftMenu,
+  StyledSuccessToast,
+  StyledErrorToast,
+  StyledToastContainer,
+} from './style';
 import Stepper from './components/Stepper';
 import AccountDetail from './components/AccountDetail';
 import EmailVerification from './components/EmailVerification';
@@ -7,17 +13,59 @@ import { useState, useEffect } from 'react';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import AuthNavbar from 'app/components/Navbar/authNav';
 import AuthFooter from 'app/components/AuthFooter';
-import { Switch, Route, useRouteMatch, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectRegister } from './slice/selectors';
+import { useRegisterSlice } from './slice';
+import { MdError } from 'react-icons/md';
 const RegisterContainer = () => {
-  let { path } = useRouteMatch();
-  let location = useLocation();
-  const [showToast, setShowToast] = useState(false);
+  const dispatch = useDispatch();
   const [emailRegister, setEmailRegister] = useState('');
+  const { actions } = useRegisterSlice();
+  const dataRegister: any = useSelector(selectRegister);
+
   useEffect(() => {
-    if (location.pathname === `${path}/step2`) {
-      setShowToast(true);
-    }
-  }, [location.pathname]);
+    return () => {
+      dispatch(actions.handleStepRegister(1));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  //success toast
+  const SuccessToast = () => {
+    return (
+      <StyledSuccessToast
+        onClose={() => {
+          dispatch(actions.handleOpenSuccessToast(false));
+        }}
+        show={dataRegister.openSuccessToast}
+        delay={3000}
+        autohide
+      >
+        <Toast.Header>
+          <IoCheckmarkDoneCircleSharp className="icon-success" />
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>Email code sent successfully</Toast.Body>
+      </StyledSuccessToast>
+    );
+  };
+  const ErrorToast = () => {
+    return (
+      <StyledErrorToast
+        onClose={() => {
+          dispatch(actions.handleOpenErrorToast(false));
+        }}
+        show={dataRegister.openErrorToast}
+        delay={3000}
+        autohide
+      >
+        <Toast.Header>
+          <MdError className="icon-error" />
+          <strong className="me-auto">Error</strong>
+        </Toast.Header>
+        <Toast.Body>{dataRegister.messageError}</Toast.Body>
+      </StyledErrorToast>
+    );
+  };
   return (
     <>
       <AuthNavbar />
@@ -25,36 +73,21 @@ const RegisterContainer = () => {
         <Container>
           <Row className="justify-content-md-center">
             <LeftMenu xs lg="4">
-              <Switch>
-                <Route exact path={path}>
-                  <AccountDetail emailregis={setEmailRegister} />
-                </Route>
-                <Route path={`${path}/step2`}>
-                  <EmailVerification email={emailRegister} />
-                </Route>
-              </Switch>
+              {dataRegister.stepRegister === 1 ? (
+                <AccountDetail emailregis={setEmailRegister} />
+              ) : dataRegister.stepRegister === 2 ? (
+                <EmailVerification email={emailRegister} />
+              ) : null}
             </LeftMenu>
             <Col xs lg="4">
-              <Stepper
-                footStep={location.pathname === `${path}/step2` ? 2 : 1}
-              />
+              <Stepper footStep={dataRegister.stepRegister} />
             </Col>
           </Row>
         </Container>
-        <ToastContainer position="top-end">
-          <StyledToast
-            onClose={() => setShowToast(false)}
-            show={showToast}
-            delay={3000}
-            autohide
-          >
-            <Toast.Header>
-              <IoCheckmarkDoneCircleSharp className="icon-success" />
-              <strong className="me-auto">Success</strong>
-            </Toast.Header>
-            <Toast.Body>Email code sent successfully</Toast.Body>
-          </StyledToast>
-        </ToastContainer>
+        <StyledToastContainer>
+          <SuccessToast />
+          <ErrorToast />
+        </StyledToastContainer>
       </Main>
       <AuthFooter />
     </>
