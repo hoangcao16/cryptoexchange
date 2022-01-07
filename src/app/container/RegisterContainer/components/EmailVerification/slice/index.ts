@@ -4,7 +4,9 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { registerVerifyEmailSaga } from './saga';
 import { VerifyEmailRegisterState } from './types';
 
-export const initialState: VerifyEmailRegisterState = {};
+export const initialState: VerifyEmailRegisterState = {
+  openFinishToast: false,
+};
 
 const slice = createSlice({
   name: 'verifyEmailRegister',
@@ -13,6 +15,9 @@ const slice = createSlice({
     registerVerifyEmailRequest(state, action: PayloadAction<any>) {},
     registerVerifyEmailSuccess(state, action) {},
     registerVerifyEmailFail(state, action) {},
+    handleOpenFinishToast(state, action) {
+      state.openFinishToast = action.payload;
+    },
   },
 });
 

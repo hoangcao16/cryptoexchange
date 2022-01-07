@@ -6,4 +6,5 @@ export interface LoginState {
   openSuccessToast: boolean;
   openErrorToast: boolean;
   messageError: string;
+  openFinishToast: boolean;
 }

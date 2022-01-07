@@ -8,6 +8,7 @@ function* handleRegisterVerifyEmail(action) {
     const response = yield call(authService.verifyEmailRegister, email, code);
     yield put(actions.registerVerifyEmailSuccess(response.data));
     if (response.data.rc === 0) {
+      yield put(actions.handleOpenFinishToast(true));
       history.push('/login');
     }
   } catch (err) {

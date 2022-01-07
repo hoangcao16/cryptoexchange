@@ -11,6 +11,7 @@ export const initialState: LoginState = {
   openSuccessToast: false,
   openErrorToast: false,
   messageError: '',
+  openFinishToast: false,
 };
 
 const slice = createSlice({
@@ -40,6 +41,9 @@ const slice = createSlice({
       state.data = action.payload;
     },
     verifyEmailLoginFail(state, action) {},
+    handleOpenFinishToast(state, action) {
+      state.openFinishToast = action.payload;
+    },
   },
 });
 
