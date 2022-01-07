@@ -48,6 +48,7 @@ const RegisterContainer = () => {
       </StyledSuccessToast>
     );
   };
+  //error toast
   const ErrorToast = () => {
     return (
       <StyledErrorToast

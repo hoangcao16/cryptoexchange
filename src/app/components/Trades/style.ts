@@ -9,6 +9,8 @@ export const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  max-height: 384px;
 `;
 export const Tabs = styled.div`
   padding: 0 0 8px 0;
@@ -53,9 +55,8 @@ export const Time = styled(Col)`
   text-align: right;
 `;
 export const Table = styled.div`
-  max-height: 300px;
-  overflow-y: scroll;
-  flex: 1;
+  height: 100%; /* relevant part */
+  overflow-y: auto;
   padding-right: 6px;
   .table-item {
     height: 20px;

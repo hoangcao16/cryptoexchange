@@ -5,7 +5,7 @@ import { authService } from 'services/authService';
 function* handleRegisterVerifyEmail(action) {
   const { email, code, history } = action.payload;
   try {
-    const response = yield call(authService.verifyEmail, email, code);
+    const response = yield call(authService.verifyEmailRegister, email, code);
     yield put(actions.registerVerifyEmailSuccess(response.data));
     if (response.data.rc === 0) {
       history.push('/login');

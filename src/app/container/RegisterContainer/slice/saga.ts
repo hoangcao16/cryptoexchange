@@ -18,7 +18,7 @@ function* handleRegister(action) {
       yield put(actions.registerSuccess(response.data));
       yield put(actions.handleStepRegister(2));
       yield put(actions.handleOpenSuccessToast(true));
-    } else if (response.data.rc === 1005) {
+    } else if (response.data.rc !== 0) {
       yield put(actions.handleOpenErrorToast(true));
       yield put(actions.handleMessageError(response.data.rd));
     }
