@@ -43,6 +43,9 @@ export const Input = styled.input`
   &:focus {
     border-color: ${({ theme }) => theme.secondary};
   }
+  &[data-status='error'] {
+    border-color: ${({ theme }) => theme.errorColor};
+  }
 `;
 export const ConfirmCodeButton = styled.button`
   margin: 40px 0px 0px;
@@ -79,4 +82,8 @@ export const ConfirmCodeButton = styled.button`
   @media screen and (min-width: 767px) {
     margin-top: 40px;
   }
+`;
+export const ErrorMessage = styled.div`
+  color: ${({ theme }) => theme.errorColor};
+  font-size: 12px;
 `;

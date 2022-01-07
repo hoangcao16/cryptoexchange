@@ -4,6 +4,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Form, EmailSection, PasswordSection, ErrorMessage } from './style';
 import ShowIcon from 'app/assets/img/showpassIcon';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { useDispatch } from 'react-redux';
+import { useLoginSlice } from '../../slice';
 
 //declare type
 type UserSubmitFormLogin = {
@@ -11,9 +14,11 @@ type UserSubmitFormLogin = {
   password: string;
 };
 
-const LoginByEmail = ({ stepChanger }) => {
+const LoginByEmail = ({ emailLogin }) => {
+  const dispatch = useDispatch();
+  const { actions } = useLoginSlice();
   const [showPassword, setShowPassword] = useState(false);
-
+  const [recaptcha_response, setRecaptcha] = useState('');
   //Validate
   const validation = Yup.object().shape({
     email: Yup.string().required('Invalid email').email('Invalid email'),
@@ -47,8 +52,12 @@ const LoginByEmail = ({ stepChanger }) => {
   });
   // submit form
   const onSubmitLogin = (data: UserSubmitFormLogin) => {
-    console.log(JSON.stringify(data, null, 2));
-    stepChanger(2);
+    emailLogin(data.email);
+    dispatch(actions.loginRequest({ ...data, recaptcha_response }));
+  };
+  // get value Captcha
+  const onChangeRecaptcha = value => {
+    setRecaptcha(value);
   };
   return (
     <Form onSubmit={handleSubmit(onSubmitLogin)}>
@@ -96,6 +105,10 @@ const LoginByEmail = ({ stepChanger }) => {
           <ErrorMessage>{errors.password?.message}</ErrorMessage>
         </PasswordSection>
       </div>
+      <ReCAPTCHA
+        sitekey="6Lfky_MdAAAAAGwcXnFNnyevydcnpT6-mKyOTNzC"
+        onChange={onChangeRecaptcha}
+      />
       <button id="submit" type="submit">
         Login
       </button>

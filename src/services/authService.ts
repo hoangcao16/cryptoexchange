@@ -14,7 +14,7 @@ export const authService = {
       },
     });
   },
-  verifyEmail(email, code) {
+  verifyEmailRegister(email, code) {
     return apiClient.request({
       method: 'POST',
       url: '/account-svc/users/auth/check-email-code',
@@ -24,7 +24,28 @@ export const authService = {
       },
     });
   },
-
+  login(email, password, recaptcha_response) {
+    return apiClient.request({
+      method: 'POST',
+      url: '/account-svc/users/auth/login',
+      data: {
+        email,
+        password,
+        recaptcha_response,
+      },
+    });
+  },
+  verifyEmailLogin(email, code, requestTime) {
+    return apiClient.request({
+      method: 'POST',
+      url: '/account-svc/users/auth/check-email-code-login',
+      data: {
+        email,
+        code,
+        requestTime,
+      },
+    });
+  },
   setAccessToken(token: string) {
     return localStorage.setItem('access_token', token);
   },
