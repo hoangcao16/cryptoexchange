@@ -44,7 +44,7 @@ export const Content = styled.div`
     text-decoration: none;
     color: ${({ theme }) => theme.grayColor};
     &:hover {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
     .title {
       box-sizing: border-box;

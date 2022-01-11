@@ -20,27 +20,22 @@ function* handleLogin(action) {
       yield put(actions.handleOpenErrorToast(true));
       yield put(actions.handleMessageError(response.data.rd));
     }
-  } catch (err) {
-    yield put(actions.loginFail(err));
+  } catch (err: any) {
+    yield put(actions.loginFail(err.response));
     console.log(err);
   }
 }
 function* handleVerifyEmailLogin(action) {
-  const { email, code, requestTime, history } = action.payload;
+  const { email, code } = action.payload;
   try {
-    const response = yield call(
-      authService.verifyEmailLogin,
-      email,
-      code,
-      requestTime,
-    );
+    const response = yield call(authService.verifyEmailLogin, email, code);
     if (response.data.rc === 0) {
       yield put(actions.verifyEmailLoginSuccess(response.data));
+      yield call(authService.setAccessToken, response.data.access_token);
       yield put(actions.handleOpenFinishToast(true));
-      history.push('/');
     }
-  } catch (err) {
-    yield put(actions.verifyEmailLoginFail(err));
+  } catch (err: any) {
+    yield put(actions.verifyEmailLoginFail(err.response));
     console.log(err);
   }
 }

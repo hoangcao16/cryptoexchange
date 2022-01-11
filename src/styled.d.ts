@@ -4,7 +4,7 @@ import 'styled-components';
 // and extend it
 declare module 'styled-components' {
   export interface DefaultTheme {
-    main?: string;
+    primary?: string;
     secondary?: string;
     borderRadius?: string;
     theme?: string;
@@ -29,7 +29,11 @@ declare module 'styled-components' {
     greenColor?: string;
     darkPinkColor?: string;
     backgroundFooter?: string;
+    backgroundWallet?: string;
     borderSectionFooter?: string;
     errorColor?: string;
+    whiteSmokeColor?: string;
+    slateGrayColor?: string;
+    graySmokeColor?: string;
   }
 }

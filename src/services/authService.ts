@@ -35,14 +35,13 @@ export const authService = {
       },
     });
   },
-  verifyEmailLogin(email, code, requestTime) {
+  verifyEmailLogin(email, code) {
     return apiClient.request({
       method: 'POST',
       url: '/account-svc/users/auth/check-email-code-login',
       data: {
         email,
         code,
-        requestTime,
       },
     });
   },

@@ -75,7 +75,7 @@ export const Header = styled.div`
   }
   .react-select__option--is-selected {
     background-color: transparent;
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
   }
   .react-select__option--is-focused {
     background-color: ${({ theme }) => theme.backgroundDropdown};
@@ -145,7 +145,7 @@ export const StyledDropdown = styled(Dropdown)`
           height: 0;
           width: 0;
           &:checked ~ .checkmark {
-            background-color: ${({ theme }) => theme.secondary};
+            background-color: ${({ theme }) => theme.primary};
           }
           :checked ~ .checkmark:after {
             display: block;

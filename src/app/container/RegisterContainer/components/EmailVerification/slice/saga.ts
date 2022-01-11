@@ -3,16 +3,15 @@ import { verifyEmailRegisterActions as actions } from '.';
 import { authService } from 'services/authService';
 
 function* handleRegisterVerifyEmail(action) {
-  const { email, code, history } = action.payload;
+  const { email, code } = action.payload;
   try {
     const response = yield call(authService.verifyEmailRegister, email, code);
     yield put(actions.registerVerifyEmailSuccess(response.data));
     if (response.data.rc === 0) {
       yield put(actions.handleOpenFinishToast(true));
-      history.push('/login');
     }
-  } catch (err) {
-    yield put(actions.registerVerifyEmailFail(err));
+  } catch (err: any) {
+    yield put(actions.registerVerifyEmailFail(err.response));
     console.log(err);
   }
 }

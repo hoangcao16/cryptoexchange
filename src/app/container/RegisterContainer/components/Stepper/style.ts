@@ -58,7 +58,7 @@ export const Steps = styled.div`
       background-color: inherit;
     }
     &[data-status='process'] {
-      background-color: ${({ theme }) => theme.secondary};
+      background-color: ${({ theme }) => theme.primary};
     }
   }
   .bn-steps-step {
@@ -77,7 +77,7 @@ export const Steps = styled.div`
     overflow: hidden;
     &[data-status='process'] {
       .step_marker_column {
-        background-color: ${({ theme }) => theme.secondary};
+        background-color: ${({ theme }) => theme.primary};
         color: ${({ theme }) => theme.backgroundFooter};
       }
       .step-title {

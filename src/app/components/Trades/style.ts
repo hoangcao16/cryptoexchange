@@ -23,7 +23,7 @@ export const Tabs = styled.div`
     font-size: 14px;
     font-weight: 400;
     &:hover {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
   }
   .btn-myTrades {
@@ -31,7 +31,7 @@ export const Tabs = styled.div`
   }
   .btn-active {
     font-weight: 600;
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
   }
 `;
 export const Price = styled(Col)`

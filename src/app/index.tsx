@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
 import { GlobalStyles } from 'styles/global-styles';
 
@@ -16,6 +16,7 @@ import { HomePage } from './pages/HomePage/Loadable';
 import { LoginPage } from './pages/LoginPage/Loadable';
 import { RegisterPage } from './pages/RegisterPage/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
+import { FiatSpotPage } from 'app/pages/FiatSpotPage/Loadable';
 import { useTranslation } from 'react-i18next';
 // Theme
 import { ThemeProvider } from 'styled-components';
@@ -89,12 +90,13 @@ export function App() {
         >
           <meta name="description" content="Trading View" />
         </Helmet>
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/register" component={RegisterPage}></Route>
-          <Route component={NotFoundPage} />
-        </Switch>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/wallet/fiat" element={<FiatSpotPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
         <StyledToastContainer>
           <SuccessLoginToast />
           <SuccessRegisterToast />

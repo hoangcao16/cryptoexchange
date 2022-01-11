@@ -5,13 +5,13 @@ export const StyledNavDropdown = styled(NavDropdown)`
   margin: 0 8px;
   &:hover {
     .dropdown-toggle:hover {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
   }
   .arrow-right {
     display: none;
     float: right;
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
   }
   .dropdown-menu {
     background-color: ${({ theme }) => theme.background};
