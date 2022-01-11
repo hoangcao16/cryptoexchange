@@ -87,12 +87,12 @@ export const StyledSlick = styled(Slider)`
     text-align: center;
     font-size: 12px;
     .slickItem-active {
-      color: ${({ theme }) => theme.colors?.secondary};
+      color: ${({ theme }) => theme.primary};
     }
     .slick-slide {
       cursor: pointer;
       &:hover {
-        color: ${({ theme }) => theme.colors?.secondary};
+        color: ${({ theme }) => theme.primary};
       }
     }
   }

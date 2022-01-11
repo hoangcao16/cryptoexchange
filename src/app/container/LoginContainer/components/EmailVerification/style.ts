@@ -41,7 +41,7 @@ export const Input = styled.input`
   width: 100%;
   &:hover,
   &:focus {
-    border-color: ${({ theme }) => theme.secondary};
+    border-color: ${({ theme }) => theme.primary};
   }
   &[data-status='error'] {
     border-color: ${({ theme }) => theme.errorColor};
@@ -74,7 +74,7 @@ export const ConfirmCodeButton = styled.button`
   min-height: 24px;
   border: none;
   background-image: none;
-  background-color: ${({ theme }) => theme.secondary};
+  background-color: ${({ theme }) => theme.primary};
   width: 100%;
   &:hover {
     opacity: 0.9;

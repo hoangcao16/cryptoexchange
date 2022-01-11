@@ -21,7 +21,7 @@ export const ExtendButton = styled.div<{ extend: boolean }>`
   cursor: pointer;
   transform: rotate(${({ extend }) => (extend ? '0deg' : '180deg')});
   &:hover {
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
   }
   .extend-icon {
     box-sizing: border-box;

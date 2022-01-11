@@ -20,7 +20,7 @@ export const AuthGroup = styled.div`
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
       border-color 0.15s ease-in-out;
     &:hover {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
   }
 `;
@@ -31,7 +31,7 @@ export const StyledNavBrand = styled(Navbar.Brand)`
   height: 24px;
   padding: 0;
   svg {
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
   }
 `;
 export const Tag = styled.span`
@@ -46,7 +46,7 @@ export const Tag = styled.span`
   padding-right: 4px;
   font-size: 12px;
   line-height: 16px;
-  background-color: ${({ theme }) => theme.secondary};
+  background-color: ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.background};
   &::before {
     content: '';
@@ -63,7 +63,7 @@ export const Tag = styled.span`
     border-bottom-style: solid;
     border-bottom-color: transparent;
     border-right-style: solid;
-    border-right-color: ${({ theme }) => theme.secondary};
+    border-right-color: ${({ theme }) => theme.primary};
   }
 `;
 export const RegisterButton = styled(Link)`
@@ -95,7 +95,7 @@ export const RegisterButton = styled(Link)`
   border: none;
   background-image: linear-gradient(
     rgb(248, 209, 47) 0%,
-    ${({ theme }) => theme.secondary} 100%
+    ${({ theme }) => theme.primary} 100%
   );
   font-weight: 400;
   margin-left: 12px;

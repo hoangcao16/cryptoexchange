@@ -53,11 +53,11 @@ export const StyledLink = styled(Link)`
   cursor: pointer;
   display: block;
   margin-top: 8px;
-  color: ${({ theme }) => theme.secondary};
+  color: ${({ theme }) => theme.primary};
   text-decoration: none;
   &:hover {
     text-decoration: underline;
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
     opacity: 0.9;
   }
 `;

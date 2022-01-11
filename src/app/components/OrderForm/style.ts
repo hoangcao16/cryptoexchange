@@ -18,17 +18,17 @@ export const Tabs = styled.div`
     color: ${({ theme }) => theme.grayColor};
     cursor: pointer;
     &:hover {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
   }
   .active {
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
   }
 `;
 export const StyledDropdown = styled.div`
   .active {
     .btn-primary {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
   }
   .btn-primary {
@@ -39,7 +39,7 @@ export const StyledDropdown = styled.div`
     color: ${({ theme }) => theme.grayColor};
     padding: 0px 0px 2px 0px;
     &:hover {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
     &:focus {
       box-shadow: none;

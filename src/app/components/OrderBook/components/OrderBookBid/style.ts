@@ -21,7 +21,7 @@ export const OrderBookBidHeader = styled.div`
     font-size: 12px;
     text-decoration: none;
     &:hover {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
   }
 `;

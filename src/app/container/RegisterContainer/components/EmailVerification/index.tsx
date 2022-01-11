@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Title,
   Description,
@@ -12,16 +12,19 @@ import {
   ErrorMessage,
 } from './style';
 import * as Yup from 'yup';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useVerifyEmailRegisterSlice } from './slice';
+import { useEffect } from 'react';
+import { selectVerifyEmailRegister } from './slice/selectors';
 //declare type
 type UserSubmitForm = {
   code: string;
 };
 const EmailVerification = ({ email }) => {
   const dispatch = useDispatch();
-  let history = useHistory();
+  let navigate = useNavigate();
   const { actions } = useVerifyEmailRegisterSlice();
+  const dataRegister: any = useSelector(selectVerifyEmailRegister);
   //Validate
   const validation = Yup.object().shape({
     code: Yup.string()
@@ -38,8 +41,14 @@ const EmailVerification = ({ email }) => {
   });
   // submit form
   const onSubmitVerify = (data: any) => {
-    dispatch(actions.registerVerifyEmailRequest({ ...data, email, history }));
+    dispatch(actions.registerVerifyEmailRequest({ ...data, email }));
   };
+  useEffect(() => {
+    if (dataRegister.openFinishToast) {
+      navigate('/login');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataRegister.openFinishToast]);
   return (
     <>
       <Title>Email Verification</Title>

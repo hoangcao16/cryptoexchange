@@ -22,8 +22,8 @@ function* handleRegister(action) {
       yield put(actions.handleOpenErrorToast(true));
       yield put(actions.handleMessageError(response.data.rd));
     }
-  } catch (err) {
-    yield put(actions.registerFail(err));
+  } catch (err: any) {
+    yield put(actions.registerFail(err.response));
     console.log(err);
   }
 }

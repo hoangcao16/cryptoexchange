@@ -86,12 +86,12 @@ export const Tabs = styled.div`
       margin-right: 16px;
     }
     &:hover {
-      color: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.primary};
     }
   }
   .active {
     font-weight: 600;
     border: none;
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
   }
 `;

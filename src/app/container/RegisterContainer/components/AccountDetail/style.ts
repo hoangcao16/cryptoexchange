@@ -17,7 +17,7 @@ export const EmailSection = styled.div`
     width: 100%;
     &:hover,
     &:focus-within {
-      border-color: ${({ theme }) => theme.secondary};
+      border-color: ${({ theme }) => theme.primary};
     }
     .bn-input-suffix {
       flex-shrink: 0;
@@ -45,7 +45,7 @@ export const PasswordSection = styled.div`
     width: 100%;
     &:hover,
     &:focus-within {
-      border-color: ${({ theme }) => theme.secondary};
+      border-color: ${({ theme }) => theme.primary};
     }
     .bn-input-suffix {
       flex-shrink: 0;
@@ -106,7 +106,7 @@ export const RefID = styled.div`
     background-color: transparent;
     &:hover,
     &:focus-within {
-      border-color: ${({ theme }) => theme.secondary};
+      border-color: ${({ theme }) => theme.primary};
     }
     width: 100%;
     .bn-input-suffix {
@@ -138,7 +138,7 @@ export const StyledCheckbox = styled.div`
     -ms-user-select: none;
     user-select: none;
     &:hover input ~ .checkmark {
-      border-color: ${({ theme }) => theme.secondary};
+      border-color: ${({ theme }) => theme.primary};
     }
     input {
       position: absolute;
@@ -147,7 +147,7 @@ export const StyledCheckbox = styled.div`
       height: 0;
       width: 0;
       &:checked ~ .checkmark {
-        background-color: ${({ theme }) => theme.secondary};
+        background-color: ${({ theme }) => theme.primary};
       }
       :checked ~ .checkmark:after {
         display: block;
@@ -207,7 +207,7 @@ export const Form = styled.form`
     min-height: 24px;
     border: none;
     background-image: none;
-    background-color: ${({ theme }) => theme.secondary};
+    background-color: ${({ theme }) => theme.primary};
     width: 100%;
     &:hover {
       opacity: 0.9;

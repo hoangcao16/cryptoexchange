@@ -13,9 +13,9 @@ export const StyledAlert = styled(Alert)`
     box-sizing: border-box;
     margin: 0 12px 0 0;
     min-width: 0px;
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.primary};
     font-size: 20px;
-    fill: ${({ theme }) => theme.secondary};
+    fill: ${({ theme }) => theme.primary};
     width: 1em;
     height: 1em;
   }
@@ -33,7 +33,7 @@ export const StyledAlert = styled(Alert)`
 `;
 export const StyledAlertLink = styled(Alert.Link)`
   margin-left: 8px;
-  color: ${({ theme }) => theme.secondary} !important;
+  color: ${({ theme }) => theme.primary} !important;
   text-decoration: none;
   cursor: pointer;
   font-weight: 400;

@@ -16,7 +16,7 @@ export const EmailSection = styled.div`
     width: 100%;
     &:hover,
     &:focus-within {
-      border-color: ${({ theme }) => theme.secondary};
+      border-color: ${({ theme }) => theme.primary};
     }
     .bn-input-suffix {
       flex-shrink: 0;
@@ -44,7 +44,7 @@ export const PasswordSection = styled.div`
     width: 100%;
     &:hover,
     &:focus-within {
-      border-color: ${({ theme }) => theme.secondary};
+      border-color: ${({ theme }) => theme.primary};
     }
     .bn-input-suffix {
       flex-shrink: 0;
@@ -97,7 +97,7 @@ export const Form = styled.form`
     min-height: 24px;
     border: none;
     background-image: none;
-    background-color: ${({ theme }) => theme.secondary};
+    background-color: ${({ theme }) => theme.primary};
     width: 100%;
     &:hover {
       opacity: 0.9;

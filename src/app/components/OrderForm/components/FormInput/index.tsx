@@ -88,7 +88,7 @@ export const Div = styled.div`
   height: 100%;
   font-size: 14px;
   &:hover {
-    border-color: ${({ theme }) => theme.secondary};
+    border-color: ${({ theme }) => theme.primary};
   }
   .inputtext {
     color: ${({ theme }) => theme.matteWhiteColor};

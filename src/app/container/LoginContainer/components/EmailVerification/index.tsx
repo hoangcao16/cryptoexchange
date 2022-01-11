@@ -9,17 +9,20 @@ import {
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLoginSlice } from '../../slice';
+import { useEffect } from 'react';
+import { selectLogin } from '../../slice/selectors';
 //declare type
 type UserSubmitForm = {
   code: string;
 };
 const EmailVerification = ({ email }) => {
   const dispatch = useDispatch();
-  let history = useHistory();
+  let navigate = useNavigate();
   const { actions } = useLoginSlice();
+  const dataLogin: any = useSelector(selectLogin);
   //Validate
   const validation = Yup.object().shape({
     code: Yup.string()
@@ -36,11 +39,19 @@ const EmailVerification = ({ email }) => {
   });
   // submit form
   const onSubmitVerify = (data: any) => {
-    const requestTime = new Date();
     dispatch(
-      actions.verifyEmailLoginRequest({ ...data, email, requestTime, history }),
+      actions.verifyEmailLoginRequest({
+        ...data,
+        email,
+      }),
     );
   };
+  useEffect(() => {
+    if (dataLogin.openFinishToast) {
+      navigate('/');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataLogin.openFinishToast]);
   return (
     <>
       <Title>Security verification</Title>
