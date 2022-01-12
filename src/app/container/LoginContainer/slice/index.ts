@@ -3,6 +3,7 @@ import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { loginSaga } from './saga';
 import { LoginState } from './types';
+import { authService } from 'services/authService';
 
 export const initialState: LoginState = {
   responseLogin: {},
@@ -39,6 +40,8 @@ const slice = createSlice({
     verifyEmailLoginRequest(state, action: PayloadAction<any>) {},
     verifyEmailLoginSuccess(state, action) {
       state.data = action.payload;
+      localStorage.setItem('access_token', action.payload.access_token);
+      authService.autoRefreshAccessToken();
     },
     verifyEmailLoginFail(state, action) {},
     handleOpenFinishToast(state, action) {

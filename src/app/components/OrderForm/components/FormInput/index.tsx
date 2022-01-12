@@ -4,11 +4,12 @@ interface ContainerProps {
   suffix: string;
   id: string;
   Change?: any;
+  regis?: any;
 }
 const FormInput = (props: ContainerProps) => {
-  const { prefix, suffix, id, Change } = props;
+  const { prefix, suffix, id, Change, regis } = props;
   return (
-    <Container>
+    <Container data-type={prefix === 'Total' ? 'totalForm' : ''}>
       <Div>
         <div className="input-prefix">
           <label htmlFor={id}>{prefix}</label>
@@ -20,6 +21,8 @@ const FormInput = (props: ContainerProps) => {
           min="0.0001"
           step="0.0001"
           onChange={Change}
+          {...regis}
+          required
         />
         <div className="input-suffix">
           <label htmlFor={id}>{suffix}</label>
@@ -72,6 +75,9 @@ export const Container = styled.div`
     input {
       cursor: default;
     }
+  }
+  &[data-type] {
+    margin: 0px 0 12px;
   }
 `;
 export const Div = styled.div`

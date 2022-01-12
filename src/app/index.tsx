@@ -35,7 +35,8 @@ import { useLoginSlice } from 'app/container/LoginContainer/slice';
 import { selectVerifyEmailRegister } from 'app/container/RegisterContainer/components/EmailVerification/slice/selectors';
 import { useVerifyEmailRegisterSlice } from 'app/container/RegisterContainer/components/EmailVerification/slice';
 import Fade from 'react-bootstrap/Fade';
-
+import { authService } from 'services/authService';
+import { useEffect } from 'react';
 export function App() {
   const dispatch = useDispatch();
   const { actions: actionsLogin } = useLoginSlice();
@@ -87,6 +88,10 @@ export function App() {
     );
   };
 
+  // check access token
+  useEffect(() => {
+    authService.autoRefreshAccessToken();
+  }, []);
   return (
     <BrowserRouter>
       <ThemeProvider theme={themeMode}>

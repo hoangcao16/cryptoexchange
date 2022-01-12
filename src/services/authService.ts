@@ -1,4 +1,6 @@
 import apiClient from 'services/apiService';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
+import moment from 'moment';
 
 export const authService = {
   register(email, password, referralId, allowReceiveEmail, allowShareData) {
@@ -52,7 +54,40 @@ export const authService = {
     return localStorage.getItem('access_token');
   },
   removeAccessToken() {
-    localStorage.removeItem('lastToken');
     return localStorage.removeItem('access_token');
+  },
+  getDecodedAccessToken() {
+    const token = this.getAccessToken();
+    if (token) {
+      try {
+        return jwtDecode<JwtPayload>(token);
+      } catch (err) {
+        return null;
+      }
+    }
+    return null;
+  },
+  autoRefreshAccessToken() {
+    const decodedAccessToken = this.getDecodedAccessToken();
+    if (!decodedAccessToken) {
+      return null;
+    }
+    const intervalId = setInterval(() => {
+      console.log('Check auto refresh token at', moment().toString());
+      // const decodedAccessToken = this.getDecodedAccessToken();
+
+      if (!decodedAccessToken) {
+        return null;
+      }
+      // Access token is expired, redirect to login page
+      if (
+        decodedAccessToken.exp &&
+        moment().isAfter(moment(decodedAccessToken.exp * 1000))
+      ) {
+        this.removeAccessToken();
+        clearInterval(intervalId);
+        window.location.href = '/?authTab=1';
+      }
+    }, 60000);
   },
 };
