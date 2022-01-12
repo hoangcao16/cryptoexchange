@@ -19,6 +19,8 @@ import AuthFooter from 'app/components/AuthFooter';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectLogin } from './slice/selectors';
 import { useLoginSlice } from './slice';
+import Fade from 'react-bootstrap/Fade';
+
 const LoginContainer = () => {
   const dispatch = useDispatch();
   const { actions } = useLoginSlice();
@@ -33,39 +35,43 @@ const LoginContainer = () => {
   //success toast
   const SuccessToast = () => {
     return (
-      <StyledSuccessToast
-        onClose={() => {
-          dispatch(actions.handleOpenSuccessToast(false));
-        }}
-        show={dataLogin.openSuccessToast}
-        delay={3000}
-        autohide
-      >
-        <Toast.Header>
-          <IoCheckmarkDoneCircleSharp className="icon-success" />
-          <strong className="me-auto">Success</strong>
-        </Toast.Header>
-        <Toast.Body>Email code sent successfully</Toast.Body>
-      </StyledSuccessToast>
+      <Fade in={dataLogin.openSuccessToast}>
+        <StyledSuccessToast
+          onClose={() => {
+            dispatch(actions.handleOpenSuccessToast(false));
+          }}
+          show={dataLogin.openSuccessToast}
+          delay={3000}
+          autohide
+        >
+          <Toast.Header>
+            <IoCheckmarkDoneCircleSharp className="icon-success" />
+            <strong className="me-auto">Success</strong>
+          </Toast.Header>
+          <Toast.Body>Email code sent successfully</Toast.Body>
+        </StyledSuccessToast>
+      </Fade>
     );
   };
   //error toast
   const ErrorToast = () => {
     return (
-      <StyledErrorToast
-        onClose={() => {
-          dispatch(actions.handleOpenErrorToast(false));
-        }}
-        show={dataLogin.openErrorToast}
-        delay={3000}
-        autohide
-      >
-        <Toast.Header>
-          <MdError className="icon-error" />
-          <strong className="me-auto">Error</strong>
-        </Toast.Header>
-        <Toast.Body>{dataLogin.messageError}</Toast.Body>
-      </StyledErrorToast>
+      <Fade in={dataLogin.openErrorToast}>
+        <StyledErrorToast
+          onClose={() => {
+            dispatch(actions.handleOpenErrorToast(false));
+          }}
+          show={dataLogin.openErrorToast}
+          delay={3000}
+          autohide
+        >
+          <Toast.Header>
+            <MdError className="icon-error" />
+            <strong className="me-auto">Error</strong>
+          </Toast.Header>
+          <Toast.Body>{dataLogin.messageError}</Toast.Body>
+        </StyledErrorToast>
+      </Fade>
     );
   };
   return (

@@ -63,6 +63,8 @@ export const StyledLink = styled(Link)`
 `;
 export const StyledSuccessToast = styled(Toast)`
   background-color: ${({ theme }) => theme.backgroundDropdown};
+  opacity: 1;
+  transition: all 1s ease-out;
   .toast-header {
     background-color: transparent;
     color: ${({ theme }) => theme.text};
@@ -81,6 +83,8 @@ export const StyledSuccessToast = styled(Toast)`
 `;
 export const StyledErrorToast = styled(Toast)`
   background-color: ${({ theme }) => theme.backgroundDropdown};
+  opacity: 1;
+  transition: all 1s ease-out;
   .toast-header {
     background-color: transparent;
     color: ${({ theme }) => theme.text};
@@ -98,6 +102,8 @@ export const StyledErrorToast = styled(Toast)`
   }
 `;
 export const StyledToastContainer = styled(ToastContainer)`
+  opacity: 1;
+  transition: all 1s ease-out;
   position: absolute;
   top: 1rem;
   right: 1rem;

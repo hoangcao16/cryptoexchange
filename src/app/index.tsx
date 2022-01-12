@@ -17,6 +17,8 @@ import { LoginPage } from './pages/LoginPage/Loadable';
 import { RegisterPage } from './pages/RegisterPage/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { FiatSpotPage } from 'app/pages/FiatSpotPage/Loadable';
+// import PrivateRoute from './components/common/privateRoute';
+import PublicRoute from './components/common/publicRoute';
 import { useTranslation } from 'react-i18next';
 // Theme
 import { ThemeProvider } from 'styled-components';
@@ -32,6 +34,7 @@ import { selectLogin } from 'app/container/LoginContainer/slice/selectors';
 import { useLoginSlice } from 'app/container/LoginContainer/slice';
 import { selectVerifyEmailRegister } from 'app/container/RegisterContainer/components/EmailVerification/slice/selectors';
 import { useVerifyEmailRegisterSlice } from 'app/container/RegisterContainer/components/EmailVerification/slice';
+import Fade from 'react-bootstrap/Fade';
 
 export function App() {
   const dispatch = useDispatch();
@@ -45,38 +48,42 @@ export function App() {
   //success toast
   const SuccessLoginToast = () => {
     return (
-      <StyledSuccessToast
-        onClose={() => {
-          dispatch(actionsLogin.handleOpenFinishToast(false));
-        }}
-        show={dataLogin.openFinishToast}
-        delay={3000}
-        autohide
-      >
-        <Toast.Header>
-          <IoCheckmarkDoneCircleSharp className="icon-success" />
-          <strong className="me-auto">Success</strong>
-        </Toast.Header>
-        <Toast.Body>Login Successfully</Toast.Body>
-      </StyledSuccessToast>
+      <Fade in={dataLogin.openFinishToast}>
+        <StyledSuccessToast
+          onClose={() => {
+            dispatch(actionsLogin.handleOpenFinishToast(false));
+          }}
+          show={dataLogin.openFinishToast}
+          delay={3000}
+          autohide
+        >
+          <Toast.Header>
+            <IoCheckmarkDoneCircleSharp className="icon-success" />
+            <strong className="me-auto">Success</strong>
+          </Toast.Header>
+          <Toast.Body>Login Successfully</Toast.Body>
+        </StyledSuccessToast>
+      </Fade>
     );
   };
   const SuccessRegisterToast = () => {
     return (
-      <StyledSuccessToast
-        onClose={() => {
-          dispatch(actionsRegister.handleOpenFinishToast(false));
-        }}
-        show={dataRegister.openFinishToast}
-        delay={3000}
-        autohide
-      >
-        <Toast.Header>
-          <IoCheckmarkDoneCircleSharp className="icon-success" />
-          <strong className="me-auto">Success</strong>
-        </Toast.Header>
-        <Toast.Body>Register Successfully</Toast.Body>
-      </StyledSuccessToast>
+      <Fade in={dataRegister.openFinishToast}>
+        <StyledSuccessToast
+          onClose={() => {
+            dispatch(actionsRegister.handleOpenFinishToast(false));
+          }}
+          show={dataRegister.openFinishToast}
+          delay={3000}
+          autohide
+        >
+          <Toast.Header>
+            <IoCheckmarkDoneCircleSharp className="icon-success" />
+            <strong className="me-auto">Success</strong>
+          </Toast.Header>
+          <Toast.Body>Register Successfully</Toast.Body>
+        </StyledSuccessToast>
+      </Fade>
     );
   };
 
@@ -92,8 +99,22 @@ export function App() {
         </Helmet>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
           <Route path="/wallet/fiat" element={<FiatSpotPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

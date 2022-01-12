@@ -44,6 +44,8 @@ export const LeftMenu = styled(Col)`
 `;
 export const StyledSuccessToast = styled(Toast)`
   background-color: ${({ theme }) => theme.backgroundDropdown};
+  opacity: 1;
+  transition: all 1s linear;
   .toast-header {
     background-color: transparent;
     color: ${({ theme }) => theme.text};
@@ -62,6 +64,8 @@ export const StyledSuccessToast = styled(Toast)`
 `;
 export const StyledErrorToast = styled(Toast)`
   background-color: ${({ theme }) => theme.backgroundDropdown};
+  opacity: 1;
+  transition: all 1s ease-out;
   .toast-header {
     background-color: transparent;
     color: ${({ theme }) => theme.text};
@@ -82,4 +86,6 @@ export const StyledToastContainer = styled(ToastContainer)`
   position: absolute;
   top: 1rem;
   right: 1rem;
+  opacity: 1;
+  transition: all 1s ease-out;
 `;

@@ -17,6 +17,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectRegister } from './slice/selectors';
 import { useRegisterSlice } from './slice';
 import { MdError } from 'react-icons/md';
+import Fade from 'react-bootstrap/Fade';
+
 const RegisterContainer = () => {
   const dispatch = useDispatch();
   const [emailRegister, setEmailRegister] = useState('');
@@ -32,20 +34,23 @@ const RegisterContainer = () => {
   //success toast
   const SuccessToast = () => {
     return (
-      <StyledSuccessToast
-        onClose={() => {
-          dispatch(actions.handleOpenSuccessToast(false));
-        }}
-        show={dataRegister.openSuccessToast}
-        delay={3000}
-        autohide
-      >
-        <Toast.Header>
-          <IoCheckmarkDoneCircleSharp className="icon-success" />
-          <strong className="me-auto">Success</strong>
-        </Toast.Header>
-        <Toast.Body>Email code sent successfully</Toast.Body>
-      </StyledSuccessToast>
+      <Fade in={dataRegister.openSuccessToast} timeout={2000}>
+        <StyledSuccessToast
+          onClose={() => {
+            dispatch(actions.handleOpenSuccessToast(false));
+          }}
+          transition={Fade}
+          show={dataRegister.openSuccessToast}
+          delay={3000}
+          autohide
+        >
+          <Toast.Header>
+            <IoCheckmarkDoneCircleSharp className="icon-success" />
+            <strong className="me-auto">Success</strong>
+          </Toast.Header>
+          <Toast.Body>Email code sent successfully</Toast.Body>
+        </StyledSuccessToast>
+      </Fade>
     );
   };
   //error toast
