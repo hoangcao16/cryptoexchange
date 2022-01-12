@@ -20,6 +20,7 @@ import { BsFillQuestionSquareFill } from 'react-icons/bs';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
+import { getToken } from 'app/components/common/common';
 
 const Title = () => {
   return (
@@ -53,12 +54,17 @@ const NavMenu = () => {
         </StyledNav>
         {/* </Navbar.Collapse> */}
         <StyledNav>
-          <AuthGroup>
-            <Link to="/login" className="linktoLogin-button">
-              Log In
-            </Link>
-            <RegisterButton to="/register">Register</RegisterButton>
-          </AuthGroup>
+          {!getToken() ? (
+            <AuthGroup>
+              <Link to="/login" className="linktoLogin-button">
+                Log In
+              </Link>
+              <RegisterButton to="/register">Register</RegisterButton>
+            </AuthGroup>
+          ) : (
+            ''
+          )}
+
           <Nav.Link href="#pricing">Downloads</Nav.Link>
           <Nav.Link href="#pricing" className="language">
             English

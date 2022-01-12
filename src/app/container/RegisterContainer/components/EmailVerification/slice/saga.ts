@@ -1,5 +1,6 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { verifyEmailRegisterActions as actions } from '.';
+import { registerActions as actionsRegis } from '../../../slice';
 import { authService } from 'services/authService';
 
 function* handleRegisterVerifyEmail(action) {
@@ -9,6 +10,9 @@ function* handleRegisterVerifyEmail(action) {
     yield put(actions.registerVerifyEmailSuccess(response.data));
     if (response.data.rc === 0) {
       yield put(actions.handleOpenFinishToast(true));
+    } else if (response.data.rc !== 0) {
+      yield put(actionsRegis.handleOpenErrorToast(true));
+      yield put(actionsRegis.handleMessageError(response.data.rd));
     }
   } catch (err: any) {
     yield put(actions.registerVerifyEmailFail(err.response));

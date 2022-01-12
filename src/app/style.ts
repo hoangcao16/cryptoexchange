@@ -3,6 +3,8 @@ import { Toast, ToastContainer } from 'react-bootstrap';
 
 export const StyledSuccessToast = styled(Toast)`
   background-color: ${({ theme }) => theme.backgroundDropdown};
+  opacity: 1;
+  transition: all 1s ease-out;
   .toast-header {
     background-color: transparent;
     color: ${({ theme }) => theme.text};
@@ -24,4 +26,6 @@ export const StyledToastContainer = styled(ToastContainer)`
   top: 1rem;
   right: 1rem;
   z-index: 9999;
+  opacity: 1;
+  transition: all 1s ease-out;
 `;
