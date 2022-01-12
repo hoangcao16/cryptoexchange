@@ -19,7 +19,10 @@ export const darkTheme: DefaultTheme = {
   earthBrownColor: 'rgb(59, 38, 1)',
   greenColor: 'rgb(116,167,0)',
   brightGreenColor: 'rgb(14, 203, 129)',
+  darkWashedGreen: 'rgb(46, 209, 145)',
   darkPinkColor: 'rgb(234, 0, 112)', //rgb(234, 0, 112)
+  redColor: 'rgb(246, 70, 93)',
+  middleWashedRose: 'rgb(255, 66, 101)',
   body: '#161a1e',
   text: '#ffffff',
   whiteSmokeColor: '#F5F5F5', //rgb(245, 245, 245)

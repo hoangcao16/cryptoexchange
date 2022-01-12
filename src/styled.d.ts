@@ -35,5 +35,8 @@ declare module 'styled-components' {
     whiteSmokeColor?: string;
     slateGrayColor?: string;
     graySmokeColor?: string;
+    redColor?: string;
+    darkWashedGreen?: string;
+    middleWashedRose?: string;
   }
 }
