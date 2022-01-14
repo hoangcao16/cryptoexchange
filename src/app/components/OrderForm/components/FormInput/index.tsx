@@ -7,7 +7,7 @@ interface ContainerProps {
   regis?: any;
 }
 const FormInput = (props: ContainerProps) => {
-  const { prefix, suffix, id, Change, regis } = props;
+  const { prefix, suffix, id, regis } = props;
   return (
     <Container data-type={prefix === 'Total' ? 'totalForm' : ''}>
       <Div>
@@ -20,7 +20,6 @@ const FormInput = (props: ContainerProps) => {
           type="number"
           min="0.0001"
           step="0.0001"
-          onChange={Change}
           {...regis}
           required
         />
@@ -33,7 +32,7 @@ const FormInput = (props: ContainerProps) => {
 };
 export default FormInput;
 export const FormInputDisabled = (props: ContainerProps) => {
-  const { prefix, suffix, id, Change } = props;
+  const { prefix, suffix, id } = props;
   return (
     <Container>
       <Div className="input-disabled">
@@ -46,7 +45,6 @@ export const FormInputDisabled = (props: ContainerProps) => {
           type="number"
           min="0.0001"
           step="0.0001"
-          onChange={Change}
           disabled
           placeholder="Market"
         />

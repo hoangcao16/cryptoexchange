@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from '../config';
-// import { authService } from './authService';
+import { authService } from './authService';
 
 const apiClient = axios.create(config.api);
 
@@ -10,7 +10,7 @@ apiClient.interceptors.request.use(
     const accessToken = localStorage.getItem('access_token');
 
     if (accessToken) {
-      config.headers.common.Authorization = `Bearer ${accessToken}`;
+      config.headers.common.Authorization = `${accessToken}`;
     }
 
     config.headers.common['Content-Type'] = 'application/json';
@@ -31,8 +31,7 @@ apiClient.interceptors.response.use(
   error => {
     // Clear local storage data and redirect to login page if request is 401 - Unauthorized
     if (error.response.status === 401) {
-      // authService.removeAccessToken();
-      // authService.removeRefreshToken();
+      authService.removeAccessToken();
       window.location.href = '/';
     }
 

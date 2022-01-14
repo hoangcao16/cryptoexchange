@@ -1,12 +1,12 @@
 import AuthMandatory from 'app/components/AuthMandatory';
 import { Container } from './style';
 import { getToken } from 'app/components/common/common';
-import TradeOrderList from './components/TradeOrderList';
+import OpenOrderList from './components/OpenOrderList';
 const Orders = () => {
   return (
     <>
       {getToken() ? (
-        <TradeOrderList />
+        <OpenOrderList />
       ) : (
         <Container>
           <AuthMandatory />
