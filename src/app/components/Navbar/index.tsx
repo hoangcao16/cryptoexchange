@@ -34,6 +34,7 @@ const Title = () => {
 const NavMenu = () => {
   const logout = () => {
     authService.removeAccessToken();
+    authService.removeUserId();
     window.location.href = '/';
   };
   return (

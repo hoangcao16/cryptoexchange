@@ -9,6 +9,7 @@ import { useSellspotlimitSlice } from './slice';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
+import { authService } from 'services/authService';
 
 //declare type
 type SubmitForm = {
@@ -21,6 +22,8 @@ const SellForm = ({ baseSymbol, quoteSymbol, wallet, type }: any) => {
   const dispatch = useDispatch();
   const [percent, setPercent] = useState(0);
   const { actions } = useSellspotlimitSlice();
+  const userId: any = JSON.parse(authService.getUserId() || '{}');
+
   //Validate
   const validation = Yup.object().shape({
     price: Yup.number().required('Invalid price'),
@@ -46,7 +49,7 @@ const SellForm = ({ baseSymbol, quoteSymbol, wallet, type }: any) => {
     dispatch(
       actions.sellspotlimitRequest({
         ...data,
-        userId: 1,
+        userId,
         percent,
         baseSymbol,
         quoteSymbol,

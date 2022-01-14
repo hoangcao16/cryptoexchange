@@ -74,4 +74,8 @@ export const SliderContainer = styled.div`
       background-color: ${({ theme }) => theme.darkBrightGrayColor};
     }
   }
+  .ant-slider-disabled .ant-slider-handle,
+  .ant-slider-disabled .ant-slider-dot {
+    border-color: ${({ theme }) => theme.darkBrightGrayColor} !important;
+  }
 `;
