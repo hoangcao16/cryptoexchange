@@ -9,6 +9,12 @@ import OcoForm from './components/OcoForm';
 const OrderForm = () => {
   const [title, setTitle] = useState('Stop-limit');
   const [tabActive, setTabActive] = useState(1);
+  const baseSymbol = 'BTC';
+  const quoteSymbol = 'USDT';
+  const baseAvlb = 0.0;
+  const quoteAvlb = 0.0;
+  const wallet = 'SPOT';
+  const type = 'LIMIT';
   return (
     <Container>
       <div className="d-flex">
@@ -73,7 +79,14 @@ const OrderForm = () => {
       </div>
       <div className="d-flex">
         {tabActive === 1 ? (
-          <LimitForm />
+          <LimitForm
+            baseSymbol={baseSymbol}
+            quoteSymbol={quoteSymbol}
+            baseAvlb={baseAvlb}
+            quoteAvlb={quoteAvlb}
+            wallet={wallet}
+            type={type}
+          />
         ) : tabActive === 2 ? (
           <MarketForm />
         ) : tabActive === 3 ? (

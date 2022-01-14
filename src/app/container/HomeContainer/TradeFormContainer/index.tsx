@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Funds from 'app/components/TradesInformation/Funds';
 import TradeHistory from 'app/components/TradesInformation/TradeHistory';
 import OrderHistory from 'app/components/TradesInformation/OrderHistory';
-import Orders from 'app/components/TradesInformation/Orders';
+import Orders from 'app/components/TradesInformation/OpenOrders';
 const TradeFormContainer = () => {
   const [active, setActive] = useState(1);
   return (

@@ -1,6 +1,6 @@
 import { Table } from 'antd';
 import styled from 'styled-components';
-const TradeOrderList = () => {
+const OpenOrderList = () => {
   const dataSource = [
     // {
     //   key: 1,
@@ -75,11 +75,10 @@ const TradeOrderList = () => {
     </Div>
   );
 };
-export default TradeOrderList;
+export default OpenOrderList;
 export const Div = styled.div`
   width: 100%;
   height: 100%;
-  min-height: 300px;
   margin-top: 8px;
   .ant-table {
     color: ${({ theme }) => theme.grayColor};
@@ -88,6 +87,7 @@ export const Div = styled.div`
     font-weight: 400;
     .ant-table-container {
       border: none;
+      min-height: 300px;
       .ant-table-thead > tr > th {
         position: relative;
         color: inherit;
