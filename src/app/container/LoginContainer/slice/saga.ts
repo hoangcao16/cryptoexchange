@@ -32,6 +32,7 @@ function* handleVerifyEmailLogin(action) {
     if (response.data.rc === 0) {
       yield put(actions.verifyEmailLoginSuccess(response.data));
       yield call(authService.setAccessToken, response.data.access_token);
+      yield call(authService.setUserId, response.data.userId);
       yield put(actions.handleOpenFinishToast(true));
     } else if (response.data.rc !== 0) {
       yield put(actions.handleOpenErrorToast(true));

@@ -56,6 +56,15 @@ export const authService = {
   removeAccessToken() {
     return localStorage.removeItem('access_token');
   },
+  setUserId(id: string) {
+    return localStorage.setItem('userId', id);
+  },
+  getUserId() {
+    return localStorage.getItem('userId');
+  },
+  removeUserId() {
+    return localStorage.removeItem('userId');
+  },
   getDecodedAccessToken() {
     const token = this.getAccessToken();
     if (token) {
@@ -85,6 +94,7 @@ export const authService = {
         moment().isAfter(moment(decodedAccessToken.exp * 1000))
       ) {
         this.removeAccessToken();
+        this.removeUserId();
         clearInterval(intervalId);
         window.location.href = '/?authTab=1';
       }
