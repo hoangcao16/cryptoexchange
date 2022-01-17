@@ -96,7 +96,7 @@ export const authService = {
         this.removeAccessToken();
         this.removeUserId();
         clearInterval(intervalId);
-        window.location.href = '/?authTab=1';
+        window.location.href = '/';
       }
     }, 60000);
   },
