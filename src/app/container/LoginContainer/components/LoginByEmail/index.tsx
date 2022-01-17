@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -16,6 +16,7 @@ type UserSubmitFormLogin = {
 
 const LoginByEmail = ({ emailLogin }) => {
   const dispatch = useDispatch();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { actions } = useLoginSlice();
   const [showPassword, setShowPassword] = useState(false);
   const [recaptcha_response, setRecaptcha] = useState('');
@@ -55,10 +56,7 @@ const LoginByEmail = ({ emailLogin }) => {
     emailLogin(data.email);
     dispatch(actions.loginRequest({ ...data, recaptcha_response }));
   };
-  // get value Captcha
-  const onChangeRecaptcha = value => {
-    setRecaptcha(value);
-  };
+
   return (
     <Form onSubmit={handleSubmit(onSubmitLogin)}>
       <div className="form-input">
@@ -107,7 +105,11 @@ const LoginByEmail = ({ emailLogin }) => {
       </div>
       <ReCAPTCHA
         sitekey="6Lfky_MdAAAAAGwcXnFNnyevydcnpT6-mKyOTNzC"
-        onChange={onChangeRecaptcha}
+        onChange={value => setRecaptcha(value)}
+        ref={recaptchaRef}
+        onExpired={() => {
+          recaptchaRef.current.reset(); // reset captcha
+        }}
       />
       <button id="submit" type="submit">
         Login
