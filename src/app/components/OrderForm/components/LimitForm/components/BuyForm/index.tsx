@@ -45,15 +45,16 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
   // submit form
   const onSubmitBuy = (data: any) => {
     console.log(data);
+    const ts = new Date().getTime();
     dispatch(
       actions.buyspotlimitRequest({
         ...data,
         userId,
-        percent,
         baseSymbol,
         quoteSymbol,
         wallet,
         type,
+        ts,
       }),
     );
   };
