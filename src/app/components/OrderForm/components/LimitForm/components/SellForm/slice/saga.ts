@@ -9,10 +9,10 @@ function* handlesellspotlimit(action) {
     quoteSymbol,
     price,
     amount,
-    percent,
     wallet,
     type,
     total,
+    ts,
   } = action.payload;
   try {
     const response = yield call(
@@ -24,8 +24,8 @@ function* handlesellspotlimit(action) {
       type,
       price,
       amount,
-      percent,
       total,
+      ts,
     );
     console.log('response', response);
     if (response.data.rc === 0) {

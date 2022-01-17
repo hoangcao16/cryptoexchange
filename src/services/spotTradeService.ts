@@ -9,8 +9,8 @@ export const spotTradeServices = {
     type,
     price,
     amount,
-    percent,
     total,
+    ts,
   ) {
     return apiClient.request({
       method: 'POST',
@@ -23,8 +23,8 @@ export const spotTradeServices = {
         type,
         price,
         amount,
-        percent,
         total,
+        ts,
       },
     });
   },
@@ -36,8 +36,8 @@ export const spotTradeServices = {
     type,
     price,
     amount,
-    percent,
     total,
+    ts,
   ) {
     return apiClient.request({
       method: 'POST',
@@ -50,8 +50,8 @@ export const spotTradeServices = {
         type,
         price,
         amount,
-        percent,
         total,
+        ts,
       },
     });
   },

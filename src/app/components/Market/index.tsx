@@ -15,12 +15,16 @@ import {
 } from './style';
 import { useGlobalContext } from '../common/context';
 import numeral from 'numeral';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 const Trades = () => {
   const [active, setActive] = useState('USDT');
   const { activeChangeColumnMarket } = useGlobalContext();
   const [data, setData]: any[] = useState([]);
+  var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
+    connectionTimeout: 5000,
+  });
   const MenuSlick = () => {
     const settings = {
       dots: false,
@@ -78,10 +82,10 @@ const Trades = () => {
       </StyledSlick>
     );
   };
+
   function connectSocket() {
-    var socket = new WebSocket(`${baseURL}/ws`);
     socket.onopen = () => {
-      console.log(`Websocket connected`);
+      console.log(`Websocket Market connected`);
       socket.send(
         JSON.stringify({
           event: 'new_joining',
@@ -91,9 +95,6 @@ const Trades = () => {
 
     socket.onclose = () => {
       console.log('WebSocket Closed!');
-      setTimeout(function () {
-        connectSocket();
-      }, 5000);
     };
 
     socket.onmessage = (message: any) => {
@@ -105,6 +106,9 @@ const Trades = () => {
   }
   useEffect(() => {
     connectSocket();
+    return () => {
+      socket.close();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

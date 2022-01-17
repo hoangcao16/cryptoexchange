@@ -1,17 +1,8 @@
 import Header from './components/Header';
 import { useState } from 'react';
-import { data } from './data';
-import {
-  Container,
-  Price,
-  Amount,
-  Time,
-  Tabs,
-  Table,
-  MyTradesComponent,
-} from './style';
-import AuthMandatory from 'app/components/AuthMandatory';
-import numeral from 'numeral';
+import { Container, Tabs } from './style';
+import MyTrades from './components/MyTrades';
+import MarketTrades from './components/MarketTrades';
 
 const Trades = () => {
   const [active, setActive] = useState(true);
@@ -41,29 +32,3 @@ const Trades = () => {
   );
 };
 export default Trades;
-
-const MarketTrades = () => {
-  return (
-    <Table>
-      {data.map((item, index) => {
-        return (
-          <div
-            key={index}
-            className="d-flex justify-content-between table-item"
-          >
-            <Price>{numeral(item.price).format('0,0.00')}</Price>
-            <Amount>{item.amount}</Amount>
-            <Time>{item.time}</Time>
-          </div>
-        );
-      })}
-    </Table>
-  );
-};
-const MyTrades = () => {
-  return (
-    <MyTradesComponent>
-      <AuthMandatory />
-    </MyTradesComponent>
-  );
-};

@@ -1,12 +1,13 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Form, EmailSection, PasswordSection, ErrorMessage } from './style';
 import ShowIcon from 'app/assets/img/showpassIcon';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLoginSlice } from '../../slice';
+import { selectLogin } from '../../slice/selectors';
 
 //declare type
 type UserSubmitFormLogin = {
@@ -18,6 +19,7 @@ const LoginByEmail = ({ emailLogin }) => {
   const dispatch = useDispatch();
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { actions } = useLoginSlice();
+  const dataLogin: any = useSelector(selectLogin);
   const [showPassword, setShowPassword] = useState(false);
   const [recaptcha_response, setRecaptcha] = useState('');
   //Validate
@@ -56,7 +58,11 @@ const LoginByEmail = ({ emailLogin }) => {
     emailLogin(data.email);
     dispatch(actions.loginRequest({ ...data, recaptcha_response }));
   };
-
+  useEffect(() => {
+    if (dataLogin.openErrorToast) {
+      recaptchaRef.current?.reset();
+    }
+  }, [dataLogin]);
   return (
     <Form onSubmit={handleSubmit(onSubmitLogin)}>
       <div className="form-input">
