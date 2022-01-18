@@ -1,6 +1,7 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { sellspotlimitActions as actions } from '.';
 import { spotTradeServices } from 'services/spotTradeService';
+import { toastActions } from 'app/components/Toast/slice';
 
 function* handlesellspotlimit(action) {
   const {
@@ -27,9 +28,21 @@ function* handlesellspotlimit(action) {
       total,
       ts,
     );
-    console.log('response', response);
     if (response.data.rc === 0) {
       yield put(actions.sellspotlimitSuccess(response.data));
+      yield put(
+        toastActions.openSuccessToast({
+          title: 'Success',
+          message: 'Successfully sell',
+        }),
+      );
+    } else if (response.data.rc !== 0) {
+      yield put(
+        toastActions.openErrorToast({
+          title: 'Error',
+          message: 'Sell failed',
+        }),
+      );
     }
   } catch (err: any) {
     yield put(actions.sellspotlimitFail(err.response));

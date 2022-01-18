@@ -1,2 +1,4 @@
 /* --- STATE --- */
-export interface SellspotlimitState {}
+export interface SellspotlimitState {
+  data: Object;
+}

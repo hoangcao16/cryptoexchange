@@ -1,6 +1,7 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { registerActions as actions } from '.';
 import { authService } from 'services/authService';
+import { toastActions } from 'app/components/Toast/slice';
 
 function* handleRegister(action) {
   const { email, password, referralId, allowReceiveEmail, allowShareData } =
@@ -17,10 +18,19 @@ function* handleRegister(action) {
     if (response.data.rc === 0) {
       yield put(actions.registerSuccess(response.data));
       yield put(actions.handleStepRegister(2));
-      yield put(actions.handleOpenSuccessToast(true));
+      yield put(
+        toastActions.openSuccessToast({
+          title: 'Success',
+          message: 'Email code sent successfully',
+        }),
+      );
     } else if (response.data.rc !== 0) {
-      yield put(actions.handleOpenErrorToast(true));
-      yield put(actions.handleMessageError(response.data.rd));
+      yield put(
+        toastActions.openErrorToast({
+          title: 'Error',
+          message: response.data.rd,
+        }),
+      );
     }
   } catch (err: any) {
     yield put(actions.registerFail(err.response));

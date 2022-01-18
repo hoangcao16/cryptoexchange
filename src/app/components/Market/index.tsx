@@ -15,7 +15,6 @@ import {
 } from './style';
 import { useGlobalContext } from '../common/context';
 import numeral from 'numeral';
-import ReconnectingWebSocket from 'reconnecting-websocket';
 
 const Trades = ({ data }) => {
   const [active, setActive] = useState('USDT');

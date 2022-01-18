@@ -45,7 +45,6 @@ const SellForm = ({ baseSymbol, quoteSymbol, wallet, type }: any) => {
   };
   // submit form
   const onSubmitSell = (data: any) => {
-    console.log(data);
     const ts = new Date().getTime();
     dispatch(
       actions.sellspotlimitRequest({
