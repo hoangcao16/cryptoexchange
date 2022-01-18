@@ -4,7 +4,7 @@ import { Container, Tabs } from './style';
 import MyTrades from './components/MyTrades';
 import MarketTrades from './components/MarketTrades';
 
-const Trades = () => {
+const Trades = ({ data }) => {
   const [active, setActive] = useState(true);
   return (
     <>
@@ -26,7 +26,7 @@ const Trades = () => {
           </Tabs>
           {active ? <Header /> : ''}
         </div>
-        {active ? <MarketTrades /> : <MyTrades />}
+        {active ? <MarketTrades data={data} /> : <MyTrades />}
       </Container>
     </>
   );

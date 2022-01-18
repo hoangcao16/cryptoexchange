@@ -7,8 +7,48 @@ import OrderFormContainer from 'app/container/OrderFormContainer';
 import Market from 'app/components/Market';
 import Trades from 'app/components/Trades';
 import MarketActivities from 'app/components/Trades/components/MarketActivities';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import { useEffect, useState } from 'react';
+const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const HomeContentContainer = () => {
+  const [dataMarket, setDataMarket]: any[] = useState([]);
+  const [dataTrades, setDataTrades]: any[] = useState([]);
+
+  function connectSocket() {
+    var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
+      connectionTimeout: 5000,
+    });
+    socket.onopen = () => {
+      console.log(`Websocket Market connected`);
+      socket.send(
+        JSON.stringify({
+          event: 'new_joining',
+        }),
+      );
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket Closed!');
+    };
+
+    socket.onmessage = (message: any) => {
+      const Message = JSON.parse(message.data);
+      if (
+        Message.Key === 'Robinhood::RecentTrade' &&
+        Message.Value.marker_id !== Message.Value.taker_id
+      ) {
+        setDataTrades((prevState: any) => [Message.Value, ...prevState]);
+      }
+      if (Message.Key === 'RobinhoodPair') {
+        setDataMarket(Message);
+      }
+    };
+  }
+  useEffect(() => {
+    connectSocket();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Container>
       <StyledRow>
@@ -27,8 +67,8 @@ const HomeContentContainer = () => {
           </StyledRow>
         </Col>
         <StyledCol md={3} className="right-menu">
-          <Market />
-          <Trades />
+          <Market data={dataMarket} />
+          <Trades data={dataTrades} />
           <MarketActivities />
         </StyledCol>
       </StyledRow>
