@@ -2,7 +2,7 @@ import { ReactComponent as SearchIcon } from 'app/assets/img/search.svg';
 import { ReactComponent as StarIcon } from 'app/assets/img/star.svg';
 import { SampleNextArrow, SamplePrevArrow } from './components/arrow';
 import Header from './components/Header';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // import { data } from './data';
 import {
   Container,
@@ -17,14 +17,10 @@ import { useGlobalContext } from '../common/context';
 import numeral from 'numeral';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
-const Trades = () => {
+const Trades = ({ data }) => {
   const [active, setActive] = useState('USDT');
   const { activeChangeColumnMarket } = useGlobalContext();
-  const [data, setData]: any[] = useState([]);
-  var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
-    connectionTimeout: 5000,
-  });
+
   const MenuSlick = () => {
     const settings = {
       dots: false,
@@ -82,35 +78,6 @@ const Trades = () => {
       </StyledSlick>
     );
   };
-
-  function connectSocket() {
-    socket.onopen = () => {
-      console.log(`Websocket Market connected`);
-      socket.send(
-        JSON.stringify({
-          event: 'new_joining',
-        }),
-      );
-    };
-
-    socket.onclose = () => {
-      console.log('WebSocket Closed!');
-    };
-
-    socket.onmessage = (message: any) => {
-      const Message = JSON.parse(message.data);
-      if (Message.Key) {
-        setData(Message);
-      }
-    };
-  }
-  useEffect(() => {
-    connectSocket();
-    return () => {
-      socket.close();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Container>

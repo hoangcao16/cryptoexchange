@@ -1,40 +1,7 @@
-// import numeral from 'numeral';
+import numeral from 'numeral';
 import { Price, Amount, Time, Table } from './style';
-// import { data } from '../../data';
-import { useEffect, useState } from 'react';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-
-const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
-const MarketTrades = () => {
-  const [data, setData]: any[] = useState([]);
-  var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
-    connectionTimeout: 5000,
-  });
-  function connectSocket() {
-    socket.onopen = () => {
-      console.log(`Websocket Market Trades connected`);
-      socket.send(
-        JSON.stringify({
-          event: 'new_joining',
-        }),
-      );
-    };
-    socket.onclose = () => {
-      console.log('WebSocket Closed!');
-    };
-    socket.onmessage = (message: any) => {
-      const Message = JSON.parse(message.data);
-      setData((prevData: any) => [...prevData, Message]);
-    };
-  }
-  useEffect(() => {
-    connectSocket();
-    return () => {
-      socket.close();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+import moment from 'moment';
+const MarketTrades = ({ data }: any) => {
   return (
     <Table>
       {data.map((item, index) => {
@@ -43,9 +10,9 @@ const MarketTrades = () => {
             key={index}
             className="d-flex justify-content-between table-item"
           >
-            <Price>{item.price}</Price>
-            <Amount>{item.amount}</Amount>
-            <Time>{item.time}</Time>
+            <Price>{numeral(item.price).format('0,0.00')}</Price>
+            <Amount>{numeral(item.amount).format('0,0.00000')}</Amount>
+            <Time>{moment(item.ts * 1000).format('HH:mm:ss')}</Time>
           </div>
         );
       })}
