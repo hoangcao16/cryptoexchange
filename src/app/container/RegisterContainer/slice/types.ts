@@ -8,7 +8,4 @@ interface dataProps {
 export interface RegisterState {
   data: dataProps;
   stepRegister: number;
-  openSuccessToast: boolean;
-  openErrorToast: boolean;
-  messageError: string;
 }

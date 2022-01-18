@@ -17,76 +17,28 @@ import { LoginPage } from './pages/LoginPage/Loadable';
 import { RegisterPage } from './pages/RegisterPage/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { FiatSpotPage } from 'app/pages/FiatSpotPage/Loadable';
-// import PrivateRoute from './components/common/privateRoute';
 import PublicRoute from './components/common/publicRoute';
 import { useTranslation } from 'react-i18next';
 // Theme
 import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from 'theme/theme';
 import { useThemeContext } from 'app/components/common/themeContext';
-import { StyledSuccessToast, StyledToastContainer } from './style';
-import { Toast } from 'react-bootstrap';
-import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
+import { StyledToastContainer } from './style';
+import { SuccessToast, ErrorToast } from 'app/components/Toast';
 
 //get store redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLogin } from 'app/container/LoginContainer/slice/selectors';
-import { useLoginSlice } from 'app/container/LoginContainer/slice';
-import { selectVerifyEmailRegister } from 'app/container/RegisterContainer/components/EmailVerification/slice/selectors';
-import { useVerifyEmailRegisterSlice } from 'app/container/RegisterContainer/components/EmailVerification/slice';
-import Fade from 'react-bootstrap/Fade';
+import { selectToast } from 'app/components/Toast/slice/selectors';
+import { useToastSlice } from 'app/components/Toast/slice';
 import { authService } from 'services/authService';
 import { useEffect } from 'react';
 export function App() {
   const dispatch = useDispatch();
-  const { actions: actionsLogin } = useLoginSlice();
-  const { actions: actionsRegister } = useVerifyEmailRegisterSlice();
-  const dataLogin: any = useSelector(selectLogin);
-  const dataRegister: any = useSelector(selectVerifyEmailRegister);
+  const { actions: toastActions } = useToastSlice();
+  const dataToast: any = useSelector(selectToast);
   const { i18n } = useTranslation();
   const { theme } = useThemeContext();
   const themeMode = theme === 'light' ? lightTheme : darkTheme;
-  //success toast
-  const SuccessLoginToast = () => {
-    return (
-      <Fade in={dataLogin.openFinishToast}>
-        <StyledSuccessToast
-          onClose={() => {
-            dispatch(actionsLogin.handleOpenFinishToast(false));
-          }}
-          show={dataLogin.openFinishToast}
-          delay={3000}
-          autohide
-        >
-          <Toast.Header>
-            <IoCheckmarkDoneCircleSharp className="icon-success" />
-            <strong className="me-auto">Success</strong>
-          </Toast.Header>
-          <Toast.Body>Login Successfully</Toast.Body>
-        </StyledSuccessToast>
-      </Fade>
-    );
-  };
-  const SuccessRegisterToast = () => {
-    return (
-      <Fade in={dataRegister.openFinishToast}>
-        <StyledSuccessToast
-          onClose={() => {
-            dispatch(actionsRegister.handleOpenFinishToast(false));
-          }}
-          show={dataRegister.openFinishToast}
-          delay={3000}
-          autohide
-        >
-          <Toast.Header>
-            <IoCheckmarkDoneCircleSharp className="icon-success" />
-            <strong className="me-auto">Success</strong>
-          </Toast.Header>
-          <Toast.Body>Register Successfully</Toast.Body>
-        </StyledSuccessToast>
-      </Fade>
-    );
-  };
 
   // check access token
   useEffect(() => {
@@ -95,11 +47,7 @@ export function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={themeMode}>
-        <Helmet
-          // titleTemplate="Trading Platform"
-          // defaultTitle="Trading Platform"
-          htmlAttributes={{ lang: i18n.language }}
-        >
+        <Helmet htmlAttributes={{ lang: i18n.language }}>
           <meta name="description" content="Trading View" />
         </Helmet>
         <Routes>
@@ -124,8 +72,18 @@ export function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <StyledToastContainer>
-          <SuccessLoginToast />
-          <SuccessRegisterToast />
+          <SuccessToast
+            close={() => dispatch(toastActions.closeSuccessToast())}
+            show={dataToast.openSuccessToast}
+            title={dataToast.titleSuccessToast}
+            message={dataToast.messageSuccessToast}
+          />
+          <ErrorToast
+            close={() => dispatch(toastActions.closeErrorToast())}
+            show={dataToast.openErrorToast}
+            title={dataToast.titleErrorToast}
+            message={dataToast.messageErrorToast}
+          />
         </StyledToastContainer>
         <GlobalStyles />
       </ThemeProvider>

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Col, Toast, ToastContainer } from 'react-bootstrap';
+import { Col, ToastContainer } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 export const Main = styled.main`
   margin: 0;
@@ -59,46 +59,6 @@ export const StyledLink = styled(Link)`
     text-decoration: underline;
     color: ${({ theme }) => theme.primary};
     opacity: 0.9;
-  }
-`;
-export const StyledSuccessToast = styled(Toast)`
-  background-color: ${({ theme }) => theme.backgroundDropdown};
-  opacity: 1;
-  transition: all 1s ease-out;
-  .toast-header {
-    background-color: transparent;
-    color: ${({ theme }) => theme.text};
-    border-bottom: none;
-    padding-left: 2rem;
-    .icon-success {
-      font-size: 20px;
-      color: ${({ theme }) => theme.brightGreenColor};
-      margin-right: 6px;
-    }
-  }
-  .toast-body {
-    color: ${({ theme }) => theme.grayColor};
-    padding-left: 2rem;
-  }
-`;
-export const StyledErrorToast = styled(Toast)`
-  background-color: ${({ theme }) => theme.backgroundDropdown};
-  opacity: 1;
-  transition: all 1s ease-out;
-  .toast-header {
-    background-color: transparent;
-    color: ${({ theme }) => theme.text};
-    border-bottom: none;
-    padding-left: 2rem;
-    .icon-error {
-      font-size: 20px;
-      color: ${({ theme }) => theme.errorColor};
-      margin-right: 6px;
-    }
-  }
-  .toast-body {
-    color: ${({ theme }) => theme.grayColor};
-    padding-left: 2rem;
   }
 `;
 export const StyledToastContainer = styled(ToastContainer)`

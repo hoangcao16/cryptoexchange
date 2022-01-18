@@ -9,10 +9,7 @@ export const initialState: LoginState = {
   responseLogin: {},
   data: {},
   stepLogin: 1,
-  openSuccessToast: false,
-  openErrorToast: false,
-  messageError: '',
-  openFinishToast: false,
+  reloadrecaptcha: false,
 };
 
 const slice = createSlice({
@@ -23,18 +20,12 @@ const slice = createSlice({
     loginSuccess(state, action) {
       state.responseLogin = action.payload;
     },
-    loginFail(state, action) {},
+    loginFail(state, action) {
+      state.reloadrecaptcha = true;
+      state.responseLogin = action.payload;
+    },
     handleStepLogin(state, action) {
       state.stepLogin = action.payload;
-    },
-    handleOpenSuccessToast(state, action) {
-      state.openSuccessToast = action.payload;
-    },
-    handleOpenErrorToast(state, action) {
-      state.openErrorToast = action.payload;
-    },
-    handleMessageError(state, action) {
-      state.messageError = action.payload;
     },
     // VerifyEmailLogin
     verifyEmailLoginRequest(state, action: PayloadAction<any>) {},
@@ -44,9 +35,6 @@ const slice = createSlice({
       authService.autoRefreshAccessToken();
     },
     verifyEmailLoginFail(state, action) {},
-    handleOpenFinishToast(state, action) {
-      state.openFinishToast = action.payload;
-    },
   },
 });
 

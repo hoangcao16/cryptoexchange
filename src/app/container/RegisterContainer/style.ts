@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Col, Toast, ToastContainer } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 export const Main = styled.main`
   margin: 0;
   min-width: 0;
@@ -41,51 +41,4 @@ export const LeftMenu = styled(Col)`
       margin-bottom: 24px;
     }
   }
-`;
-export const StyledSuccessToast = styled(Toast)`
-  background-color: ${({ theme }) => theme.backgroundDropdown};
-  opacity: 1;
-  transition: all 1s linear;
-  .toast-header {
-    background-color: transparent;
-    color: ${({ theme }) => theme.text};
-    border-bottom: none;
-    padding-left: 2rem;
-    .icon-success {
-      font-size: 20px;
-      color: ${({ theme }) => theme.brightGreenColor};
-      margin-right: 6px;
-    }
-  }
-  .toast-body {
-    color: ${({ theme }) => theme.grayColor};
-    padding-left: 2rem;
-  }
-`;
-export const StyledErrorToast = styled(Toast)`
-  background-color: ${({ theme }) => theme.backgroundDropdown};
-  opacity: 1;
-  transition: all 1s ease-out;
-  .toast-header {
-    background-color: transparent;
-    color: ${({ theme }) => theme.text};
-    border-bottom: none;
-    padding-left: 2rem;
-    .icon-error {
-      font-size: 20px;
-      color: ${({ theme }) => theme.errorColor};
-      margin-right: 6px;
-    }
-  }
-  .toast-body {
-    color: ${({ theme }) => theme.grayColor};
-    padding-left: 2rem;
-  }
-`;
-export const StyledToastContainer = styled(ToastContainer)`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  opacity: 1;
-  transition: all 1s ease-out;
 `;

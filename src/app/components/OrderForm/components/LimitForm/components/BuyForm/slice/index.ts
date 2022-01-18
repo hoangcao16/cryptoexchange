@@ -4,14 +4,18 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { buyspotlimitSaga } from './saga';
 import { BuyspotlimitState } from './types';
 
-export const initialState: BuyspotlimitState = {};
+export const initialState: BuyspotlimitState = {
+  data: {},
+};
 
 const slice = createSlice({
   name: 'buyspotlimit',
   initialState,
   reducers: {
     buyspotlimitRequest(state, action: PayloadAction<any>) {},
-    buyspotlimitSuccess(state, action) {},
+    buyspotlimitSuccess(state, action) {
+      state.data = action.payload;
+    },
     buyspotlimitFail(state, action) {},
   },
 });

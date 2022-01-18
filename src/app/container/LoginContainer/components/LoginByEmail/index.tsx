@@ -59,7 +59,7 @@ const LoginByEmail = ({ emailLogin }) => {
     dispatch(actions.loginRequest({ ...data, recaptcha_response }));
   };
   useEffect(() => {
-    if (dataLogin.openErrorToast) {
+    if (dataLogin.reloadrecaptcha) {
       recaptchaRef.current?.reset();
     }
   }, [dataLogin]);

@@ -1,4 +1,2 @@
 /* --- STATE --- */
-export interface VerifyEmailRegisterState {
-  openFinishToast: boolean;
-}
+export interface VerifyEmailRegisterState {}
