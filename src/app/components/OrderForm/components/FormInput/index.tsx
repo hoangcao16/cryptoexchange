@@ -5,29 +5,30 @@ interface ContainerProps {
   id: string;
   Change?: any;
   regis?: any;
+  error?: string;
 }
 const FormInput = (props: ContainerProps) => {
-  const { prefix, suffix, id, regis } = props;
+  const { prefix, suffix, id, regis, error } = props;
   return (
-    <Container data-type={prefix === 'Total' ? 'totalForm' : ''}>
-      <Div>
-        <div className="input-prefix">
-          <label htmlFor={id}>{prefix}</label>
-        </div>
-        <input
-          id={id}
-          className="inputtext"
-          type="number"
-          min="0.0001"
-          step="0.0001"
-          {...regis}
-          required
-        />
-        <div className="input-suffix">
-          <label htmlFor={id}>{suffix}</label>
-        </div>
-      </Div>
-    </Container>
+    <>
+      <Container data-type={prefix === 'Total' ? 'totalForm' : 'normal'}>
+        <Div data-status={error ? 'error' : 'normal'}>
+          <div className="input-prefix">
+            <label htmlFor={id}>{prefix}</label>
+          </div>
+          <input
+            id={id}
+            className="inputtext"
+            type="number"
+            step="0.0001"
+            {...regis}
+          />
+          <div className="input-suffix">
+            <label htmlFor={id}>{suffix}</label>
+          </div>
+        </Div>
+      </Container>
+    </>
   );
 };
 export default FormInput;
@@ -74,7 +75,7 @@ export const Container = styled.div`
       cursor: default;
     }
   }
-  &[data-type] {
+  &[data-type='normal'] {
     margin: 0px 0 12px;
   }
 `;
@@ -94,6 +95,9 @@ export const Div = styled.div`
   &:hover {
     border-color: ${({ theme }) => theme.primary};
   }
+  &[data-status='error'] {
+    border-color: ${({ theme }) => theme.errorColor};
+    }
   .inputtext {
     color: ${({ theme }) => theme.matteWhiteColor};
     font-size: 14px;

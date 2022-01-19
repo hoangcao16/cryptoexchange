@@ -11,8 +11,8 @@ const OrderForm = () => {
   const [tabActive, setTabActive] = useState(1);
   const baseSymbol = 'BTC';
   const quoteSymbol = 'USDT';
-  const baseAvlb = 0.0;
-  const quoteAvlb = 0.0;
+  const baseAvlb = 100;
+  const quoteAvlb = 100;
   const wallet = 'SPOT';
   const type = 'LIMIT';
   return (
