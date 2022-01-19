@@ -1,4 +1,4 @@
-import { Container, Nav, Offcanvas, Button } from 'react-bootstrap';
+import { Container, Nav, Offcanvas } from 'react-bootstrap';
 import BuyCrypto from './components/BuyCrypto';
 import TradeNav from './components/Trade';
 import DerivativesNav from './components/Derivatives';
@@ -16,12 +16,12 @@ import {
   NavbarOffcanvas,
   StyledNavBar,
 } from './style';
+import UserLogged from 'app/components/Navbar/components/UserLogged';
 import { BsFillQuestionSquareFill } from 'react-icons/bs';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
 import { getToken } from 'app/components/common/common';
-import { authService } from 'services/authService';
 
 const Title = () => {
   return (
@@ -32,11 +32,6 @@ const Title = () => {
   );
 };
 const NavMenu = () => {
-  const logout = () => {
-    authService.removeAccessToken();
-    authService.removeUserId();
-    window.location.href = '/';
-  };
   return (
     <StyledNavBar collapseOnSelect expand="xl" bg="dark" variant="dark">
       <Container fluid style={{ height: '64px' }}>
@@ -68,9 +63,7 @@ const NavMenu = () => {
               <RegisterButton to="/register">Register</RegisterButton>
             </AuthGroup>
           ) : (
-            <Button variant="danger" onClick={logout}>
-              Logout
-            </Button>
+            <UserLogged />
           )}
 
           <Nav.Link href="#pricing">Downloads</Nav.Link>

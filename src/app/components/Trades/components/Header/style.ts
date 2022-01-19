@@ -5,4 +5,7 @@ export const THeader = styled(Row)`
   padding-right: 8px;
   font-size: 12px;
   color: ${({ theme }) => theme.grayColor};
+  .pl-0 {
+    padding-left: 0;
+  }
 `;

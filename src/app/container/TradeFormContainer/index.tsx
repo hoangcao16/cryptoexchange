@@ -1,12 +1,39 @@
 import styled from 'styled-components';
 import { Container } from 'react-bootstrap';
-import { useState } from 'react';
 import Funds from 'app/components/TradesInformation/Funds';
 import TradeHistory from 'app/components/TradesInformation/TradeHistory';
 import OrderHistory from 'app/components/TradesInformation/OrderHistory';
-import Orders from 'app/components/TradesInformation/OpenOrders';
+import OpenOrders from 'app/components/TradesInformation/OpenOrders';
+import { selectBuyspotlimit } from 'app/components/OrderForm/components/LimitForm/components/BuyForm/slice/selectors';
+import { selectSellspotlimit } from 'app/components/OrderForm/components/LimitForm/components/SellForm/slice/selectors';
+import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { isEmpty } from 'app/components/common/common';
 const TradeFormContainer = () => {
   const [active, setActive] = useState(1);
+  const dataBuy: any = useSelector(selectBuyspotlimit);
+  const dataSell: any = useSelector(selectSellspotlimit);
+  const [dataOpenOrders, setDataOpenOrders]: any[] = useState([]);
+  useEffect(() => {
+    if (
+      !isEmpty(dataBuy.data) &&
+      dataOpenOrders.find(
+        (item: any) => item.order_id === dataBuy.data.order_id,
+      ) === undefined
+    ) {
+      setDataOpenOrders((prev: any) => [dataBuy.data, ...prev]);
+    }
+    if (
+      !isEmpty(dataSell.data) &&
+      dataOpenOrders.find(
+        (item: any) => item.order_id === dataSell.data.order_id,
+      ) === undefined
+    ) {
+      setDataOpenOrders((prev: any) => [dataSell.data, ...prev]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataBuy.data, dataSell.data]);
+
   return (
     <StyledContainer>
       <Tabs>
@@ -36,7 +63,7 @@ const TradeFormContainer = () => {
         </div>
       </Tabs>
       {active === 1 ? (
-        <Orders />
+        <OpenOrders dataSource={dataOpenOrders} />
       ) : active === 2 ? (
         <OrderHistory />
       ) : active === 3 ? (

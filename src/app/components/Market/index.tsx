@@ -3,7 +3,6 @@ import { ReactComponent as StarIcon } from 'app/assets/img/star.svg';
 import { SampleNextArrow, SamplePrevArrow } from './components/arrow';
 import Header from './components/Header';
 import { useState } from 'react';
-// import { data } from './data';
 import {
   Container,
   SearchBox,
@@ -77,7 +76,6 @@ const Trades = ({ data }) => {
       </StyledSlick>
     );
   };
-
   return (
     <Container>
       <SearchBox>
@@ -89,26 +87,26 @@ const Trades = ({ data }) => {
       <MenuSlick />
       <Header />
       <Table>
-        {/* {data.map((item, index) => {
-          return ( */}
         <div className="d-flex justify-content-between table-item align-items-center">
-          {data.Key && (
+          {data.symbol && (
             <>
               <Pair className="d-flex align-items-center">
                 <StarIcon className="tableItem-star" />
                 {data.symbol}
               </Pair>
-              <Price>{numeral(data.LatestPrice).format('0,0.00000000')}</Price>
+              <Price data-type={data.isPriceUp ? 'up' : 'down'}>
+                {numeral(data.latestPrice).format('0,0.00000000')}
+              </Price>
               {activeChangeColumnMarket ? (
-                <Change>{numeral(data.Change24h).format('0,0.00')}%</Change>
+                <Change data-type={data.change24h < 0 ? 'down' : 'up'}>
+                  {numeral(data.change24h).format('0,0.00')}%
+                </Change>
               ) : (
-                <Change>{data.Volume24h}M</Change>
+                <Change>{data.volume24h}M</Change>
               )}
             </>
           )}
         </div>
-        {/* ); */}
-        {/* })} */}
       </Table>
     </Container>
   );
