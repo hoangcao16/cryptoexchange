@@ -1,37 +1,10 @@
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { selectBuyspotlimit } from 'app/components/OrderForm/components/LimitForm/components/BuyForm/slice/selectors';
-import { selectSellspotlimit } from 'app/components/OrderForm/components/LimitForm/components/SellForm/slice/selectors';
-import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
-import { isEmpty } from 'app/components/common/common';
+
 import moment from 'moment';
 import numeral from 'numeral';
 import { Div, StyledButtion } from './style';
-const OpenOrderList = () => {
-  const dataBuy: any = useSelector(selectBuyspotlimit);
-  const dataSell: any = useSelector(selectSellspotlimit);
-  const [dataSource, setDataSource]: any[] = useState([]);
-  useEffect(() => {
-    if (
-      !isEmpty(dataBuy.data) &&
-      dataSource.find(
-        (item: any) => item.order_id === dataBuy.data.order_id,
-      ) === undefined
-    ) {
-      setDataSource((prev: any) => [dataBuy.data, ...prev]);
-    }
-    if (
-      !isEmpty(dataSell.data) &&
-      dataSource.find(
-        (item: any) => item.order_id === dataSell.data.order_id,
-      ) === undefined
-    ) {
-      setDataSource((prev: any) => [dataSell.data, ...prev]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataBuy.data, dataSell.data]);
-
+const OpenOrderList = ({ dataSource }: any) => {
   const columns: ColumnsType<any> = [
     {
       title: 'Date',

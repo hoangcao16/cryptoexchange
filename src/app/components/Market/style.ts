@@ -129,6 +129,12 @@ export const Price = styled(Col)`
   font-size: 12px;
   padding: 0;
   text-align: right;
+  &[data-type='up'] {
+    color: ${({ theme }) => theme.brightGreenColor};
+  }
+  &[data-type='down'] {
+    color: ${({ theme }) => theme.darkPinkColor};
+  }
 `;
 export const Change = styled(Col)`
   color: ${({ theme }) => theme.colorDescription};
@@ -136,6 +142,12 @@ export const Change = styled(Col)`
   font-size: 12px;
   padding: 0;
   text-align: right;
+  &[data-type='up'] {
+    color: ${({ theme }) => theme.brightGreenColor};
+  }
+  &[data-type='down'] {
+    color: ${({ theme }) => theme.darkPinkColor};
+  }
 `;
 export const Table = styled.div`
   height: 270px;

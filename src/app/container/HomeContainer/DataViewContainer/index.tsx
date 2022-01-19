@@ -14,8 +14,7 @@ const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 const HomeContentContainer = () => {
   const [dataMarket, setDataMarket]: any[] = useState([]);
   const [dataTrades, setDataTrades]: any[] = useState([]);
-
-  function connectSocket() {
+  useEffect(() => {
     var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
       connectionTimeout: 5000,
     });
@@ -26,8 +25,17 @@ const HomeContentContainer = () => {
           event: 'new_joining',
         }),
       );
+      setInterval(
+        () =>
+          socket.send(
+            JSON.stringify({
+              id: Math.random(),
+              method: 'GET_PROPERTY',
+            }),
+          ),
+        5000,
+      );
     };
-
     socket.onclose = () => {
       console.log('WebSocket Closed!');
     };
@@ -39,14 +47,14 @@ const HomeContentContainer = () => {
         Message.Value.marker_id !== Message.Value.taker_id
       ) {
         setDataTrades((prevState: any) => [Message.Value, ...prevState]);
-      }
-      if (Message.Key === 'RobinhoodPair') {
-        setDataMarket(Message);
+      } else if (Message.Key === 'RobinhoodPair') {
+        setDataMarket(Message.Value);
       }
     };
-  }
-  useEffect(() => {
-    connectSocket();
+    // connectSocket();
+    return () => {
+      socket.close();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

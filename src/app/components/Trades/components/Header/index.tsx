@@ -6,7 +6,7 @@ const OrderBookHeader = () => {
       <THeader>
         <Col>Price(USDT)</Col>
         <Col className="text-end px-0">Amount(BTC)</Col>
-        <Col className="text-end">Time</Col>
+        <Col className="text-end pl-0">Time</Col>
       </THeader>
     </>
   );

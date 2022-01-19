@@ -2,10 +2,15 @@ import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
 
 export const Price = styled(Col)`
-  color: ${({ theme }) => theme.darkPinkColor};
   padding: 0;
   font-size: 12px;
   cursor: pointer;
+  &[data-type='down'] {
+    color: ${({ theme }) => theme.darkPinkColor};
+  }
+  &[data-type='up'] {
+    color: ${({ theme }) => theme.brightGreenColor};
+  }
 `;
 export const Amount = styled(Col)`
   color: ${({ theme }) => theme.colorDescription};
