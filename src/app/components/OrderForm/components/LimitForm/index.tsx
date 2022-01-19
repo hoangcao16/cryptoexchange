@@ -1,6 +1,7 @@
 import { ColLeft, ColRight } from './style';
 import BuyForm from './components/BuyForm';
 import SellForm from './components/SellForm';
+import numeral from 'numeral';
 const LimitForm = ({
   baseSymbol,
   quoteSymbol,
@@ -15,13 +16,12 @@ const LimitForm = ({
         <div className="balance">
           <div className="balance-name">Avbl</div>
           <div className="balance-coin">
-            {quoteAvlb} {quoteSymbol}
+            {numeral(quoteAvlb).format('0,0.000000')} {quoteSymbol}
           </div>
         </div>
         <BuyForm
           baseSymbol={baseSymbol}
           quoteSymbol={quoteSymbol}
-          baseAvlb={baseAvlb}
           quoteAvlb={quoteAvlb}
           wallet={wallet}
           type={type}
@@ -31,12 +31,13 @@ const LimitForm = ({
         <div className="balance">
           <div className="balance-name">Avbl</div>
           <div className="balance-coin">
-            {baseAvlb} {baseSymbol}
+            {numeral(baseAvlb).format('0,0.000000')} {baseSymbol}
           </div>
         </div>
         <SellForm
           baseSymbol={baseSymbol}
           quoteSymbol={quoteSymbol}
+          baseAvlb={baseAvlb}
           wallet={wallet}
           type={type}
         />
