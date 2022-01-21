@@ -7,13 +7,19 @@ export const OrderBookBidHeader = styled.div`
   padding-top: 4px;
   padding-bottom: 4px;
   .contractPrice {
-    color: ${({ theme }) => theme.greenColor};
     font-size: 20px;
     display: flex;
     align-items: center;
+    &[data-type='up'] {
+      color: ${({ theme }) => theme.greenColor};
+    }
+    &[data-type='down'] {
+      color: ${({ theme }) => theme.darkPinkColor};
+    }
   }
   .markPrice {
     font-size: 12px;
+    margin-left: 8px;
     color: ${({ theme }) => theme.grayColor};
   }
   .readmore {
@@ -46,7 +52,12 @@ export const Total = styled(Col)`
   text-align: right;
 `;
 export const Table = styled.div`
+  overflow-y: auto;
+  height: 100%;
   .table-item {
     height: 20px;
+  }
+  &[data-type='mini'] {
+    overflow: hidden;
   }
 `;

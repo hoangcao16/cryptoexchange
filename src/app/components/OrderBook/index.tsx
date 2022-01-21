@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import OrderBookAsk from './components/OrderBookAsk';
 import OrderBookBid from './components/OrderBookBid';
 import OrderBookTHeader from './components/OrderBookHeader';
@@ -8,14 +8,22 @@ import {
   GroupButton,
   MoreButton,
   StyledDropdown,
+  StyledRow,
 } from './style';
 import { ReactComponent as MoreIcon } from 'app/assets/img/more.svg';
 import OrderBookIcon from 'app/assets/img/Orderbook';
 import Select from 'react-select';
 import { Dropdown } from 'react-bootstrap';
-const OrderBook = () => {
+import { useDispatch, useSelector } from 'react-redux';
+import { useOrderbookSlice } from './slice';
+import { selectOrderbook } from './slice/selectors';
+
+const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
   const [Layout, setLayout] = useState(1);
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+  const { actions } = useOrderbookSlice();
+  const dataOrderbook: any = useSelector(selectOrderbook);
   const showDropdown = e => {
     setShow(!show);
   };
@@ -30,6 +38,15 @@ const OrderBook = () => {
     { value: '5', label: '50' },
     { value: '6', label: '100' },
   ];
+  useEffect(() => {
+    const pairName = JSON.parse(
+      JSON.stringify(localStorage.getItem('pair')) || '',
+    );
+    dispatch(actions.getOrderbookRequest(pairName));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const dataAsks = dataOrderbook?.data?.data?.asks;
+  const dataBids = dataOrderbook?.data?.data?.bids;
   return (
     <Container>
       <Header>
@@ -101,17 +118,41 @@ const OrderBook = () => {
       {Layout === 1 ? (
         <>
           <OrderBookTHeader />
-          <OrderBookAsk />
-          <OrderBookBid />
+          <StyledRow>
+            <OrderBookAsk
+              dataApi={dataAsks}
+              dataSocket={dataOrderbookSocket}
+              miniTable
+            />
+          </StyledRow>
+          <StyledRow>
+            <OrderBookBid
+              dataApi={dataBids}
+              dataSocket={dataOrderbookSocket}
+              dataMarketSocket={dataMarketSocket}
+              miniTable
+            />
+          </StyledRow>
         </>
       ) : Layout === 2 ? (
         <>
-          <OrderBookTHeader /> <OrderBookBid />
+          <OrderBookTHeader />
+          <OrderBookBid
+            dataApi={dataBids}
+            dataSocket={dataOrderbookSocket}
+            dataMarketSocket={dataMarketSocket}
+            miniTable={false}
+          />
         </>
       ) : (
-        <>
-          <OrderBookTHeader /> <OrderBookAsk />
-        </>
+        <div style={{ height: '100%' }}>
+          <OrderBookTHeader />
+          <OrderBookAsk
+            dataApi={dataAsks}
+            dataSocket={dataOrderbookSocket}
+            miniTable={false}
+          />
+        </div>
       )}
     </Container>
   );

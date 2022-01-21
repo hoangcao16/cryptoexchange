@@ -4,14 +4,14 @@ import { useForm } from 'react-hook-form';
 import SliderBar from '../../../SliderBar';
 import { getToken } from 'app/components/common/common';
 import { Button } from '../../style';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSellspotlimitSlice } from './slice';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { authService } from 'services/authService';
 import { Tooltip } from 'antd';
-
+import { selectOrderbook } from 'app/components/OrderBook/slice/selectors';
 //declare type
 type SubmitForm = {
   price: number;
@@ -21,6 +21,7 @@ type SubmitForm = {
 const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
   const dispatch = useDispatch();
   const { actions } = useSellspotlimitSlice();
+  const selectPrice: any = useSelector(selectOrderbook);
   const [percent, setPercent] = useState(0);
   const userId: any = JSON.parse(authService.getUserId() || '{}');
 
@@ -69,7 +70,9 @@ const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
   };
   // getvalues Price
   const onChangePrice = (value: number) => {
-    setValue('total', value * amount, { shouldValidate: true });
+    setValue('total', parseFloat((value * amount).toFixed(8)), {
+      shouldValidate: true,
+    });
     if (baseAvlb === 0) {
       setPercent(100);
     } else {
@@ -78,7 +81,9 @@ const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
   };
   // getvalues Amount
   const onChangeAmount = (value: number) => {
-    setValue('total', value * price, { shouldValidate: true });
+    setValue('total', parseFloat((value * price).toFixed(8)), {
+      shouldValidate: true,
+    });
     if (baseAvlb === 0) {
       setPercent(100);
     } else {
@@ -94,6 +99,14 @@ const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
       setPercent((value * 100) / baseAvlb);
     }
   };
+  useEffect(() => {
+    if (selectPrice.selectPrice > 0) {
+      setValue('price', selectPrice.selectPrice, {
+        shouldValidate: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectPrice.selectPrice]);
   // submit form
   const onSubmitSell = (data: any) => {
     const ts = new Date().getTime();

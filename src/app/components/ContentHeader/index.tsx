@@ -9,13 +9,16 @@ import {
 import { ReactComponent as PlayIcon } from 'app/assets/img/play.svg';
 import { ReactComponent as OpenIcon } from 'app/assets/img/openIcon.svg';
 const ContentHeader = () => {
+  const pairName = JSON.parse(
+    JSON.stringify(localStorage.getItem('pair')) || '',
+  );
   return (
     <Container>
       <Div>
         <Content>
           <ContentLeft>
             <div className="contentLeft-coin">
-              <div className="coin">BTC/USDT</div>
+              <div className="coin">{pairName}</div>
               <div className="InfomationCoin">
                 <OpenIcon />
                 <a href="/#">Bitcoin</a>

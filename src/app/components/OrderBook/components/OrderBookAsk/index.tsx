@@ -1,23 +1,48 @@
-import { data } from './data';
+import { useState, useEffect } from 'react';
 import { Price, Amount, Total, Table } from './style';
 import numeral from 'numeral';
+import { useDispatch } from 'react-redux';
+import { useOrderbookSlice } from '../../slice';
 
-const OrderBookAsk = () => {
+const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
+  const [dataView, setDataView]: any[] = useState([]);
+  const dispatch = useDispatch();
+  const { actions } = useOrderbookSlice();
+  useEffect(() => {
+    if (dataSocket.asks !== undefined) {
+      setDataView(dataSocket.asks);
+    } else if (dataSocket.asks === null) {
+      setDataView([]);
+    } else {
+      setDataView(dataApi);
+    }
+  }, [dataApi, dataSocket]);
+
+  const selectPrice = (price: number) => {
+    dispatch(actions.selectPrice(price));
+  };
   return (
-    <Table>
-      {data.map((item, index) => {
-        return (
-          <div
-            key={index}
-            className="d-flex justify-content-between table-item"
-          >
-            <Price>{numeral(item.price).format('0,0.00')}</Price>
-            <Amount>{item.amount}</Amount>
-            <Total>{numeral(item.total).format('0,0.00000')}</Total>
-          </div>
-        );
-      })}
-    </Table>
+    <div style={{ height: '98%', overflowY: 'auto' }}>
+      <Table data-type={miniTable ? 'mini' : 'normal'}>
+        {dataView !== undefined &&
+          dataView !== null &&
+          dataView?.slice(miniTable ? -19 : 0).map((item, index) => {
+            return (
+              <div
+                onClick={() => selectPrice(item.price)}
+                key={index}
+                className="d-flex justify-content-between table-item"
+              >
+                <Price>{numeral(item.price).format('0,0.000')}</Price>
+                <Amount>{numeral(item.quantity).format('0,0.00000')}</Amount>
+                <Total>
+                  {numeral(item.price * item.quantity).format('0,0.00000')}
+                </Total>
+              </div>
+            );
+          })}
+      </Table>
+    </div>
   );
 };
 export default OrderBookAsk;

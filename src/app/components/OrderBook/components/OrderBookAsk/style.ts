@@ -21,7 +21,15 @@ export const Total = styled(Col)`
   text-align: right;
 `;
 export const Table = styled.div`
+  overflow-y: scroll;
+  height: 96%;
   .table-item {
     height: 20px;
+  }
+  &[data-type='mini'] {
+    overflow: hidden;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* flex-direction: column-reverse; */
   }
 `;

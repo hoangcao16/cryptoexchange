@@ -1,16 +1,69 @@
-import { data } from './data';
+import { useState, useEffect } from 'react';
 import { Price, Amount, Total, OrderBookBidHeader, Table } from './style';
 import numeral from 'numeral';
-import { BsArrowUp } from 'react-icons/bs';
+import { BsArrowUp, BsArrowDown } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+import { selectGetallpair } from 'app/components/Market/slice/selectors';
+import { isEmpty } from 'app/components/common/common';
+import { useDispatch } from 'react-redux';
+import { useOrderbookSlice } from '../../slice';
 
-const OrderBookBid = () => {
+const OrderBookBid = ({
+  dataApi,
+  dataSocket,
+  dataMarketSocket,
+  miniTable,
+}: any) => {
+  const [dataView, setDataView]: any[] = useState([]);
+  const [lastestPrice, setLastestPrice] = useState('');
+  const pairData: any = useSelector(selectGetallpair);
+  const dispatch = useDispatch();
+  const { actions } = useOrderbookSlice();
+  useEffect(() => {
+    if (dataSocket.bids !== undefined) {
+      setDataView(dataSocket.bids);
+    } else if (dataSocket.bids === null) {
+      setDataView([]);
+    } else {
+      setDataView(dataApi);
+    }
+    if (!isEmpty(dataMarketSocket)) {
+      setLastestPrice(dataMarketSocket?.latestPrice);
+    } else {
+      const index: any = pairData?.data?.list?.findIndex((item: any) => {
+        return (
+          item?.symbol ===
+          JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '')
+        );
+      });
+      if (index !== -1 && index !== undefined) {
+        setLastestPrice(pairData?.data?.list[index]?.latestPrice);
+      }
+    }
+  }, [dataApi, dataSocket, dataMarketSocket, pairData]);
+  const selectPrice = (price: number) => {
+    dispatch(actions.selectPrice(price));
+  };
   return (
-    <div>
+    <>
       <OrderBookBidHeader>
         <div className="d-flex align-items-center">
-          <div className="contractPrice">
-            49,832.97
-            <BsArrowUp />
+          <div
+            className="contractPrice"
+            data-type={
+              dataMarketSocket?.isPriceUp
+                ? 'up'
+                : dataMarketSocket?.isPriceUp === false
+                ? 'down'
+                : ''
+            }
+          >
+            {numeral(lastestPrice).format('0,0.000')}
+            {dataMarketSocket?.isPriceUp ? (
+              <BsArrowUp />
+            ) : dataMarketSocket?.isPriceUp === false ? (
+              <BsArrowDown />
+            ) : null}
           </div>
           <div className="markPrice">$49,838.53</div>
         </div>
@@ -18,18 +71,28 @@ const OrderBookBid = () => {
           More
         </a>
       </OrderBookBidHeader>
-      <Table>
-        {data.map((item, index) => {
-          return (
-            <div key={index} className="d-flex table-item">
-              <Price>{numeral(item.price).format('0,0.00')}</Price>
-              <Amount>{item.amount}</Amount>
-              <Total>{numeral(item.total).format('0,0.00000')}</Total>
-            </div>
-          );
-        })}
-      </Table>
-    </div>
+      <div style={{ height: '92%', overflowY: 'auto' }}>
+        <Table data-type={miniTable ? 'mini' : 'normal'}>
+          {dataView !== undefined &&
+            dataView !== null &&
+            dataView?.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="d-flex table-item"
+                  onClick={() => selectPrice(item.price)}
+                >
+                  <Price>{numeral(item.price).format('0,0.000')}</Price>
+                  <Amount>{numeral(item.quantity).format('0,0.00000')}</Amount>
+                  <Total>
+                    {numeral(item.price * item.quantity).format('0,0.00000')}
+                  </Total>
+                </div>
+              );
+            })}
+        </Table>
+      </div>
+    </>
   );
 };
 export default OrderBookBid;

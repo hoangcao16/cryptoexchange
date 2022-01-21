@@ -1,9 +1,11 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 const AuthButton = () => {
   return (
     <Container>
       <span>
-        <Span href="/#">Log In</Span> or <Span href="/#">Register Now</Span>
+        <StyledLink to="/login">Log In</StyledLink> or{' '}
+        <StyledLink to="/register">Register Now</StyledLink>
       </span>
     </Container>
   );
@@ -21,7 +23,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
 `;
-export const Span = styled.a`
+export const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.primary};
   text-decoration: none;
   &:hover {
