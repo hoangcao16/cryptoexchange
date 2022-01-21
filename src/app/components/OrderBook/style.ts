@@ -5,6 +5,7 @@ export const Container = styled.div`
   border: none;
   padding: 16px;
   height: 839px;
+  overflow: hidden;
 `;
 export const Header = styled.div`
   display: flex;
@@ -173,4 +174,7 @@ export const StyledDropdown = styled(Dropdown)`
       }
     }
   }
+`;
+export const StyledRow = styled.div`
+  height: 50%;
 `;

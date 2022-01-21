@@ -86,9 +86,9 @@ const AccountDetail = ({ emailregis }: any) => {
                 }
               >
                 <input autoComplete="off" {...register('email')} />
-                <div className="bn-input-suffix">
+                {/* <div className="bn-input-suffix">
                   <div className="css-1w8oghj"></div>
-                </div>
+                </div> */}
               </div>
               <ErrorMessage>{errors.email?.message}</ErrorMessage>
             </EmailSection>

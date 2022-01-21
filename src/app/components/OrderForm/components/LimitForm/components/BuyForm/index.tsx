@@ -5,13 +5,14 @@ import { useForm } from 'react-hook-form';
 import SliderBar from '../../../SliderBar';
 import { getToken } from 'app/components/common/common';
 import { Button } from '../../style';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useBuyspotlimitSlice } from './slice';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { authService } from 'services/authService';
 import { Tooltip } from 'antd';
+import { selectOrderbook } from 'app/components/OrderBook/slice/selectors';
 //declare type
 type SubmitForm = {
   price: number;
@@ -22,6 +23,7 @@ type SubmitForm = {
 const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
   const dispatch = useDispatch();
   const { actions } = useBuyspotlimitSlice();
+  const selectPrice: any = useSelector(selectOrderbook);
   const [percent, setPercent] = useState(0);
   const userId: any = JSON.parse(authService.getUserId() || '{}');
 
@@ -54,8 +56,8 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
   } = useForm<SubmitForm>({
     resolver: yupResolver(validation),
   });
-  const price = getValues('price');
-  const amount = getValues('amount');
+  const price: number = getValues('price');
+  const amount: number = getValues('amount');
   // getvalues slider
   const onChangeSlider = (value: number) => {
     setPercent(value);
@@ -71,7 +73,9 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
   };
   // getvalues Price
   const onChangePrice = (value: number) => {
-    setValue('total', value * amount, { shouldValidate: true });
+    setValue('total', parseFloat((value * amount).toFixed(5)), {
+      shouldValidate: true,
+    });
     if (quoteAvlb === 0) {
       setPercent(100);
     } else {
@@ -80,7 +84,9 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
   };
   // getvalues Amount
   const onChangeAmount = (value: number) => {
-    setValue('total', value * price, { shouldValidate: true });
+    setValue('total', parseFloat((value * price).toFixed(5)), {
+      shouldValidate: true,
+    });
     if (quoteAvlb === 0) {
       setPercent(100);
     } else {
@@ -96,6 +102,14 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
       setPercent((value * 100) / quoteAvlb);
     }
   };
+  useEffect(() => {
+    if (selectPrice.selectPrice > 0) {
+      setValue('price', selectPrice.selectPrice, {
+        shouldValidate: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectPrice.selectPrice]);
   // submit form
   const onSubmitBuy = (data: any) => {
     const ts = new Date().getTime();

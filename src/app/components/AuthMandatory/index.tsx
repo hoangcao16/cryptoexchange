@@ -1,13 +1,14 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 const AuthMandatory = () => {
   return (
     <span>
-      <Span href="/#">Log In</Span> or <Span href="/#">Register Now</Span> to
-      trade
+      <StyledLink to="/login">Log In</StyledLink> or
+      <StyledLink to="/register">Register Now</StyledLink> to trade
     </span>
   );
 };
-export const Span = styled.a`
+export const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.primary};
   text-decoration: none;
   &:hover {

@@ -14,10 +14,35 @@ import {
 } from './style';
 import { useGlobalContext } from '../common/context';
 import numeral from 'numeral';
+import { isEmpty } from 'app/components/common/common';
 
-const Trades = ({ data }) => {
+const Market = ({ dataSocket, dataApi }) => {
   const [active, setActive] = useState('USDT');
+  // const [allPair, setAllPair]: any[] = useState([]);
+  let allPair: any[] = [];
   const { activeChangeColumnMarket } = useGlobalContext();
+
+  if (dataApi.data.list && isEmpty(dataSocket)) {
+    allPair = dataApi.data.list.slice(0);
+  }
+  if (!isEmpty(dataSocket)) {
+    if (allPair.length === 0) {
+      allPair = [dataSocket];
+    } else {
+      const index = allPair?.findIndex((item: any) => {
+        return item.symbol === dataSocket?.symbol;
+      });
+      if (index !== -1 && allPair !== undefined) {
+        // Object.assign(allPair[index], dataSocket);
+        allPair[index].latestPrice = dataSocket?.latestPrice;
+        allPair[index].change24h = dataSocket?.change24h;
+        allPair[index].volume24h = dataSocket?.volume24h;
+      }
+    }
+  }
+  // useEffect(() => {
+
+  // }, [dataSocket]);
 
   const MenuSlick = () => {
     const settings = {
@@ -87,28 +112,32 @@ const Trades = ({ data }) => {
       <MenuSlick />
       <Header />
       <Table>
-        <div className="d-flex justify-content-between table-item align-items-center">
-          {data.symbol && (
-            <>
-              <Pair className="d-flex align-items-center">
-                <StarIcon className="tableItem-star" />
-                {data.symbol}
-              </Pair>
-              <Price data-type={data.isPriceUp ? 'up' : 'down'}>
-                {numeral(data.latestPrice).format('0,0.00000000')}
-              </Price>
-              {activeChangeColumnMarket ? (
-                <Change data-type={data.change24h < 0 ? 'down' : 'up'}>
-                  {numeral(data.change24h).format('0,0.00')}%
-                </Change>
-              ) : (
-                <Change>{data.volume24h}M</Change>
-              )}
-            </>
-          )}
-        </div>
+        {allPair !== undefined &&
+          allPair?.map((item, index) => {
+            return (
+              <div
+                className="d-flex justify-content-between table-item align-items-center"
+                key={index}
+              >
+                <Pair className="d-flex align-items-center">
+                  <StarIcon className="tableItem-star" />
+                  {item.symbol && item.symbol.toUpperCase()}
+                </Pair>
+                <Price data-type={item.isPriceUp ? 'up' : 'down'}>
+                  {numeral(item.latestPrice).format('0,0.00000000')}
+                </Price>
+                {activeChangeColumnMarket ? (
+                  <Change data-type={item.change24h < 0 ? 'down' : 'up'}>
+                    {numeral(item.change24h).format('0,0.00')}%
+                  </Change>
+                ) : (
+                  <Change>{item.volume24h}M</Change>
+                )}
+              </div>
+            );
+          })}
       </Table>
     </Container>
   );
 };
-export default Trades;
+export default Market;

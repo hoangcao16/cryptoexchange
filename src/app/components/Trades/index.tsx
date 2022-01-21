@@ -4,7 +4,7 @@ import { Container, Tabs } from './style';
 import MyTrades from './components/MyTrades';
 import MarketTrades from './components/MarketTrades';
 
-const Trades = ({ data }) => {
+const Trades = ({ dataSocket, dataApi }) => {
   const [active, setActive] = useState(true);
   return (
     <>
@@ -26,7 +26,11 @@ const Trades = ({ data }) => {
           </Tabs>
           {active ? <Header /> : ''}
         </div>
-        {active ? <MarketTrades data={data} /> : <MyTrades />}
+        {active ? (
+          <MarketTrades dataSocket={dataSocket} dataApi={dataApi} />
+        ) : (
+          <MyTrades />
+        )}
       </Container>
     </>
   );

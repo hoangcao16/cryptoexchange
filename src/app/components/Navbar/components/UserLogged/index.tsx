@@ -15,6 +15,7 @@ const UserLogged = () => {
   const logout = () => {
     authService.removeAccessToken();
     authService.removeUserId();
+    localStorage.removeItem('pair');
     window.location.href = '/';
   };
   const username = localStorage.getItem('userId');

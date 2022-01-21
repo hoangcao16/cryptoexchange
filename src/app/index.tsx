@@ -43,6 +43,7 @@ export function App() {
   // check access token
   useEffect(() => {
     authService.autoRefreshAccessToken();
+    localStorage.setItem('pair', 'BTC/USDT');
   }, []);
   return (
     <BrowserRouter>

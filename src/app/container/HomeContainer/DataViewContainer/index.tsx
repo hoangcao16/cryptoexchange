@@ -9,11 +9,26 @@ import Trades from 'app/components/Trades';
 import MarketActivities from 'app/components/Trades/components/MarketActivities';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useGetallpairSlice } from 'app/components/Market/slice';
+import { selectGetallpair } from 'app/components/Market/slice/selectors';
+import { useTradesSlice } from 'app/components/Trades/slice';
+import { selectTrades } from 'app/components/Trades/slice/selectors';
+
 const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const HomeContentContainer = () => {
-  const [dataMarket, setDataMarket]: any[] = useState([]);
-  const [dataTrades, setDataTrades]: any[] = useState([]);
+  const [dataMarketSocket, setDataMarketSocket]: any = useState({});
+  const [dataTradesSocket, setDataTradesSocket]: any = useState({});
+  const [dataOrder, setDataOrder]: any[] = useState([]);
+  const dispatch = useDispatch();
+  const { actions: actionsAllPair } = useGetallpairSlice();
+  const { actions: actionsTrades } = useTradesSlice();
+  const pairName = JSON.parse(
+    JSON.stringify(localStorage.getItem('pair')) || '',
+  );
+  const dataAllPair = useSelector(selectGetallpair);
+  const dataAllTrades = useSelector(selectTrades);
   useEffect(() => {
     var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
       connectionTimeout: 5000,
@@ -46,15 +61,22 @@ const HomeContentContainer = () => {
         Message.Key === 'Robinhood::RecentTrade' &&
         Message.Value.marker_id !== Message.Value.taker_id
       ) {
-        setDataTrades((prevState: any) => [Message.Value, ...prevState]);
+        setDataTradesSocket(Message.Value);
       } else if (Message.Key === 'RobinhoodPair') {
-        setDataMarket(Message.Value);
+        setDataMarketSocket(Message.Value);
+      } else if (Message.Key === 'Robinhood::OrderBook') {
+        setDataOrder(Message.Value);
       }
     };
     // connectSocket();
     return () => {
       socket.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    dispatch(actionsAllPair.getAllPairRequest());
+    dispatch(actionsTrades.getTradesRequest(pairName));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -66,7 +88,10 @@ const HomeContentContainer = () => {
           </StyledRow>
           <StyledRow>
             <StyledCol md={4} className="orderbook-section">
-              <OrderBook />
+              <OrderBook
+                dataOrderbookSocket={dataOrder}
+                dataMarketSocket={dataMarketSocket}
+              />
             </StyledCol>
             <StyledCol md={8} className="d-flex flex-column">
               <Chart />
@@ -75,8 +100,8 @@ const HomeContentContainer = () => {
           </StyledRow>
         </Col>
         <StyledCol md={3} className="right-menu">
-          <Market data={dataMarket} />
-          <Trades data={dataTrades} />
+          <Market dataSocket={dataMarketSocket} dataApi={dataAllPair} />
+          <Trades dataSocket={dataTradesSocket} dataApi={dataAllTrades} />
           <MarketActivities />
         </StyledCol>
       </StyledRow>
