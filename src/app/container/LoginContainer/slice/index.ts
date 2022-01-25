@@ -10,6 +10,7 @@ export const initialState: LoginState = {
   data: {},
   stepLogin: 1,
   reloadrecaptcha: false,
+  loginFinish: false,
 };
 
 const slice = createSlice({
@@ -31,6 +32,7 @@ const slice = createSlice({
     verifyEmailLoginRequest(state, action: PayloadAction<any>) {},
     verifyEmailLoginSuccess(state, action) {
       state.data = action.payload;
+      state.loginFinish = true;
       localStorage.setItem('access_token', action.payload.access_token);
       authService.autoRefreshAccessToken();
     },

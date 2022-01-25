@@ -47,11 +47,11 @@ const EmailVerification = ({ email }) => {
     );
   };
   useEffect(() => {
-    if (dataLogin.openFinishToast) {
+    if (dataLogin.loginFinish) {
       navigate('/');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataLogin.openFinishToast]);
+  }, [dataLogin.loginFinish]);
   return (
     <>
       <Title>Security verification</Title>

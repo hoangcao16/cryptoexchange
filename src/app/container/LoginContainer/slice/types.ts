@@ -4,4 +4,5 @@ export interface LoginState {
   data: Object;
   stepLogin: number;
   reloadrecaptcha: boolean;
+  loginFinish: boolean;
 }

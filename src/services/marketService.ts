@@ -4,7 +4,7 @@ export const MarketServices = {
   GetAllPair() {
     return apiClient.request({
       method: 'GET',
-      url: `/api-svc/pair/getAllPair`,
+      url: `/api-svc/api/v1/pair/getAllPair`,
     });
   },
 };

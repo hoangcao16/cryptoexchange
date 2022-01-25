@@ -4,14 +4,18 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { registerVerifyEmailSaga } from './saga';
 import { VerifyEmailRegisterState } from './types';
 
-export const initialState: VerifyEmailRegisterState = {};
+export const initialState: VerifyEmailRegisterState = {
+  registerSuccess: false,
+};
 
 const slice = createSlice({
   name: 'verifyEmailRegister',
   initialState,
   reducers: {
     registerVerifyEmailRequest(state, action: PayloadAction<any>) {},
-    registerVerifyEmailSuccess(state, action) {},
+    registerVerifyEmailSuccess(state, action) {
+      state.registerSuccess = true;
+    },
     registerVerifyEmailFail(state, action) {},
   },
 });
