@@ -44,11 +44,11 @@ const EmailVerification = ({ email }) => {
     dispatch(actions.registerVerifyEmailRequest({ ...data, email }));
   };
   useEffect(() => {
-    if (dataRegister.openFinishToast) {
+    if (dataRegister.registerSuccess) {
       navigate('/login');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataRegister.openFinishToast]);
+  }, [dataRegister.registerSuccess]);
   return (
     <>
       <Title>Email Verification</Title>
