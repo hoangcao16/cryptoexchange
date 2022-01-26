@@ -4,7 +4,7 @@ export const OpenOrderServices = {
   getOpenOrder(pageIndex, pageSize) {
     return apiClient.request({
       method: 'GET',
-      url: `/order/getOpenOrder`,
+      url: `/api-svc/order/getOpenOrder`,
       params: {
         pageIndex: pageIndex,
         pageSize: pageSize,

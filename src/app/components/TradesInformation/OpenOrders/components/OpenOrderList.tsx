@@ -26,7 +26,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       align: 'center',
       key: 'pair',
       render: (text: any) => {
-        return <span className="white-color">{text.toUpperCase()}</span>;
+        return <span className="white-color">{text}</span>;
       },
     },
     {
@@ -35,7 +35,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       align: 'center',
       key: 'type',
       render: (text: any) => {
-        return <span className="white-color">{text.toUpperCase()}</span>;
+        return <span className="white-color">{text}</span>;
       },
     },
     {

@@ -71,9 +71,7 @@ const Orders = () => {
       if (index !== -1 && dataOpenOrders !== undefined) {
         const dataCopy = [...JSON.parse(JSON.stringify(dataOpenOrders))];
         dataCopy[index].filled =
-          ((dataSocket.Orderfilled.origin_quantity -
-            dataSocket.Orderfilled.order_quantity +
-            dataSocket.Orderfilled.filled) /
+          (dataSocket.Orderfilled.filled_quantity /
             dataSocket.Orderfilled.origin_quantity) *
           100;
         setDataOpenOrders(dataCopy);
