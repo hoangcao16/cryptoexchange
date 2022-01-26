@@ -14,7 +14,7 @@ import { useGetallpairSlice } from 'app/components/Market/slice';
 import { selectGetallpair } from 'app/components/Market/slice/selectors';
 import { useTradesSlice } from 'app/components/Trades/slice';
 import { selectTrades } from 'app/components/Trades/slice/selectors';
-
+import { useWebsocketSlice } from 'app/container/HomeContainer/slice';
 const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const HomeContentContainer = () => {
@@ -24,6 +24,7 @@ const HomeContentContainer = () => {
   const dispatch = useDispatch();
   const { actions: actionsAllPair } = useGetallpairSlice();
   const { actions: actionsTrades } = useTradesSlice();
+  const { actions: actionsWebsocket } = useWebsocketSlice();
   const pairName = JSON.parse(
     JSON.stringify(localStorage.getItem('pair')) || '',
   );
@@ -66,6 +67,8 @@ const HomeContentContainer = () => {
         setDataMarketSocket(Message.Value);
       } else if (Message.Key === 'Robinhood::OrderBook') {
         setDataOrder(Message.Value);
+      } else if (Message.Key === 'Robinhood::OrderFilled') {
+        dispatch(actionsWebsocket.updateOrderFilled(Message.Value));
       }
     };
     // connectSocket();
