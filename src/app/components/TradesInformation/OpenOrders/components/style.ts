@@ -58,8 +58,8 @@ export const Div = styled.div`
     .ant-pagination-prev,
     .ant-pagination-next,
     .ant-pagination-item {
-      height: 24px;
-      line-height: 24px;
+      height: 25px;
+      line-height: 22px;
       min-width: 24px;
     }
     .ant-pagination-prev > button,

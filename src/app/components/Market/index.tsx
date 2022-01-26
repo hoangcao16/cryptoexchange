@@ -40,9 +40,6 @@ const Market = ({ dataSocket, dataApi }) => {
       }
     }
   }
-  // useEffect(() => {
-
-  // }, [dataSocket]);
 
   const MenuSlick = () => {
     const settings = {

@@ -1,10 +1,17 @@
-import { Table } from 'antd';
+import { Table, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-
 import moment from 'moment';
 import numeral from 'numeral';
 import { Div, StyledButtion } from './style';
+import { useDispatch } from 'react-redux';
+import { useGetopenOrderSlice } from '../slice';
+
 const OpenOrderList = ({ dataSource }: any) => {
+  const dispatch = useDispatch();
+  const { actions } = useGetopenOrderSlice();
+  const confirm = (e: any, record: any) => {
+    dispatch(actions.cancelOrderRequest(record.order_id));
+  };
   const columns: ColumnsType<any> = [
     {
       title: 'Date',
@@ -106,11 +113,22 @@ const OpenOrderList = ({ dataSource }: any) => {
     },
     {
       title: 'Cancel All',
-      dataIndex: 'cancel',
       align: 'center',
       key: 'cancel',
-      render: (text: any) => {
-        return <StyledButtion>Cancel</StyledButtion>;
+      render: (record: any) => {
+        return (
+          <Space>
+            <Popconfirm
+              placement="topRight"
+              title={`Are you sure to cancel this order?`}
+              onConfirm={e => confirm(e, record)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <StyledButtion>Cancel</StyledButtion>
+            </Popconfirm>
+          </Space>
+        );
       },
     },
   ];
