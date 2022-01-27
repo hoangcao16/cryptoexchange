@@ -14,6 +14,11 @@ export const App = styled.div`
     padding-left: 32px;
     padding-right: 32px;
   }
+  .coin-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
   .coin-url {
     color: ${({ theme }) => theme.colorDescription};
   }

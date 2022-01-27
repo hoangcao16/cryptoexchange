@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { NavDropdown } from 'react-bootstrap';
-
+import { Link } from 'react-router-dom';
 export const StyledNavDropdown = styled(NavDropdown)`
   margin: 0 8px;
   &:hover {
@@ -36,4 +36,7 @@ export const DropdownItemTitle = styled.div`
     color: ${({ theme }) => theme.colorDescription};
     font-size: 12px;
   }
+`;
+export const StyledLink = styled(Link)`
+  text-decoration: none;
 `;

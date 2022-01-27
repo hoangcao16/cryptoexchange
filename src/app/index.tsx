@@ -16,8 +16,10 @@ import { HomePage } from './pages/HomePage/Loadable';
 import { LoginPage } from './pages/LoginPage/Loadable';
 import { RegisterPage } from './pages/RegisterPage/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
-import { FiatSpotPage } from 'app/pages/FiatSpotPage/Loadable';
+import { SpotWalletPage } from 'app/pages/SpotWalletPage/Loadable';
+import { P2PWalletPage } from 'app/pages/P2PWalletPage/Loadable';
 import PublicRoute from './components/common/publicRoute';
+import PrivateRoute from './components/common/privateRoute';
 import { useTranslation } from 'react-i18next';
 // Theme
 import { ThemeProvider } from 'styled-components';
@@ -69,7 +71,22 @@ export function App() {
               </PublicRoute>
             }
           />
-          <Route path="/wallet/fiat" element={<FiatSpotPage />} />
+          <Route
+            path="/wallet/spot"
+            element={
+              <PrivateRoute>
+                <SpotWalletPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/wallet/p2p"
+            element={
+              <PrivateRoute>
+                <P2PWalletPage />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <StyledToastContainer>
