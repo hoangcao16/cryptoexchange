@@ -17,8 +17,19 @@ import {
 import ShowIcon from 'app/assets/img/showpassIcon';
 import { ReactComponent as NextIcon } from 'app/assets/img/next.svg';
 import { Container } from 'react-bootstrap';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useP2PWalletSlice } from './slice';
+import { selectP2PWallet } from './slice/selectors';
 
-const FiatSpotContainer = () => {
+const P2PWalletContainer = () => {
+  const dispatch = useDispatch();
+  const { actions } = useP2PWalletSlice();
+  const AllP2PWall: any = useSelector(selectP2PWallet);
+  useEffect(() => {
+    dispatch(actions.getP2PWalletRequest());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <App>
       <Navbar />
@@ -30,7 +41,7 @@ const FiatSpotContainer = () => {
           <div className="content">
             <LeftParameter>
               <div className="title">
-                <div className="title--text">Fiat and Spot balance</div>
+                <div className="title--text">P2P balance</div>
                 <div>
                   <button className="title--icon">
                     <ShowIcon name="show" className="show-icon" />
@@ -48,7 +59,7 @@ const FiatSpotContainer = () => {
             <RightParameter>
               <Balance>
                 <BalanceName>
-                  <div className="balance--name-text">Spot balance</div>
+                  <div className="balance--name-text">P2P balance</div>
                 </BalanceName>
                 <BalanceNumber>
                   <div className="amount-coin">
@@ -60,7 +71,7 @@ const FiatSpotContainer = () => {
               </Balance>
               <Balance>
                 <BalanceName>
-                  <div className="balance--name-text">Fiat balance</div>
+                  <div className="balance--name-text">P2P balance</div>
                 </BalanceName>
                 <BalanceNumber>
                   <div className="amount-coin">
@@ -106,8 +117,8 @@ const FiatSpotContainer = () => {
           </div>
         </Container>
       </Parameter>
-      <FiatSpotTable />
+      <FiatSpotTable dataSource={AllP2PWall.data.rows} />
     </App>
   );
 };
-export default FiatSpotContainer;
+export default P2PWalletContainer;

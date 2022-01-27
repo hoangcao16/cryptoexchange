@@ -4,7 +4,7 @@
 
 import { lazyLoad } from 'utils/loadable';
 
-export const FiatSpotPage = lazyLoad(
+export const SpotWalletPage = lazyLoad(
   () => import('./index'),
-  module => module.FiatSpotPage,
+  module => module.SpotWalletPage,
 );

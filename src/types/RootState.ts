@@ -10,6 +10,8 @@ import { GetallpairState } from 'app/components/Market/slice/types';
 import { TradesState } from 'app/components/Trades/slice/types';
 import { WebsocketState } from 'app/container/HomeContainer/slice/types';
 import { GetopenOrderState } from 'app/components/TradesInformation/OpenOrders/slice/types';
+import { SpotWalletState } from 'app/container/SpotWalletContainer/slice/types';
+import { P2PWalletState } from 'app/container/P2PWalletContainer/slice/types';
 /* 
   Because the redux-injectors injects your reducers asynchronously somewhere in your code
   You have to declare them here manually
@@ -26,4 +28,6 @@ export interface RootState {
   trades: TradesState;
   websocket: WebsocketState;
   getopenOrder: GetopenOrderState;
+  spotWallet: SpotWalletState;
+  p2pWallet: P2PWalletState;
 }

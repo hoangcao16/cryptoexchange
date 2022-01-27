@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import FiatSpotContainer from 'app/container/FiatSpotContainer';
-export function FiatSpotPage() {
+import P2PWalletContainer from 'app/container/P2PWalletContainer';
+export function P2PWalletPage() {
   return (
     <App>
       <Helmet>
-        <title>Spot - Wallet | Trading View</title>
+        <title>P2P - Wallet | Trading View</title>
         <meta name="description" content="Login Trading View Web" />
       </Helmet>
-      <FiatSpotContainer />
+      <P2PWalletContainer />
     </App>
   );
 }

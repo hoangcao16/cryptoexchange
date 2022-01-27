@@ -8,18 +8,13 @@ import {
   ConvertButton,
 } from './style';
 import { ReactComponent as SearchIcon } from 'app/assets/img/search.svg';
-import { data } from './data';
 import { Table, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import numeral from 'numeral';
 
-export interface NameProps {
-  coin: string;
-  description: string;
-  url: string;
-}
 export interface Dataprops {
   key: number;
-  name: NameProps;
+  assetName: string;
   total: number;
   available: number;
   inOrder: number;
@@ -29,15 +24,18 @@ export interface Dataprops {
 const columns: ColumnsType<Dataprops> = [
   {
     title: 'Coin',
-    dataIndex: 'name',
-    sorter: (a, b) => a.name.coin.localeCompare(b.name.coin),
-    render: (record: any) => {
+    dataIndex: 'assetName',
+    sorter: (a, b) => a.assetName.localeCompare(b.assetName),
+    render: (text: any, record: any) => {
       return (
         <Space size="middle">
+          <div>
+            <img className="coin-icon" src={record.icon} alt="coin" />
+          </div>
           <div className="d-flex flex-column">
-            <div>{record.coin}</div>
+            <div>{text}</div>
             <a className="coin-url" href={record.url}>
-              {record.description}
+              {record.tokenName}
             </a>
           </div>
         </Space>
@@ -51,6 +49,9 @@ const columns: ColumnsType<Dataprops> = [
       compare: (a, b) => a.total - b.total,
       multiple: 3,
     },
+    render: (text: any, record: any) => {
+      return <Space size="middle">{numeral(text).format('0,0.000000')}</Space>;
+    },
   },
   {
     title: 'Available',
@@ -58,6 +59,9 @@ const columns: ColumnsType<Dataprops> = [
     sorter: {
       compare: (a, b) => a.available - b.available,
       multiple: 2,
+    },
+    render: (text: any, record: any) => {
+      return <Space size="middle">{numeral(text).format('0,0.000000')}</Space>;
     },
   },
   {
@@ -67,13 +71,8 @@ const columns: ColumnsType<Dataprops> = [
       compare: (a, b) => a.inOrder - b.inOrder,
       multiple: 1,
     },
-  },
-  {
-    title: 'BTC Value',
-    dataIndex: 'btcValue',
-    sorter: {
-      compare: (a, b) => a.btcValue - b.btcValue,
-      multiple: 1,
+    render: (text: any, record: any) => {
+      return <Space size="middle">{numeral(text).format('0,0.000000')}</Space>;
     },
   },
   {
@@ -83,18 +82,16 @@ const columns: ColumnsType<Dataprops> = [
     render: (record: any) => {
       return (
         <Space size="middle">
-          {record.map((item: any, index) => (
-            <span className="coin-action" key={index}>
-              {item}
-            </span>
-          ))}
+          <span className="coin-action">Deposit</span>
+          <span className="coin-action">Withdraw</span>
+          <span className="coin-action">Convert</span>
         </Space>
       );
     },
   },
 ];
 
-const FiatSpotTable = () => {
+const FiatSpotTable = ({ dataSource }) => {
   const onChange = (filters, sorter, extra) => {
     console.log('params', filters, sorter, extra);
   };
@@ -102,7 +99,7 @@ const FiatSpotTable = () => {
     <App>
       <Container>
         <Header />
-        <Table columns={columns} dataSource={data} onChange={onChange} />
+        <Table columns={columns} dataSource={dataSource} onChange={onChange} />
       </Container>
     </App>
   );

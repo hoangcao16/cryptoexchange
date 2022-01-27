@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { StyledNavDropdown, DropdownItemTitle } from './style';
-import { Link } from 'react-router-dom';
+import { StyledNavDropdown, DropdownItemTitle, StyledLink } from './style';
 
 const WalletLogged = () => {
   const [show, setShow] = useState(false);
@@ -18,7 +17,7 @@ const WalletLogged = () => {
       onMouseEnter={showDropdown}
       onMouseLeave={hideDropdown}
     >
-      <Link to="/wallet/fiat">
+      <StyledLink to="/wallet/spot">
         <div className="item">
           <DropdownItemTitle>
             <span>Fiat & Spot</span>
@@ -26,7 +25,16 @@ const WalletLogged = () => {
             <span className="title_description">(Deposit & Withdraw)</span>
           </DropdownItemTitle>
         </div>
-      </Link>
+      </StyledLink>
+      <StyledLink to="/wallet/p2p">
+        <div className="item">
+          <DropdownItemTitle>
+            <span>P2P Wallet</span>
+            <br></br>
+            <span className="title_description">(Deposit & Withdraw)</span>
+          </DropdownItemTitle>
+        </div>
+      </StyledLink>
     </StyledNavDropdown>
   );
 };

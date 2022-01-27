@@ -2,7 +2,7 @@ import { ReactComponent as SearchIcon } from 'app/assets/img/search.svg';
 import { ReactComponent as StarIcon } from 'app/assets/img/star.svg';
 import { SampleNextArrow, SamplePrevArrow } from './components/arrow';
 import Header from './components/Header';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   SearchBox,
@@ -18,26 +18,34 @@ import { isEmpty } from 'app/components/common/common';
 
 const Market = ({ dataSocket, dataApi }) => {
   const [active, setActive] = useState('USDT');
-  let allPair: any[] = [];
+  const [allPair, setAllPair]: any[] = useState([]);
+  // let allPair: any[] = [];
   const { activeChangeColumnMarket } = useGlobalContext();
-  if (dataApi.data.rows && isEmpty(dataSocket)) {
-    allPair = dataApi.data.rows.slice(0);
-  }
-  if (!isEmpty(dataSocket)) {
-    if (allPair.length === 0) {
-      allPair = [dataSocket];
-    } else {
-      const index = allPair?.findIndex((item: any) => {
-        return item.symbol === dataSocket?.symbol;
-      });
-      if (index !== -1 && allPair !== undefined) {
-        // Object.assign(allPair[index], dataSocket);
-        allPair[index].latestPrice = dataSocket?.latestPrice;
-        allPair[index].changes = dataSocket?.change24h;
-        allPair[index].volume = dataSocket?.volume24h;
+  useEffect(() => {
+    if (dataApi.data.rows && isEmpty(dataSocket)) {
+      setAllPair(dataApi.data.rows);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataApi.data.rows]);
+  useEffect(() => {
+    if (!isEmpty(dataSocket)) {
+      if (allPair.length === 0) {
+        setAllPair([dataSocket]);
+      } else {
+        const index = allPair?.findIndex((item: any) => {
+          return item.symbol === dataSocket?.symbol;
+        });
+        if (index !== -1 && allPair !== undefined) {
+          const copyData = [...JSON.parse(JSON.stringify(allPair))];
+          copyData[index].latestPrice = dataSocket?.latestPrice;
+          copyData[index].changes = dataSocket?.change24h;
+          copyData[index].volume = dataSocket?.volume24h;
+          setAllPair(copyData);
+        }
       }
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataSocket]);
 
   const MenuSlick = () => {
     const settings = {
