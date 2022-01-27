@@ -16,18 +16,18 @@ import { useTradesSlice } from 'app/components/Trades/slice';
 import { selectTrades } from 'app/components/Trades/slice/selectors';
 import { useWebsocketSlice } from 'app/container/HomeContainer/slice';
 const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
-
+const getPairName = () => {
+  return JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '');
+};
 const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
   const [dataTradesSocket, setDataTradesSocket]: any = useState({});
+  const [pairName, setPairName] = useState('');
   const [dataOrder, setDataOrder]: any[] = useState([]);
   const dispatch = useDispatch();
   const { actions: actionsAllPair } = useGetallpairSlice();
   const { actions: actionsTrades } = useTradesSlice();
   const { actions: actionsWebsocket } = useWebsocketSlice();
-  const pairName = JSON.parse(
-    JSON.stringify(localStorage.getItem('pair')) || '',
-  );
   const dataAllPair = useSelector(selectGetallpair);
   const dataAllTrades = useSelector(selectTrades);
   useEffect(() => {
@@ -78,10 +78,21 @@ const HomeContentContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    dispatch(actionsAllPair.getAllPairRequest());
-    dispatch(actionsTrades.getTradesRequest(pairName));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    function hanldeGetSymbol() {
+      setPairName(getPairName());
+    }
+    window.addEventListener('storage', hanldeGetSymbol);
+    return () => window.removeEventListener('storage', hanldeGetSymbol);
   }, []);
+  useEffect(() => {
+    dispatch(actionsAllPair.getAllPairRequest());
+  }, []);
+  useEffect(() => {
+    if (pairName !== '') {
+      dispatch(actionsTrades.getTradesRequest(pairName));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pairName]);
   return (
     <Container>
       <StyledRow>

@@ -5,18 +5,29 @@ import numeral from 'numeral';
 import { useSelector } from 'react-redux';
 import { selectGetBalancePair } from '../../slice/selectors';
 import { getToken } from 'app/components/common/common';
+import { useState, useEffect } from 'react';
+
+const getBaseSymbol = () => {
+  return JSON.parse(JSON.stringify(localStorage.getItem('base_symbol') || ''));
+};
+const getQuoteSymbol = () => {
+  return JSON.parse(JSON.stringify(localStorage.getItem('quote_symbol') || ''));
+};
 const LimitForm = ({ wallet }: any) => {
   const type = 'LIMIT';
   const balancePair: any = useSelector(selectGetBalancePair);
-  console.log(balancePair.data);
+  const [baseSymbol, setBaseSymbol] = useState('');
+  const [quoteSymbol, setQuoteSymbol] = useState('');
   const baseAmount = balancePair.data.base_amount;
   const quoteAmount = balancePair.data.quote_amount;
-  const baseSymbol = JSON.parse(
-    JSON.stringify(localStorage.getItem('base_symbol') || ''),
-  );
-  const quoteSymbol = JSON.parse(
-    JSON.stringify(localStorage.getItem('quote_symbol') || ''),
-  );
+  useEffect(() => {
+    function hanldeGetSymbol() {
+      setBaseSymbol(getBaseSymbol());
+      setQuoteSymbol(getQuoteSymbol());
+    }
+    window.addEventListener('storage', hanldeGetSymbol);
+    return () => window.removeEventListener('storage', hanldeGetSymbol);
+  }, []);
   return (
     <>
       <ColLeft>
