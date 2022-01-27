@@ -17,7 +17,7 @@ export interface Dataprops {
   assetName: string;
   total: number;
   available: number;
-  inOrder: number;
+  frozen: number;
   btcValue: number;
   action: Array<string>;
 }
@@ -65,10 +65,10 @@ const columns: ColumnsType<Dataprops> = [
     },
   },
   {
-    title: 'In Order',
-    dataIndex: 'inOrder',
+    title: 'Frozen',
+    dataIndex: 'frozen',
     sorter: {
-      compare: (a, b) => a.inOrder - b.inOrder,
+      compare: (a, b) => a.frozen - b.frozen,
       multiple: 1,
     },
     render: (text: any, record: any) => {
@@ -99,7 +99,12 @@ const FiatSpotTable = ({ dataSource }) => {
     <App>
       <Container>
         <Header />
-        <Table columns={columns} dataSource={dataSource} onChange={onChange} />
+        <Table
+          columns={columns}
+          dataSource={dataSource}
+          onChange={onChange}
+          rowKey="tokenId"
+        />
       </Container>
     </App>
   );

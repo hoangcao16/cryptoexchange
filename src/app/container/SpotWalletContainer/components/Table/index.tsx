@@ -99,7 +99,12 @@ const FiatSpotTable = ({ dataSource }) => {
     <App>
       <Container>
         <Header />
-        <Table columns={columns} dataSource={dataSource} onChange={onChange} />
+        <Table
+          columns={columns}
+          dataSource={dataSource}
+          onChange={onChange}
+          rowKey="tokenId"
+        />
       </Container>
     </App>
   );

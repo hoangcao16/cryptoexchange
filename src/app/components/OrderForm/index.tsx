@@ -1,20 +1,26 @@
 import { Container, Tabs, StyledDropdown, Tooltip } from './style';
 import { ReactComponent as InformationIcon } from 'app/assets/img/information.svg';
 import { SplitButton, Dropdown } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LimitForm from './components/LimitForm';
 import MarketForm from './components/MarketForm';
 import StopLimitForm from './components/StopLimitForm';
 import OcoForm from './components/OcoForm';
+import { useDispatch } from 'react-redux';
+import { useGetBalancePairSlice } from './slice';
+
 const OrderForm = () => {
   const [title, setTitle] = useState('Stop-limit');
   const [tabActive, setTabActive] = useState(1);
-  const baseSymbol = 'BTC';
-  const quoteSymbol = 'USDT';
-  const baseAvlb = 100;
-  const quoteAvlb = 100;
+  const dispatch = useDispatch();
+  const { actions } = useGetBalancePairSlice();
   const wallet = 'SPOT';
-  const type = 'LIMIT';
+  const pairId = JSON.parse(
+    JSON.stringify(localStorage.getItem('pair_id') || ''),
+  );
+  useEffect(() => {
+    dispatch(actions.getBalancePairSpotRequest(pairId));
+  }, [actions, dispatch, pairId]);
   return (
     <Container>
       <div className="d-flex">
@@ -79,14 +85,7 @@ const OrderForm = () => {
       </div>
       <div className="d-flex">
         {tabActive === 1 ? (
-          <LimitForm
-            baseSymbol={baseSymbol}
-            quoteSymbol={quoteSymbol}
-            baseAvlb={baseAvlb}
-            quoteAvlb={quoteAvlb}
-            wallet={wallet}
-            type={type}
-          />
+          <LimitForm wallet={wallet} />
         ) : tabActive === 2 ? (
           <MarketForm />
         ) : tabActive === 3 ? (

@@ -7,6 +7,17 @@ function* handleGetAllPair() {
     const response = yield call(MarketServices.GetAllPair);
     if (response.data.rc === 0) {
       yield put(actions.getAllPairSuccess(response.data));
+      const index = response.data.rows[0].symbol.indexOf('/');
+      localStorage.setItem(
+        'base_symbol',
+        response.data.rows[0].symbol.substring(0, index),
+      );
+      localStorage.setItem(
+        'quote_symbol',
+        response.data.rows[0].symbol.substring(index + 1),
+      );
+      localStorage.setItem('pair', response.data.rows[0].symbol);
+      localStorage.setItem('pair_id', response.data.rows[0].id);
     }
   } catch (err: any) {
     yield put(actions.getAllPairFail(err.response));
