@@ -9,17 +9,28 @@ import OcoForm from './components/OcoForm';
 import { useDispatch } from 'react-redux';
 import { useGetBalancePairSlice } from './slice';
 
+const getPairId = () => {
+  return JSON.parse(JSON.stringify(localStorage.getItem('pair_id')) || '');
+};
+
 const OrderForm = () => {
   const [title, setTitle] = useState('Stop-limit');
   const [tabActive, setTabActive] = useState(1);
+  const [pairId, setPairId] = useState('');
   const dispatch = useDispatch();
   const { actions } = useGetBalancePairSlice();
   const wallet = 'SPOT';
-  const pairId = JSON.parse(
-    JSON.stringify(localStorage.getItem('pair_id') || ''),
-  );
   useEffect(() => {
-    dispatch(actions.getBalancePairSpotRequest(pairId));
+    function hanldeGetPairId() {
+      setPairId(getPairId());
+    }
+    window.addEventListener('storage', hanldeGetPairId);
+    return () => window.removeEventListener('storage', hanldeGetPairId);
+  }, []);
+  useEffect(() => {
+    if (pairId !== '') {
+      dispatch(actions.getBalancePairSpotRequest(pairId));
+    }
   }, [actions, dispatch, pairId]);
   return (
     <Container>

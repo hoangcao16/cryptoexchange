@@ -8,10 +8,19 @@ import {
 } from './style';
 import { ReactComponent as PlayIcon } from 'app/assets/img/play.svg';
 import { ReactComponent as OpenIcon } from 'app/assets/img/openIcon.svg';
+import { useEffect, useState } from 'react';
+const getPairName = () => {
+  return JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '');
+};
 const ContentHeader = () => {
-  const pairName = JSON.parse(
-    JSON.stringify(localStorage.getItem('pair')) || '',
-  );
+  const [pairName, setPairName] = useState('');
+  useEffect(() => {
+    function hanldeGetSymbol() {
+      setPairName(getPairName());
+    }
+    window.addEventListener('storage', hanldeGetSymbol);
+    return () => window.removeEventListener('storage', hanldeGetSymbol);
+  }, []);
   return (
     <Container>
       <Div>

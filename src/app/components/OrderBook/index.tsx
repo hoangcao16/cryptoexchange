@@ -21,9 +21,13 @@ import { selectOrderbook } from './slice/selectors';
 const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
   const [Layout, setLayout] = useState(1);
   const [show, setShow] = useState(false);
+  const [pairName, setPairName] = useState('');
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
   const dataOrderbook: any = useSelector(selectOrderbook);
+  const getPairName = () => {
+    return JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '');
+  };
   const showDropdown = e => {
     setShow(!show);
   };
@@ -39,12 +43,18 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
     { value: '6', label: '100' },
   ];
   useEffect(() => {
-    const pairName = JSON.parse(
-      JSON.stringify(localStorage.getItem('pair')) || '',
-    );
-    dispatch(actions.getOrderbookRequest(pairName));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    function hanldeGetSymbol() {
+      setPairName(getPairName());
+    }
+    window.addEventListener('storage', hanldeGetSymbol);
+    return () => window.removeEventListener('storage', hanldeGetSymbol);
   }, []);
+  useEffect(() => {
+    if (pairName !== '') {
+      dispatch(actions.getOrderbookRequest(pairName));
+    }
+  }, [actions, dispatch, pairName]);
+
   const dataAsks = dataOrderbook?.data?.data?.asks;
   const dataBids = dataOrderbook?.data?.data?.bids;
   return (
