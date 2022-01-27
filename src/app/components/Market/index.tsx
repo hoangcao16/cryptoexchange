@@ -18,12 +18,10 @@ import { isEmpty } from 'app/components/common/common';
 
 const Market = ({ dataSocket, dataApi }) => {
   const [active, setActive] = useState('USDT');
-  // const [allPair, setAllPair]: any[] = useState([]);
   let allPair: any[] = [];
   const { activeChangeColumnMarket } = useGlobalContext();
-
-  if (dataApi.data.list && isEmpty(dataSocket)) {
-    allPair = dataApi.data.list.slice(0);
+  if (dataApi.data.rows && isEmpty(dataSocket)) {
+    allPair = dataApi.data.rows.slice(0);
   }
   if (!isEmpty(dataSocket)) {
     if (allPair.length === 0) {
@@ -35,8 +33,8 @@ const Market = ({ dataSocket, dataApi }) => {
       if (index !== -1 && allPair !== undefined) {
         // Object.assign(allPair[index], dataSocket);
         allPair[index].latestPrice = dataSocket?.latestPrice;
-        allPair[index].change24h = dataSocket?.change24h;
-        allPair[index].volume24h = dataSocket?.volume24h;
+        allPair[index].changes = dataSocket?.change24h;
+        allPair[index].volume = dataSocket?.volume24h;
       }
     }
   }
@@ -124,11 +122,11 @@ const Market = ({ dataSocket, dataApi }) => {
                   {numeral(item.latestPrice).format('0,0.00000000')}
                 </Price>
                 {activeChangeColumnMarket ? (
-                  <Change data-type={item.change24h < 0 ? 'down' : 'up'}>
-                    {numeral(item.change24h).format('0,0.00')}%
+                  <Change data-type={item.changes < 0 ? 'down' : 'up'}>
+                    {numeral(item.changes).format('0,0.00')}%
                   </Change>
                 ) : (
-                  <Change>{item.volume24h}M</Change>
+                  <Change>{item.volume}M</Change>
                 )}
               </div>
             );
