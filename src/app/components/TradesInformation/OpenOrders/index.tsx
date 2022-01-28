@@ -69,10 +69,13 @@ const Orders = () => {
       });
       if (index !== -1 && dataOpenOrders !== undefined) {
         const dataCopy = [...JSON.parse(JSON.stringify(dataOpenOrders))];
-        dataCopy[index].filled =
-          (dataSocket.Orderfilled.filled_quantity /
+        const percentFill =
+          ((dataSocket.Orderfilled.origin_quantity -
+            dataSocket.Orderfilled.order_quantity) /
             dataSocket.Orderfilled.origin_quantity) *
           100;
+        // console.log(percentFill);
+        dataCopy[index].filled = percentFill;
         setDataOpenOrders(dataCopy);
       }
     }

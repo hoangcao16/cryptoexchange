@@ -19,9 +19,9 @@ const OrderBookBid = ({
   const pairData: any = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
-  useEffect(() => {
-    setDataView([]);
-  }, [pairData.reselectPair]);
+  // useEffect(() => {
+  //   setDataView([]);
+  // }, [pairData.reselectPair]);
   useEffect(() => {
     if (dataSocket.bids !== undefined) {
       setDataView(dataSocket.bids);

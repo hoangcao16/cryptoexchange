@@ -6,6 +6,7 @@ import { GetBalancePairState } from './types';
 
 export const initialState: GetBalancePairState = {
   data: {},
+  reGetBalancePair: false,
 };
 
 const slice = createSlice({
@@ -17,6 +18,9 @@ const slice = createSlice({
       state.data = action.payload;
     },
     getBalancePairSpotFail(state, action: PayloadAction<any>) {},
+    regetBalance(state) {
+      state.reGetBalancePair = !state.reGetBalancePair;
+    },
   },
 });
 

@@ -80,7 +80,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       key: 'executed',
       render: (text: any) => {
         return (
-          <span className="white-color">{numeral(text).format('0,0.00')}</span>
+          <span className="white-color">{numeral(text).format('0,0.000')}</span>
         );
       },
     },
@@ -91,7 +91,9 @@ const OrderHistoryList = ({ dataSource }: any) => {
       key: 'amount',
       render: (text: any) => {
         return (
-          <span className="white-color">{numeral(text).format('0,0.00')}%</span>
+          <span className="white-color">
+            {numeral(text).format('0,0.0000')}%
+          </span>
         );
       },
     },

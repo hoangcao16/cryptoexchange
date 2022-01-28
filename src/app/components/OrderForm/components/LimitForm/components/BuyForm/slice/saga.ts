@@ -2,6 +2,7 @@ import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { buyspotlimitActions as actions } from '.';
 import { spotTradeServices } from 'services/spotTradeService';
 import { toastActions } from 'app/components/Toast/slice';
+import { getBalancePairActions } from 'app/components/OrderForm/slice';
 
 function* handlebuyspotlimit(action) {
   const { pair_id, type, price, amount, stop, limit } = action.payload;
@@ -17,6 +18,7 @@ function* handlebuyspotlimit(action) {
     );
     if (response.data.rc === 0) {
       yield put(actions.buyspotlimitSuccess(response.data));
+      yield put(getBalancePairActions.regetBalance());
       yield put(
         toastActions.openSuccessToast({
           title: 'Success',
