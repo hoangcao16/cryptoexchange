@@ -9,7 +9,6 @@ import { useSellspotlimitSlice } from './slice';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from 'react';
-import { authService } from 'services/authService';
 import { Tooltip } from 'antd';
 import { selectOrderbook } from 'app/components/OrderBook/slice/selectors';
 //declare type
@@ -23,7 +22,6 @@ const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
   const { actions } = useSellspotlimitSlice();
   const selectPrice: any = useSelector(selectOrderbook);
   const [percent, setPercent] = useState(0);
-  const userId: any = JSON.parse(authService.getUserId() || '{}');
 
   //Validate
   const validation = Yup.object().shape({
@@ -109,18 +107,14 @@ const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
   }, [selectPrice.selectPrice]);
   // submit form
   const onSubmitSell = (data: any) => {
-    const ts = new Date().getTime();
-    dispatch(
-      actions.sellspotlimitRequest({
-        ...data,
-        userId,
-        baseSymbol,
-        quoteSymbol,
-        wallet,
-        type,
-        ts,
-      }),
-    );
+    const payload = {
+      ...data,
+      pair_id: localStorage.getItem('pair_id'),
+      type: type,
+      stop: null,
+      limit: null,
+    };
+    dispatch(actions.sellspotlimitRequest(payload));
   };
   return (
     <form onSubmit={handleSubmit(onSubmitSell)}>
