@@ -9,6 +9,7 @@ import OcoForm from './components/OcoForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetBalancePairSlice } from './slice';
 import { selectGetallpair } from 'app/components/Market/slice/selectors';
+import { selectGetBalancePair } from './slice/selectors';
 
 const getPairId = () => {
   return JSON.parse(JSON.stringify(localStorage.getItem('pair_id')) || '');
@@ -20,6 +21,7 @@ const OrderForm = () => {
   const [pairId, setPairId] = useState('');
   const dispatch = useDispatch();
   const { reselectPair } = useSelector(selectGetallpair);
+  const { reGetBalancePair } = useSelector(selectGetBalancePair);
   const { actions } = useGetBalancePairSlice();
   const wallet = 'SPOT';
   useEffect(() => {
@@ -30,7 +32,7 @@ const OrderForm = () => {
     if (pairId !== '') {
       dispatch(actions.getBalancePairSpotRequest(pairId));
     }
-  }, [actions, dispatch, pairId]);
+  }, [actions, dispatch, pairId, reGetBalancePair]);
   return (
     <Container>
       <div className="d-flex">
