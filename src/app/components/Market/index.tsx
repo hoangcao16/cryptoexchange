@@ -15,11 +15,14 @@ import {
 import { useGlobalContext } from '../common/context';
 import numeral from 'numeral';
 import { isEmpty } from 'app/components/common/common';
+import { useDispatch } from 'react-redux';
+import { useGetallpairSlice } from './slice';
 
 const Market = ({ dataSocket, dataApi }) => {
   const [active, setActive] = useState('USDT');
   const [allPair, setAllPair]: any[] = useState([]);
-  // let allPair: any[] = [];
+  const dispatch = useDispatch();
+  const { actions } = useGetallpairSlice();
   const { activeChangeColumnMarket } = useGlobalContext();
   useEffect(() => {
     if (dataApi.data.rows && isEmpty(dataSocket)) {
@@ -104,6 +107,14 @@ const Market = ({ dataSocket, dataApi }) => {
       </StyledSlick>
     );
   };
+  const setPair = data => {
+    const index = data.symbol.indexOf('/');
+    localStorage.setItem('base_symbol', data.symbol.substring(0, index));
+    localStorage.setItem('quote_symbol', data.symbol.substring(index + 1));
+    localStorage.setItem('pair', data.symbol);
+    localStorage.setItem('pair_id', data.id);
+    dispatch(actions.reselectPair());
+  };
   return (
     <Container>
       <SearchBox>
@@ -121,6 +132,7 @@ const Market = ({ dataSocket, dataApi }) => {
               <div
                 className="d-flex justify-content-between table-item align-items-center"
                 key={index}
+                onClick={() => setPair(item)}
               >
                 <Pair className="d-flex align-items-center">
                   <StarIcon className="tableItem-star" />

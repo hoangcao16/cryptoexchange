@@ -11,6 +11,7 @@ function* handleGetOrderbook(action) {
     }
   } catch (err: any) {
     yield put(actions.getOrderbookFail(err.response));
+    yield put(actions.getOrderbookSuccess(null));
     console.log(err);
   }
 }

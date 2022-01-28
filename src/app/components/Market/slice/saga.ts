@@ -18,6 +18,7 @@ function* handleGetAllPair() {
       );
       localStorage.setItem('pair', response.data.rows[0].symbol);
       localStorage.setItem('pair_id', response.data.rows[0].id);
+      yield put(actions.reselectPair());
     }
   } catch (err: any) {
     yield put(actions.getAllPairFail(err.response));

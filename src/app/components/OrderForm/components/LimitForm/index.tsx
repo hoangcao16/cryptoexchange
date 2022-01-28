@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ColLeft, ColRight } from './style';
 import BuyForm from './components/BuyForm';
 import SellForm from './components/SellForm';
@@ -21,13 +22,12 @@ const LimitForm = ({ wallet }: any) => {
   const baseAmount = balancePair.data.base_amount;
   const quoteAmount = balancePair.data.quote_amount;
   useEffect(() => {
-    function hanldeGetSymbol() {
-      setBaseSymbol(getBaseSymbol());
-      setQuoteSymbol(getQuoteSymbol());
-    }
-    window.addEventListener('storage', hanldeGetSymbol);
-    return () => window.removeEventListener('storage', hanldeGetSymbol);
-  }, []);
+    setBaseSymbol(getBaseSymbol());
+    setQuoteSymbol(getQuoteSymbol());
+  }, [
+    localStorage.getItem('base_symbol'),
+    localStorage.getItem('quote_symbol'),
+  ]);
   return (
     <>
       <ColLeft>

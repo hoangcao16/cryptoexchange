@@ -20,6 +20,9 @@ const OrderBookBid = ({
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
   useEffect(() => {
+    setDataView([]);
+  }, [pairData.reselectPair]);
+  useEffect(() => {
     if (dataSocket.bids !== undefined) {
       setDataView(dataSocket.bids);
     } else if (dataSocket.bids === null) {
@@ -40,7 +43,7 @@ const OrderBookBid = ({
         setLastestPrice(pairData?.data?.list[index]?.latestPrice);
       }
     }
-  }, [dataApi, dataSocket, dataMarketSocket, pairData]);
+  }, [dataApi, dataSocket, dataMarketSocket, pairData.data]);
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));
   };

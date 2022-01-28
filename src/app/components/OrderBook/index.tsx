@@ -17,6 +17,7 @@ import { Dropdown } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOrderbookSlice } from './slice';
 import { selectOrderbook } from './slice/selectors';
+import { selectGetallpair } from 'app/components/Market/slice/selectors';
 
 const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
   const [Layout, setLayout] = useState(1);
@@ -25,6 +26,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
   const dataOrderbook: any = useSelector(selectOrderbook);
+  const { reselectPair } = useSelector(selectGetallpair);
   const getPairName = () => {
     return JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '');
   };
@@ -43,20 +45,15 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
     { value: '6', label: '100' },
   ];
   useEffect(() => {
-    function hanldeGetSymbol() {
-      setPairName(getPairName());
-    }
-    window.addEventListener('storage', hanldeGetSymbol);
-    return () => window.removeEventListener('storage', hanldeGetSymbol);
-  }, []);
+    setPairName(getPairName());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reselectPair]);
   useEffect(() => {
     if (pairName !== '') {
       dispatch(actions.getOrderbookRequest(pairName));
     }
   }, [actions, dispatch, pairName]);
 
-  const dataAsks = dataOrderbook?.data?.data?.asks;
-  const dataBids = dataOrderbook?.data?.data?.bids;
   return (
     <Container>
       <Header>
@@ -130,14 +127,14 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
           <OrderBookTHeader />
           <StyledRow>
             <OrderBookAsk
-              dataApi={dataAsks}
+              dataApi={dataOrderbook?.data?.data?.asks}
               dataSocket={dataOrderbookSocket}
               miniTable
             />
           </StyledRow>
           <StyledRow>
             <OrderBookBid
-              dataApi={dataBids}
+              dataApi={dataOrderbook?.data?.data?.bids}
               dataSocket={dataOrderbookSocket}
               dataMarketSocket={dataMarketSocket}
               miniTable
@@ -148,7 +145,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
         <>
           <OrderBookTHeader />
           <OrderBookBid
-            dataApi={dataBids}
+            dataApi={dataOrderbook?.data?.data?.bids}
             dataSocket={dataOrderbookSocket}
             dataMarketSocket={dataMarketSocket}
             miniTable={false}
@@ -158,7 +155,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
         <div style={{ height: '100%' }}>
           <OrderBookTHeader />
           <OrderBookAsk
-            dataApi={dataAsks}
+            dataApi={dataOrderbook?.data?.data?.asks}
             dataSocket={dataOrderbookSocket}
             miniTable={false}
           />

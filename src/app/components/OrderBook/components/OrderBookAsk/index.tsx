@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Price, Amount, Total, Table } from './style';
 import numeral from 'numeral';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useOrderbookSlice } from '../../slice';
+import { selectGetallpair } from 'app/components/Market/slice/selectors';
 
 const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
   const [dataView, setDataView]: any[] = useState([]);
+  const { reselectPair } = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
+  useEffect(() => {
+    setDataView([]);
+  }, [reselectPair]);
   useEffect(() => {
     if (dataSocket.asks !== undefined) {
       setDataView(dataSocket.asks);
