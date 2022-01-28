@@ -86,7 +86,7 @@ const HomeContentContainer = () => {
   }, []);
   useEffect(() => {
     dispatch(actionsAllPair.getAllPairRequest());
-  }, []);
+  }, [actionsAllPair, dispatch]);
   useEffect(() => {
     if (pairName !== '') {
       dispatch(actionsTrades.getTradesRequest(pairName));

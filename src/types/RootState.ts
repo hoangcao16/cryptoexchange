@@ -10,6 +10,7 @@ import { GetallpairState } from 'app/components/Market/slice/types';
 import { TradesState } from 'app/components/Trades/slice/types';
 import { WebsocketState } from 'app/container/HomeContainer/slice/types';
 import { GetopenOrderState } from 'app/components/TradesInformation/OpenOrders/slice/types';
+import { OrderhistoryState } from 'app/components/TradesInformation/OrderHistory/slice/types';
 import { SpotWalletState } from 'app/container/SpotWalletContainer/slice/types';
 import { P2PWalletState } from 'app/container/P2PWalletContainer/slice/types';
 import { GetBalancePairState } from 'app/components/OrderForm/slice/types';
@@ -29,6 +30,7 @@ export interface RootState {
   trades: TradesState;
   websocket: WebsocketState;
   getopenOrder: GetopenOrderState;
+  orderhistory: OrderhistoryState;
   spotWallet: SpotWalletState;
   p2pWallet: P2PWalletState;
   getBalancePair: GetBalancePairState;
