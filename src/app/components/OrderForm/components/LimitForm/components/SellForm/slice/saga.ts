@@ -4,29 +4,16 @@ import { spotTradeServices } from 'services/spotTradeService';
 import { toastActions } from 'app/components/Toast/slice';
 
 function* handlesellspotlimit(action) {
-  const {
-    userId,
-    baseSymbol,
-    quoteSymbol,
-    price,
-    amount,
-    wallet,
-    type,
-    total,
-    ts,
-  } = action.payload;
+  const { pair_id, type, price, amount, stop, limit } = action.payload;
   try {
     const response = yield call(
       spotTradeServices.sellSpotLimit,
-      userId,
-      baseSymbol,
-      quoteSymbol,
-      wallet,
+      pair_id,
       type,
       price,
       amount,
-      total,
-      ts,
+      stop,
+      limit,
     );
     if (response.data.rc === 0) {
       yield put(actions.sellspotlimitSuccess(response.data));
