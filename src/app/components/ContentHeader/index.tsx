@@ -15,12 +15,9 @@ const getPairName = () => {
 const ContentHeader = () => {
   const [pairName, setPairName] = useState('');
   useEffect(() => {
-    function hanldeGetSymbol() {
-      setPairName(getPairName());
-    }
-    window.addEventListener('storage', hanldeGetSymbol);
-    return () => window.removeEventListener('storage', hanldeGetSymbol);
-  }, []);
+    setPairName(getPairName());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localStorage.getItem('pair')]);
   return (
     <Container>
       <Div>

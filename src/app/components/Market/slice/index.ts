@@ -6,6 +6,7 @@ import { GetallpairState } from './types';
 
 export const initialState: GetallpairState = {
   data: {},
+  reselectPair: false,
 };
 
 const slice = createSlice({
@@ -17,6 +18,9 @@ const slice = createSlice({
       state.data = action.payload;
     },
     getAllPairFail(state, action: PayloadAction<any>) {},
+    reselectPair(state) {
+      state.reselectPair = !state.reselectPair;
+    },
   },
 });
 

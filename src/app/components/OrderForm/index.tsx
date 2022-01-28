@@ -6,8 +6,9 @@ import LimitForm from './components/LimitForm';
 import MarketForm from './components/MarketForm';
 import StopLimitForm from './components/StopLimitForm';
 import OcoForm from './components/OcoForm';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useGetBalancePairSlice } from './slice';
+import { selectGetallpair } from 'app/components/Market/slice/selectors';
 
 const getPairId = () => {
   return JSON.parse(JSON.stringify(localStorage.getItem('pair_id')) || '');
@@ -18,15 +19,13 @@ const OrderForm = () => {
   const [tabActive, setTabActive] = useState(1);
   const [pairId, setPairId] = useState('');
   const dispatch = useDispatch();
+  const { reselectPair } = useSelector(selectGetallpair);
   const { actions } = useGetBalancePairSlice();
   const wallet = 'SPOT';
   useEffect(() => {
-    function hanldeGetPairId() {
-      setPairId(getPairId());
-    }
-    window.addEventListener('storage', hanldeGetPairId);
-    return () => window.removeEventListener('storage', hanldeGetPairId);
-  }, []);
+    setPairId(getPairId());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reselectPair]);
   useEffect(() => {
     if (pairId !== '') {
       dispatch(actions.getBalancePairSpotRequest(pairId));

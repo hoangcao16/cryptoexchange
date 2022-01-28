@@ -78,12 +78,9 @@ const HomeContentContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    function hanldeGetSymbol() {
-      setPairName(getPairName());
-    }
-    window.addEventListener('storage', hanldeGetSymbol);
-    return () => window.removeEventListener('storage', hanldeGetSymbol);
-  }, []);
+    setPairName(getPairName());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataAllPair.reselectPair]);
   useEffect(() => {
     dispatch(actionsAllPair.getAllPairRequest());
   }, [actionsAllPair, dispatch]);
