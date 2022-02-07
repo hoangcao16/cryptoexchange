@@ -20,10 +20,14 @@ function* handleGetOpenOrder(action) {
 }
 
 function* handleCancelOpenOrder(action) {
+  const { orderId, baseSymbol, quoteSymbol, wallet } = action.payload;
   try {
     const response = yield call(
       OpenOrderServices.cancelOpenOrder,
-      action.payload,
+      orderId,
+      baseSymbol,
+      quoteSymbol,
+      wallet,
     );
     if (response.data.rc === 0) {
       yield put(actions.cancelOrderSuccess(response.data));

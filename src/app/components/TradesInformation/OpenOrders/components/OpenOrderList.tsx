@@ -10,7 +10,13 @@ const OpenOrderList = ({ dataSource }: any) => {
   const dispatch = useDispatch();
   const { actions } = useGetopenOrderSlice();
   const confirm = (e: any, record: any) => {
-    dispatch(actions.cancelOrderRequest(record.order_id));
+    const dataprops = {
+      orderId: record.order_id,
+      baseSymbol: record.baseSymbol,
+      quoteSymbol: record.quoteSymbol,
+      wallet: record.wallet,
+    };
+    dispatch(actions.cancelOrderRequest(dataprops));
   };
   const columns: ColumnsType<any> = [
     {
