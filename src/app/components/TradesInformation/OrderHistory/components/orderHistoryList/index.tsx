@@ -92,7 +92,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       render: (text: any) => {
         return (
           <span className="white-color">
-            {numeral(text).format('0,0.0000')}%
+            {numeral(text).format('0,0.0000')}
           </span>
         );
       },

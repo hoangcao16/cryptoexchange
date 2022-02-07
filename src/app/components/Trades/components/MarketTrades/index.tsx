@@ -10,7 +10,12 @@ const MarketTrades = ({ dataSocket, dataApi }) => {
   const [dataView, setDataView]: any[] = useState([]);
   const { reselectPair } = useSelector(selectGetallpair);
   useEffect(() => {
-    setDataView([]);
+    if (!isEmpty(dataApi.data)) {
+      setDataView(dataApi.data.data.list);
+    } else {
+      setDataView([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reselectPair]);
 
   useEffect(() => {
