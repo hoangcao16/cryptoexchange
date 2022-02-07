@@ -36,6 +36,18 @@ const Orders = () => {
     }
   }, [dataOrders.data]);
   useEffect(() => {
+    if (dataOrders.responseCancelOrder.rc === 0) {
+      const index = dataOpenOrders.findIndex((item: any) => {
+        return item.order_id === dataOrders.responseCancelOrder.orderId;
+      });
+      if (index !== -1 && dataOpenOrders !== undefined) {
+        const dataCopy = [...JSON.parse(JSON.stringify(dataOpenOrders))];
+        dataCopy.splice(index, 1);
+        setDataOpenOrders(dataCopy);
+      }
+    }
+  }, [dataOrders.responseCancelOrder]);
+  useEffect(() => {
     if (
       !isEmpty(dataBuy.data) &&
       dataOpenOrders.find(

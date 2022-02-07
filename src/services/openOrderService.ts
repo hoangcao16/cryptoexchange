@@ -11,10 +11,16 @@ export const OpenOrderServices = {
       },
     });
   },
-  cancelOpenOrder(id) {
+  cancelOpenOrder(orderId, baseSymbol, quoteSymbol, wallet) {
     return apiClient.request({
       method: 'POST',
-      url: `/orders/cancel?orderId=${id}`,
+      url: `/wise-router/orders/cancel`,
+      data: {
+        orderId,
+        baseSymbol,
+        quoteSymbol,
+        wallet,
+      },
     });
   },
 };
