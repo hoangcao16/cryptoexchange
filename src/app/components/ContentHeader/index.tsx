@@ -25,7 +25,7 @@ const ContentHeader = () => {
           <ContentLeft>
             <div className="contentLeft-coin">
               <div className="coin">{pairName}</div>
-              <div className="InfomationCoin">
+              <div className="InformationCoin">
                 <OpenIcon />
                 <a href="/#">Bitcoin</a>
               </div>

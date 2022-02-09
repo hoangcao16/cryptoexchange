@@ -16,12 +16,15 @@ const OrderBookBid = ({
 }: any) => {
   const [dataView, setDataView]: any[] = useState([]);
   const [lastestPrice, setLastestPrice] = useState('');
+  const [mockUSD, setMockUSD] = useState(0);
   const pairData: any = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
-  // useEffect(() => {
-  //   setDataView([]);
-  // }, [pairData.reselectPair]);
+  useEffect(() => {
+    setInterval(() => {
+      setMockUSD(Math.random() * (5000 - 50 + 1) + 50);
+    }, 1000);
+  }, []);
   useEffect(() => {
     if (dataSocket.bids !== undefined) {
       setDataView(dataSocket.bids);
@@ -31,7 +34,12 @@ const OrderBookBid = ({
       setDataView(dataApi);
     }
     if (!isEmpty(dataMarketSocket)) {
-      setLastestPrice(dataMarketSocket?.latestPrice);
+      if (
+        dataMarketSocket.symbol ===
+        JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '')
+      ) {
+        setLastestPrice(dataMarketSocket?.latestPrice);
+      }
     } else {
       const index: any = pairData?.data?.list?.findIndex((item: any) => {
         return (
@@ -68,7 +76,7 @@ const OrderBookBid = ({
               <BsArrowDown />
             ) : null}
           </div>
-          <div className="markPrice">$49,838.53</div>
+          <div className="markPrice">${numeral(mockUSD).format('0,0.0')}</div>
         </div>
         <a href="/#" className="readmore">
           More

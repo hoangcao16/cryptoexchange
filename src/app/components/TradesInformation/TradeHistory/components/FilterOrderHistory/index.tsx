@@ -9,13 +9,13 @@ import { DatePicker } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useOrderhistorySlice } from '../../slice';
+import { useTradehistorySlice } from '../../slice';
 
 const FilterOrderHistory = () => {
   const { RangePicker } = DatePicker;
   const [time, setTime] = useState(1);
   const dispatch = useDispatch();
-  const { actions } = useOrderhistorySlice();
+  const { actions } = useTradehistorySlice();
   const [startTimeRange, setStartTimeRange]: any = useState();
   const [endTimeRange, setEndTimeRange]: any = useState();
   const onChangeTimeRange = (value: any) => {
@@ -26,56 +26,41 @@ const FilterOrderHistory = () => {
     const data = {
       startTime: moment().subtract(1, 'day').startOf('day').valueOf(),
       endTime: moment().valueOf(),
-      status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
     };
     setTime(1);
-    dispatch(actions.getOrderhistoryRequest(data));
+    dispatch(actions.getTradeHistoryRequest(data));
   };
   const select1Week = () => {
     const data = {
       startTime: moment().subtract(1, 'w').startOf('day').valueOf(),
       endTime: moment().valueOf(),
-      status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
     };
     setTime(2);
-    dispatch(actions.getOrderhistoryRequest(data));
+    dispatch(actions.getTradeHistoryRequest(data));
   };
   const select1Month = () => {
     const data = {
       startTime: moment().subtract(1, 'month').startOf('day').valueOf(),
       endTime: moment().valueOf(),
-      status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
     };
     setTime(3);
-    dispatch(actions.getOrderhistoryRequest(data));
+    dispatch(actions.getTradeHistoryRequest(data));
   };
   const select3Months = () => {
     const data = {
       startTime: moment().subtract(1, 'month').startOf('day').valueOf(),
       endTime: moment().valueOf(),
-      status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
     };
     setTime(4);
-    dispatch(actions.getOrderhistoryRequest(data));
+    dispatch(actions.getTradeHistoryRequest(data));
   };
   const handleSearch = () => {
     const data = {
       startTime: startTimeRange,
       endTime: endTimeRange,
-      status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
     };
     setTime(1);
-    dispatch(actions.getOrderhistoryRequest(data));
+    dispatch(actions.getTradeHistoryRequest(data));
   };
   const handleReset = () => {
     select1Day();

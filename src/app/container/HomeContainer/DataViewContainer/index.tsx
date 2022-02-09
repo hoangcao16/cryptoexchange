@@ -19,10 +19,13 @@ const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 const getPairName = () => {
   return JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '');
 };
+var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
+  connectionTimeout: 5000,
+});
 const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
   const [dataTradesSocket, setDataTradesSocket]: any = useState({});
-  const [pairName, setPairName] = useState('');
+  const [pairName, setPairName] = useState('ROB/USDT');
   const [dataOrder, setDataOrder]: any[] = useState([]);
   const dispatch = useDispatch();
   const { actions: actionsAllPair } = useGetallpairSlice();
@@ -30,23 +33,29 @@ const HomeContentContainer = () => {
   const { actions: actionsWebsocket } = useWebsocketSlice();
   const dataAllPair = useSelector(selectGetallpair);
   const dataAllTrades = useSelector(selectTrades);
+
   useEffect(() => {
-    var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
-      connectionTimeout: 5000,
-    });
+    // var socket = new ReconnectingWebSocket(
+    //   `${baseURL}/ws?pair=${pairName}`,
+    //   [],
+    //   {
+    //     connectionTimeout: 5000,
+    //   },
+    // );
     socket.onopen = () => {
       console.log(`Websocket Market connected`);
-      socket.send(
-        JSON.stringify({
-          event: 'new_joining',
-        }),
-      );
+      // socket.send(
+      //   JSON.stringify({
+      //     method: 'N',
+      //     id: Math.random(),
+      //   }),
+      // );
       setInterval(
         () =>
           socket.send(
             JSON.stringify({
-              id: Math.random(),
               method: 'GET_PROPERTY',
+              id: Math.random(),
             }),
           ),
         5000,
@@ -72,9 +81,9 @@ const HomeContentContainer = () => {
       }
     };
     // connectSocket();
-    return () => {
-      socket.close();
-    };
+    // return () => {
+    //   socket.close();
+    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -111,7 +120,11 @@ const HomeContentContainer = () => {
           </StyledRow>
         </Col>
         <StyledCol md={3} className="right-menu">
-          <Market dataSocket={dataMarketSocket} dataApi={dataAllPair} />
+          <Market
+            dataSocket={dataMarketSocket}
+            dataApi={dataAllPair}
+            socket={socket}
+          />
           <Trades dataSocket={dataTradesSocket} dataApi={dataAllTrades} />
           <MarketActivities />
         </StyledCol>

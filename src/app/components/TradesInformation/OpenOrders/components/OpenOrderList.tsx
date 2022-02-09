@@ -2,7 +2,7 @@ import { Table, Space, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import numeral from 'numeral';
-import { Div, StyledButtion } from './style';
+import { Div, StyledButton } from './style';
 import { useDispatch } from 'react-redux';
 import { useGetopenOrderSlice } from '../slice';
 
@@ -133,7 +133,7 @@ const OpenOrderList = ({ dataSource }: any) => {
               okText="Yes"
               cancelText="No"
             >
-              <StyledButtion>Cancel</StyledButtion>
+              <StyledButton>Cancel</StyledButton>
             </Popconfirm>
           </Space>
         );
@@ -142,7 +142,13 @@ const OpenOrderList = ({ dataSource }: any) => {
   ];
   return (
     <Div>
-      <Table dataSource={dataSource} columns={columns} rowKey="order_id" />
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        rowKey="order_id"
+        pagination={false}
+        scroll={{ y: 260 }}
+      />
     </Div>
   );
 };

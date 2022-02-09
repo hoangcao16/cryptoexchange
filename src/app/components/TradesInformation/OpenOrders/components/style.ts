@@ -71,8 +71,11 @@ export const Div = styled.div`
       color: ${({ theme }) => theme.text};
     }
   }
+  .ant-table-cell-scrollbar {
+    box-shadow: none;
+  }
 `;
-export const StyledButtion = styled.button`
+export const StyledButton = styled.button`
   background-color: transparent;
   color: ${({ theme }) => theme.primary};
   border: none;

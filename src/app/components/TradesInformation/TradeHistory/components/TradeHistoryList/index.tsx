@@ -1,10 +1,10 @@
-import { Table, Space } from 'antd';
+import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import numeral from 'numeral';
 import { Div } from './style';
 
-const OrderHistoryList = ({ dataSource }: any) => {
+const TradeHistoryList = ({ dataSource }: any) => {
   const columns: ColumnsType<any> = [
     {
       title: 'Date',
@@ -23,15 +23,6 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Type',
-      dataIndex: 'type',
-      align: 'center',
-      key: 'type',
-      render: (text: any) => {
-        return <span className="white-color">{text.toUpperCase()}</span>;
-      },
-    },
-    {
       title: 'Side',
       dataIndex: 'side',
       align: 'center',
@@ -43,19 +34,6 @@ const OrderHistoryList = ({ dataSource }: any) => {
             data-type={text === 'SELL' ? 'sell' : 'buy'}
           >
             {text}
-          </span>
-        );
-      },
-    },
-    {
-      title: 'Average',
-      dataIndex: 'average',
-      align: 'center',
-      key: 'average',
-      render: (text: any) => {
-        return (
-          <span className="white-color">
-            {numeral(text).format('0,0.0000')}
           </span>
         );
       },
@@ -85,10 +63,10 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Amount',
-      dataIndex: 'amount',
+      title: 'Fee',
+      dataIndex: 'fee',
       align: 'center',
-      key: 'amount',
+      key: 'fee',
       render: (text: any) => {
         return (
           <span className="white-color">
@@ -110,24 +88,6 @@ const OrderHistoryList = ({ dataSource }: any) => {
         );
       },
     },
-    {
-      title: 'Trigger Condition',
-      dataIndex: 'triggerCondition',
-      align: 'center',
-      key: 'triggerConditions',
-      render: (text: any) => {
-        return <span className="white-color">{text}</span>;
-      },
-    },
-    {
-      title: 'All',
-      align: 'center',
-      key: 'status',
-      dataIndex: 'status',
-      render: (text: any, record: any) => {
-        return <Space>{text}</Space>;
-      },
-    },
   ];
   return (
     <Div>
@@ -141,4 +101,4 @@ const OrderHistoryList = ({ dataSource }: any) => {
     </Div>
   );
 };
-export default OrderHistoryList;
+export default TradeHistoryList;
