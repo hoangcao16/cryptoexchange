@@ -14,6 +14,7 @@ import { OrderhistoryState } from 'app/components/TradesInformation/OrderHistory
 import { SpotWalletState } from 'app/container/SpotWalletContainer/slice/types';
 import { P2PWalletState } from 'app/container/P2PWalletContainer/slice/types';
 import { GetBalancePairState } from 'app/components/OrderForm/slice/types';
+import { TradehistoryState } from 'app/components/TradesInformation/TradeHistory/slice/types';
 /* 
   Because the redux-injectors injects your reducers asynchronously somewhere in your code
   You have to declare them here manually
@@ -34,4 +35,5 @@ export interface RootState {
   spotWallet: SpotWalletState;
   p2pWallet: P2PWalletState;
   getBalancePair: GetBalancePairState;
+  tradehistory: TradehistoryState;
 }

@@ -105,7 +105,8 @@ export const StyledDropdown = styled(Dropdown)`
     padding: 0px;
     margin: 0px;
     min-width: 0px;
-    box-shadow: none;
+    box-shadow: none !important;
+    border: none !important;
 
     &::after {
       display: none;

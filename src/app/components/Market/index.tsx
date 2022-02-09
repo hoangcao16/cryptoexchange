@@ -18,7 +18,7 @@ import { isEmpty } from 'app/components/common/common';
 import { useDispatch } from 'react-redux';
 import { useGetallpairSlice } from './slice';
 
-const Market = ({ dataSocket, dataApi }) => {
+const Market = ({ dataSocket, dataApi, socket }) => {
   const [active, setActive] = useState('USDT');
   const [allPair, setAllPair]: any[] = useState([]);
   const dispatch = useDispatch();
@@ -27,6 +27,12 @@ const Market = ({ dataSocket, dataApi }) => {
   useEffect(() => {
     if (dataApi.data.rows && isEmpty(dataSocket)) {
       setAllPair(dataApi.data.rows);
+      socket.send(
+        JSON.stringify({
+          method: 'SUBSCRIBE',
+          pair: dataApi.data.rows[0].symbol,
+        }),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataApi.data.rows]);
@@ -109,6 +115,20 @@ const Market = ({ dataSocket, dataApi }) => {
   };
   const setPair = data => {
     const index = data.symbol.indexOf('/');
+    if (localStorage.getItem('pair') !== data.symbol) {
+      socket.send(
+        JSON.stringify({
+          method: 'SUBSCRIBE',
+          pair: data.symbol,
+        }),
+      );
+      socket.send(
+        JSON.stringify({
+          method: 'UNSUBSCRIBE',
+          pair: localStorage.getItem('pair'),
+        }),
+      );
+    }
     localStorage.setItem('base_symbol', data.symbol.substring(0, index));
     localStorage.setItem('quote_symbol', data.symbol.substring(index + 1));
     localStorage.setItem('pair', data.symbol);

@@ -60,7 +60,7 @@ export const ContentLeft = styled.div`
       font-size: 20px;
       font-weight: 500;
     }
-    .InfomationCoin {
+    .InformationCoin {
       svg {
         margin: 0px 4px 0px 0px;
         min-width: 0px;

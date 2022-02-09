@@ -13,5 +13,13 @@ export const GlobalStyles = createGlobalStyle`
     &:hover {
       color: ${({ theme }) => theme.primary};
     }
-}
+  }
+  .container {  
+    @media (min-width: 1200px) {
+      max-width: 1190px;
+    }
+    @media (min-width: 1400px) {
+      max-width: 1400px;
+    }
+  }
   `;
