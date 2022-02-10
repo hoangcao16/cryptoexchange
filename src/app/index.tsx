@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 
 import { GlobalStyles } from 'styles/global-styles';
 
@@ -32,16 +32,23 @@ import { SuccessToast, ErrorToast } from 'app/components/Toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToast } from 'app/components/Toast/slice/selectors';
 import { useToastSlice } from 'app/components/Toast/slice';
+import { useGetallpairSlice } from 'app/components/Market/slice';
 import { authService } from 'services/authService';
 import { useEffect } from 'react';
 export function App() {
   const dispatch = useDispatch();
   const { actions: toastActions } = useToastSlice();
+  const { actions: actionsAllPair } = useGetallpairSlice();
+  const basePair = 'ROB_USDT';
   const dataToast: any = useSelector(selectToast);
   const { i18n } = useTranslation();
   const { theme } = useThemeContext();
   const themeMode = theme === 'light' ? lightTheme : darkTheme;
 
+  //Get all pair
+  useEffect(() => {
+    dispatch(actionsAllPair.getAllPairRequest());
+  }, [actionsAllPair, dispatch]);
   // check access token
   useEffect(() => {
     authService.autoRefreshAccessToken();
@@ -53,7 +60,8 @@ export function App() {
           <meta name="description" content="Trading View" />
         </Helmet>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Navigate to={`/trade/${basePair}`} />} />
+          <Route path="/trade/:pair" element={<HomePage />} />
           <Route
             path="/login"
             element={

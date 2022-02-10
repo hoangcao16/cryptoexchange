@@ -10,9 +10,7 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
   // const { reselectPair } = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
-  // useEffect(() => {
-  //   setDataView([]);
-  // }, [reselectPair]);
+
   useEffect(() => {
     if (dataSocket.asks !== undefined) {
       setDataView(dataSocket.asks);

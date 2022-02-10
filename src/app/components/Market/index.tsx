@@ -17,6 +17,7 @@ import numeral from 'numeral';
 import { isEmpty } from 'app/components/common/common';
 import { useDispatch } from 'react-redux';
 import { useGetallpairSlice } from './slice';
+import { useParams, Link } from 'react-router-dom';
 
 const Market = ({ dataSocket, dataApi, socket }) => {
   const [active, setActive] = useState('USDT');
@@ -24,15 +25,21 @@ const Market = ({ dataSocket, dataApi, socket }) => {
   const dispatch = useDispatch();
   const { actions } = useGetallpairSlice();
   const { activeChangeColumnMarket } = useGlobalContext();
+  let { pair } = useParams();
   useEffect(() => {
+    const findIndex: any = pair?.indexOf('_');
+    const changeFormatPair = `${pair?.substring(
+      0,
+      findIndex,
+    )}/${pair?.substring(findIndex + 1)}`;
+    socket.send(
+      JSON.stringify({
+        method: 'SUBSCRIBE',
+        pair: changeFormatPair,
+      }),
+    );
     if (dataApi.data.rows && isEmpty(dataSocket)) {
       setAllPair(dataApi.data.rows);
-      socket.send(
-        JSON.stringify({
-          method: 'SUBSCRIBE',
-          pair: dataApi.data.rows[0].symbol,
-        }),
-      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataApi.data.rows]);
@@ -114,8 +121,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
     );
   };
   const setPair = data => {
-    const index = data.symbol.indexOf('/');
-    if (localStorage.getItem('pair') !== data.symbol) {
+    if (pair !== data.symbol) {
       socket.send(
         JSON.stringify({
           method: 'SUBSCRIBE',
@@ -129,10 +135,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
         }),
       );
     }
-    localStorage.setItem('base_symbol', data.symbol.substring(0, index));
-    localStorage.setItem('quote_symbol', data.symbol.substring(index + 1));
     localStorage.setItem('pair', data.symbol);
-    localStorage.setItem('pair_id', data.id);
     dispatch(actions.reselectPair());
   };
   return (
@@ -148,10 +151,15 @@ const Market = ({ dataSocket, dataApi, socket }) => {
       <Table>
         {allPair !== undefined &&
           allPair?.map((item, index) => {
+            const findIndex = item.symbol.indexOf('/');
             return (
-              <div
+              <Link
                 className="d-flex justify-content-between table-item align-items-center"
                 key={index}
+                to={`/trade/${item.symbol.substring(
+                  0,
+                  findIndex,
+                )}_${item.symbol.substring(findIndex + 1)}`}
                 onClick={() => setPair(item)}
               >
                 <Pair className="d-flex align-items-center">
@@ -168,7 +176,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
                 ) : (
                   <Change>{item.volume}M</Change>
                 )}
-              </div>
+              </Link>
             );
           })}
       </Table>

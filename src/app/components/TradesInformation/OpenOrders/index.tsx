@@ -10,6 +10,10 @@ import { selectSellspotlimit } from 'app/components/OrderForm/components/LimitFo
 import { useState, useEffect } from 'react';
 import { useGetopenOrderSlice } from './slice';
 import { selectGetopenOrder } from './slice/selectors';
+import { useWebsocketSlice } from 'app/container/HomeContainer/slice';
+import { useSellspotlimitSlice } from 'app/components/OrderForm/components/LimitForm/components/SellForm/slice';
+import { useBuyspotlimitSlice } from 'app/components/OrderForm/components/LimitForm/components/BuyForm/slice';
+
 interface stateProps {
   order_id?: string;
   filled?: number;
@@ -17,6 +21,9 @@ interface stateProps {
 const Orders = () => {
   const dispatch = useDispatch();
   const { actions } = useGetopenOrderSlice();
+  const { actions: actionsWebsocket } = useWebsocketSlice();
+  const { actions: actionsSellspotlimit } = useSellspotlimitSlice();
+  const { actions: actionsBuyspotlimit } = useBuyspotlimitSlice();
   const dataSocket = useSelector(selectWebsocket);
   const dataBuy: any = useSelector(selectBuyspotlimit);
   const dataSell: any = useSelector(selectSellspotlimit);
@@ -34,6 +41,11 @@ const Orders = () => {
     if (dataOrders?.data?.list?.length > 0) {
       setDataOpenOrders(dataOrders.data.list);
     }
+    return () => {
+      dispatch(actionsWebsocket.updateOrderFilled({}));
+      dispatch(actionsSellspotlimit.clearstate());
+      dispatch(actionsBuyspotlimit.clearstate());
+    };
   }, [dataOrders.data]);
   useEffect(() => {
     if (dataOrders.responseCancelOrder.rc === 0) {

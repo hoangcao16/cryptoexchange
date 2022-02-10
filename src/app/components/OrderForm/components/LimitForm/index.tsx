@@ -6,28 +6,15 @@ import numeral from 'numeral';
 import { useSelector } from 'react-redux';
 import { selectGetBalancePair } from '../../slice/selectors';
 import { getToken } from 'app/components/common/common';
-import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
-const getBaseSymbol = () => {
-  return JSON.parse(JSON.stringify(localStorage.getItem('base_symbol') || ''));
-};
-const getQuoteSymbol = () => {
-  return JSON.parse(JSON.stringify(localStorage.getItem('quote_symbol') || ''));
-};
 const LimitForm = ({ wallet }: any) => {
   const type = 'LIMIT';
   const balancePair: any = useSelector(selectGetBalancePair);
-  const [baseSymbol, setBaseSymbol] = useState('');
-  const [quoteSymbol, setQuoteSymbol] = useState('');
   const baseAmount = balancePair.data.base_amount;
   const quoteAmount = balancePair.data.quote_amount;
-  useEffect(() => {
-    setBaseSymbol(getBaseSymbol());
-    setQuoteSymbol(getQuoteSymbol());
-  }, [
-    localStorage.getItem('base_symbol'),
-    localStorage.getItem('quote_symbol'),
-  ]);
+  let { pair } = useParams();
+  const findIndex: any = pair?.indexOf('_');
   return (
     <>
       <ColLeft>
@@ -35,12 +22,12 @@ const LimitForm = ({ wallet }: any) => {
           <div className="balance-name">Avbl</div>
           <div className="balance-coin">
             {getToken() ? numeral(quoteAmount).format('0,0.000000') : '-'}{' '}
-            {quoteSymbol}
+            {pair?.substring(findIndex + 1)}
           </div>
         </div>
         <BuyForm
-          baseSymbol={baseSymbol}
-          quoteSymbol={quoteSymbol}
+          baseSymbol={pair?.substring(0, findIndex)}
+          quoteSymbol={pair?.substring(findIndex + 1)}
           quoteAvlb={quoteAmount}
           wallet={wallet}
           type={type}
@@ -51,12 +38,12 @@ const LimitForm = ({ wallet }: any) => {
           <div className="balance-name">Avbl</div>
           <div className="balance-coin">
             {getToken() ? numeral(baseAmount).format('0,0.000000') : '-'}{' '}
-            {baseSymbol}
+            {pair?.substring(0, findIndex)}
           </div>
         </div>
         <SellForm
-          baseSymbol={baseSymbol}
-          quoteSymbol={quoteSymbol}
+          baseSymbol={pair?.substring(0, findIndex)}
+          quoteSymbol={pair?.substring(findIndex + 1)}
           baseAvlb={baseAmount}
           wallet={wallet}
           type={type}

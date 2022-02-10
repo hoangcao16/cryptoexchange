@@ -7,6 +7,7 @@ import { selectGetallpair } from 'app/components/Market/slice/selectors';
 import { isEmpty } from 'app/components/common/common';
 import { useDispatch } from 'react-redux';
 import { useOrderbookSlice } from '../../slice';
+import { useParams } from 'react-router-dom';
 
 const OrderBookBid = ({
   dataApi,
@@ -20,6 +21,7 @@ const OrderBookBid = ({
   const pairData: any = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
+  let { pair } = useParams();
   useEffect(() => {
     setInterval(() => {
       setMockUSD(Math.random() * (5000 - 50 + 1) + 50);
@@ -34,24 +36,18 @@ const OrderBookBid = ({
       setDataView(dataApi);
     }
     if (!isEmpty(dataMarketSocket)) {
-      if (
-        dataMarketSocket.symbol ===
-        JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '')
-      ) {
+      if (dataMarketSocket.symbol === pair) {
         setLastestPrice(dataMarketSocket?.latestPrice);
       }
     } else {
       const index: any = pairData?.data?.list?.findIndex((item: any) => {
-        return (
-          item?.symbol ===
-          JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '')
-        );
+        return item?.symbol === pair;
       });
       if (index !== -1 && index !== undefined) {
         setLastestPrice(pairData?.data?.list[index]?.latestPrice);
       }
     }
-  }, [dataApi, dataSocket, dataMarketSocket, pairData.data]);
+  }, [dataApi, dataSocket, dataMarketSocket, pairData?.data, pair]);
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));
   };

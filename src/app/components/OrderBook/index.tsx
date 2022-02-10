@@ -17,19 +17,16 @@ import { Dropdown } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOrderbookSlice } from './slice';
 import { selectOrderbook } from './slice/selectors';
-import { selectGetallpair } from 'app/components/Market/slice/selectors';
+import { useParams } from 'react-router-dom';
 
 const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
   const [Layout, setLayout] = useState(1);
   const [show, setShow] = useState(false);
-  const [pairName, setPairName] = useState('');
   const dispatch = useDispatch();
+  let { pair } = useParams();
   const { actions } = useOrderbookSlice();
   const dataOrderbook: any = useSelector(selectOrderbook);
-  const { reselectPair } = useSelector(selectGetallpair);
-  const getPairName = () => {
-    return JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '');
-  };
+
   const showDropdown = e => {
     setShow(!show);
   };
@@ -45,14 +42,15 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
     { value: '6', label: '100' },
   ];
   useEffect(() => {
-    setPairName(getPairName());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reselectPair]);
-  useEffect(() => {
-    if (pairName !== '') {
-      dispatch(actions.getOrderbookRequest(pairName));
+    const findIndex: any = pair?.indexOf('_');
+    if (pair !== '') {
+      dispatch(
+        actions.getOrderbookRequest(
+          `${pair?.substring(0, findIndex)}/${pair?.substring(findIndex + 1)}`,
+        ),
+      );
     }
-  }, [actions, dispatch, pairName]);
+  }, [actions, dispatch, pair]);
 
   return (
     <Container>

@@ -8,23 +8,20 @@ import {
 } from './style';
 import { ReactComponent as PlayIcon } from 'app/assets/img/play.svg';
 import { ReactComponent as OpenIcon } from 'app/assets/img/openIcon.svg';
-import { useEffect, useState } from 'react';
-const getPairName = () => {
-  return JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '');
-};
+import { useParams } from 'react-router-dom';
+
 const ContentHeader = () => {
-  const [pairName, setPairName] = useState('');
-  useEffect(() => {
-    setPairName(getPairName());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localStorage.getItem('pair')]);
+  let { pair } = useParams();
+  const findIndex: any = pair?.indexOf('_');
   return (
     <Container>
       <Div>
         <Content>
           <ContentLeft>
             <div className="contentLeft-coin">
-              <div className="coin">{pairName}</div>
+              <div className="coin">
+                {pair?.substring(0, findIndex)}/{pair?.substring(findIndex + 1)}
+              </div>
               <div className="InformationCoin">
                 <OpenIcon />
                 <a href="/#">Bitcoin</a>
