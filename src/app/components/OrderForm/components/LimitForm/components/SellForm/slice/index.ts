@@ -17,6 +17,9 @@ const slice = createSlice({
       state.data = action.payload;
     },
     sellspotlimitFail(state, action) {},
+    clearstate(state) {
+      state.data = {};
+    },
   },
 });
 

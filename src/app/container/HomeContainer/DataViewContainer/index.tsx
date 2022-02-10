@@ -10,46 +10,31 @@ import MarketActivities from 'app/components/Trades/components/MarketActivities'
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetallpairSlice } from 'app/components/Market/slice';
 import { selectGetallpair } from 'app/components/Market/slice/selectors';
 import { useTradesSlice } from 'app/components/Trades/slice';
 import { selectTrades } from 'app/components/Trades/slice/selectors';
 import { useWebsocketSlice } from 'app/container/HomeContainer/slice';
+import { useParams } from 'react-router-dom';
 const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
-const getPairName = () => {
-  return JSON.parse(JSON.stringify(localStorage.getItem('pair')) || '');
-};
+
 var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
   connectionTimeout: 5000,
 });
 const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
   const [dataTradesSocket, setDataTradesSocket]: any = useState({});
-  const [pairName, setPairName] = useState('ROB/USDT');
   const [dataOrder, setDataOrder]: any[] = useState([]);
   const dispatch = useDispatch();
-  const { actions: actionsAllPair } = useGetallpairSlice();
+
   const { actions: actionsTrades } = useTradesSlice();
   const { actions: actionsWebsocket } = useWebsocketSlice();
   const dataAllPair = useSelector(selectGetallpair);
   const dataAllTrades = useSelector(selectTrades);
+  let { pair } = useParams();
 
   useEffect(() => {
-    // var socket = new ReconnectingWebSocket(
-    //   `${baseURL}/ws?pair=${pairName}`,
-    //   [],
-    //   {
-    //     connectionTimeout: 5000,
-    //   },
-    // );
     socket.onopen = () => {
       console.log(`Websocket Market connected`);
-      // socket.send(
-      //   JSON.stringify({
-      //     method: 'N',
-      //     id: Math.random(),
-      //   }),
-      // );
       setInterval(
         () =>
           socket.send(
@@ -87,18 +72,22 @@ const HomeContentContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    setPairName(getPairName());
+    setDataTradesSocket({});
+    setDataOrder([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataAllPair.reselectPair]);
+
   useEffect(() => {
-    dispatch(actionsAllPair.getAllPairRequest());
-  }, [actionsAllPair, dispatch]);
-  useEffect(() => {
-    if (pairName !== '') {
-      dispatch(actionsTrades.getTradesRequest(pairName));
+    const findIndex: any = pair?.indexOf('_');
+    if (pair !== '') {
+      dispatch(
+        actionsTrades.getTradesRequest(
+          `${pair?.substring(0, findIndex)}/${pair?.substring(findIndex + 1)}`,
+        ),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pairName]);
+  }, [pair]);
   return (
     <Container>
       <StyledRow>

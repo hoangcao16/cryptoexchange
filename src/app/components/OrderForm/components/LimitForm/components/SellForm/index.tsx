@@ -22,7 +22,6 @@ const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
   const { actions } = useSellspotlimitSlice();
   const selectPrice: any = useSelector(selectOrderbook);
   const [percent, setPercent] = useState(0);
-
   //Validate
   const validation = Yup.object().shape({
     price: Yup.number()
@@ -71,11 +70,6 @@ const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
     setValue('total', parseFloat((value * amount).toFixed(8)), {
       shouldValidate: true,
     });
-    if (baseAvlb === 0) {
-      setPercent(100);
-    } else {
-      setPercent((value * amount * 100) / baseAvlb);
-    }
   };
   // getvalues Amount
   const onChangeAmount = (value: number) => {
@@ -85,7 +79,7 @@ const SellForm = ({ baseSymbol, quoteSymbol, baseAvlb, wallet, type }: any) => {
     if (baseAvlb === 0) {
       setPercent(100);
     } else {
-      setPercent((value * price * 100) / baseAvlb);
+      setPercent((value / baseAvlb) * 100);
     }
   };
   // getvalues Total

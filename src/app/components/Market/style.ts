@@ -155,6 +155,7 @@ export const Table = styled.div`
   padding-right: 6px;
   .table-item {
     height: 24px;
+    text-decoration: none;
     .tableItem-star {
       margin: 0px 2px 0px 0px;
       min-width: 0px;

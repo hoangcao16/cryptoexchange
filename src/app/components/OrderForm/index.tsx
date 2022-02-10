@@ -10,24 +10,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useGetBalancePairSlice } from './slice';
 import { selectGetallpair } from 'app/components/Market/slice/selectors';
 import { selectGetBalancePair } from './slice/selectors';
-
-const getPairId = () => {
-  return JSON.parse(JSON.stringify(localStorage.getItem('pair_id')) || '');
-};
+import { useParams } from 'react-router-dom';
 
 const OrderForm = () => {
   const [title, setTitle] = useState('Stop-limit');
   const [tabActive, setTabActive] = useState(1);
   const [pairId, setPairId] = useState('');
   const dispatch = useDispatch();
-  const { reselectPair } = useSelector(selectGetallpair);
+  const pairData: any = useSelector(selectGetallpair);
+  // const { reselectPair } = useSelector(selectGetallpair);
   const { reGetBalancePair } = useSelector(selectGetBalancePair);
   const { actions } = useGetBalancePairSlice();
+  let { pair } = useParams();
   const wallet = 'SPOT';
+  // Get pairId
   useEffect(() => {
-    setPairId(getPairId());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reselectPair]);
+    const findIndex: any = pair?.indexOf('_');
+    const changeFormatPair = `${pair?.substring(
+      0,
+      findIndex,
+    )}/${pair?.substring(findIndex + 1)}`;
+    const index = pairData.data.rows?.findIndex((item: any) => {
+      return item.symbol === changeFormatPair;
+    });
+    setPairId(pairData.data.rows[index].id);
+    localStorage.setItem('pair_id', pairData.data.rows[index].id);
+  }, [pair, pairData.data.rows]);
   useEffect(() => {
     if (pairId !== '') {
       dispatch(actions.getBalancePairSpotRequest(pairId));
