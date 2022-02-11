@@ -1,34 +1,30 @@
-import i18next from 'i18next';
+import i18n from 'i18next';
+import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
-import en from './en/translation.json';
-import { convertLanguageJsonToObject } from './translations';
+import translationEN from '../locales/english/translation.json';
+import translationESP from '../locales/spain/translation.json';
 
-export const translationsJson = {
-  en: {
-    translation: en,
+// the translations
+const resources = {
+  English: {
+    translation: translationEN,
+  },
+  Spain: {
+    translation: translationESP,
   },
 };
 
-// Create the 'translations' object to provide full intellisense support for the static json files.
-convertLanguageJsonToObject(en);
-
-export const i18n = i18next
-  // pass the i18n instance to react-i18next.
+i18n
+  .use(Backend)
   .use(initReactI18next)
-  // detect user language
-  // learn more: https://github.com/i18next/i18next-browser-languageDetector
-  .use(LanguageDetector)
-  // init i18next
-  // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    resources: translationsJson,
-    fallbackLng: 'en',
-    debug:
-      process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-
+    resources,
+    fallbackLng: 'English',
+    debug: true,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
   });
+
+export default i18n;

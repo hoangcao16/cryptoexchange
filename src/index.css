@@ -20,12 +20,16 @@ body {
   font-family: BinancePlex, sans-serif;
   font-size: 14px;
 }
+
+body.modal-open {
+  padding-right: 0 !important;
+  overflow: auto !important;
+}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
