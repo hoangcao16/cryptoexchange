@@ -27,7 +27,9 @@ import reportWebVitals from 'reportWebVitals';
 import { ThemeContextProvider } from 'app/components/common/themeContext';
 import 'index.css';
 // Initialize languages
-import './locales/i18n';
+import i18n from './locales/i18n';
+import { I18nextProvider } from 'react-i18next';
+//Context Privider
 import { GlobalContextProvider } from 'app/components/common/context';
 
 const store = configureAppStore();
@@ -39,7 +41,9 @@ ReactDOM.render(
       <ThemeContextProvider>
         <GlobalContextProvider>
           {/* <React.StrictMode> */}
-          <App />
+          <I18nextProvider i18n={i18n}>
+            <App />
+          </I18nextProvider>
           {/* </React.StrictMode> */}
         </GlobalContextProvider>
       </ThemeContextProvider>

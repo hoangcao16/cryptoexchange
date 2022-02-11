@@ -22,6 +22,7 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
 import { getToken } from 'app/components/common/common';
+import ChangeLanguage from '../ChangeLanguage';
 
 const Title = () => {
   return (
@@ -67,9 +68,7 @@ const NavMenu = () => {
           )}
 
           <Nav.Link href="#pricing">Downloads</Nav.Link>
-          <Nav.Link href="#pricing" className="language">
-            English
-          </Nav.Link>
+          <ChangeLanguage />
           <i className="border"></i>
           <Nav.Link href="#pricing">USD</Nav.Link>
           <NavbarToggle aria-controls="offcanvasNavbar" />
