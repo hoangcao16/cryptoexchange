@@ -51,7 +51,7 @@ const HomeContentContainer = () => {
     };
 
     socket.onmessage = (message: any) => {
-      const Message = JSON.parse(message.data);
+      const Message = JSON.parse(message?.data);
       if (
         Message.Key === 'Robinhood::RecentTrade' &&
         Message.Value.marker_id !== Message.Value.taker_id

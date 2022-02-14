@@ -32,7 +32,11 @@ const Market = ({ dataSocket, dataApi, socket }) => {
       0,
       findIndex,
     )}/${pair?.substring(findIndex + 1)}`;
-    if (changeFormatPair !== '' || changeFormatPair !== undefined) {
+    if (
+      changeFormatPair !== '' ||
+      changeFormatPair !== undefined ||
+      changeFormatPair !== null
+    ) {
       socket.send(
         JSON.stringify({
           method: 'SUBSCRIBE',
@@ -40,6 +44,8 @@ const Market = ({ dataSocket, dataApi, socket }) => {
         }),
       );
     }
+  }, [pair]);
+  useEffect(() => {
     if (dataApi.data.rows && isEmpty(dataSocket)) {
       setAllPair(dataApi.data.rows);
     }
@@ -127,17 +133,17 @@ const Market = ({ dataSocket, dataApi, socket }) => {
       socket.send(
         JSON.stringify({
           method: 'SUBSCRIBE',
-          pair: data.symbol,
+          pair: data?.symbol,
         }),
       );
       socket.send(
         JSON.stringify({
           method: 'UNSUBSCRIBE',
-          pair: localStorage.getItem('pair'),
+          pair: localStorage?.getItem('pair'),
         }),
       );
     }
-    localStorage.setItem('pair', data.symbol);
+    localStorage.setItem('pair', data?.symbol);
     dispatch(actions.reselectPair());
   };
   return (
