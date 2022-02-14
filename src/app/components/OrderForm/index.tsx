@@ -37,12 +37,12 @@ const OrderForm = () => {
       0,
       findIndex,
     )}/${pair?.substring(findIndex + 1)}`;
-    const index = pairData.data.rows?.findIndex((item: any) => {
+    const index = pairData?.data.rows?.findIndex((item: any) => {
       return item.symbol === changeFormatPair;
     });
-    setPairId(pairData.data.rows[index].id);
-    localStorage.setItem('pair_id', pairData.data.rows[index].id);
-  }, [pair, pairData.data.rows]);
+    setPairId(pairData?.data.rows[index].id);
+    localStorage.setItem('pair_id', pairData?.data.rows[index].id);
+  }, [pair, pairData?.data.rows]);
   useEffect(() => {
     if (pairId !== '') {
       dispatch(actions.getBalancePairSpotRequest(pairId));

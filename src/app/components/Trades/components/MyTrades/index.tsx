@@ -23,7 +23,7 @@ const MyTradesHistory = () => {
     <>
       <Header />
       <Table>
-        {data.map((item, index) => {
+        {data?.map((item, index) => {
           return (
             <div
               key={index}

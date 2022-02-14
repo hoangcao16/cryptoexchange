@@ -39,18 +39,18 @@ const Orders = () => {
   }, []);
   useEffect(() => {
     if (dataOrders?.data?.list?.length > 0) {
-      setDataOpenOrders(dataOrders.data.list);
+      setDataOpenOrders(dataOrders?.data?.list);
     }
     return () => {
       dispatch(actionsWebsocket.updateOrderFilled({}));
       dispatch(actionsSellspotlimit.clearstate());
       dispatch(actionsBuyspotlimit.clearstate());
     };
-  }, [dataOrders.data]);
+  }, [dataOrders?.data]);
   useEffect(() => {
-    if (dataOrders.responseCancelOrder.rc === 0) {
+    if (dataOrders?.responseCancelOrder?.rc === 0) {
       const index = dataOpenOrders.findIndex((item: any) => {
-        return item.order_id === dataOrders.responseCancelOrder.orderId;
+        return item.order_id === dataOrders?.responseCancelOrder.orderId;
       });
       if (index !== -1 && dataOpenOrders !== undefined) {
         const dataCopy = [...JSON.parse(JSON.stringify(dataOpenOrders))];
@@ -58,45 +58,45 @@ const Orders = () => {
         setDataOpenOrders(dataCopy);
       }
     }
-  }, [dataOrders.responseCancelOrder]);
+  }, [dataOrders?.responseCancelOrder]);
   useEffect(() => {
     if (
-      !isEmpty(dataBuy.data) &&
+      !isEmpty(dataBuy?.data) &&
       dataOpenOrders.find(
-        (item: any) => item.order_id === dataBuy.data.order_id,
+        (item: any) => item.order_id === dataBuy?.data.order_id,
       ) === undefined
     ) {
-      setDataOpenOrders((prev: any) => [dataBuy.data, ...prev]);
+      setDataOpenOrders((prev: any) => [dataBuy?.data, ...prev]);
     }
     if (
-      !isEmpty(dataSell.data) &&
+      !isEmpty(dataSell?.data) &&
       dataOpenOrders.find(
-        (item: any) => item.order_id === dataSell.data.order_id,
+        (item: any) => item.order_id === dataSell?.data.order_id,
       ) === undefined
     ) {
-      setDataOpenOrders((prev: any) => [dataSell.data, ...prev]);
+      setDataOpenOrders((prev: any) => [dataSell?.data, ...prev]);
     }
-  }, [dataBuy.data, dataSell.data]);
+  }, [dataBuy?.data, dataSell?.data]);
   useEffect(() => {
-    if (dataSocket.Orderfilled.filled === true) {
+    if (dataSocket?.Orderfilled.filled === true) {
       const index = dataOpenOrders.findIndex((item: any) => {
-        return item.order_id === dataSocket.Orderfilled.order_id;
+        return item.order_id === dataSocket?.Orderfilled.order_id;
       });
       if (index !== -1 && dataOpenOrders !== undefined) {
         const dataCopy = [...JSON.parse(JSON.stringify(dataOpenOrders))];
         dataCopy.splice(index, 1);
         setDataOpenOrders(dataCopy);
       }
-    } else if (dataSocket.Orderfilled.filled === false) {
+    } else if (dataSocket?.Orderfilled.filled === false) {
       const index = dataOpenOrders.findIndex((item: any) => {
-        return item.order_id === dataSocket.Orderfilled.order_id;
+        return item.order_id === dataSocket?.Orderfilled.order_id;
       });
       if (index !== -1 && dataOpenOrders !== undefined) {
         const dataCopy = [...JSON.parse(JSON.stringify(dataOpenOrders))];
         const percentFill =
-          ((dataSocket.Orderfilled.origin_quantity -
-            dataSocket.Orderfilled.order_quantity) /
-            dataSocket.Orderfilled.origin_quantity) *
+          ((dataSocket?.Orderfilled?.origin_quantity -
+            dataSocket?.Orderfilled?.order_quantity) /
+            dataSocket?.Orderfilled?.origin_quantity) *
           100;
         // console.log(percentFill);
         dataCopy[index].filled = percentFill;
