@@ -44,7 +44,6 @@ export function App() {
   const { i18n } = useTranslation();
   const { theme } = useThemeContext();
   const themeMode = theme === 'light' ? lightTheme : darkTheme;
-  console.log('data');
   //Get all pair
   useEffect(() => {
     dispatch(actionsAllPair.getAllPairRequest());

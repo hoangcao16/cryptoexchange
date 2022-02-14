@@ -20,6 +20,7 @@ const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
   connectionTimeout: 5000,
 });
+// const socket = new WebSocket(`${baseURL}/ws`);
 const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
   const [dataTradesSocket, setDataTradesSocket]: any = useState({});
@@ -31,7 +32,6 @@ const HomeContentContainer = () => {
   const dataAllPair = useSelector(selectGetallpair);
   const dataAllTrades = useSelector(selectTrades);
   let { pair } = useParams();
-  console.log('home-dataview-container');
 
   useEffect(() => {
     socket.onopen = () => {

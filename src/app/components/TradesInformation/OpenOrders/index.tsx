@@ -24,7 +24,7 @@ const Orders = () => {
   const { actions: actionsWebsocket } = useWebsocketSlice();
   const { actions: actionsSellspotlimit } = useSellspotlimitSlice();
   const { actions: actionsBuyspotlimit } = useBuyspotlimitSlice();
-  const dataSocket = useSelector(selectWebsocket);
+  const dataSocket: any = useSelector(selectWebsocket);
   const dataBuy: any = useSelector(selectBuyspotlimit);
   const dataSell: any = useSelector(selectSellspotlimit);
   const dataOrders: any = useSelector(selectGetopenOrder);
@@ -98,7 +98,6 @@ const Orders = () => {
             dataSocket?.Orderfilled?.order_quantity) /
             dataSocket?.Orderfilled?.origin_quantity) *
           100;
-        // console.log(percentFill);
         dataCopy[index].filled = percentFill;
         setDataOpenOrders(dataCopy);
       }
