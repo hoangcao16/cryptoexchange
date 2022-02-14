@@ -26,25 +26,25 @@ const Market = ({ dataSocket, dataApi, socket }) => {
   const { actions } = useGetallpairSlice();
   const { activeChangeColumnMarket } = useGlobalContext();
   let { pair } = useParams();
-  useEffect(() => {
-    const findIndex: any = pair?.indexOf('_');
-    const changeFormatPair = `${pair?.substring(
-      0,
-      findIndex,
-    )}/${pair?.substring(findIndex + 1)}`;
-    if (
-      changeFormatPair !== '' ||
-      changeFormatPair !== undefined ||
-      changeFormatPair !== null
-    ) {
-      socket.send(
-        JSON.stringify({
-          method: 'SUBSCRIBE',
-          pair: changeFormatPair,
-        }),
-      );
-    }
-  }, [pair]);
+  // useEffect(() => {
+  //   const findIndex: any = pair?.indexOf('_');
+  //   const changeFormatPair = `${pair?.substring(
+  //     0,
+  //     findIndex,
+  //   )}/${pair?.substring(findIndex + 1)}`;
+  //   if (
+  //     changeFormatPair !== '' ||
+  //     changeFormatPair !== undefined ||
+  //     changeFormatPair !== null
+  //   ) {
+  //     socket.send(
+  //       JSON.stringify({
+  //         method: 'SUBSCRIBE',
+  //         pair: changeFormatPair,
+  //       }),
+  //     );
+  //   }
+  // }, [pair]);
   useEffect(() => {
     if (dataApi.data.rows && isEmpty(dataSocket)) {
       setAllPair(dataApi.data.rows);
@@ -129,20 +129,20 @@ const Market = ({ dataSocket, dataApi, socket }) => {
     );
   };
   const setPair = data => {
-    if (pair !== data.symbol) {
-      socket.send(
-        JSON.stringify({
-          method: 'SUBSCRIBE',
-          pair: data?.symbol,
-        }),
-      );
-      socket.send(
-        JSON.stringify({
-          method: 'UNSUBSCRIBE',
-          pair: localStorage?.getItem('pair'),
-        }),
-      );
-    }
+    // if (pair !== data.symbol) {
+    //   socket.send(
+    //     JSON.stringify({
+    //       method: 'SUBSCRIBE',
+    //       pair: data?.symbol,
+    //     }),
+    //   );
+    //   socket.send(
+    //     JSON.stringify({
+    //       method: 'UNSUBSCRIBE',
+    //       pair: localStorage?.getItem('pair'),
+    //     }),
+    //   );
+    // }
     localStorage.setItem('pair', data?.symbol);
     dispatch(actions.reselectPair());
   };
