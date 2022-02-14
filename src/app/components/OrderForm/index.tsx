@@ -12,6 +12,7 @@ import { selectGetallpair } from 'app/components/Market/slice/selectors';
 import { selectGetBalancePair } from './slice/selectors';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { isEmpty } from 'app/components/common/common';
 
 const OrderForm = () => {
   const { t } = useTranslation();
@@ -37,12 +38,16 @@ const OrderForm = () => {
       0,
       findIndex,
     )}/${pair?.substring(findIndex + 1)}`;
-    const index = pairData?.data.rows?.findIndex((item: any) => {
-      return item.symbol === changeFormatPair;
-    });
-    setPairId(pairData?.data.rows[index].id);
-    localStorage.setItem('pair_id', pairData?.data.rows[index].id);
-  }, [pair, pairData?.data.rows]);
+    if (pairData && !isEmpty(pairData?.data)) {
+      const index = pairData?.data?.rows?.findIndex((item: any) => {
+        return item.symbol === changeFormatPair;
+      });
+      if (index !== -1) {
+        setPairId(pairData?.data?.rows[index].id);
+        localStorage.setItem('pair_id', pairData?.data?.rows[index]?.id);
+      }
+    }
+  }, [pair, pairData?.data?.rows]);
   useEffect(() => {
     if (pairId !== '') {
       dispatch(actions.getBalancePairSpotRequest(pairId));

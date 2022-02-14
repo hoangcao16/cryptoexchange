@@ -12,7 +12,7 @@ import numeral from 'numeral';
 const MyTradesHistory = () => {
   const dispatch = useDispatch();
   const { actions } = useTradehistorySlice();
-  const { data } = useSelector(selectTradehistory);
+  const { data }: any = useSelector(selectTradehistory);
   useEffect(() => {
     const startTime = 0;
     const endTime = moment().valueOf();

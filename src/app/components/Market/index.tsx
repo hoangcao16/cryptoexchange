@@ -33,8 +33,8 @@ const Market = ({ dataSocket, dataApi, socket }) => {
       findIndex,
     )}/${pair?.substring(findIndex + 1)}`;
     if (
-      changeFormatPair !== '' ||
-      changeFormatPair !== undefined ||
+      changeFormatPair !== '' &&
+      changeFormatPair !== undefined &&
       changeFormatPair !== null
     ) {
       socket.send(
@@ -44,7 +44,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
         }),
       );
     }
-  }, [pair]);
+  }, [pair, socket]);
   useEffect(() => {
     if (dataApi.data.rows && isEmpty(dataSocket)) {
       setAllPair(dataApi.data.rows);
