@@ -47,7 +47,8 @@ const OrderForm = () => {
         localStorage.setItem('pair_id', pairData?.data?.rows[index]?.id);
       }
     }
-  }, [pair, pairData?.data?.rows]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pairData?.data?.rows]);
   useEffect(() => {
     if (pairId !== '') {
       dispatch(actions.getBalancePairSpotRequest(pairId));

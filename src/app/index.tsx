@@ -59,7 +59,7 @@ export function App() {
           <meta name="description" content="Trading View" />
         </Helmet>
         <Routes>
-          {/* <Route path="/" element={<Navigate to={`/trade/${basePair}`} />} /> */}
+          <Route path="/" element={<Navigate to={`/trade/${basePair}`} />} />
           <Route path="/trade/:pair" element={<HomePage />} />
           <Route
             path="/login"
