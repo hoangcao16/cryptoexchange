@@ -32,17 +32,19 @@ const Market = ({ dataSocket, dataApi, socket }) => {
       0,
       findIndex,
     )}/${pair?.substring(findIndex + 1)}`;
-    socket.send(
-      JSON.stringify({
-        method: 'SUBSCRIBE',
-        pair: changeFormatPair,
-      }),
-    );
+    if (changeFormatPair !== '' || changeFormatPair !== undefined) {
+      socket.send(
+        JSON.stringify({
+          method: 'SUBSCRIBE',
+          pair: changeFormatPair,
+        }),
+      );
+    }
     if (dataApi.data.rows && isEmpty(dataSocket)) {
       setAllPair(dataApi.data.rows);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataApi.data.rows]);
+  }, [pair, dataApi.data.rows]);
   useEffect(() => {
     if (!isEmpty(dataSocket)) {
       if (allPair.length === 0) {

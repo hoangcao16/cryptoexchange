@@ -11,8 +11,8 @@ import { useParams } from 'react-router-dom';
 const LimitForm = ({ wallet }: any) => {
   const type = 'LIMIT';
   const balancePair: any = useSelector(selectGetBalancePair);
-  const baseAmount = balancePair.data.base_amount;
-  const quoteAmount = balancePair.data.quote_amount;
+  const baseAmount = balancePair?.data?.base_amount;
+  const quoteAmount = balancePair?.data?.quote_amount;
   let { pair } = useParams();
   const findIndex: any = pair?.indexOf('_');
   return (

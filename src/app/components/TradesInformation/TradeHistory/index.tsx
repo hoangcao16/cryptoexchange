@@ -23,7 +23,7 @@ const TradeHistory = () => {
       {getToken() ? (
         <>
           <FilterOrderHistory />
-          <TradeHistoryList dataSource={dataTradeHistory.data} />
+          <TradeHistoryList dataSource={dataTradeHistory?.data} />
         </>
       ) : (
         <Container>

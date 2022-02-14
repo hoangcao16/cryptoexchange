@@ -75,7 +75,7 @@ const HomeContentContainer = () => {
     setDataTradesSocket({});
     setDataOrder([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataAllPair.reselectPair]);
+  }, [dataAllPair?.reselectPair]);
 
   useEffect(() => {
     const findIndex: any = pair?.indexOf('_');

@@ -30,7 +30,7 @@ const OrdersHistory = () => {
       {getToken() ? (
         <>
           <FilterOrderHistory />
-          <OrderHistoryList dataSource={dataOrderHistory.data.list} />
+          <OrderHistoryList dataSource={dataOrderHistory?.data?.list} />
         </>
       ) : (
         <Container>

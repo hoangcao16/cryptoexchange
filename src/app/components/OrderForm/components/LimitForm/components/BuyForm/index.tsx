@@ -103,13 +103,13 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
     }
   };
   useEffect(() => {
-    if (selectPrice.selectPrice > 0) {
-      setValue('price', selectPrice.selectPrice, {
+    if (selectPrice?.selectPrice > 0) {
+      setValue('price', selectPrice?.selectPrice, {
         shouldValidate: true,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectPrice.selectPrice]);
+  }, [selectPrice?.selectPrice]);
   // submit form
   const onSubmitBuy = (data: any) => {
     const payload = {
