@@ -8,12 +8,15 @@ import {
 } from './style';
 import OpenIcon from 'app/assets/img/MarketActivities';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 const MarketActivities = () => {
+  const { t } = useTranslation();
   const [extend, setExtend] = useState(false);
   return (
     <Container>
       <Head>
-        This is Market Activities
+        {t('market-activities')}
         <ExtendButton extend={extend} onClick={() => setExtend(!extend)}>
           <OpenIcon name="detail" className="extend-icon" />
         </ExtendButton>
@@ -23,7 +26,7 @@ const MarketActivities = () => {
           <A href="/#" target="_blank">
             <div className="a-infor">
               <div className="css-qt6vj7">
-                <span className="css-1iqe90x">AUTO</span>
+                <span className="css-1iqe90x">{t('auto')}</span>
                 /BTC
               </div>
               <div className="a-time">13:00:08</div>
@@ -54,7 +57,7 @@ const MarketActivities = () => {
           <A href="/#" target="_blank">
             <div className="a-infor">
               <div className="css-qt6vj7">
-                <span className="css-1iqe90x">AUTO</span>
+                <span className="css-1iqe90x">{t('auto')}</span>
                 /BTC
               </div>
               <div className="a-time">13:00:08</div>

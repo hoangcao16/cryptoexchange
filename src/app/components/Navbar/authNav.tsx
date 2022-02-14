@@ -3,6 +3,7 @@ import { StyledNavBrand, StyledNav, StyledNavBar } from './style';
 import { BsSun } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
+import ChangeLanguage from '../ChangeLanguage';
 
 const NavMenu = () => {
   return (
@@ -17,9 +18,7 @@ const NavMenu = () => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <StyledNav className="me-auto"></StyledNav>
           <StyledNav>
-            <Nav.Link href="#pricing" className="language">
-              English
-            </Nav.Link>
+            <ChangeLanguage />
             <i className="border"></i>
             <Nav.Link href="#pricing">
               <BsSun />

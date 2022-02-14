@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 interface ContainerProps {
-  prefix: string;
-  suffix: string;
+  prefix: any;
+  suffix: any;
   id: string;
   Change?: any;
   regis?: any;

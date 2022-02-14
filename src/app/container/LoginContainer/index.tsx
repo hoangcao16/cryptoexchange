@@ -15,9 +15,11 @@ import AuthFooter from 'app/components/AuthFooter';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectLogin } from './slice/selectors';
 import { useLoginSlice } from './slice';
+import { useTranslation } from 'react-i18next';
 
 const LoginContainer = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { actions } = useLoginSlice();
   const [emailLogin, setEmailLogin] = useState('');
   const dataLogin: any = useSelector(selectLogin);
@@ -37,15 +39,12 @@ const LoginContainer = () => {
             <LeftMenu xs lg="4">
               {dataLogin.stepLogin === 1 ? (
                 <>
-                  <div className="title">Binance Account Login</div>
-                  <div className="sub-title">
-                    Welcome back! Log In with your Email, Phone number or QR
-                    code
-                  </div>
+                  <div className="title">{t('auth.welcome-title')}</div>
+                  <div className="sub-title">{t('auth.welcome-subtitle')}</div>
                   <LoginByEmail emailLogin={setEmailLogin} />
                   <GroupHelpButton>
-                    <StyledLink to="/">Forgot password?</StyledLink>
-                    <StyledLink to="/register">Register now</StyledLink>
+                    <StyledLink to="/">{t('auth.forgot-password')}</StyledLink>
+                    <StyledLink to="/register">{t('register-now')}</StyledLink>
                   </GroupHelpButton>
                 </>
               ) : dataLogin.stepLogin === 2 ? (

@@ -3,8 +3,10 @@ import { NavDropdown, Button } from 'react-bootstrap';
 import { StyledNavDropdown, DropdownItemGroup } from './style';
 import { authService } from 'services/authService';
 import WalletLogged from './wallet';
+import { useTranslation } from 'react-i18next';
 
 const UserLogged = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = e => {
     setShow(!show);
@@ -22,7 +24,7 @@ const UserLogged = () => {
     <>
       <WalletLogged />
       <StyledNavDropdown
-        title={`User ${username}`}
+        title={`${t('user')} ${username}`}
         id="collasible-nav-dropdown"
         show={show}
         onMouseEnter={showDropdown}
@@ -31,7 +33,7 @@ const UserLogged = () => {
         <DropdownItemGroup>
           <NavDropdown.Item href="#action/3.1">
             <Button variant="danger" onClick={logout}>
-              Logout
+              {t('logout')}
             </Button>
           </NavDropdown.Item>
         </DropdownItemGroup>

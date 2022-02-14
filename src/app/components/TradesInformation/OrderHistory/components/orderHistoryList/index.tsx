@@ -3,18 +3,20 @@ import { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import numeral from 'numeral';
 import { Div } from './style';
+import { useTranslation } from 'react-i18next';
 
 const OrderHistoryList = ({ dataSource }: any) => {
+  const { t } = useTranslation();
   const columns: ColumnsType<any> = [
     {
-      title: 'Date',
+      title: t('date'),
       dataIndex: 'ts',
       align: 'center',
       key: 'ts',
       render: (text: any) => moment(text).format('MM-DD HH:mm:ss'),
     },
     {
-      title: 'Pair',
+      title: t('pair'),
       dataIndex: 'pair',
       align: 'center',
       key: 'pair',
@@ -23,7 +25,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Type',
+      title: t('type'),
       dataIndex: 'type',
       align: 'center',
       key: 'type',
@@ -32,7 +34,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Side',
+      title: t('side'),
       dataIndex: 'side',
       align: 'center',
       key: 'side',
@@ -48,7 +50,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Average',
+      title: t('average'),
       dataIndex: 'average',
       align: 'center',
       key: 'average',
@@ -61,7 +63,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Price',
+      title: t('price'),
       dataIndex: 'price',
       align: 'center',
       key: 'price',
@@ -74,7 +76,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Executed',
+      title: t('executed'),
       dataIndex: 'executed',
       align: 'center',
       key: 'executed',
@@ -85,7 +87,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Amount',
+      title: t('amount'),
       dataIndex: 'amount',
       align: 'center',
       key: 'amount',
@@ -98,7 +100,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Total',
+      title: t('total'),
       dataIndex: 'total',
       align: 'center',
       key: 'total',
@@ -111,7 +113,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Trigger Condition',
+      title: t('trigger-condition'),
       dataIndex: 'triggerCondition',
       align: 'center',
       key: 'triggerConditions',
@@ -120,7 +122,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'All',
+      title: t('all'),
       align: 'center',
       key: 'status',
       dataIndex: 'status',

@@ -43,6 +43,12 @@ export const StyledModal = styled(Modal)`
         border-bottom: 1px solid ${({ theme }) => theme.primary};
       }
     }
+    .btn-close {
+      filter: invert(1) grayscale(100%) brightness(200%);
+      &:focus {
+        box-shadow: none;
+      }
+    }
     .modal-body {
       padding: 16px 16px 16px 16px;
       &--title {

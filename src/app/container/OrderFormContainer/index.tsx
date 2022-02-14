@@ -3,7 +3,9 @@ import { Container, Header, A, StyledDropdown } from './style';
 import { ReactComponent as MoreIcon } from 'app/assets/img/more.svg';
 import { Dropdown } from 'react-bootstrap';
 import OrderForm from 'app/components/OrderForm';
+import { useTranslation } from 'react-i18next';
 const OrderFormContainer = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = () => {
     setShow(!show);
@@ -14,11 +16,11 @@ const OrderFormContainer = () => {
   return (
     <Container>
       <Header>
-        <div className="tradeItemSwitchWrap spotTab active ">Spot</div>
+        <div className="tradeItemSwitchWrap spotTab active ">{t('spot')}</div>
         <div className="tradeItemSwitchWrap" style={{ flex: ' 1 1 0%' }}></div>
         <div className="tradeItemSwitchWrap">
           <A target="_blank" href="/#">
-            <div className="hrefText">Margin</div>
+            <div className="hrefText">{t('margin')}</div>
             <div className="marginRatio">10x</div>
           </A>
           <StyledDropdown
@@ -30,9 +32,9 @@ const OrderFormContainer = () => {
               <MoreIcon className="more-icon" />
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item href="/#">Trading Rules</Dropdown.Item>
-              <Dropdown.Item href="/#">FAQ</Dropdown.Item>
-              <Dropdown.Item href="/#">Spot Tutorial</Dropdown.Item>
+              <Dropdown.Item href="/#">{t('trading-rules')}</Dropdown.Item>
+              <Dropdown.Item href="/#">{t('FAQ')}</Dropdown.Item>
+              <Dropdown.Item href="/#">{t('spot-tutorial')}</Dropdown.Item>
             </Dropdown.Menu>
           </StyledDropdown>
         </div>

@@ -12,6 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from 'react';
 import { Tooltip } from 'antd';
 import { selectOrderbook } from 'app/components/OrderBook/slice/selectors';
+import { useTranslation } from 'react-i18next';
 //declare type
 type SubmitForm = {
   price: number;
@@ -21,6 +22,7 @@ type SubmitForm = {
 
 const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { actions } = useBuyspotlimitSlice();
   const selectPrice: any = useSelector(selectOrderbook);
   const [percent, setPercent] = useState(0);
@@ -125,7 +127,7 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
         <Tooltip color={'#000'} title={errors.price?.message}>
           <div>
             <FormInput
-              prefix="Price"
+              prefix={t('price')}
               suffix={quoteSymbol}
               id="price"
               error={errors.price?.message}
@@ -138,7 +140,7 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
         <Tooltip color={'#000'} title={errors.amount?.message}>
           <div>
             <FormInput
-              prefix="Amount"
+              prefix={t('amount')}
               suffix={baseSymbol}
               id="amount"
               error={errors.amount?.message}
@@ -153,7 +155,7 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
           <Tooltip color={'#000'} title={errors?.total?.message}>
             <div>
               <FormInput
-                prefix="Total"
+                prefix={t('total')}
                 suffix={quoteSymbol}
                 id="total"
                 error={errors.total?.message}
@@ -168,7 +170,7 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
         )}
         {getToken() ? (
           <Button data-type="buyButton" id="orderformBuyBtn" type="submit">
-            Buy BTC
+            {t('buy')} {baseSymbol}
           </Button>
         ) : (
           <AuthButton />

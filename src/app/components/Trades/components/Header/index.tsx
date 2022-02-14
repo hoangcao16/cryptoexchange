@@ -1,12 +1,21 @@
 import { THeader } from './style';
 import { Col } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 const OrderBookHeader = () => {
+  const { t } = useTranslation();
+  let { pair } = useParams();
+  const findIndex: any = pair?.indexOf('_');
   return (
     <>
       <THeader>
-        <Col>Price(USDT)</Col>
-        <Col className="text-end px-0">Amount(BTC)</Col>
-        <Col className="text-end pl-0">Time</Col>
+        <Col>
+          {t('price')}({pair?.substring(findIndex + 1)})
+        </Col>
+        <Col className="text-end px-0">
+          {t('amount')}({pair?.substring(0, findIndex)})
+        </Col>
+        <Col className="text-end pl-0">{t('time')}</Col>
       </THeader>
     </>
   );

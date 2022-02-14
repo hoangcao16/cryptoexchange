@@ -11,8 +11,11 @@ import { useGetBalancePairSlice } from './slice';
 import { selectGetallpair } from 'app/components/Market/slice/selectors';
 import { selectGetBalancePair } from './slice/selectors';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const OrderForm = () => {
+  const { t } = useTranslation();
+  const { i18n } = useTranslation();
   const [title, setTitle] = useState('Stop-limit');
   const [tabActive, setTabActive] = useState(1);
   const [pairId, setPairId] = useState('');
@@ -23,6 +26,10 @@ const OrderForm = () => {
   const { actions } = useGetBalancePairSlice();
   let { pair } = useParams();
   const wallet = 'SPOT';
+
+  useEffect(() => {
+    setTitle(t('stop-limit'));
+  }, [i18n, t]);
   // Get pairId
   useEffect(() => {
     const findIndex: any = pair?.indexOf('_');
@@ -49,13 +56,13 @@ const OrderForm = () => {
             onClick={() => setTabActive(1)}
             className={tabActive === 1 ? 'item active' : 'item'}
           >
-            Limit
+            {t('limit')}
           </div>
           <div
             onClick={() => setTabActive(2)}
             className={tabActive === 2 ? 'item active' : 'item'}
           >
-            Market
+            {t('market')}
           </div>
           <StyledDropdown className="item">
             <SplitButton
@@ -63,17 +70,17 @@ const OrderForm = () => {
               id="dropdown-button-drop-down"
               drop="down"
               title={title}
-              onClick={() => setTabActive(title === 'Stop-limit' ? 3 : 4)}
+              onClick={() => setTabActive(title === t('stop-limit') ? 3 : 4)}
               className={tabActive === 3 || tabActive === 4 ? ' active' : ''}
             >
               <Dropdown.Item
                 className="dropdown-item"
                 onClick={() => {
-                  setTitle('Stop-limit');
+                  setTitle(t('stop-limit'));
                   setTabActive(3);
                 }}
               >
-                Stop-limit
+                {t('stop-limit')}
               </Dropdown.Item>
               <Dropdown.Item
                 className="dropdown-item"
@@ -91,12 +98,12 @@ const OrderForm = () => {
             <div className="tooltiptext">
               <div className="tooltip-content">
                 {tabActive === 1
-                  ? 'A limit order is an order to buy or sell at a specific price or better. Limit orders are not guaranteed to execute.'
+                  ? t('tooltip-limit')
                   : tabActive === 2
-                  ? 'Market order is immediately matched to the best available market price.'
+                  ? t('tooltip-market')
                   : tabActive === 3
-                  ? 'To buy or sell a coin once the price reaches a specified price.'
-                  : 'To place a stop-limit order and a limit order at the same time. When either of the order pairs is triggered, the other order will be cancelled. If one is cancelled, the OCO pair will be cancelled.'}
+                  ? t('tooltip-stop-limit')
+                  : t('tooltip-oco')}
               </div>
             </div>
           </Tooltip>

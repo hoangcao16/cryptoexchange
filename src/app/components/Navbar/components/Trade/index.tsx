@@ -6,9 +6,18 @@ import {
   DropdownItemGroup,
   DropdownItemTitle,
 } from './style';
-import { data } from './data';
+import { useTranslation } from 'react-i18next';
+import { SiConvertio } from 'react-icons/si';
+import { AiOutlineLayout } from 'react-icons/ai';
+import { RiLayoutGridLine } from 'react-icons/ri';
+import { GrUpgrade } from 'react-icons/gr';
+import { BsPeople } from 'react-icons/bs';
+import { AiOutlineLineChart } from 'react-icons/ai';
+import { AiOutlineSwap } from 'react-icons/ai';
+import { BiBarChartAlt2 } from 'react-icons/bi';
 
 const TradeNav = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = e => {
     setShow(!show);
@@ -16,9 +25,60 @@ const TradeNav = () => {
   const hideDropdown = e => {
     setShow(false);
   };
+  const data = [
+    {
+      id: 1,
+      icon: SiConvertio,
+      name: t('convert'),
+      description: t('easiest-way-to-trade'),
+    },
+    {
+      id: 2,
+      icon: AiOutlineLayout,
+      name: t('classic'),
+      description: t('classic-sub'),
+    },
+    {
+      id: 3,
+      icon: RiLayoutGridLine,
+      name: t('advanced'),
+      description: t('advanced-sub'),
+    },
+    {
+      id: 4,
+      icon: GrUpgrade,
+      name: t('margin'),
+      description: t('increase-your-profits'),
+    },
+    {
+      id: 5,
+      icon: BsPeople,
+      name: 'P2P',
+      description: t('p2p-trading-subtitle'),
+    },
+    {
+      id: 6,
+      icon: AiOutlineLineChart,
+      name: t('strategy-trading'),
+      description: t('strategy-trading-sub'),
+    },
+    {
+      id: 7,
+      icon: AiOutlineSwap,
+      name: t('swap-farming'),
+      description: t('swap-farming-sub'),
+    },
+    {
+      id: 8,
+      icon: BiBarChartAlt2,
+      name: t('fan-token'),
+      description: t('fan-token-sub'),
+    },
+  ];
+
   return (
     <StyledNavDropdown
-      title="Trade"
+      title={t('trade')}
       id="collasible-nav-dropdown"
       show={show}
       onMouseEnter={showDropdown}

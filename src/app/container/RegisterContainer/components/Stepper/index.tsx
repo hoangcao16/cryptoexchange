@@ -1,11 +1,12 @@
 import { Container, Steps, Step } from './style';
+import { useTranslation } from 'react-i18next';
 
 interface StepperProps {
   footStep: number;
 }
 const Stepper = (props: StepperProps) => {
   const { footStep } = props;
-
+  const { t } = useTranslation();
   return (
     <Container>
       <div>
@@ -15,7 +16,9 @@ const Stepper = (props: StepperProps) => {
               <div className="step_marker_column">
                 <span className="step-counter">1</span>
               </div>
-              <div className="step-title">Enter Account Details</div>
+              <div className="step-title">
+                {t('auth.enter-account-details')}
+              </div>
               <div className="css-vdqias"></div>
             </Step>
           </div>
@@ -31,7 +34,7 @@ const Stepper = (props: StepperProps) => {
               <div className="step_marker_column">
                 <span className="step-counter">2</span>
               </div>
-              <div className="step-title">Email Verification</div>
+              <div className="step-title">{t('auth.email-verification')}</div>
               <div className="css-vdqias"></div>
             </Step>
           </div>

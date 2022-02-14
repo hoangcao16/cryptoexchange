@@ -3,18 +3,20 @@ import { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import numeral from 'numeral';
 import { Div } from './style';
+import { useTranslation } from 'react-i18next';
 
 const TradeHistoryList = ({ dataSource }: any) => {
+  const { t } = useTranslation();
   const columns: ColumnsType<any> = [
     {
-      title: 'Date',
+      title: t('date'),
       dataIndex: 'ts',
       align: 'center',
       key: 'ts',
       render: (text: any) => moment(text).format('MM-DD HH:mm:ss'),
     },
     {
-      title: 'Pair',
+      title: t('pair'),
       dataIndex: 'pair',
       align: 'center',
       key: 'pair',
@@ -23,7 +25,7 @@ const TradeHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Side',
+      title: t('side'),
       dataIndex: 'side',
       align: 'center',
       key: 'side',
@@ -39,7 +41,7 @@ const TradeHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Price',
+      title: t('price'),
       dataIndex: 'price',
       align: 'center',
       key: 'price',
@@ -52,7 +54,7 @@ const TradeHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Executed',
+      title: t('executed'),
       dataIndex: 'executed',
       align: 'center',
       key: 'executed',
@@ -63,7 +65,7 @@ const TradeHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Fee',
+      title: t('fee'),
       dataIndex: 'fee',
       align: 'center',
       key: 'fee',
@@ -76,7 +78,7 @@ const TradeHistoryList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Total',
+      title: t('total'),
       dataIndex: 'total',
       align: 'center',
       key: 'total',

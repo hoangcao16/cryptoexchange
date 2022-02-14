@@ -7,8 +7,23 @@ import {
   DropdownItemGroup,
   DropdownItemTitle,
 } from './style';
-import { data } from './data';
+import { AiOutlineInteraction } from 'react-icons/ai';
+import { CgArrowsExchangeV } from 'react-icons/cg';
+import { HiOutlineAcademicCap } from 'react-icons/hi';
+import { RiExchangeBoxLine } from 'react-icons/ri';
+import { MdOutlineHomeRepairService } from 'react-icons/md';
+import { MdOutlineManageSearch } from 'react-icons/md';
+import { GiNestedHearts } from 'react-icons/gi';
+import { WiCloudy } from 'react-icons/wi';
+import { ImLab } from 'react-icons/im';
+import { GrLaunch } from 'react-icons/gr';
+import { FiCreditCard } from 'react-icons/fi';
+import { BsShield } from 'react-icons/bs';
+import { SiBinance } from 'react-icons/si';
+import { useTranslation } from 'react-i18next';
+
 const ProductNav = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = e => {
     setShow(!show);
@@ -16,6 +31,87 @@ const ProductNav = () => {
   const hideDropdown = e => {
     setShow(false);
   };
+  const data = [
+    {
+      id: 1,
+      icon: CgArrowsExchangeV,
+      name: t('exchange'),
+      description: t('exchange-sub'),
+    },
+    {
+      id: 2,
+      icon: HiOutlineAcademicCap,
+      name: t('academy'),
+      description: t('academy-sub'),
+    },
+    {
+      id: 3,
+      icon: RiExchangeBoxLine,
+      name: t('broker'),
+      description: t('broker-sub'),
+    },
+    {
+      id: 4,
+      icon: MdOutlineHomeRepairService,
+      name: t('institutional-vip-service'),
+      description: t('institutional-vip-service-sub'),
+    },
+    {
+      id: 5,
+      icon: GiNestedHearts,
+      name: t('charity'),
+      description: t('charity-sub'),
+    },
+    {
+      id: 6,
+      icon: WiCloudy,
+      name: t('cloud'),
+      description: t('cloud-sub'),
+    },
+    {
+      id: 7,
+      icon: AiOutlineInteraction,
+      name: t('DEX'),
+      description: t('DEX-sub'),
+    },
+    {
+      id: 8,
+      icon: ImLab,
+      name: t('labs'),
+      description: t('labs-sub'),
+    },
+    {
+      id: 9,
+      icon: GrLaunch,
+      name: t('launchpad'),
+      description: t('launchpad-sub'),
+    },
+    {
+      id: 10,
+      icon: MdOutlineManageSearch,
+      name: t('research'),
+      description: t('research-sub'),
+    },
+    {
+      id: 11,
+      icon: BsShield,
+      name: t('trust-wallet'),
+      description: t('trust-wallet-sub'),
+    },
+    {
+      id: 12,
+      icon: FiCreditCard,
+      name: t('gift-card'),
+      description: t('gift-card-sub'),
+    },
+    {
+      id: 13,
+      icon: SiBinance,
+      name: t('POW-live'),
+      description: t('POW-live-sub'),
+    },
+  ];
+
   return (
     <StyledNavDropdown
       title={<CgMenuGridR style={{ fontSize: '24px' }} />}

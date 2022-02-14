@@ -2,12 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components/macro';
 import { P } from './P';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 
 export function NotFoundPage() {
+  const { t } = useTranslation();
   return (
     <>
       <Helmet>
-        <title>404 Page Not Found</title>
+        <title>404 {t('page-not-found')}</title>
         <meta name="description" content="Page not found" />
       </Helmet>
       <Wrapper>
@@ -18,7 +20,7 @@ export function NotFoundPage() {
           </span>
           4
         </Title>
-        <P>Page not found.</P>
+        <P>{t('page-not-found')}.</P>
       </Wrapper>
     </>
   );

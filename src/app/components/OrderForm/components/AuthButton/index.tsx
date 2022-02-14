@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 const AuthButton = () => {
+  const { t } = useTranslation();
   return (
     <Container>
       <span>
-        <StyledLink to="/login">Log In</StyledLink> or{' '}
-        <StyledLink to="/register">Register Now</StyledLink>
+        <StyledLink to="/login">{t('log-in')}</StyledLink> {t('or')}{' '}
+        <StyledLink to="/register">{t('register-now')}</StyledLink>
       </span>
     </Container>
   );

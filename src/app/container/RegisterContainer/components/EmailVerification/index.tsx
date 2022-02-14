@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useVerifyEmailRegisterSlice } from './slice';
 import { useEffect } from 'react';
 import { selectVerifyEmailRegister } from './slice/selectors';
+import { useTranslation } from 'react-i18next';
 //declare type
 type UserSubmitForm = {
   code: string;
@@ -23,6 +24,7 @@ type UserSubmitForm = {
 const EmailVerification = ({ email }) => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
+  const { t } = useTranslation();
   const { actions } = useVerifyEmailRegisterSlice();
   const dataRegister: any = useSelector(selectVerifyEmailRegister);
   //Validate
@@ -51,14 +53,14 @@ const EmailVerification = ({ email }) => {
   }, [dataRegister.registerSuccess]);
   return (
     <>
-      <Title>Email Verification</Title>
+      <Title>{t('auth.email-verification')}</Title>
       <Description>
         <div className="subtitle--content">
-          Please enter the 6-digit verification code that was sent to &nbsp;
-          {email}. The code is valid for 30 minutes.
+          {t('auth.please-enter-the-6digit-code')} &nbsp;
+          {email}. {t('auth.the-code-valid')}
         </div>
       </Description>
-      <SubTitle>Email Verification Code</SubTitle>
+      <SubTitle>{t('auth.email-verification-code')}</SubTitle>
       <form onSubmit={handleSubmit(onSubmitVerify)}>
         <div>
           <Input
@@ -70,13 +72,13 @@ const EmailVerification = ({ email }) => {
         </div>
         <ErrorMessage>{errors.code?.message}</ErrorMessage>
         <ResendButton type="button">
-          <div className="css-1c82c04">Resend email&nbsp;</div>
+          <div className="css-1c82c04">{t('auth.resend-email')}&nbsp;</div>
         </ResendButton>
         <HelpButton>
-          <div className="text">Didn't receive the code?</div>
+          <div className="text">{t('auth.resend-email-subtitle')}</div>
         </HelpButton>
         <ConfirmCodeButton id="submit_verification" type="submit">
-          Finish
+          {t('finish')}
         </ConfirmCodeButton>
       </form>
     </>

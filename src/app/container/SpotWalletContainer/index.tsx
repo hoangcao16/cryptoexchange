@@ -21,9 +21,11 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSpotWalletSlice } from './slice';
 import { selectSpotWallet } from './slice/selectors';
+import { useTranslation } from 'react-i18next';
 
 const SpotWalletContainer = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { actions } = useSpotWalletSlice();
   const AllSpotWall: any = useSelector(selectSpotWallet);
   useEffect(() => {
@@ -41,7 +43,7 @@ const SpotWalletContainer = () => {
           <div className="content">
             <LeftParameter>
               <div className="title">
-                <div className="title--text">Fiat and Spot balance</div>
+                <div className="title--text">{t('fiat-spot-balance')}</div>
                 <div>
                   <button className="title--icon">
                     <ShowIcon name="show" className="show-icon" />
@@ -59,7 +61,7 @@ const SpotWalletContainer = () => {
             <RightParameter>
               <Balance>
                 <BalanceName>
-                  <div className="balance--name-text">Spot balance</div>
+                  <div className="balance--name-text">{t('spot-balance')}</div>
                 </BalanceName>
                 <BalanceNumber>
                   <div className="amount-coin">
@@ -71,7 +73,7 @@ const SpotWalletContainer = () => {
               </Balance>
               <Balance>
                 <BalanceName>
-                  <div className="balance--name-text">Fiat balance</div>
+                  <div className="balance--name-text">{t('fiat-balance')}</div>
                 </BalanceName>
                 <BalanceNumber>
                   <div className="amount-coin">
@@ -86,17 +88,12 @@ const SpotWalletContainer = () => {
                   <div>
                     <Tooltip className="tooltip-box">
                       <div className="tooltip-title">
-                        Yesterday's PNL = Yesterday asset total in spot account
-                        (24:00:00 UTC) - Today's initial asset total (00:00:00
-                        UTC) - Yesterday's net transfer and deposit. Data update
-                        time refers to UTC + 0 time zone. The data maintenance
-                        time is 0am - 2am (UTC+0) every day. During this period,
-                        yesterday‘s PNL do not displayed.
+                        {t('p2p-tooltip-box')}
                       </div>
                       <div className="bn-tooltip-arrow"></div>
                       <i className="gap-fill"></i>
                     </Tooltip>
-                    <div className="title-text">Yesterday's PNL</div>
+                    <div className="title-text">{t('yesterday-pnl')}</div>
                   </div>
                   <div className="title-icon">
                     <NextIcon />

@@ -23,16 +23,18 @@ import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
 import { getToken } from 'app/components/common/common';
 import ChangeLanguage from '../ChangeLanguage';
-
+import { useTranslation } from 'react-i18next';
 const Title = () => {
+  const { t } = useTranslation();
   return (
     <>
       <span>NFT</span>
-      <Tag>New</Tag>
+      <Tag>{t('new')}</Tag>
     </>
   );
 };
 const NavMenu = () => {
+  const { t } = useTranslation();
   return (
     <StyledNavBar collapseOnSelect expand="xl" bg="dark" variant="dark">
       <Container fluid style={{ height: '64px' }}>
@@ -45,7 +47,7 @@ const NavMenu = () => {
         <StyledNav className="me-auto">
           <ProductNav />
           <BuyCrypto />
-          <StyledNavLink href="#pricing">Markets</StyledNavLink>
+          <StyledNavLink href="#pricing">{t('markets')}</StyledNavLink>
           <TradeNav />
           <DerivativesNav />
           <EarnNav />
@@ -59,15 +61,14 @@ const NavMenu = () => {
           {!getToken() ? (
             <AuthGroup>
               <Link to="/login" className="linktoLogin-button">
-                Log In
+                {t('log-in')}
               </Link>
-              <RegisterButton to="/register">Register</RegisterButton>
+              <RegisterButton to="/register">{t('register')}</RegisterButton>
             </AuthGroup>
           ) : (
             <UserLogged />
           )}
-
-          <Nav.Link href="#pricing">Downloads</Nav.Link>
+          <Nav.Link href="#pricing">{t('downloads')}</Nav.Link>
           <ChangeLanguage />
           <i className="border"></i>
           <Nav.Link href="#pricing">USD</Nav.Link>

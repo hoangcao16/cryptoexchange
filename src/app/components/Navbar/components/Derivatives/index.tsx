@@ -6,18 +6,71 @@ import {
   DropdownItemGroup,
   DropdownItemTitle,
 } from './style';
-import { data } from './data';
+import { useTranslation } from 'react-i18next';
+import { GrOverview } from 'react-icons/gr';
+import { BsFilePersonFill } from 'react-icons/bs';
+import { RiMoneyDollarBoxLine } from 'react-icons/ri';
+import { BsCoin } from 'react-icons/bs';
+import { CgOptions } from 'react-icons/cg';
+import { CgArrowsExchangeV } from 'react-icons/cg';
+import { GiCrossedSwords } from 'react-icons/gi';
+
 const DerivativesNav = () => {
   const [show, setShow] = useState(false);
+  const { t } = useTranslation();
   const showDropdown = e => {
     setShow(!show);
   };
   const hideDropdown = e => {
     setShow(false);
   };
+  const data = [
+    {
+      id: 1,
+      icon: GrOverview,
+      name: t('POW-futures-overview'),
+      description: t('view-our-full-range'),
+    },
+    {
+      id: 2,
+      icon: BsFilePersonFill,
+      name: t('responsible-trading'),
+      description: t('responsible-trading-sub'),
+    },
+    {
+      id: 3,
+      icon: RiMoneyDollarBoxLine,
+      name: t('USDM-futures'),
+      description: t('USDM-futures-sub'),
+    },
+    {
+      id: 4,
+      icon: BsCoin,
+      name: t('COINM-futures'),
+      description: t('COINM-futures-sub'),
+    },
+    {
+      id: 5,
+      icon: CgOptions,
+      name: t('vanilla-options'),
+      description: t('vanilla-options-sub'),
+    },
+    {
+      id: 6,
+      icon: CgArrowsExchangeV,
+      name: t('leveraged-token'),
+      description: t('leveraged-token-sub'),
+    },
+    {
+      id: 7,
+      icon: GiCrossedSwords,
+      name: t('battle'),
+      description: t('battle-sub'),
+    },
+  ];
   return (
     <StyledNavDropdown
-      title="Derivatives"
+      title={t('derivatives')}
       id="collasible-nav-dropdown"
       show={show}
       onMouseEnter={showDropdown}

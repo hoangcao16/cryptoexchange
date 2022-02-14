@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import RegisterContainer from 'app/container/RegisterContainer';
+import { useTranslation } from 'react-i18next';
 export function RegisterPage() {
+  const { t } = useTranslation();
   return (
     <App>
       <Helmet>
-        <title>Register Page | Trading View</title>
+        <title>{t('register-page')} | Trading View</title>
         <meta name="description" content="Register Trading View Web" />
       </Helmet>
       <RegisterContainer />

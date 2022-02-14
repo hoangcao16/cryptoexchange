@@ -1,12 +1,13 @@
 import LoginContainer from 'app/container/LoginContainer';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-
+import { useTranslation } from 'react-i18next';
 export function LoginPage() {
+  const { t } = useTranslation();
   return (
     <App>
       <Helmet>
-        <title>Signin Page | Trading View</title>
+        <title>{t('sign-page')} | Trading View</title>
         <meta name="description" content="Login Trading View Web" />
       </Helmet>
       <LoginContainer />
