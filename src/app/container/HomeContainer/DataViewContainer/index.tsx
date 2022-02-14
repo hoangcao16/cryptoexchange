@@ -31,6 +31,7 @@ const HomeContentContainer = () => {
   const dataAllPair = useSelector(selectGetallpair);
   const dataAllTrades = useSelector(selectTrades);
   let { pair } = useParams();
+  console.log('home-dataview-container');
 
   useEffect(() => {
     socket.onopen = () => {

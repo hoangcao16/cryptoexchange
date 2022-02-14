@@ -44,7 +44,7 @@ export function App() {
   const { i18n } = useTranslation();
   const { theme } = useThemeContext();
   const themeMode = theme === 'light' ? lightTheme : darkTheme;
-
+  console.log('data');
   //Get all pair
   useEffect(() => {
     dispatch(actionsAllPair.getAllPairRequest());
@@ -60,7 +60,7 @@ export function App() {
           <meta name="description" content="Trading View" />
         </Helmet>
         <Routes>
-          <Route path="/" element={<Navigate to={`/trade/${basePair}`} />} />
+          {/* <Route path="/" element={<Navigate to={`/trade/${basePair}`} />} /> */}
           <Route path="/trade/:pair" element={<HomePage />} />
           <Route
             path="/login"
