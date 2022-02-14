@@ -114,7 +114,9 @@ const BuyForm = ({ baseSymbol, quoteSymbol, quoteAvlb, wallet, type }: any) => {
   const onSubmitBuy = (data: any) => {
     const payload = {
       ...data,
-      pair_id: localStorage.getItem('pair_id'),
+      pair_id: JSON.parse(
+        JSON.stringify(localStorage.getItem('pair_id') || ''),
+      ),
       type: type,
       stop: null,
       limit: null,

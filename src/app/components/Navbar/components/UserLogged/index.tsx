@@ -19,7 +19,9 @@ const UserLogged = () => {
     authService.removeUserId();
     window.location.href = '/';
   };
-  const username = localStorage.getItem('userId');
+  const username = JSON.parse(
+    JSON.stringify(localStorage.getItem('userId') || ''),
+  );
   return (
     <>
       <WalletLogged />
