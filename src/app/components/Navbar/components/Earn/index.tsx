@@ -6,9 +6,17 @@ import {
   DropdownItemGroup,
   DropdownItemTitle,
 } from './style';
-import { data } from './data';
+import { useTranslation } from 'react-i18next';
+import { MdOutlineSavings } from 'react-icons/md';
+import { GrLaunch } from 'react-icons/gr';
+import { RiCopperCoinLine } from 'react-icons/ri';
+import { RiCoinsLine } from 'react-icons/ri';
+import { MdOutlineAutorenew } from 'react-icons/md';
+import { GiDigDug } from 'react-icons/gi';
+import { RiCoinLine } from 'react-icons/ri';
 
 const EarnNav = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = e => {
     setShow(!show);
@@ -16,9 +24,65 @@ const EarnNav = () => {
   const hideDropdown = e => {
     setShow(false);
   };
+  const data = [
+    {
+      id: 1,
+      icon: MdOutlineSavings,
+      name: t('POW-earn'),
+      description: t('POW-earn-sub'),
+    },
+    {
+      id: 2,
+      icon: GrLaunch,
+      name: t('launchpad'),
+      description: t('launchpad-sub'),
+    },
+    {
+      id: 3,
+      icon: RiCopperCoinLine,
+      name: t('savings'),
+      description: t('savings-sub'),
+    },
+    {
+      id: 4,
+      icon: RiCopperCoinLine,
+      name: t('staking'),
+      description: t('staking-sub'),
+    },
+    {
+      id: 5,
+      icon: RiCopperCoinLine,
+      name: t('BNB-vaults'),
+      description: t('BNB-Vaults-sub'),
+    },
+    {
+      id: 6,
+      icon: RiCoinsLine,
+      name: t('dual-investment'),
+      description: t('dual-investment-sub'),
+    },
+    {
+      id: 7,
+      icon: RiCoinLine,
+      name: t('liquidity-farming'),
+      description: t('liquidity-farming-sub'),
+    },
+    {
+      id: 8,
+      icon: MdOutlineAutorenew,
+      name: t('auto-invest'),
+      description: t('auto-invest-sub'),
+    },
+    {
+      id: 9,
+      icon: GiDigDug,
+      name: t('POW-pool'),
+      description: t('POW-pool-sub'),
+    },
+  ];
   return (
     <StyledNavDropdown
-      title="Earn"
+      title={t('earn')}
       id="collasible-nav-dropdown"
       show={show}
       onMouseEnter={showDropdown}

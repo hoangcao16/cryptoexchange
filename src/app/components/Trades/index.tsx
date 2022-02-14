@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { Container, Tabs } from './style';
 import MyTrades from './components/MyTrades';
 import MarketTrades from './components/MarketTrades';
+import { useTranslation } from 'react-i18next';
 
 const Trades = ({ dataSocket, dataApi }) => {
+  const { t } = useTranslation();
   const [active, setActive] = useState(true);
   return (
     <>
@@ -15,13 +17,13 @@ const Trades = ({ dataSocket, dataApi }) => {
               onClick={() => setActive(true)}
               className={active ? 'btn-active btn-market' : 'btn-market'}
             >
-              Market Trades
+              {t('market-trades')}
             </button>
             <button
               onClick={() => setActive(false)}
               className={!active ? 'btn-active btn-myTrades' : 'btn-myTrades'}
             >
-              My Trades
+              {t('my-trades')}
             </button>
           </Tabs>
           {active ? <Header /> : ''}

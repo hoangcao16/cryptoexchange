@@ -6,8 +6,13 @@ import {
   DropdownItemGroup,
   DropdownItemTitle,
 } from './style';
-import { data } from './data';
+import { useTranslation } from 'react-i18next';
+import { BiCreditCardAlt } from 'react-icons/bi';
+import { FaCreditCard } from 'react-icons/fa';
+import { BiCreditCardFront } from 'react-icons/bi';
+
 const FinanceNav = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = e => {
     setShow(!show);
@@ -15,9 +20,30 @@ const FinanceNav = () => {
   const hideDropdown = e => {
     setShow(false);
   };
+  const data = [
+    {
+      id: 1,
+      icon: BiCreditCardAlt,
+      name: t('POW-visa-card'),
+      description: t('POW-visa-card-sub'),
+    },
+    {
+      id: 2,
+      icon: FaCreditCard,
+      name: t('crypto-loans'),
+      description: t('crypto-loans-sub'),
+    },
+    {
+      id: 3,
+      icon: BiCreditCardFront,
+      name: t('POW-pay'),
+      description: t('POW-pay-sub'),
+    },
+  ];
+
   return (
     <StyledNavDropdown
-      title="Finance"
+      title={t('finance')}
       id="collasible-nav-dropdown"
       show={show}
       onMouseEnter={showDropdown}

@@ -9,10 +9,12 @@ import {
 import { ReactComponent as PlayIcon } from 'app/assets/img/play.svg';
 import { ReactComponent as OpenIcon } from 'app/assets/img/openIcon.svg';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ContentHeader = () => {
   let { pair } = useParams();
   const findIndex: any = pair?.indexOf('_');
+  const { t } = useTranslation();
   return (
     <Container>
       <Div>
@@ -38,7 +40,7 @@ const ContentHeader = () => {
             <div className="contentRightContainer d-flex">
               <div className="ticketList d-flex">
                 <div className="ticketItem">
-                  <div className="tickerItemLabel">24h Change</div>
+                  <div className="tickerItemLabel">24h {t('change')}</div>
                   <div className="tickerPriceText">
                     <span style={{ color: 'rgb(116, 167, 0)' }}>
                       629.10 +1.26%
@@ -46,19 +48,23 @@ const ContentHeader = () => {
                   </div>
                 </div>
                 <div className="ticketItem">
-                  <div className="tickerItemLabel">24h High</div>
+                  <div className="tickerItemLabel">24h {t('high')}</div>
                   <div className="tickerPriceText">
                     <span>51,280.00</span>
                   </div>
                 </div>
                 <div className="ticketItem">
-                  <div className="tickerItemLabel">24h Volume(BTC)</div>
+                  <div className="tickerItemLabel">
+                    24h {t('volume')}({pair?.substring(0, findIndex)})
+                  </div>
                   <div className="tickerPriceText">
                     <span>21,501.52</span>
                   </div>
                 </div>
                 <div className="ticketItem">
-                  <div className="tickerItemLabel">24h Volume(USDT)</div>
+                  <div className="tickerItemLabel">
+                    24h {t('volume')}({pair?.substring(findIndex + 1)})
+                  </div>
                   <div className="tickerPriceText">
                     <span>1,086,001,682.32</span>
                   </div>
@@ -69,7 +75,7 @@ const ContentHeader = () => {
         </Content>
         <SpotTutorial>
           <PlayIcon />
-          <span>Spot Tutorial</span>
+          <span>{t('spot-tutorial')}</span>
         </SpotTutorial>
       </Div>
     </Container>

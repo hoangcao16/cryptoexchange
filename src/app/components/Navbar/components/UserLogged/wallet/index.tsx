@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { StyledNavDropdown, DropdownItemTitle, StyledLink } from './style';
+import { useTranslation } from 'react-i18next';
 
 const WalletLogged = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = e => {
     setShow(!show);
@@ -11,7 +13,7 @@ const WalletLogged = () => {
   };
   return (
     <StyledNavDropdown
-      title="Wallet"
+      title={t('wallet')}
       id="collasible-nav-dropdown"
       show={show}
       onMouseEnter={showDropdown}
@@ -20,18 +22,18 @@ const WalletLogged = () => {
       <StyledLink to="/wallet/spot">
         <div className="item">
           <DropdownItemTitle>
-            <span>Fiat & Spot</span>
+            <span>{t('fiat-spot')}</span>
             <br></br>
-            <span className="title_description">(Deposit & Withdraw)</span>
+            <span className="title_description">({t('deposit-withdraw')})</span>
           </DropdownItemTitle>
         </div>
       </StyledLink>
       <StyledLink to="/wallet/p2p">
         <div className="item">
           <DropdownItemTitle>
-            <span>P2P Wallet</span>
+            <span>P2P {t('wallet')}</span>
             <br></br>
-            <span className="title_description">(Deposit & Withdraw)</span>
+            <span className="title_description">({t('deposit-withdraw')})</span>
           </DropdownItemTitle>
         </div>
       </StyledLink>

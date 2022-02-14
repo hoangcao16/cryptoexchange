@@ -2,17 +2,28 @@ import { ColLeft, ColRight } from './style';
 import FormInput, { FormInputDisabled } from '../FormInput';
 import AuthButton from '../AuthButton';
 import SliderBar from '../SliderBar';
+import { useParams } from 'react-router-dom';
 const MarketForm = () => {
+  let { pair } = useParams();
+  const findIndex: any = pair?.indexOf('_');
   return (
     <>
       <ColLeft>
         <div className="balance">
           <div className="balance-name">Avbl</div>
-          <div className="balance-coin">- USDT</div>
+          <div className="balance-coin">- {pair?.substring(findIndex + 1)}</div>
         </div>
         <form>
-          <FormInputDisabled prefix="Price" suffix="USDT" id="price" />
-          <FormInput prefix="Total" suffix="USDT" id="amount" />
+          <FormInputDisabled
+            prefix="Price"
+            suffix={pair?.substring(findIndex + 1)}
+            id="price"
+          />
+          <FormInput
+            prefix="Total"
+            suffix={pair?.substring(findIndex + 1)}
+            id="amount"
+          />
           <SliderBar />
           <AuthButton />
         </form>
@@ -20,11 +31,19 @@ const MarketForm = () => {
       <ColRight>
         <div className="balance">
           <div className="balance-name">Avbl</div>
-          <div className="balance-coin">- BTC</div>
+          <div className="balance-coin">- {pair?.substring(0, findIndex)}</div>
         </div>
         <form>
-          <FormInputDisabled prefix="Price" suffix="USDT" id="price-coin" />
-          <FormInput prefix="Amount" suffix="BTC" id="amount-coin" />
+          <FormInputDisabled
+            prefix="Price"
+            suffix={pair?.substring(findIndex + 1)}
+            id="price-coin"
+          />
+          <FormInput
+            prefix="Amount"
+            suffix={pair?.substring(0, findIndex)}
+            id="amount-coin"
+          />
           <SliderBar />
           <AuthButton />
         </form>

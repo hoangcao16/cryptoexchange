@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLoginSlice } from '../../slice';
 import { useEffect } from 'react';
 import { selectLogin } from '../../slice/selectors';
+import { useTranslation } from 'react-i18next';
 //declare type
 type UserSubmitForm = {
   code: string;
@@ -21,6 +22,7 @@ type UserSubmitForm = {
 const EmailVerification = ({ email }) => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
+  const { t } = useTranslation();
   const { actions } = useLoginSlice();
   const dataLogin: any = useSelector(selectLogin);
   //Validate
@@ -54,11 +56,9 @@ const EmailVerification = ({ email }) => {
   }, [dataLogin.loginFinish]);
   return (
     <>
-      <Title>Security verification</Title>
-      <Description>
-        To secure your account, please complete the following verification.
-      </Description>
-      <SubTitle>Email Verification Code</SubTitle>
+      <Title>{t('auth.security-verification')}</Title>
+      <Description>{t('auth.security-verification-subtitle')}</Description>
+      <SubTitle>{t('auth.email-verification-code')}</SubTitle>
       <form onSubmit={handleSubmit(onSubmitVerify)}>
         <div>
           <Input
@@ -70,7 +70,7 @@ const EmailVerification = ({ email }) => {
         </div>
         <ErrorMessage>{errors.code?.message}</ErrorMessage>
         <ConfirmCodeButton id="submit_verification" type="submit">
-          Confirm
+          {t('confirm')}
         </ConfirmCodeButton>
       </form>
     </>

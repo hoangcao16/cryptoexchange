@@ -4,8 +4,11 @@ import { Helmet } from 'react-helmet-async';
 import HomeContainer from 'app/container/HomeContainer';
 import FooterSticky from 'app/components/FooterSticky';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 export function HomePage() {
   let { pair } = useParams();
+  const { t } = useTranslation();
   // save LocalStorage pair
   React.useEffect(() => {
     const findIndex: any = pair?.indexOf('_');
@@ -15,11 +18,10 @@ export function HomePage() {
     )}/${pair?.substring(findIndex + 1)}`;
     localStorage.setItem('pair', changeFormatPair);
   }, [pair]);
-  console.log(pair);
   return (
     <>
       <Helmet>
-        <title>Home Page | Trading View</title>
+        <title>{t('home-page')} | Trading View</title>
         <meta name="description" content="Home page Trading View Web" />
       </Helmet>
       <HomeContainer />

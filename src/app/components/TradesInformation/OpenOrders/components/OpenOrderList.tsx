@@ -5,10 +5,12 @@ import numeral from 'numeral';
 import { Div, StyledButton } from './style';
 import { useDispatch } from 'react-redux';
 import { useGetopenOrderSlice } from '../slice';
+import { useTranslation } from 'react-i18next';
 
 const OpenOrderList = ({ dataSource }: any) => {
   const dispatch = useDispatch();
   const { actions } = useGetopenOrderSlice();
+  const { t } = useTranslation();
   const confirm = (e: any, record: any) => {
     const dataprops = {
       orderId: record.order_id,
@@ -20,14 +22,14 @@ const OpenOrderList = ({ dataSource }: any) => {
   };
   const columns: ColumnsType<any> = [
     {
-      title: 'Date',
+      title: t('date'),
       dataIndex: 'ts',
       align: 'center',
       key: 'ts',
       render: (text: any) => moment(text).format('MM-DD HH:mm:ss'),
     },
     {
-      title: 'Pair',
+      title: t('pair'),
       dataIndex: 'pair',
       align: 'center',
       key: 'pair',
@@ -36,7 +38,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Type',
+      title: t('type'),
       dataIndex: 'type',
       align: 'center',
       key: 'type',
@@ -45,7 +47,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Side',
+      title: t('side'),
       dataIndex: 'side',
       align: 'center',
       key: 'side',
@@ -61,7 +63,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Price',
+      title: t('price'),
       dataIndex: 'price',
       align: 'center',
       key: 'price',
@@ -74,7 +76,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Amount',
+      title: t('amount'),
       dataIndex: 'amount',
       align: 'center',
       key: 'amount',
@@ -87,7 +89,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Filled',
+      title: t('filled'),
       dataIndex: 'filled',
       align: 'center',
       key: 'filled',
@@ -98,7 +100,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Total',
+      title: t('total'),
       dataIndex: 'total',
       align: 'center',
       key: 'total',
@@ -111,7 +113,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Trigger Condition',
+      title: t('trigger-condition'),
       dataIndex: 'triggerCondition',
       align: 'center',
       key: 'triggerConditions',
@@ -120,7 +122,7 @@ const OpenOrderList = ({ dataSource }: any) => {
       },
     },
     {
-      title: 'Cancel All',
+      title: t('cancel-all'),
       align: 'center',
       key: 'cancel',
       render: (record: any) => {
@@ -133,7 +135,7 @@ const OpenOrderList = ({ dataSource }: any) => {
               okText="Yes"
               cancelText="No"
             >
-              <StyledButton>Cancel</StyledButton>
+              <StyledButton>{t('cancel')}</StyledButton>
             </Popconfirm>
           </Space>
         );

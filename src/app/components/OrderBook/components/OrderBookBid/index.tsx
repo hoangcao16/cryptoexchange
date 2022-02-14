@@ -8,6 +8,7 @@ import { isEmpty } from 'app/components/common/common';
 import { useDispatch } from 'react-redux';
 import { useOrderbookSlice } from '../../slice';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const OrderBookBid = ({
   dataApi,
@@ -15,6 +16,7 @@ const OrderBookBid = ({
   dataMarketSocket,
   miniTable,
 }: any) => {
+  const { t } = useTranslation();
   const [dataView, setDataView]: any[] = useState([]);
   const [lastestPrice, setLastestPrice] = useState('');
   const [mockUSD, setMockUSD] = useState(0);
@@ -75,7 +77,7 @@ const OrderBookBid = ({
           <div className="markPrice">${numeral(mockUSD).format('0,0.0')}</div>
         </div>
         <a href="/#" className="readmore">
-          More
+          {t('more')}
         </a>
       </OrderBookBidHeader>
       <div style={{ height: '92%', overflowY: 'auto' }}>

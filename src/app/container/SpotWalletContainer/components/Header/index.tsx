@@ -6,19 +6,21 @@ import {
   WalletDirect,
 } from './style';
 import { ReactComponent as WalletIcon } from 'app/assets/img/wallet.svg';
+import { useTranslation } from 'react-i18next';
 
 const FiatSpotHeader = () => {
+  const { t } = useTranslation();
   return (
     <div className="d-flex justify-content-between py-5 align-items-center position-relative">
-      <Title>Fiat and Spot</Title>
+      <Title>{t('fiat-and-spot')}</Title>
       <GroupButton>
         <div className="d-flex ">
           <DepositButton>
-            <button>Deposit</button>
+            <button>{t('deposit')}</button>
           </DepositButton>
           <NormalButton href="#" id="spotAccount_top_withdrawal">
             <button data-bn-type="button" className=" css-sl95de">
-              Withdraw
+              {t('withdraw')}
             </button>
           </NormalButton>
           <NormalButton
@@ -26,13 +28,13 @@ const FiatSpotHeader = () => {
             rel="noopener noreferrer"
             id="spotAccount_top_pay"
           >
-            <button>Pay</button>
+            <button>{t('pay')}</button>
           </NormalButton>
           <NormalButton id="spotAccount_top_transfer">
-            <button>Transfer</button>
+            <button>{t('transfer')}</button>
           </NormalButton>
           <NormalButton href="#">
-            <button>History</button>
+            <button>{t('history')}</button>
           </NormalButton>
           <WalletDirect>
             <NormalButton
@@ -43,13 +45,12 @@ const FiatSpotHeader = () => {
             >
               <button>
                 <WalletIcon />
-                Wallet Direct
+                {t('wallet-direct')}
               </button>
             </NormalButton>
             <div className="bn-tooltip-box">
               <div data-bn-type="text" className="css-1kv8tk2">
-                Transfer coins or tokens between Binance.com account and Binance
-                Chain Wallet.
+                {t('wallet-direct-tooltip')}
               </div>
               <div
                 className="bn-tooltip-arrow css-1u9esp9"

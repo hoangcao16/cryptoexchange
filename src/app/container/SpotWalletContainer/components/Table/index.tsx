@@ -11,6 +11,7 @@ import { ReactComponent as SearchIcon } from 'app/assets/img/search.svg';
 import { Table, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import numeral from 'numeral';
+import { useTranslation } from 'react-i18next';
 
 export interface Dataprops {
   key: number;
@@ -21,80 +22,87 @@ export interface Dataprops {
   btcValue: number;
   action: Array<string>;
 }
-const columns: ColumnsType<Dataprops> = [
-  {
-    title: 'Coin',
-    dataIndex: 'assetName',
-    sorter: (a, b) => a.assetName.localeCompare(b.assetName),
-    render: (text: any, record: any) => {
-      return (
-        <Space size="middle">
-          <div>
-            <img className="coin-icon" src={record.icon} alt="coin" />
-          </div>
-          <div className="d-flex flex-column">
-            <div>{text}</div>
-            <a className="coin-url" href={record.url}>
-              {record.tokenName}
-            </a>
-          </div>
-        </Space>
-      );
-    },
-  },
-  {
-    title: 'Total',
-    dataIndex: 'total',
-    sorter: {
-      compare: (a, b) => a.total - b.total,
-      multiple: 3,
-    },
-    render: (text: any, record: any) => {
-      return <Space size="middle">{numeral(text).format('0,0.000000')}</Space>;
-    },
-  },
-  {
-    title: 'Available',
-    dataIndex: 'available',
-    sorter: {
-      compare: (a, b) => a.available - b.available,
-      multiple: 2,
-    },
-    render: (text: any, record: any) => {
-      return <Space size="middle">{numeral(text).format('0,0.000000')}</Space>;
-    },
-  },
-  {
-    title: 'In Order',
-    dataIndex: 'inOrder',
-    sorter: {
-      compare: (a, b) => a.inOrder - b.inOrder,
-      multiple: 1,
-    },
-    render: (text: any, record: any) => {
-      return <Space size="middle">{numeral(text).format('0,0.000000')}</Space>;
-    },
-  },
-  {
-    key: 'action',
-    title: 'Action',
-    dataIndex: 'action',
-    render: (record: any) => {
-      return (
-        <Space size="middle">
-          <span className="coin-action">Deposit</span>
-          <span className="coin-action">Withdraw</span>
-          <span className="coin-action">Convert</span>
-        </Space>
-      );
-    },
-  },
-];
 
 const FiatSpotTable = ({ dataSource }) => {
+  const { t } = useTranslation();
   const onChange = (filters, sorter, extra) => {
     console.log('params', filters, sorter, extra);
   };
+  const columns: ColumnsType<Dataprops> = [
+    {
+      title: t('coin'),
+      dataIndex: 'assetName',
+      sorter: (a, b) => a.assetName.localeCompare(b.assetName),
+      render: (text: any, record: any) => {
+        return (
+          <Space size="middle">
+            <div>
+              <img className="coin-icon" src={record.icon} alt="coin" />
+            </div>
+            <div className="d-flex flex-column">
+              <div>{text}</div>
+              <a className="coin-url" href={record.url}>
+                {record.tokenName}
+              </a>
+            </div>
+          </Space>
+        );
+      },
+    },
+    {
+      title: t('total'),
+      dataIndex: 'total',
+      sorter: {
+        compare: (a, b) => a.total - b.total,
+        multiple: 3,
+      },
+      render: (text: any, record: any) => {
+        return (
+          <Space size="middle">{numeral(text).format('0,0.000000')}</Space>
+        );
+      },
+    },
+    {
+      title: t('available'),
+      dataIndex: 'available',
+      sorter: {
+        compare: (a, b) => a.available - b.available,
+        multiple: 2,
+      },
+      render: (text: any, record: any) => {
+        return (
+          <Space size="middle">{numeral(text).format('0,0.000000')}</Space>
+        );
+      },
+    },
+    {
+      title: t('in-order'),
+      dataIndex: 'inOrder',
+      sorter: {
+        compare: (a, b) => a.inOrder - b.inOrder,
+        multiple: 1,
+      },
+      render: (text: any, record: any) => {
+        return (
+          <Space size="middle">{numeral(text).format('0,0.000000')}</Space>
+        );
+      },
+    },
+    {
+      title: t('action'),
+      key: 'action',
+      dataIndex: 'action',
+      render: (record: any) => {
+        return (
+          <Space size="middle">
+            <span className="coin-action">{t('deposit')}</span>
+            <span className="coin-action">{t('withdraw')}</span>
+            <span className="coin-action">{t('convert')}</span>
+          </Space>
+        );
+      },
+    },
+  ];
   return (
     <App>
       <Container>
@@ -111,6 +119,7 @@ const FiatSpotTable = ({ dataSource }) => {
 };
 export default FiatSpotTable;
 const Header = () => {
+  const { t } = useTranslation();
   return (
     <Head>
       <SearchBox>
@@ -130,11 +139,11 @@ const Header = () => {
           <label htmlFor="hideSmallBalances" className="labelView">
             <input id="hideSmallBalances" type="checkbox" />
             <span className="checkmark"></span>
-            <span className="label-text">Hide Small Balances</span>
+            <span className="label-text">{t('hide-small-balances')}</span>
           </label>
         </StyledCheckbox>
         <ConvertButton href="#" rel="noopener noreferrer">
-          Convert Small Balance to BNB
+          {t('convert-small-balances')}
         </ConvertButton>
       </Subfilter>
     </Head>

@@ -8,6 +8,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLoginSlice } from '../../slice';
 import { selectLogin } from '../../slice/selectors';
+import { useTranslation } from 'react-i18next';
 
 //declare type
 type UserSubmitFormLogin = {
@@ -17,6 +18,7 @@ type UserSubmitFormLogin = {
 
 const LoginByEmail = ({ emailLogin }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { actions } = useLoginSlice();
   const dataLogin: any = useSelector(selectLogin);
@@ -67,7 +69,7 @@ const LoginByEmail = ({ emailLogin }) => {
     <Form onSubmit={handleSubmit(onSubmitLogin)}>
       <div className="form-input">
         <EmailSection>
-          <div>Email</div>
+          <div>{t('email')}</div>
           <div
             className={
               errors.email?.message ? 'email-input error' : 'email-input'
@@ -81,7 +83,7 @@ const LoginByEmail = ({ emailLogin }) => {
           <ErrorMessage>{errors.email?.message}</ErrorMessage>
         </EmailSection>
         <PasswordSection>
-          <div>Password</div>
+          <div>{t('password')}</div>
           <div
             className={
               errors.password?.message
@@ -118,7 +120,7 @@ const LoginByEmail = ({ emailLogin }) => {
         }}
       />
       <button id="submit" type="submit">
-        Login
+        {t('login')}
       </button>
     </Form>
   );

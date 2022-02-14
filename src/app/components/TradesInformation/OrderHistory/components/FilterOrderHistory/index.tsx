@@ -10,9 +10,11 @@ import moment from 'moment';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useOrderhistorySlice } from '../../slice';
+import { useTranslation } from 'react-i18next';
 
 const FilterOrderHistory = () => {
   const { RangePicker } = DatePicker;
+  const { t } = useTranslation();
   const [time, setTime] = useState(1);
   const dispatch = useDispatch();
   const { actions } = useOrderhistorySlice();
@@ -88,38 +90,38 @@ const FilterOrderHistory = () => {
             data-type={time === 1 ? 'active' : 'normal'}
             onClick={select1Day}
           >
-            1 Day
+            1 {t('day')}
           </SelectButton>
           <SelectButton
             data-type={time === 2 ? 'active' : 'normal'}
             onClick={select1Week}
           >
-            1 Week
+            1 {t('week')}
           </SelectButton>
           <SelectButton
             data-type={time === 3 ? 'active' : 'normal'}
             onClick={select1Month}
           >
-            1 Month
+            1 {t('month')}
           </SelectButton>
           <SelectButton
             data-type={time === 4 ? 'active' : 'normal'}
             onClick={select3Months}
           >
-            3 Months
+            3 {t('months')}
           </SelectButton>
         </div>
         <TimeRangeGroup>
-          <div className="time-range--label">Time</div>
+          <div className="time-range--label">{t('time')}</div>
           <RangePicker
-            separator={<span>to</span>}
+            separator={<span>{t('to')}</span>}
             placeholder={['YYYY-MM-DD', 'YYYY-MM-DD']}
             onChange={onChangeTimeRange}
           />
-          <SearchButton onClick={handleSearch}>Search</SearchButton>
+          <SearchButton onClick={handleSearch}>{t('search')}</SearchButton>
         </TimeRangeGroup>
         <ResetButton data-bn-type="button" onClick={handleReset}>
-          Reset
+          {t('reset')}
         </ResetButton>
       </div>
       <div></div>

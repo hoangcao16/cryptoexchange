@@ -5,9 +5,10 @@ import TradeHistory from 'app/components/TradesInformation/TradeHistory';
 import OrderHistory from 'app/components/TradesInformation/OrderHistory';
 import OpenOrders from 'app/components/TradesInformation/OpenOrders';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 const TradeFormContainer = () => {
   const [active, setActive] = useState(1);
-
+  const { t } = useTranslation();
   return (
     <StyledContainer>
       <Tabs>
@@ -15,25 +16,25 @@ const TradeFormContainer = () => {
           onClick={() => setActive(1)}
           className={active === 1 ? 'tab-item active' : 'tab-item'}
         >
-          Open Orders(0)
+          {t('open-orders')}(0)
         </div>
         <div
           onClick={() => setActive(2)}
           className={active === 2 ? 'tab-item active' : 'tab-item'}
         >
-          Order History
+          {t('order-history')}
         </div>
         <div
           onClick={() => setActive(3)}
           className={active === 3 ? 'tab-item active' : 'tab-item'}
         >
-          Trade History
+          {t('trade-history')}
         </div>
         <div
           onClick={() => setActive(4)}
           className={active === 4 ? 'tab-item active' : 'tab-item'}
         >
-          Funds
+          {t('funds')}
         </div>
       </Tabs>
       {active === 1 ? (

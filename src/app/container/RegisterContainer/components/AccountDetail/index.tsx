@@ -14,6 +14,7 @@ import {
 } from './style';
 import { useDispatch } from 'react-redux';
 import { useRegisterSlice } from '../../slice';
+import { useTranslation } from 'react-i18next';
 
 //declare type
 type UserSubmitFormSignup = {
@@ -26,6 +27,7 @@ type UserSubmitFormSignup = {
 
 const AccountDetail = ({ emailregis }: any) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { actions } = useRegisterSlice();
   const [showPassword, setShowPassword] = useState(false);
   const [showRef, setShowRef] = useState(false);
@@ -71,15 +73,13 @@ const AccountDetail = ({ emailregis }: any) => {
   };
   return (
     <>
-      <div className="title">Enter Account Details</div>
-      <div className="subTitle">
-        Enter your account details and a strong password to secure your account.
-      </div>
+      <div className="title">{t('auth.enter-account-details')}</div>
+      <div className="subTitle">{t('auth.enter-account-details-subtitle')}</div>
       <div>
         <Form onSubmit={handleSubmit(onSubmitSignup)}>
           <div className="form-input">
             <EmailSection>
-              <div>Email</div>
+              <div>{t('email')}</div>
               <div
                 className={
                   errors.email?.message ? 'email-input error' : 'email-input'
@@ -93,7 +93,7 @@ const AccountDetail = ({ emailregis }: any) => {
               <ErrorMessage>{errors.email?.message}</ErrorMessage>
             </EmailSection>
             <PasswordSection>
-              <div>Password</div>
+              <div>{t('password')}</div>
               <div
                 className={
                   errors.password?.message
@@ -122,7 +122,7 @@ const AccountDetail = ({ emailregis }: any) => {
             </PasswordSection>
             <RefID>
               <div className="ref-title" onClick={() => setShowRef(!showRef)}>
-                Referral ID (Optional)
+                {t('auth.referral-id')}
                 <UpDownIcon
                   name={showRef ? 'up' : 'down'}
                   className="updown-icon"
@@ -141,8 +141,8 @@ const AccountDetail = ({ emailregis }: any) => {
                   type="checkbox"
                   {...register('allowReceiveEmail')}
                 />
-                <span className="checkmark"></span>I agree to receive email
-                updates from Binance
+                <span className="checkmark"></span>
+                {t('auth.agree-email')}
               </label>
             </StyledCheckbox>
             <StyledCheckbox>
@@ -153,13 +153,13 @@ const AccountDetail = ({ emailregis }: any) => {
                   defaultChecked={true}
                   {...register('allowShareData')}
                 />
-                <span className="checkmark"></span>I agree to share data for
-                marketing purposes
+                <span className="checkmark"></span>
+                {t('auth.agree-share')}
               </label>
             </StyledCheckbox>
           </div>
           <button id="submit_email" type="submit">
-            Next
+            {t('next')}
           </button>
         </Form>
       </div>

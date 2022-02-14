@@ -18,12 +18,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useOrderbookSlice } from './slice';
 import { selectOrderbook } from './slice/selectors';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
   const [Layout, setLayout] = useState(1);
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   let { pair } = useParams();
+  const { t } = useTranslation();
   const { actions } = useOrderbookSlice();
   const dataOrderbook: any = useSelector(selectOrderbook);
 
@@ -112,7 +114,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
                   <label htmlFor="AVGsum" className="labelView">
                     <input id="AVGsum" type="checkbox" />
                     <span className="checkmark"></span>
-                    Display AVG&sum
+                    {t('display-avg-sum')}
                   </label>
                 </div>
               </Dropdown.Menu>

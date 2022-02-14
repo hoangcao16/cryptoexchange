@@ -2,7 +2,7 @@ import styled from 'styled-components';
 const AuthFooter = () => {
   return (
     <>
-      <Div>© 2017 - 2022 Binance.com. All rights reserved</Div>
+      <Div>© 2017 - 2022 POW.com. All rights reserved</Div>
     </>
   );
 };
