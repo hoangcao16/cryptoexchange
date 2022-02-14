@@ -26,6 +26,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
   const { actions } = useGetallpairSlice();
   const { activeChangeColumnMarket } = useGlobalContext();
   let { pair } = useParams();
+
   useEffect(() => {
     const findIndex: any = pair?.indexOf('_');
     const changeFormatPair = `${pair?.substring(
@@ -44,13 +45,11 @@ const Market = ({ dataSocket, dataApi, socket }) => {
         }),
       );
     }
-  }, [pair, socket]);
-  useEffect(() => {
     if (dataApi.data.rows && isEmpty(dataSocket)) {
       setAllPair(dataApi.data.rows);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pair, dataApi.data.rows]);
+  }, [dataApi.data.rows]);
   useEffect(() => {
     if (!isEmpty(dataSocket)) {
       if (allPair.length === 0) {
