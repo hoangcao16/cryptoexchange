@@ -76,6 +76,25 @@ export const authService = {
     }
     return null;
   },
+  checkAccessToken() {
+    const decodedAccessToken = this.getDecodedAccessToken();
+    if (!decodedAccessToken) {
+      return null;
+    }
+    console.log('Check auto refresh token at', moment().toString());
+    if (!decodedAccessToken) {
+      return null;
+    }
+    // Access token is expired, redirect to login page
+    if (
+      decodedAccessToken.exp &&
+      moment().isAfter(moment(decodedAccessToken.exp * 1000))
+    ) {
+      this.removeAccessToken();
+      this.removeUserId();
+      window.location.href = '/';
+    }
+  },
   autoRefreshAccessToken() {
     const decodedAccessToken = this.getDecodedAccessToken();
     if (!decodedAccessToken) {
