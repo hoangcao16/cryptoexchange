@@ -48,7 +48,7 @@ const OrderForm = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pairData?.data?.rows]);
+  }, [pairData]);
   useEffect(() => {
     if (pairId !== '') {
       dispatch(actions.getBalancePairSpotRequest(pairId));

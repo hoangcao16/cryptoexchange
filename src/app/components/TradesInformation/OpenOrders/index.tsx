@@ -68,6 +68,8 @@ const Orders = () => {
     ) {
       setDataOpenOrders((prev: any) => [dataBuy?.data, ...prev]);
     }
+  }, [dataBuy?.data]);
+  useEffect(() => {
     if (
       !isEmpty(dataSell?.data) &&
       dataOpenOrders.find(
@@ -76,7 +78,7 @@ const Orders = () => {
     ) {
       setDataOpenOrders((prev: any) => [dataSell?.data, ...prev]);
     }
-  }, [dataBuy?.data, dataSell?.data]);
+  }, [dataSell?.data]);
   useEffect(() => {
     if (dataSocket?.Orderfilled.filled === true) {
       const index = dataOpenOrders.findIndex((item: any) => {

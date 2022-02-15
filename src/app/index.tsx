@@ -50,6 +50,7 @@ export function App() {
   }, [actionsAllPair, dispatch]);
   // check access token
   useEffect(() => {
+    authService.checkAccessToken();
     authService.autoRefreshAccessToken();
   }, []);
   return (
