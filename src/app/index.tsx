@@ -18,6 +18,7 @@ import { RegisterPage } from './pages/RegisterPage/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { SpotWalletPage } from 'app/pages/SpotWalletPage/Loadable';
 import { P2PWalletPage } from 'app/pages/P2PWalletPage/Loadable';
+import { TradeP2PPage } from './pages/TradeP2P/Loadable';
 import PublicRoute from './components/common/publicRoute';
 import PrivateRoute from './components/common/privateRoute';
 import { useTranslation } from 'react-i18next';
@@ -91,6 +92,22 @@ export function App() {
             element={
               <PrivateRoute>
                 <P2PWalletPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trade-p2p/p2p/"
+            element={
+              <PrivateRoute>
+                <TradeP2PPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trade-p2p/express/buy"
+            element={
+              <PrivateRoute>
+                <TradeP2PPage />
               </PrivateRoute>
             }
           />

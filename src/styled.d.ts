@@ -38,5 +38,10 @@ declare module 'styled-components' {
     redColor?: string;
     darkWashedGreen?: string;
     middleWashedRose?: string;
+    powColor?: string;
+    p2pBorder?: string;
+    p2pBuy?: string;
+    p2pSell?: string;
+    powColorLight?: string;
   }
 }

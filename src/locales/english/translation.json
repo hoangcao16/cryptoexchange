@@ -211,5 +211,7 @@
     "the-code-valid": "The code is valid for 30 minutes.",
     "resend-email": "Resend email",
     "resend-email-subtitle": "Didn't receive the code?"
-  }
+  },
+
+  "trade-p2p": "Buy and Sell | POW Exchange"
 }
