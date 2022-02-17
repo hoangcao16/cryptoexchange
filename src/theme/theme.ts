@@ -38,4 +38,10 @@ export const darkTheme: DefaultTheme = {
   borderBlack: '1px solid rgb(37 41 48)',
   borderSectionFooter: '1px solid rgb(35, 40, 45)',
   errorColor: '#dc143c',
+
+  powColor: '#330858',
+  powColorLight: '#9761c5',
+  p2pBorder: '#E6E8EA',
+  p2pBuy: '#02C076',
+  p2pSell: '#f84960',
 };

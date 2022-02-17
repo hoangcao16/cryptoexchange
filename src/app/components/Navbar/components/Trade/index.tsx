@@ -55,6 +55,7 @@ const TradeNav = () => {
       icon: BsPeople,
       name: 'P2P',
       description: t('p2p-trading-subtitle'),
+      url: '/trade-p2p/p2p',
     },
     {
       id: 6,
@@ -87,7 +88,10 @@ const TradeNav = () => {
       <DropdownItemGroup>
         {data.map((item, index) => {
           return (
-            <NavDropdown.Item href="#action/3.1" key={index}>
+            <NavDropdown.Item
+              href={item.url ? item.url : '#action/3.1'}
+              key={index}
+            >
               <item.icon
                 style={{
                   fontSize: '24px',
