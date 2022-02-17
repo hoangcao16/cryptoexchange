@@ -26,7 +26,7 @@ const FilterOrderHistory = () => {
   };
   const select1Day = () => {
     const data = {
-      startTime: moment().subtract(1, 'day').startOf('day').valueOf(),
+      startTime: moment().startOf('day').valueOf(),
       endTime: moment().valueOf(),
     };
     setTime(1);

@@ -28,23 +28,6 @@ const Market = ({ dataSocket, dataApi, socket }) => {
   let { pair } = useParams();
 
   useEffect(() => {
-    const findIndex: any = pair?.indexOf('_');
-    const changeFormatPair = `${pair?.substring(
-      0,
-      findIndex,
-    )}/${pair?.substring(findIndex + 1)}`;
-    if (
-      changeFormatPair !== '' &&
-      changeFormatPair !== undefined &&
-      changeFormatPair !== null
-    ) {
-      socket.send(
-        JSON.stringify({
-          method: 'SUBSCRIBE',
-          pair: changeFormatPair,
-        }),
-      );
-    }
     if (dataApi.data.rows && isEmpty(dataSocket)) {
       setAllPair(dataApi.data.rows);
     }

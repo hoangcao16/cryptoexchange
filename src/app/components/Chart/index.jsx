@@ -1,34 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import { Container } from './style';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { widget } from './charting_library';
 import Datafeed1 from './api/datafeeds';
+import { useParams } from 'react-router-dom';
 const Chart = props => {
-  const [symbol, setSymbol] = useState('Bitfinex:BTC/USD');
   const tv_chart_container = 'tv_chart_container';
+  // const [symbol, setSymbol] = useState('POW:ROB/USDT');
   const libraryPath = '/custom_scripts/chart_main/';
+  let { pair } = useParams();
+  const findIndex = pair?.indexOf('_');
+  const changeFormatPair = `POW:${pair?.substring(
+    0,
+    findIndex,
+  )}/${pair?.substring(findIndex + 1)}`;
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     initTradingView();
-  }, []);
+  }, [changeFormatPair]);
 
   const initTradingView = () => {
     const widgetOptions = {
       fullscreen: false,
       autosize: true,
-      symbol: symbol,
+      symbol: changeFormatPair,
       container_id: tv_chart_container,
       library_path: libraryPath,
       datafeed: Datafeed1,
       locale: 'en',
-      timezone: 'ETC/UTC', //todo: ustawianie timezone'a po strefie usera
+      timezone: 'Asia/Bangkok', //todo: ustawianie timezone'a po strefie usera
       charts_storage_api_version: '1.1',
       client_id: 'tradingview.com',
       user_id: 'public_user_id',
       debug: true,
       // loading_screen:{ backgroundColor: "#00ff00",foregroundColor: "#000000", }, //todo:do it
-      interval: '60',
+      interval: '1',
       // timeframe:'',//todo: na koncu
       toolbar_bg: '#20334d',
       // saved_data: this.savedData,
@@ -86,7 +93,7 @@ const Chart = props => {
         ], //todo: bb
       },
       disabled_features: [
-        // 'header_symbol_search',
+        'header_symbol_search',
         // 'header_interval_dialog_button',
         // 'show_interval_dialog_on_key_press',
         // 'symbol_search_hot_key',
@@ -111,7 +118,7 @@ const Chart = props => {
         // 'remove_library_container_border',
       ],
       enabled_features: [
-        'header_symbol_search',
+        // 'header_symbol_search',
         'header_interval_dialog_button',
         'show_interval_dialog_on_key_press',
         'symbol_search_hot_key',

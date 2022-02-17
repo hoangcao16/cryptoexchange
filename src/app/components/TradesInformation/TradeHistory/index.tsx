@@ -14,7 +14,7 @@ const TradeHistory = () => {
   const { actions } = useTradehistorySlice();
   const dataTradeHistory: any = useSelector(selectTradehistory);
   useEffect(() => {
-    const startTime = moment().subtract(1, 'day').startOf('day').valueOf();
+    const startTime = moment().startOf('day').valueOf();
     const endTime = moment().valueOf();
     dispatch(actions.getTradeHistoryRequest({ startTime, endTime }));
   }, [actions, dispatch]);
