@@ -1,27 +1,15 @@
 import { makeApiRequest, generateSymbol, parseFullSymbol } from './helpers';
-// import {
-//   subscribeOnStream, unsubscribeFromStream,
-// } from './streaming'
+import { subscribeOnStream, unsubscribeFromStream } from './streaming';
 
 const lastBarsCache = new Map();
 
 const configurationData = {
-  supported_resolutions: ['1D', '1W', '1M'],
+  supported_resolutions: ['1', '5', '15', '30', '60', '1D', '1W', '1M'],
   exchanges: [
     {
-      value: 'Bitfinex',
-      name: 'Bitfinex',
-      desc: 'Bitfinex',
-    },
-    {
-      // `exchange` argument for the `searchSymbols` method, if a user selects this exchange
-      value: 'Kraken',
-
-      // filter name
-      name: 'Kraken',
-
-      // full exchange name displayed in the filter popup
-      desc: 'Kraken bitcoin exchange',
+      value: 'POW',
+      name: 'POW',
+      desc: 'POW',
     },
   ],
   symbols_types: [
@@ -35,28 +23,31 @@ const configurationData = {
 };
 
 async function getAllSymbols() {
-  const data = await makeApiRequest('data/v3/all/exchanges');
+  const data = await makeApiRequest('/trade-his/exchange');
   let allSymbols = [];
 
   for (const exchange of configurationData.exchanges) {
-    const pairs = data.Data[exchange.value].pairs;
-
-    for (const leftPairPart of Object.keys(pairs)) {
-      const symbols = pairs[leftPairPart].map(rightPairPart => {
-        const symbol = generateSymbol(
-          exchange.value,
-          leftPairPart,
-          rightPairPart,
-        );
-        return {
-          symbol: symbol.short,
-          full_name: symbol.full,
-          description: symbol.short,
-          exchange: exchange.value,
-          type: 'crypto',
-        };
-      });
-      allSymbols = [...allSymbols, ...symbols];
+    if (data.Response === 'Success') {
+      const pairs = data.Data[exchange.value].pairs;
+      if (pairs !== undefined && pairs !== null) {
+        for (const leftPairPart of Object.keys(pairs)) {
+          const symbols = pairs[leftPairPart].map(rightPairPart => {
+            const symbol = generateSymbol(
+              exchange.value,
+              leftPairPart,
+              rightPairPart,
+            );
+            return {
+              symbol: symbol.short,
+              full_name: symbol.full,
+              description: symbol.short,
+              exchange: exchange.value,
+              type: 'crypto',
+            };
+          });
+          allSymbols = [...allSymbols, ...symbols];
+        }
+      }
     }
   }
   return allSymbols;
@@ -107,11 +98,12 @@ export default {
       description: symbolItem.description,
       type: symbolItem.type,
       session: '24x7',
-      timezone: 'Etc/UTC',
+      timezone: 'Asia/Bangkok',
       exchange: symbolItem.exchange,
       minmov: 1,
       pricescale: 100,
-      has_intraday: false,
+      has_intraday: true,
+      intraday_multipliers: ['1'],
       has_no_volume: true,
       has_weekly_and_monthly: false,
       supported_resolutions: configurationData.supported_resolutions,
@@ -141,8 +133,12 @@ export default {
     console.log(
       '[getBars]: Method call',
       symbolInfo,
+      'RESOLUTION: ',
       resolution,
+      'FROM: ',
       from,
+      'TO: ',
+      to,
       onHistoryCallback,
       onErrorCallback,
       firstDataRequest,
@@ -159,8 +155,8 @@ export default {
       .map(name => `${name}=${encodeURIComponent(urlParameters[name])}`)
       .join('&');
     try {
-      console.log('tuanpa:url:', `data/histoday?${query}`);
-      const data = await makeApiRequest(`data/histoday?${query}`);
+      console.log('tuanpa:url:', `/trade-his/candle?${query}`);
+      const data = await makeApiRequest(`/trade-his/candle?${query}`);
       if (
         (data.Response && data.Response === 'Error') ||
         data.Data.length === 0
@@ -213,14 +209,35 @@ export default {
       '[subscribeBars]: Method call with subscribeUID:',
       subscribeUID,
     );
-    // subscribeOnStream(symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback, lastBarsCache.get(symbolInfo.full_name),)
+    subscribeOnStream(
+      symbolInfo,
+      resolution,
+      onRealtimeCallback,
+      subscribeUID,
+      onResetCacheNeededCallback,
+      lastBarsCache.get(symbolInfo.full_name),
+    );
   },
-  //
   unsubscribeBars: subscriberUID => {
     console.log(
       '[unsubscribeBars]: Method call with subscriberUID:',
       subscriberUID,
     );
-    // unsubscribeFromStream(subscriberUID)
+    unsubscribeFromStream(subscriberUID);
+  },
+  //
+  getMarks: (symbolInfo, startDate, endDate, onDataCallback, resolution) => {
+    //optional
+    console.log('=====getMarks running');
+  },
+  getTimeScaleMarks: (
+    symbolInfo,
+    startDate,
+    endDate,
+    onDataCallback,
+    resolution,
+  ) => {
+    //optional
+    console.log('=====getTimeScaleMarks running');
   },
 };

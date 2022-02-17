@@ -1,48 +1,53 @@
 import { parseFullSymbol } from './helpers.js';
-import socketio from 'socket.io';
-const socket = socketio('wss://streamer.cryptocompare.com');
+import moment from 'moment';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
+
+var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
+  connectionTimeout: 5000,
+});
 const channelToSubscription = new Map();
 
-socket.on('connect', () => {
-  console.log('[socket] Connected');
-});
+socket.onopen = () => {
+  console.log(`[Chart] Socket opened`);
+  setInterval(
+    () =>
+      socket.send(
+        JSON.stringify({
+          method: 'GET_PROPERTY',
+          id: Math.random(),
+        }),
+      ),
+    5000,
+  );
+};
 
-socket.on('disconnect', (reason) => {
-  console.log('[socket] Disconnected:', reason);
-});
+socket.onmessage = message => {
+  const Message = JSON.parse(message?.data);
+  // console.log('[socket] Message:', Message);
 
-socket.on('error', (error) => {
-  console.log('[socket] Error:', error);
-});
-
-socket.on('m', data => {
-  console.log('[socket] Message:', data);
-  const [
-    eventTypeStr,
-    exchange,
-    fromSymbol,
-    toSymbol,
-    ,
-    ,
-    tradeTimeStr,
-    ,
-    tradePriceStr,
-  ] = data.split('~');
-
-  if (parseInt(eventTypeStr) !== 0) {
-    // skip all non-TRADE events
-    return;
-  }
+  const fromSymbol = Message.FSYM;
+  const toSymbol = Message.TSYM;
+  const tradeTimeStr = Message.TS;
+  const tradePriceStr = Message.P;
   const tradePrice = parseFloat(tradePriceStr);
   const tradeTime = parseInt(tradeTimeStr);
-  const channelString = `0~${exchange}~${fromSymbol}~${toSymbol}`;
+  const channelString = `${fromSymbol}/${toSymbol}_CHART`;
   const subscriptionItem = channelToSubscription.get(channelString);
   if (subscriptionItem === undefined) {
     return;
   }
   const lastDailyBar = subscriptionItem.lastDailyBar;
-  const nextDailyBarTime = getNextDailyBarTime(lastDailyBar.time);
-
+  const nextDailyBarTime = getNextDailyBarTime(
+    lastDailyBar?.time,
+    subscriptionItem.resolution,
+  );
+  // console.log('subscriptionItemResolution', subscriptionItem.resolution);
+  // console.log('tradeTime', tradeTime);
+  // console.log('lastDailyBar', lastDailyBar);
+  // console.log('lastDailyBarTime', lastDailyBar.time);
+  // console.log('nextDailyBarTime', nextDailyBarTime);
+  // console.log('tradePrice', tradePrice);
   let bar;
   if (tradeTime >= nextDailyBarTime) {
     bar = {
@@ -56,22 +61,36 @@ socket.on('m', data => {
   } else {
     bar = {
       ...lastDailyBar,
-      high: Math.max(lastDailyBar.high, tradePrice),
-      low: Math.min(lastDailyBar.low, tradePrice),
+      high: Math.max(lastDailyBar?.high, tradePrice),
+      low: Math.min(lastDailyBar?.low, tradePrice),
       close: tradePrice,
     };
-    console.log('[socket] Update the latest bar by price', tradePrice);
+    // console.log('[socket] Update the latest bar by price', tradePrice);
+    console.log('[socket] Update the latest bar by price', bar);
   }
   subscriptionItem.lastDailyBar = bar;
 
   // send data to every subscriber of that symbol
   subscriptionItem.handlers.forEach(handler => handler.callback(bar));
-});
+};
+// };
 
-function getNextDailyBarTime(barTime) {
-  const date = new Date(barTime * 1000);
-  date.setDate(date.getDate() + 1);
-  return date.getTime() / 1000;
+function getNextDailyBarTime(barTime, resolution) {
+  // const date = moment(barTime);
+  // date.setMinutes(date.getMinutes() + 1);
+  switch (resolution) {
+    case '1':
+      return moment(barTime).add(1, 'm').startOf('minute').valueOf();
+    case '5':
+      return moment(barTime).add(5, 'm').startOf('minute').valueOf();
+    case '1D':
+      return moment(barTime).add(1, 'd').startOf('day').valueOf();
+    case '1W':
+      return moment(barTime).add(1, 'w').startOf('week').valueOf();
+    case '1M':
+      return moment(barTime).add(1, 'M').startOf('month').valueOf();
+    default:
+  }
 }
 
 export function subscribeOnStream(
@@ -83,7 +102,7 @@ export function subscribeOnStream(
   lastDailyBar,
 ) {
   const parsedSymbol = parseFullSymbol(symbolInfo.full_name);
-  const channelString = `0~${parsedSymbol.exchange}~${parsedSymbol.fromSymbol}~${parsedSymbol.toSymbol}`;
+  const channelString = `${parsedSymbol.fromSymbol}/${parsedSymbol.toSymbol}_CHART`;
   const handler = {
     id: subscribeUID,
     callback: onRealtimeCallback,
@@ -101,16 +120,25 @@ export function subscribeOnStream(
     handlers: [handler],
   };
   channelToSubscription.set(channelString, subscriptionItem);
-  console.log('[subscribeBars]: Subscribe to streaming. Channel:', channelString);
-  socket.emit('SubAdd', { subs: [channelString] });
+  console.log(
+    '[subscribeBars]: Subscribe to streaming. Channel:',
+    channelString,
+  );
+  socket.send(
+    JSON.stringify({
+      method: 'SUBSCRIBE',
+      pair: parsedSymbol.fromSymbol + '/' + parsedSymbol.toSymbol + '_CHART',
+    }),
+  );
 }
 
 export function unsubscribeFromStream(subscriberUID) {
   // find a subscription with id === subscriberUID
   for (const channelString of channelToSubscription.keys()) {
     const subscriptionItem = channelToSubscription.get(channelString);
-    const handlerIndex = subscriptionItem.handlers
-      .findIndex(handler => handler.id === subscriberUID);
+    const handlerIndex = subscriptionItem.handlers.findIndex(
+      handler => handler.id === subscriberUID,
+    );
 
     if (handlerIndex !== -1) {
       // remove from handlers
@@ -118,8 +146,16 @@ export function unsubscribeFromStream(subscriberUID) {
 
       if (subscriptionItem.handlers.length === 0) {
         // unsubscribe from the channel, if it was the last handler
-        console.log('[unsubscribeBars]: Unsubscribe from streaming. Channel:', channelString);
-        socket.emit('SubRemove', { subs: [channelString] });
+        console.log(
+          '[unsubscribeBars]: Unsubscribe from streaming. Channel:',
+          channelString,
+        );
+        socket.send(
+          JSON.stringify({
+            method: 'UNSUBSCRIBE',
+            pair: channelString,
+          }),
+        );
         channelToSubscription.delete(channelString);
         break;
       }

@@ -24,6 +24,10 @@ const OrderBookBid = ({
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
   let { pair } = useParams();
+  const findIndex: any = pair?.indexOf('_');
+  const changeFormatPair = `${pair?.substring(0, findIndex)}/${pair?.substring(
+    findIndex + 1,
+  )}`;
   useEffect(() => {
     setInterval(() => {
       setMockUSD(Math.random() * (5000 - 50 + 1) + 50);
@@ -38,17 +42,18 @@ const OrderBookBid = ({
       setDataView(dataApi);
     }
     if (!isEmpty(dataMarketSocket)) {
-      if (dataMarketSocket.symbol === pair) {
+      if (dataMarketSocket.symbol === changeFormatPair) {
         setLastestPrice(dataMarketSocket?.latestPrice);
       }
     } else {
-      const index: any = pairData?.data?.list?.findIndex((item: any) => {
-        return item?.symbol === pair;
+      const index: any = pairData?.data?.rows?.findIndex((item: any) => {
+        return item?.symbol === changeFormatPair;
       });
       if (index !== -1 && index !== undefined) {
-        setLastestPrice(pairData?.data?.list[index]?.latestPrice);
+        setLastestPrice(pairData?.data?.rows[index]?.latestPrice);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataApi, dataSocket, dataMarketSocket, pairData?.data, pair]);
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));

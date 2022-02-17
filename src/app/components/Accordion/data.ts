@@ -2,8 +2,7 @@ const data = [
   {
     id: 1,
     href: '#',
-    title:
-      'Flash NFT `Pow`erStation with S.S. Lazio: 6,000 LAZIO to Be Shared!',
+    title: 'Flash NFT PowerStation with S.S. Lazio: 6,000 LAZIO to Be Shared!',
     notification: '(12-27)',
   },
   {

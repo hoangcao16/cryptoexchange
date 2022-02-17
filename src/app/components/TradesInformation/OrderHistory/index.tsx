@@ -17,7 +17,7 @@ const OrdersHistory = () => {
 
   useEffect(() => {
     const data = {
-      startTime: moment().subtract(1, 'day').startOf('day').valueOf(),
+      startTime: moment().startOf('day').valueOf(),
       endTime: moment().valueOf(),
       status: 'ALL',
       pageIndex: 0,

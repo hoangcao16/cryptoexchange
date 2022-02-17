@@ -32,10 +32,26 @@ const HomeContentContainer = () => {
   const dataAllPair = useSelector(selectGetallpair);
   const dataAllTrades = useSelector(selectTrades);
   let { pair } = useParams();
+  const findIndex: any = pair?.indexOf('_');
+  const changeFormatPair = `${pair?.substring(0, findIndex)}/${pair?.substring(
+    findIndex + 1,
+  )}`;
 
   useEffect(() => {
     socket.onopen = () => {
       console.log(`Websocket Market connected`);
+      if (
+        changeFormatPair !== '' &&
+        changeFormatPair !== undefined &&
+        changeFormatPair !== null
+      ) {
+        socket.send(
+          JSON.stringify({
+            method: 'SUBSCRIBE',
+            pair: changeFormatPair,
+          }),
+        );
+      }
       setInterval(
         () =>
           socket.send(
@@ -75,6 +91,7 @@ const HomeContentContainer = () => {
   useEffect(() => {
     setDataTradesSocket({});
     setDataOrder([]);
+    setDataMarketSocket({});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataAllPair?.reselectPair]);
 

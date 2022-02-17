@@ -1,10 +1,12 @@
 // Make requests to CryptoCompare API
 export async function makeApiRequest(path) {
+  const baseURL = process.env.REACT_APP_BASE_API_URL;
   try {
-    const response = await fetch(`https://min-api.cryptocompare.com/${path}`);
+    const response = await fetch(`${baseURL}/api-svc${path}`);
     return response.json();
   } catch (error) {
-    throw new Error(`CryptoCompare request error: ${error.status}`);
+    // throw new Error(`CryptoCompare request error: ${error.status}`);
+    console.log('Server request error:', error);
   }
 }
 
