@@ -68,6 +68,7 @@ const TabsCryptoButton = styled.button`
   box-shadow: none;
 
   margin-right: 18px;
+  min-width: 60px;
 
   &:hover,
   &:focus,
@@ -79,5 +80,6 @@ const TabsCryptoButton = styled.button`
   &.TabsCryptoButton-active {
     border-bottom: 2px solid ${({ theme }) => theme.powColor};
     color: ${({ theme }) => theme.powColor};
+    font-weight: bold;
   }
 `;

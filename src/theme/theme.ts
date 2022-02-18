@@ -44,4 +44,5 @@ export const darkTheme: DefaultTheme = {
   p2pBorder: '#E6E8EA',
   p2pBuy: '#02C076',
   p2pSell: '#f84960',
+  p2pGray: '#cccccc',
 };
