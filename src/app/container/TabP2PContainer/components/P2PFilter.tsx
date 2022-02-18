@@ -1,7 +1,11 @@
 import { Checkbox, Col, Input, Row, Select } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useTabP2PSlice } from '../slice';
+import { selectTabP2P } from '../slice/selectors';
+import { TabP2PState } from '../slice/type';
 const { Search } = Input;
 const { Option } = Select;
 
@@ -52,6 +56,18 @@ const payments = [
 ];
 
 function P2PFilter() {
+  const { actions } = useTabP2PSlice();
+  const dispatch = useDispatch();
+  const TabP2PState: TabP2PState = useSelector(selectTabP2P);
+
+  const handleFiat = (value: any) => {
+    dispatch(actions.fiatTabP2P(value));
+  };
+
+  const handlePaymentMethod = (value: any) => {
+    dispatch(actions.paymentTabP2P(value));
+  };
+
   return (
     <Wrapper>
       <Row gutter={[8, 8]} align="bottom">
@@ -61,14 +77,18 @@ function P2PFilter() {
             placeholder="Enter amount"
             enterButton="Search"
             size="large"
-            suffix="Fiat"
+            suffix={TabP2PState.searchParam.fiat || ' '}
           />
         </Col>
 
         <Col lg={3}>
-          <div className="title">Amount</div>
+          <div className="title">Fiat</div>
 
-          <SelectStyled showSearch>
+          <SelectStyled
+            showSearch
+            onChange={handleFiat}
+            value={TabP2PState.searchParam.fiat}
+          >
             {fiats.map((f, i) => (
               <Option value={f.name} key={i}>
                 <img
@@ -85,7 +105,11 @@ function P2PFilter() {
         <Col lg={4}>
           <div className="title">Payment</div>
 
-          <SelectStyled showSearch>
+          <SelectStyled
+            showSearch
+            onChange={handlePaymentMethod}
+            value={TabP2PState.searchParam.payment}
+          >
             {payments.map((p, i) => (
               <Option value={p.name} key={i}>
                 <img
@@ -133,6 +157,19 @@ const Wrapper = styled(Container)`
     border-color: ${({ theme }) => theme.powColor} !important;
     box-shadow: none !important;
   }
+
+  /* checkbox */
+
+  .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+  .ant-checkbox:hover .ant-checkbox-inner,
+  .ant-checkbox-input:focus + .ant-checkbox-inner {
+    border-color: ${({ theme }) => theme.powColor};
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: ${({ theme }) => theme.powColor};
+    border-color: ${({ theme }) => theme.powColor};
+  }
 `;
 
 const SearchStyled = styled(Search)`
@@ -160,10 +197,15 @@ const SearchStyled = styled(Search)`
     color: ${({ theme }) => theme.powColor};
     box-shadow: none;
     border: 1px solid ${({ theme }) => theme.p2pBorder};
+    font-weight: bold;
 
     &:hover {
       border-color: ${({ theme }) => theme.powColor};
     }
+  }
+
+  .ant-input-suffix {
+    color: ${({ theme }) => theme.p2pGray};
   }
 `;
 

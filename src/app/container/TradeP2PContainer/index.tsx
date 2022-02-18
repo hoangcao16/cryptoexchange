@@ -1,7 +1,23 @@
+import { Button, Popover } from 'antd';
 import NavMenu from 'app/components/Navbar';
 import React, { useEffect, useState } from 'react';
-import { Tab, Tabs } from 'react-bootstrap';
-import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
+import {
+  AiOutlinePlayCircle,
+  AiOutlineFileText,
+  AiOutlineTeam,
+  AiOutlineMore,
+  AiOutlineCaretDown,
+  AiOutlineControl,
+  AiOutlineMonitor,
+  AiOutlinePlusCircle,
+  AiOutlineProfile,
+} from 'react-icons/ai';
+import {
+  createSearchParams,
+  Link,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import styled from 'styled-components';
 import TabExpressContainer from '../TabExpressContainer';
 import TabP2PContainer from '../TabP2PContainer';
@@ -38,6 +54,51 @@ function TradeP2PContainer() {
     pathName[2] ? setDefaultActiveKey(pathName[2]) : setDefaultActiveKey('p2p');
   }, [pathName]);
 
+  //
+
+  const ContentOrders = (
+    <ContentOrdersStyled>
+      <div className="orderTitle">
+        <div className="orderTitle__text">Processing</div>
+        <Button type="link" className="orderTitle__link">
+          All Orders
+        </Button>
+      </div>
+
+      <div className="orderContent">content</div>
+    </ContentOrdersStyled>
+  );
+
+  const ContentMore = (
+    <ContentMoreStyled>
+      <ul>
+        <Link to="#">
+          <li>
+            <AiOutlineMonitor className="moreIcon" /> Payment Methods
+          </li>
+        </Link>
+
+        <Link to="#">
+          <li>
+            <AiOutlinePlusCircle className="moreIcon" /> Post new Ad
+          </li>
+        </Link>
+
+        <Link to="#">
+          <li>
+            <AiOutlineControl className="moreIcon" /> My Ads
+          </li>
+        </Link>
+
+        <Link to="#">
+          <li>
+            <AiOutlineProfile className="moreIcon" /> P2P Trading FAQ
+          </li>
+        </Link>
+      </ul>
+    </ContentMoreStyled>
+  );
+
   return (
     <Wrapper>
       <NavMenu />
@@ -51,21 +112,74 @@ function TradeP2PContainer() {
           </p>
         </div>
 
-        <div className="trade-tabs">
-          <Tabs
-            defaultActiveKey={defaultActiveKey}
-            id="uncontrolled-tab-example"
-            className="container nav-tabs-trade-p2p"
-            onSelect={key => handleChangeTabs(key)}
-          >
-            <Tab eventKey="express" title="Express">
-              <TabExpressContainer />
-            </Tab>
-            <Tab eventKey="p2p" title="P2P">
-              <TabP2PContainer />
-            </Tab>
-          </Tabs>
+        <div className="trade-tabs container">
+          <div>
+            <Button
+              type="link"
+              className={
+                defaultActiveKey === 'express'
+                  ? 'trade-tabs__button trade-tabs__button--active'
+                  : 'trade-tabs__button'
+              }
+              onClick={() => handleChangeTabs('express')}
+            >
+              Express
+            </Button>
+
+            <Button
+              type="link"
+              className={
+                defaultActiveKey === 'p2p'
+                  ? 'trade-tabs__button trade-tabs__button--active'
+                  : 'trade-tabs__button'
+              }
+              onClick={() => handleChangeTabs('p2p')}
+            >
+              P2P
+            </Button>
+          </div>
+
+          <div className="trade-tabs__options">
+            <Button
+              type="link"
+              className="btnOption"
+              icon={<AiOutlinePlayCircle className="btnOption__icon" />}
+            >
+              Video tutorial
+            </Button>
+
+            <Popover content={ContentOrders} placement="bottomLeft">
+              <Button
+                type="link"
+                className="btnOption"
+                icon={<AiOutlineFileText className="btnOption__icon" />}
+              >
+                Orders
+              </Button>
+            </Popover>
+
+            <Button
+              type="link"
+              className="btnOption"
+              icon={<AiOutlineTeam className="btnOption__icon" />}
+            >
+              P2P User Center
+            </Button>
+
+            <Popover content={ContentMore} placement="bottomRight">
+              <Button
+                type="link"
+                className="btnOption"
+                icon={<AiOutlineMore className="btnOption__icon" />}
+              >
+                More <AiOutlineCaretDown style={{ marginLeft: '8px' }} />
+              </Button>
+            </Popover>
+          </div>
         </div>
+
+        {defaultActiveKey === 'p2p' && <TabP2PContainer />}
+        {defaultActiveKey === 'express' && <TabExpressContainer />}
       </NavbarTradeP2P>
     </Wrapper>
   );
@@ -96,22 +210,93 @@ export const NavbarTradeP2P = styled.div`
   }
 
   .trade-tabs {
-    .nav-tabs-trade-p2p {
-      height: 60px;
-      border: none;
+    height: 60px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button:focus,
+    button:active {
+      box-shadow: none;
     }
 
-    .nav-tabs-trade-p2p .nav-link {
-      height: 100%;
-      color: ${({ theme }) => theme.text};
-      font-weight: 500;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
+    &__button {
+      height: 60px;
 
-      &.active {
-        border-bottom: 2px solid ${({ theme }) => theme.text};
+      color: ${({ theme }) => theme.text};
+      opacity: 0.5;
+
+      border: 2px solid transparent;
+      background-color: inherit;
+
+      &--active {
+        border-bottom: 2px solid #ffffff;
+        opacity: 1;
       }
     }
+
+    &__options {
+      .btnOption {
+        height: 60px;
+        color: ${({ theme }) => theme.text};
+
+        &__icon {
+          font-size: 20px;
+          margin-right: 4px;
+          margin-top: -3px;
+        }
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+`;
+
+const ContentOrdersStyled = styled.div`
+  width: 300px;
+  .orderTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__text {
+      font-weight: bold;
+    }
+
+    &__link {
+      color: ${({ theme }) => theme.powColor};
+    }
+
+    border-bottom: 1px solid ${({ theme }) => theme.p2pBorder};
+  }
+`;
+
+const ContentMoreStyled = styled.div`
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  li {
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+
+    &:hover {
+      font-weight: bold;
+      color: ${({ theme }) => theme.powColor};
+    }
+  }
+  .moreIcon {
+    font-size: 20px;
   }
 `;

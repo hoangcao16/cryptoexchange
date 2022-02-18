@@ -7,8 +7,8 @@ export const initialState: TabP2PState = {
   data: {},
   searchParam: {
     action: 'buy',
-    crypto: 'BTC',
-    fiat: 'fiat',
+    crypto: '',
+    fiat: '',
     payment: '',
   },
 };
@@ -41,6 +41,24 @@ const slice = createSlice({
      */
     cryptoTabP2P(state, action: PayloadAction<string>) {
       state.searchParam = { ...state.searchParam, crypto: action.payload };
+    },
+
+    /**
+     *
+     * @param state
+     * @param action | payload: fiat
+     */
+    fiatTabP2P(state, action: PayloadAction<string>) {
+      state.searchParam = { ...state.searchParam, fiat: action.payload };
+    },
+
+    /**
+     *
+     * @param state
+     * @param action | payload: payment method
+     */
+    paymentTabP2P(state, action: PayloadAction<string>) {
+      state.searchParam = { ...state.searchParam, payment: action.payload };
     },
   },
 });

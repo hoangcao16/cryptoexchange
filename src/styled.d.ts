@@ -43,5 +43,6 @@ declare module 'styled-components' {
     p2pBuy?: string;
     p2pSell?: string;
     powColorLight?: string;
+    p2pGray?: string;
   }
 }

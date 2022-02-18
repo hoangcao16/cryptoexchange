@@ -23,9 +23,9 @@ function HandleP2PTradeUrl() {
   useEffect(() => {
     const param: any = {
       action: TabP2PState.searchParam.action,
-      crypto: TabP2PState.searchParam.crypto || '',
-      fiat: TabP2PState.searchParam.fiat || '',
-      payment: TabP2PState.searchParam.payment || '',
+      crypto: TabP2PState.searchParam.crypto,
+      fiat: TabP2PState.searchParam.fiat,
+      payment: TabP2PState.searchParam.payment,
     };
     navigate({
       pathname: '/trade-p2p/p2p/',
@@ -33,13 +33,13 @@ function HandleP2PTradeUrl() {
     });
   }, [TabP2PState.searchParam]);
 
-  // FOLLOW URL -> DISPATCH TO STORE
+  // FOLLOW URL -> DISPATCH TO STORE FIRST TIME
   useEffect(() => {
     const param = {
-      action: P2PSearchParams.action,
-      crypto: P2PSearchParams.crypto,
-      fiat: P2PSearchParams.fiat,
-      payment: P2PSearchParams.payment,
+      action: P2PSearchParams.action || 'buy',
+      crypto: P2PSearchParams.crypto || 'USDT',
+      fiat: P2PSearchParams.fiat || '',
+      payment: P2PSearchParams.payment || '',
     };
 
     dispatch(actions.upTabP2P(param));
