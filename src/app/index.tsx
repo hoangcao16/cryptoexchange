@@ -6,36 +6,35 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  */
 
-import * as React from 'react';
-import { Helmet } from 'react-helmet-async';
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
-
-import { GlobalStyles } from 'styles/global-styles';
-
-import { HomePage } from './pages/HomePage/Loadable';
-import { LoginPage } from './pages/LoginPage/Loadable';
-import { RegisterPage } from './pages/RegisterPage/Loadable';
-import { NotFoundPage } from './components/NotFoundPage/Loadable';
-import { SpotWalletPage } from 'app/pages/SpotWalletPage/Loadable';
-import { P2PWalletPage } from 'app/pages/P2PWalletPage/Loadable';
-import { TradeP2PPage } from './pages/TradeP2P/Loadable';
-import PublicRoute from './components/common/publicRoute';
-import PrivateRoute from './components/common/privateRoute';
-import { useTranslation } from 'react-i18next';
-// Theme
-import { ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme } from 'theme/theme';
 import { useThemeContext } from 'app/components/common/themeContext';
-import { StyledToastContainer } from './style';
-import { SuccessToast, ErrorToast } from 'app/components/Toast';
-
+import { useGetallpairSlice } from 'app/components/Market/slice';
+import { ErrorToast, SuccessToast } from 'app/components/Toast';
+import { useToastSlice } from 'app/components/Toast/slice';
+import { selectToast } from 'app/components/Toast/slice/selectors';
+import { P2PWalletPage } from 'app/pages/P2PWalletPage/Loadable';
+import { SpotWalletPage } from 'app/pages/SpotWalletPage/Loadable';
+import * as React from 'react';
+import { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 //get store redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectToast } from 'app/components/Toast/slice/selectors';
-import { useToastSlice } from 'app/components/Toast/slice';
-import { useGetallpairSlice } from 'app/components/Market/slice';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { authService } from 'services/authService';
-import { useEffect } from 'react';
+// Theme
+import { ThemeProvider } from 'styled-components';
+import { GlobalStyles } from 'styles/global-styles';
+import { darkTheme, lightTheme } from 'theme/theme';
+import PrivateRoute from './components/common/privateRoute';
+import PublicRoute from './components/common/publicRoute';
+import { NotFoundPage } from './components/NotFoundPage/Loadable';
+import { HomePage } from './pages/HomePage/Loadable';
+import { LoginPage } from './pages/LoginPage/Loadable';
+import { PostAdP2P } from './pages/PostAdP2P/Loadable';
+import { RegisterPage } from './pages/RegisterPage/Loadable';
+import { TradeP2PPage } from './pages/TradeP2P/Loadable';
+import { StyledToastContainer } from './style';
+
 export function App() {
   const dispatch = useDispatch();
   const { actions: toastActions } = useToastSlice();
@@ -103,11 +102,21 @@ export function App() {
               </PrivateRoute>
             }
           />
+
           <Route
-            path="/trade-p2p/express/buy"
+            path="/trade-p2p/express/*"
             element={
               <PrivateRoute>
                 <TradeP2PPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/en/postAd"
+            element={
+              <PrivateRoute>
+                <PostAdP2P />
               </PrivateRoute>
             }
           />
