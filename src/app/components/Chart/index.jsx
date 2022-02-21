@@ -34,10 +34,10 @@ const Chart = props => {
       client_id: 'tradingview.com',
       user_id: 'public_user_id',
       debug: true,
-      // loading_screen:{ backgroundColor: "#00ff00",foregroundColor: "#000000", }, //todo:do it
+      // loading_screen:{ backgroundColor: "#00DD00",foregroundColor: "#000000", }, //todo:do it
       interval: '1',
       // timeframe:'',//todo: na koncu
-      toolbar_bg: '#20334d',
+      toolbar_bg: `#1e2329`,
       // saved_data: this.savedData,
       allow_symbol_change: true,
       time_frames: [
@@ -112,9 +112,9 @@ const Chart = props => {
         // 'compare_symbol',
         // 'border_around_the_chart',
         // 'timezone_menu',
-        // 'header_resolutions',//todo: przetestowac
-        // 'control_bar',//todo: przetestowac
-        // 'edit_buttons_in_legend',//todo: przetestowac
+        // 'header_resolutions', //todo: przetestowac
+        // 'control_bar', //todo: przetestowac
+        // 'edit_buttons_in_legend', //todo: przetestowac
         // 'remove_library_container_border',
       ],
       enabled_features: [
@@ -125,7 +125,6 @@ const Chart = props => {
         'study_dialog_search_control',
         'display_market_status',
         'header_compare',
-        'edit_buttons_in_legend',
         'symbol_info',
         'border_around_the_chart',
         'main_series_scale_menu',
@@ -135,38 +134,35 @@ const Chart = props => {
         'context_menus',
         'go_to_date',
         'compare_symbol',
-        'border_around_the_chart',
         'timezone_menu',
         'header_resolutions', //todo: przetestowac
         'control_bar', //todo: przetestowac
         'edit_buttons_in_legend', //todo: przetestowac
         'remove_library_container_border',
-
         'dont_show_boolean_study_arguments',
         'use_localstorage_for_settings',
-        'remove_library_container_border',
         'save_chart_properties_to_local_storage',
         'side_toolbar_in_fullscreen_mode',
         'hide_last_na_study_output',
         'constraint_dialogs_movement', //todo: nie do końca jestem pewien
       ],
       studies_overrides: {
-        'volume.volume.color.0': '#fe4761',
-        'volume.volume.color.1': '#3fcfb4',
-        'volume.volume.transparency': 75,
+        'volume.volume.color.0': '#FF00FF',
+        'volume.volume.color.1': '#00DD00',
+        'volume.volume.transparency': 100,
       },
       overrides: {
         'symbolWatermarkProperties.color': 'rgba(0,0,0, 0)',
-        'paneProperties.background': '#20334d',
+        'paneProperties.background': '#1e2329',
         'paneProperties.vertGridProperties.color': '#344568',
         'paneProperties.horzGridProperties.color': '#344568',
         'paneProperties.crossHairProperties.color': '#58637a',
         'paneProperties.crossHairProperties.style': 2,
         'mainSeriesProperties.style': 9,
-        'mainSeriesProperties.showCountdown': false,
+        'mainSeriesProperties.showCountdown': true,
         'scalesProperties.showSeriesLastValue': true,
         'mainSeriesProperties.visible': false,
-        'mainSeriesProperties.showPriceLine': false,
+        'mainSeriesProperties.showPriceLine': true,
         'mainSeriesProperties.priceLineWidth': 1,
         'mainSeriesProperties.lockScale': false,
         'mainSeriesProperties.minTick': 'default',
@@ -195,8 +191,8 @@ const Chart = props => {
         'paneProperties.legendProperties.showSeriesOHLC': true,
         'scalesProperties.showLeftScale': false,
         'scalesProperties.showRightScale': true,
-        'scalesProperties.backgroundColor': '#20334d',
-        'scalesProperties.lineColor': '#46587b',
+        'scalesProperties.backgroundColor': '#1e2329',
+        'scalesProperties.lineColor': '#1e2329',
         'scalesProperties.textColor': '#8f98ad',
         'scalesProperties.scaleSeriesOnly': false,
         'mainSeriesProperties.priceAxisProperties.autoScale': true,
@@ -205,40 +201,40 @@ const Chart = props => {
         'mainSeriesProperties.priceAxisProperties.percentageDisabled': false,
         'mainSeriesProperties.priceAxisProperties.log': false,
         'mainSeriesProperties.priceAxisProperties.logDisabled': false,
-        'mainSeriesProperties.candleStyle.upColor': '#3fcfb4',
-        'mainSeriesProperties.candleStyle.downColor': '#fe4761',
+        'mainSeriesProperties.candleStyle.upColor': '#00DD00',
+        'mainSeriesProperties.candleStyle.downColor': '#FF00FF',
         'mainSeriesProperties.candleStyle.drawWick': true,
         'mainSeriesProperties.candleStyle.drawBorder': true,
-        'mainSeriesProperties.candleStyle.borderColor': '#3fcfb4',
-        'mainSeriesProperties.candleStyle.borderUpColor': '#3fcfb4',
-        'mainSeriesProperties.candleStyle.borderDownColor': '#fe4761',
+        'mainSeriesProperties.candleStyle.borderColor': '#00DD00',
+        'mainSeriesProperties.candleStyle.borderUpColor': '#00DD00',
+        'mainSeriesProperties.candleStyle.borderDownColor': '#FF00FF',
         'mainSeriesProperties.candleStyle.wickColor': '#737375',
-        'mainSeriesProperties.candleStyle.wickUpColor': '#3fcfb4',
-        'mainSeriesProperties.candleStyle.wickDownColor': '#fe4761',
+        'mainSeriesProperties.candleStyle.wickUpColor': '#00DD00',
+        'mainSeriesProperties.candleStyle.wickDownColor': '#FF00FF',
         'mainSeriesProperties.candleStyle.barColorsOnPrevClose': false,
-        'mainSeriesProperties.hollowCandleStyle.upColor': '#3fcfb4',
-        'mainSeriesProperties.hollowCandleStyle.downColor': '#fe4761',
+        'mainSeriesProperties.hollowCandleStyle.upColor': '#00DD00',
+        'mainSeriesProperties.hollowCandleStyle.downColor': '#FF00FF',
         'mainSeriesProperties.hollowCandleStyle.drawWick': true,
         'mainSeriesProperties.hollowCandleStyle.drawBorder': true,
-        'mainSeriesProperties.hollowCandleStyle.borderColor': '#3fcfb4',
-        'mainSeriesProperties.hollowCandleStyle.borderUpColor': '#3fcfb4',
-        'mainSeriesProperties.hollowCandleStyle.borderDownColor': '#fe4761',
+        'mainSeriesProperties.hollowCandleStyle.borderColor': '#00DD00',
+        'mainSeriesProperties.hollowCandleStyle.borderUpColor': '#00DD00',
+        'mainSeriesProperties.hollowCandleStyle.borderDownColor': '#FF00FF',
         'mainSeriesProperties.hollowCandleStyle.wickColor': '#737375',
-        'mainSeriesProperties.hollowCandleStyle.wickUpColor': '#3fcfb4',
-        'mainSeriesProperties.hollowCandleStyle.wickDownColor': '#fe4761',
-        'mainSeriesProperties.haStyle.upColor': '#3fcfb4',
-        'mainSeriesProperties.haStyle.downColor': '#fe4761',
+        'mainSeriesProperties.hollowCandleStyle.wickUpColor': '#00DD00',
+        'mainSeriesProperties.hollowCandleStyle.wickDownColor': '#FF00FF',
+        'mainSeriesProperties.haStyle.upColor': '#00DD00',
+        'mainSeriesProperties.haStyle.downColor': '#FF00FF',
         'mainSeriesProperties.haStyle.drawWick': true,
         'mainSeriesProperties.haStyle.drawBorder': true,
-        'mainSeriesProperties.haStyle.borderColor': '#3fcfb4',
-        'mainSeriesProperties.haStyle.borderUpColor': '#3fcfb4',
-        'mainSeriesProperties.haStyle.borderDownColor': '#fe4761',
+        'mainSeriesProperties.haStyle.borderColor': '#00DD00',
+        'mainSeriesProperties.haStyle.borderUpColor': '#00DD00',
+        'mainSeriesProperties.haStyle.borderDownColor': '#FF00FF',
         'mainSeriesProperties.haStyle.wickColor': '#737375',
-        'mainSeriesProperties.haStyle.wickUpColor': '#3fcfb4',
-        'mainSeriesProperties.haStyle.wickDownColor': '#fe4761',
+        'mainSeriesProperties.haStyle.wickUpColor': '#00DD00',
+        'mainSeriesProperties.haStyle.wickDownColor': '#FF00FF',
         'mainSeriesProperties.haStyle.barColorsOnPrevClose': false,
-        'mainSeriesProperties.barStyle.upColor': '#3fcfb4',
-        'mainSeriesProperties.barStyle.downColor': '#fe4761',
+        'mainSeriesProperties.barStyle.upColor': '#00DD00',
+        'mainSeriesProperties.barStyle.downColor': '#FF00FF',
         'mainSeriesProperties.barStyle.barColorsOnPrevClose': false,
         'mainSeriesProperties.barStyle.dontDrawOpen': false,
         'mainSeriesProperties.lineStyle.color': '#0cbef3',
@@ -275,7 +271,8 @@ const Chart = props => {
           }),
         );
 
-      button[0].innerHTML = 'Check API';
+      // button[0].innerHTML = 'Check API';
+      button[0].style = 'display:none';
     });
   };
   return <Container id={tv_chart_container}> Here is chart</Container>;

@@ -107,7 +107,7 @@ export default {
       has_no_volume: true,
       has_weekly_and_monthly: false,
       supported_resolutions: configurationData.supported_resolutions,
-      volume_precision: 2,
+      volume_precision: 8,
       data_status: 'streaming',
     };
 
