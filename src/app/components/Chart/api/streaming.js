@@ -42,12 +42,12 @@ socket.onmessage = message => {
     lastDailyBar?.time,
     subscriptionItem.resolution,
   );
-  // console.log('subscriptionItemResolution', subscriptionItem.resolution);
-  // console.log('tradeTime', tradeTime);
-  // console.log('lastDailyBar', lastDailyBar);
-  // console.log('lastDailyBarTime', lastDailyBar.time);
-  // console.log('nextDailyBarTime', nextDailyBarTime);
-  // console.log('tradePrice', tradePrice);
+  console.log('subscriptionItemResolution', subscriptionItem.resolution);
+  console.log('tradeTime', tradeTime);
+  console.log('lastDailyBar', lastDailyBar);
+  console.log('lastDailyBarTime', lastDailyBar.time);
+  console.log('nextDailyBarTime', nextDailyBarTime);
+  console.log('tradePrice', tradePrice);
   let bar;
   if (tradeTime >= nextDailyBarTime) {
     bar = {
