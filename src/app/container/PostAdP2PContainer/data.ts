@@ -63,3 +63,9 @@ export const cashs = [
     name: 'RON',
   },
 ];
+
+export const payments = [
+  { name: 'Momo', fullname: 'Ha Quoc Tuan', mobilePhone: '0918273645' },
+  { name: 'Momo3', fullname: 'Ha Quoc Tuan5', mobilePhone: '0918273645' },
+  { name: 'Momo5', fullname: 'Ha Quoc Tuan6', mobilePhone: '0918273645' },
+];

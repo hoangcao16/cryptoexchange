@@ -1,11 +1,34 @@
 import { Button, Form, Input, Select } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { usePostAdP2PSlice } from '../slice';
 import CardPaymentMethod from './CardPaymentMethod';
+import ModalSelectPaymentMethod from './ModalSelectPaymentMethod';
+import SwitchStep from './SwitchStep';
 const { Option } = Select;
 
 function StepTotalAndPayment() {
+  const { actions } = usePostAdP2PSlice();
+  const dispatch = useDispatch();
+
+  const [modalSelectPaymentMethod, setModalSelectPaymentMethod] =
+    useState(false);
+  const [paymentMethodSelected, setPaymentMethodSelected] = useState([]);
+
+  const handleNextStep = () => {
+    dispatch(actions.setCurrentStep(3));
+  };
+
+  const handleOpenModal = () => {
+    setModalSelectPaymentMethod(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalSelectPaymentMethod(false);
+  };
+
   return (
     <Wrapper>
       <Form>
@@ -54,9 +77,14 @@ function StepTotalAndPayment() {
 
         <div className="stepTAP--label">Payment Method</div>
         <div>Select up to 5 methods</div>
-        <CardPaymentMethod />
-        <CardPaymentMethod />
-        <Button type="link" className="stepTAP--btnAdd mb-4">
+        {paymentMethodSelected.map((e, i) => (
+          <CardPaymentMethod mode="display" key={i} />
+        ))}
+        <Button
+          type="link"
+          className="stepTAP--btnAdd mb-4"
+          onClick={handleOpenModal}
+        >
           <AiOutlinePlus /> Add
         </Button>
 
@@ -68,6 +96,13 @@ function StepTotalAndPayment() {
           </Select>
         </Form.Item>
       </Form>
+
+      <ModalSelectPaymentMethod
+        visible={modalSelectPaymentMethod}
+        handleOk={() => {}}
+        handleCancel={handleCloseModal}
+      />
+      <SwitchStep next={handleNextStep} post={() => {}} />
     </Wrapper>
   );
 }

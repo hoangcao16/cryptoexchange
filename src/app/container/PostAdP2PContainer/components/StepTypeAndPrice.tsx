@@ -1,20 +1,29 @@
 import { Button, Input, Radio } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  AiOutlineFileUnknown,
   AiOutlineInfoCircle,
   AiOutlineMinus,
   AiOutlinePlus,
 } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { postAdP2PServices } from 'services/postAdP2PService';
 import styled from 'styled-components';
-import { assets, cashs } from '../data';
-import HelpGuide from './HelpGuide';
+import { cashs } from '../data';
+import { usePostAdP2PSlice } from '../slice';
+import { selectPostAdP2P } from '../slice/selectors';
+import { PostAdP2PState } from '../slice/types';
+import { RadioStyled } from '../style';
+import SwitchStep from './SwitchStep';
 
 function StepTypeAndPrice() {
-  const [active, setActive] = useState<'buy' | 'sell'>('buy');
+  const { actions } = usePostAdP2PSlice();
+  const dispatch = useDispatch();
+  const PostAdP2PState: PostAdP2PState = useSelector(selectPostAdP2P);
 
+  const [active, setActive] = useState<'buy' | 'sell'>('buy');
   const [priceType, setPriceType] = useState<'fixed' | 'floating'>('fixed');
+  const [tokens, setTokens] = useState<any[]>([]);
+  const [assetSelected, setAssetSelected] = useState();
 
   const handleType = (key: 'buy' | 'sell') => {
     if (key === active) {
@@ -23,9 +32,33 @@ function StepTypeAndPrice() {
     setActive(key);
   };
 
+  const handleSelectAsset = (e: any) => {
+    setAssetSelected(e.target.value);
+  };
+
   const handlePriceType = (e: any) => {
     setPriceType(e.target.value);
   };
+
+  const handleNextStep = () => {
+    dispatch(actions.setCurrentStep(2));
+  };
+
+  useEffect(() => {
+    postAdP2PServices
+      .getAllAllowBuySellService()
+      .then(res => {
+        if (res.data.rc !== 0) {
+          return;
+        }
+
+        setTokens(res.data.rows);
+        setAssetSelected(res.data.rows[0].assetCode);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Wrapper>
@@ -57,11 +90,19 @@ function StepTypeAndPrice() {
         {/* asset */}
         <div className="contentSTP--row">
           <div className="contentSTP--label">Asset</div>
-          <Radio.Group className="contentSTP--options">
-            {assets.map((a, i) => (
-              <Radio value={a.name} key={i} className="contentSTP--item">
-                {a.name}
-              </Radio>
+          <Radio.Group
+            onChange={handleSelectAsset}
+            value={assetSelected}
+            className="contentSTP--options"
+          >
+            {tokens.map((token, i) => (
+              <RadioStyled
+                value={token.assetCode}
+                key={i}
+                className="contentSTP--item"
+              >
+                {token.assetName}
+              </RadioStyled>
             ))}
           </Radio.Group>
         </div>
@@ -73,9 +114,9 @@ function StepTypeAndPrice() {
           </div>
           <Radio.Group className="contentSTP--options">
             {cashs.map((a, i) => (
-              <Radio value={a.name} key={i} className="contentSTP--item">
+              <RadioStyled value={a.name} key={i} className="contentSTP--item">
                 {a.name}
-              </Radio>
+              </RadioStyled>
             ))}
           </Radio.Group>
         </div>
@@ -103,12 +144,12 @@ function StepTypeAndPrice() {
             value={priceType}
             onChange={handlePriceType}
           >
-            <Radio value="fixed" className="contentSTP--item">
+            <RadioStyled value="fixed" className="contentSTP--item">
               Fixed
-            </Radio>
-            <Radio value="floating" className="contentSTP--item">
+            </RadioStyled>
+            <RadioStyled value="floating" className="contentSTP--item">
               Floating
-            </Radio>
+            </RadioStyled>
           </Radio.Group>
         </div>
 
@@ -163,7 +204,8 @@ function StepTypeAndPrice() {
           )}
         </div>
       </div>
-      {/* <HelpGuide /> */}
+
+      <SwitchStep next={handleNextStep} post={() => {}} />
     </Wrapper>
   );
 }
