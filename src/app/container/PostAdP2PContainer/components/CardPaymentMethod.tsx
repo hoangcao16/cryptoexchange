@@ -1,17 +1,36 @@
 import { Button } from 'antd';
 import React from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineEdit } from 'react-icons/ai';
 import styled from 'styled-components';
 
-function CardPaymentMethod() {
+interface Props {
+  mode: 'display' | 'select';
+}
+
+function CardPaymentMethod(props: Props) {
+  const { mode } = props;
+  const handleSelect = () => {
+    if (mode === 'display') {
+      return;
+    }
+  };
   return (
-    <Wrapper>
+    <Wrapper onClick={handleSelect}>
       <div className="cardPM--header">
         <div className="cardPM--payment">Momo</div>
-        <Button
-          type="link"
-          icon={<AiOutlineClose className="cardPM--icon" />}
-        ></Button>
+        {mode === 'display' && (
+          <Button
+            type="link"
+            icon={<AiOutlineClose className="cardPM--icon" />}
+          ></Button>
+        )}
+
+        {mode === 'select' && (
+          <Button
+            type="link"
+            icon={<AiOutlineEdit className="cardPM--icon" />}
+          ></Button>
+        )}
       </div>
 
       <div className="cardPM--row">

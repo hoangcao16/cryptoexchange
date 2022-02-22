@@ -3,12 +3,15 @@ import NavMenu from 'app/components/Navbar';
 import NavbarTradeP2P from 'app/components/NavbarTradeP2P';
 import React from 'react';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import HelpGuide from './components/HelpGuide';
 import PostAdTitle from './components/PostAdTitle';
 import StepRemarksAndResponse from './components/StepRemarksAndResponse';
 import StepTotalAndPayment from './components/StepTotalAndPayment';
 import StepTypeAndPrice from './components/StepTypeAndPrice';
+import { selectPostAdP2P } from './slice/selectors';
+import { PostAdP2PState } from './slice/types';
 
 const { Step } = Steps;
 
@@ -28,74 +31,24 @@ const steps = [
 ];
 
 function PostAdP2PContainer() {
-  const [current, setCurrent] = React.useState(0);
-
-  const next = () => {
-    setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    setCurrent(current - 1);
-  };
-
+  const PostAdP2PState: PostAdP2PState = useSelector(selectPostAdP2P);
   return (
     <Wrapper>
       <NavMenu />
       <NavbarTradeP2P defaultActiveKey="none" />
       <PostAdTitle />
       <div className="container container-steps-content mt-3">
-        <Steps current={current} size="small">
+        <Steps current={PostAdP2PState.currentStep - 1} size="small">
           {steps.map(item => (
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>
 
-        <div className="steps-content">{steps[current].content}</div>
+        <div className="steps-content">
+          {steps[PostAdP2PState.currentStep - 1].content}
+        </div>
 
         <HelpGuide />
-      </div>
-
-      <div className="steps-action">
-        <div className="steps-action__buttons container">
-          <div>
-            {current > 0 && (
-              <>
-                <span className="reserved">Reserved Fee</span>
-                <AiOutlineInfoCircle className="reserved-icon" />
-                0.03 USDT
-              </>
-            )}
-          </div>
-          <div>
-            {current > 0 && (
-              <Button
-                className="btnPostAd btnPostAd--prev"
-                type="link"
-                onClick={() => prev()}
-              >
-                Previous
-              </Button>
-            )}
-            {current < steps.length - 1 && (
-              <Button
-                className="btnPostAd btnPostAd--next"
-                type="link"
-                onClick={() => next()}
-              >
-                Next
-              </Button>
-            )}
-            {current === steps.length - 1 && (
-              <Button
-                className="btnPostAd btnPostAd--next"
-                type="link"
-                onClick={() => message.success('Processing complete!')}
-              >
-                Post
-              </Button>
-            )}
-          </div>
-        </div>
       </div>
     </Wrapper>
   );
@@ -115,57 +68,24 @@ const Wrapper = styled.div`
     margin-top: 16px;
   }
 
-  .steps-action {
-    margin: 0px;
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    box-shadow: rgb(0 0 0 / 8%) 0px -1px 2px;
-    background-color: ${({ theme }) => theme.p2pBackground};
+  .ant-steps-item-finish .ant-steps-item-icon {
+    border-color: ${({ theme }) => theme.powColor};
 
-    &__buttons {
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .btnPostAd {
-        min-width: 60px;
-        width: 200px;
-        height: 42px;
-        font-weight: 500;
-        font-size: 14px;
-
-        margin-left: 10px;
-
-        &--next {
-          color: ${({ theme }) => theme.p2pTextLight};
-          background: ${({ theme }) => theme.powColor};
-
-          &:hover {
-            opacity: 0.8;
-          }
-        }
-
-        &--prev {
-          color: ${({ theme }) => theme.powColor};
-          border: 1px solid ${({ theme }) => theme.p2pBorder};
-
-          &:hover {
-            border: 1px solid ${({ theme }) => theme.powColor};
-          }
-        }
-      }
+    .ant-steps-icon {
+      color: ${({ theme }) => theme.powColor};
+      top: -3px;
     }
+  }
 
-    .reserved {
-      color: ${({ theme }) => theme.p2pGray};
-    }
-
-    .reserved-icon {
-      font-size: 16px;
-      margin: 0px 4px;
-    }
+  .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+    background: ${({ theme }) => theme.powColor};
+    border-color: ${({ theme }) => theme.powColor};
+  }
+  .ant-steps-item-finish
+    > .ant-steps-item-container
+    > .ant-steps-item-content
+    > .ant-steps-item-title::after {
+    background-color: ${({ theme }) => theme.powColor};
+    height: 3px;
   }
 `;
