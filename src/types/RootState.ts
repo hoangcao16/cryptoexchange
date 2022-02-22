@@ -16,6 +16,7 @@ import { P2PWalletState } from 'app/container/P2PWalletContainer/slice/types';
 import { GetBalancePairState } from 'app/components/OrderForm/slice/types';
 import { TradehistoryState } from 'app/components/TradesInformation/TradeHistory/slice/types';
 import { TabP2PState } from 'app/container/TabP2PContainer/slice/type';
+import { CurrentPairState } from 'app/components/ContentHeader/slice/types';
 /* 
   Because the redux-injectors injects your reducers asynchronously somewhere in your code
   You have to declare them here manually
@@ -38,4 +39,5 @@ export interface RootState {
   getBalancePair: GetBalancePairState;
   tradehistory: TradehistoryState;
   tabP2P: TabP2PState;
+  currentPair: CurrentPairState;
 }
