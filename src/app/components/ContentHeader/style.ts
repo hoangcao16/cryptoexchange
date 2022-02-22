@@ -26,6 +26,18 @@ export const Content = styled.div`
   box-sizing: border-box;
   margin: 0px;
   flex: 1 1 0%;
+  .showPrice {
+    color: ${({ theme }) => theme.text};
+    &[data-type='up'] {
+      color: ${({ theme }) => theme.greenColor};
+    }
+    &[data-type='down'] {
+      color: ${({ theme }) => theme.darkPinkColor};
+    }
+  }
+  .subPrice {
+    color: ${({ theme }) => theme.text};
+  }
 `;
 export const SpotTutorial = styled.div`
   box-sizing: border-box;
@@ -82,12 +94,6 @@ export const ContentLeft = styled.div`
       }
     }
   }
-  .showPrice {
-    color: ${({ theme }) => theme.text};
-  }
-  .subPrice {
-    color: ${({ theme }) => theme.text};
-  }
 `;
 export const ContentRight = styled.div`
   display: flex;
@@ -111,7 +117,15 @@ export const ContentRight = styled.div`
       font-weight: 400;
     }
     .tickerPriceText {
-      color: ${({ theme }) => theme.text};
+      .tickerPriceText-value {
+        color: ${({ theme }) => theme.text};
+        &[data-type='up'] {
+          color: ${({ theme }) => theme.greenColor};
+        }
+        &[data-type='down'] {
+          color: ${({ theme }) => theme.darkPinkColor};
+        }
+      }
     }
   }
 `;
