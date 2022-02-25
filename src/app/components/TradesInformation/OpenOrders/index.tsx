@@ -33,7 +33,7 @@ const Orders = () => {
   useEffect(() => {
     const param = {
       pageIndex: 0,
-      pageSize: 15,
+      pageSize: null,
     };
     dispatch(actions.getopenOrderRequest(param));
   }, []);

@@ -23,6 +23,8 @@ import { useTranslation } from 'react-i18next';
 const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
   const [Layout, setLayout] = useState(1);
   const [show, setShow] = useState(false);
+  const [dataSocketBids, setDataSocketBids]: any = useState({});
+  const [dataSocketAsks, setDataSocketAsks]: any = useState({});
   const dispatch = useDispatch();
   let { pair } = useParams();
   const { t } = useTranslation();
@@ -51,9 +53,17 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
           `${pair?.substring(0, findIndex)}/${pair?.substring(findIndex + 1)}`,
         ),
       );
+      setDataSocketBids({});
+      setDataSocketAsks({});
     }
-  }, [actions, dispatch, pair]);
-
+  }, [actions, dispatch, pair, Layout]);
+  useEffect(() => {
+    if (dataOrderbookSocket.side === 'buy') {
+      setDataSocketBids(dataOrderbookSocket);
+    } else {
+      setDataSocketAsks(dataOrderbookSocket);
+    }
+  }, [dataOrderbookSocket]);
   return (
     <Container>
       <Header>
@@ -128,14 +138,14 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
           <StyledRow>
             <OrderBookAsk
               dataApi={dataOrderbook?.data?.data?.asks}
-              dataSocket={dataOrderbookSocket}
+              dataSocket={dataSocketAsks}
               miniTable
             />
           </StyledRow>
           <StyledRow>
             <OrderBookBid
               dataApi={dataOrderbook?.data?.data?.bids}
-              dataSocket={dataOrderbookSocket}
+              dataSocket={dataSocketBids}
               dataMarketSocket={dataMarketSocket}
               miniTable
             />
@@ -146,7 +156,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
           <OrderBookTHeader />
           <OrderBookBid
             dataApi={dataOrderbook?.data?.data?.bids}
-            dataSocket={dataOrderbookSocket}
+            dataSocket={dataSocketBids}
             dataMarketSocket={dataMarketSocket}
             miniTable={false}
           />
@@ -156,7 +166,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
           <OrderBookTHeader />
           <OrderBookAsk
             dataApi={dataOrderbook?.data?.data?.asks}
-            dataSocket={dataOrderbookSocket}
+            dataSocket={dataSocketAsks}
             miniTable={false}
           />
         </div>
