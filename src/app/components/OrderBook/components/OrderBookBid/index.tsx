@@ -34,13 +34,6 @@ const OrderBookBid = ({
     }, 1000);
   }, []);
   useEffect(() => {
-    if (dataSocket.bids !== undefined) {
-      setDataView(dataSocket.bids);
-    } else if (dataSocket.bids === null) {
-      setDataView([]);
-    } else {
-      setDataView(dataApi);
-    }
     if (!isEmpty(dataMarketSocket)) {
       if (dataMarketSocket.symbol === changeFormatPair) {
         setLastestPrice(dataMarketSocket?.latestPrice);
@@ -54,7 +47,63 @@ const OrderBookBid = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataApi, dataSocket, dataMarketSocket, pairData?.data, pair]);
+  }, [dataMarketSocket, pairData?.data, pair]);
+  useEffect(() => {
+    (async () => {
+      await (function () {
+        setDataView(dataApi);
+      })();
+      await (function () {
+        if (!isEmpty(dataSocket)) {
+          if (
+            dataView === null ||
+            (dataView === undefined && Number(dataSocket?.sign) > 0)
+          ) {
+            setDataView([
+              {
+                price: dataSocket?.price,
+                quantity: dataSocket?.delta,
+              },
+            ]);
+          } else if (dataView !== undefined && dataView !== null) {
+            const index = dataView.findIndex((item: any) => {
+              return item.price === dataSocket?.price;
+            });
+            if (index === -1 && Number(dataSocket?.sign) > 0) {
+              const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
+              dataCopy.push({
+                price: dataSocket.price,
+                quantity: dataSocket.delta,
+              });
+              dataCopy.sort(function (a, b) {
+                return b.price - a.price;
+              });
+              setDataView(dataCopy);
+            } else if (index !== -1) {
+              const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
+              const sumQuantity = Number(
+                (
+                  Number(dataCopy[index].quantity) +
+                  Number(dataSocket.delta * dataSocket.sign)
+                ).toPrecision(5),
+              );
+              if (sumQuantity > 0) {
+                dataCopy[index].quantity = sumQuantity;
+                setDataView(dataCopy);
+              } else if (sumQuantity === 0 || sumQuantity < 0) {
+                dataCopy.splice(index, 1);
+                setDataView(dataCopy);
+              }
+            }
+          }
+        }
+      })();
+    })();
+    return () => {
+      setDataView([]);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataApi, dataSocket]);
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));
   };

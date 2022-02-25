@@ -24,7 +24,7 @@ var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
 const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
   const [dataTradesSocket, setDataTradesSocket]: any = useState({});
-  const [dataOrder, setDataOrder]: any[] = useState([]);
+  const [dataOrder, setDataOrder]: any = useState({});
   const dispatch = useDispatch();
 
   const { actions: actionsTrades } = useTradesSlice();
@@ -76,7 +76,7 @@ const HomeContentContainer = () => {
         setDataTradesSocket(Message.Value);
       } else if (Message.Key === 'RobinhoodPair') {
         setDataMarketSocket(Message.Value);
-      } else if (Message.Key === 'Robinhood::OrderBook') {
+      } else if (Message.Key === 'PowExchange::OrderBookChange') {
         setDataOrder(Message.Value);
       } else if (Message.Key === 'Robinhood::OrderFilled') {
         dispatch(actionsWebsocket.updateOrderFilled(Message.Value));
@@ -90,7 +90,7 @@ const HomeContentContainer = () => {
   }, []);
   useEffect(() => {
     setDataTradesSocket({});
-    setDataOrder([]);
+    setDataOrder({});
     setDataMarketSocket({});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataAllPair?.reselectPair]);
