@@ -17,7 +17,7 @@ import { selectCurrentPair } from './slice/selectors';
 import numeral from 'numeral';
 import { isEmpty } from 'app/components/common/common';
 
-const ContentHeader = () => {
+const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
   let { pair } = useParams();
   const findIndex: any = pair?.indexOf('_');
   const changeFormatPair: any = `${pair?.substring(
@@ -46,7 +46,6 @@ const ContentHeader = () => {
   }, [pair]);
   useEffect(() => {
     if (!isEmpty(dataCurrentPair.data)) {
-      console.log(dataCurrentPair.data.price, price);
       if (dataCurrentPair.data.price > price) {
         setIsPriceUp(1);
       } else if (dataCurrentPair.data.price < price) {
@@ -62,9 +61,21 @@ const ContentHeader = () => {
       setVolumeBase24h(dataCurrentPair.data.volume_base_24h);
       setVolumeQuote24h(dataCurrentPair.data.volume_quote_24h);
     }
-    console.log(dataCurrentPair.data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataCurrentPair.data]);
+  useEffect(() => {
+    if (!isEmpty(tradeInforSocket)) {
+      setPrice(tradeInforSocket.price);
+      setChangePrice24h(tradeInforSocket.change_price_24h);
+      setChangePercent24h(tradeInforSocket.change_percent_24h);
+      setHigh24h(tradeInforSocket.high_24h);
+      setLow24h(tradeInforSocket.low_24h);
+    }
+    if (!isEmpty(tradeVolumeInforSocket)) {
+      setVolumeBase24h(tradeVolumeInforSocket.volume_base_24h);
+      setVolumeQuote24h(tradeVolumeInforSocket.volume_quote_24h);
+    }
+  }, [tradeInforSocket, tradeVolumeInforSocket]);
   return (
     <Container>
       <Div>

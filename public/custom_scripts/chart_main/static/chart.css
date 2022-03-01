@@ -157,7 +157,9 @@ textarea {
   font-size: 11px;
   line-height: 1;
 }
-
+.pane-legend-item-value-wrap .pane-legend-item-value {
+  color: #00ffad !important;
+}
 .pane-legend-line.pane-legend-wrap.main .pane-legend-item-value-wrap span {
   line-height: 1;
 }
