@@ -7,7 +7,6 @@ import Datafeed1 from './api/datafeeds';
 import { useParams } from 'react-router-dom';
 const Chart = props => {
   const tv_chart_container = 'tv_chart_container';
-  // const [symbol, setSymbol] = useState('POW:ROB/USDT');
   const libraryPath = '/custom_scripts/chart_main/';
   let { pair } = useParams();
   const findIndex = pair?.indexOf('_');
@@ -30,53 +29,29 @@ const Chart = props => {
       datafeed: Datafeed1,
       locale: 'en',
       timezone: 'Asia/Bangkok', //todo: ustawianie timezone'a po strefie usera
-      charts_storage_api_version: '1.1',
+      charts_storage_api_version: '1.11',
       client_id: 'tradingview.com',
       user_id: 'public_user_id',
+      style: '1',
       debug: true,
       // loading_screen:{ backgroundColor: "#00DD00",foregroundColor: "#000000", }, //todo:do it
       interval: '1',
+      enable_publishing: false,
       // timeframe:'',//todo: na koncu
       toolbar_bg: `#1e2329`,
       // saved_data: this.savedData,
       allow_symbol_change: true,
+      studies: [
+        'MASimple@tv-basicstudies',
+        'MAExp@tv-basicstudies',
+        'MAWeighted@tv-basicstudies',
+      ],
       time_frames: [
-        {
-          text: '1y',
-          resolution: '1W',
-        },
-        {
-          text: '6m',
-          resolution: '3D',
-        },
-        {
-          text: '3m',
-          resolution: '1D',
-        },
-        {
-          text: '1m',
-          resolution: '1D',
-        },
-        {
-          text: '1w',
-          resolution: '30',
-        },
-        {
-          text: '3d',
-          resolution: '30',
-        },
-        {
-          text: '1d',
-          resolution: '30',
-        },
-        {
-          text: '6h',
-          resolution: '15',
-        },
-        {
-          text: '1h',
-          resolution: '1',
-        },
+        { text: '1y', resolution: 'W' },
+        { text: '3m', resolution: '60' },
+        { text: '1m', resolution: 'D' },
+        { text: '3d', resolution: '5', description: '3 Days' },
+        { text: '1d', resolution: '1', description: '1 Days' },
       ],
       drawings_access: {
         type: 'black',
@@ -133,6 +108,7 @@ const Chart = props => {
         'right_bar_stays_on_scroll',
         'context_menus',
         'go_to_date',
+        'study_templates',
         'compare_symbol',
         'timezone_menu',
         'header_resolutions', //todo: przetestowac
@@ -150,6 +126,12 @@ const Chart = props => {
         'volume.volume.color.0': '#FF00FF',
         'volume.volume.color.1': '#00DD00',
         'volume.volume.transparency': 100,
+        'volume.volume ma.color': '#FF0000',
+        'volume.volume ma.transparency': 30,
+        'volume.volume ma.linewidth': 5,
+        'volume.show ma': true,
+        'bollinger bands.median.color': '#33FF88',
+        'bollinger bands.upper.linewidth': 7,
       },
       overrides: {
         'symbolWatermarkProperties.color': 'rgba(0,0,0, 0)',
@@ -158,8 +140,9 @@ const Chart = props => {
         'paneProperties.horzGridProperties.color': '#344568',
         'paneProperties.crossHairProperties.color': '#58637a',
         'paneProperties.crossHairProperties.style': 2,
-        'mainSeriesProperties.style': 9,
+        'mainSeriesProperties.style': 1,
         'mainSeriesProperties.showCountdown': true,
+        'mainSeriesProperties.onWidget': true,
         'scalesProperties.showSeriesLastValue': true,
         'mainSeriesProperties.visible': false,
         'mainSeriesProperties.showPriceLine': true,
@@ -167,7 +150,7 @@ const Chart = props => {
         'mainSeriesProperties.lockScale': false,
         'mainSeriesProperties.minTick': 'default',
         'mainSeriesProperties.extendedHours': false,
-        volumePaneSize: 'tiny',
+        volumePaneSize: 'medium',
         editorFontsList: [
           'Lato',
           'Arial',
@@ -184,7 +167,7 @@ const Chart = props => {
         'paneProperties.leftAxisProperties.log': false,
         'paneProperties.leftAxisProperties.logDisabled': false,
         'paneProperties.leftAxisProperties.alignLabels': true,
-        // "paneProperties.legendProperties.showStudyArguments": true,
+        'paneProperties.legendProperties.showStudyArguments': true,
         'paneProperties.legendProperties.showStudyTitles': true,
         'paneProperties.legendProperties.showStudyValues': true,
         'paneProperties.legendProperties.showSeriesTitle': true,
@@ -195,6 +178,7 @@ const Chart = props => {
         'scalesProperties.lineColor': '#1e2329',
         'scalesProperties.textColor': '#8f98ad',
         'scalesProperties.scaleSeriesOnly': false,
+        'timeScale.rightOffset': 3,
         'mainSeriesProperties.priceAxisProperties.autoScale': true,
         'mainSeriesProperties.priceAxisProperties.autoScaleDisabled': false,
         'mainSeriesProperties.priceAxisProperties.percentage': false,
@@ -252,8 +236,8 @@ const Chart = props => {
       custom_css_url: 'chart.css',
       // custom_css_url: 'custom_scripts/chart_main/static/chart.css',
     };
-
     const tvWidget = new widget(widgetOptions);
+
     tvWidget.onChartReady(() => {
       console.log('mounted:onChartReady');
       const button = tvWidget
@@ -270,7 +254,6 @@ const Chart = props => {
             },
           }),
         );
-
       // button[0].innerHTML = 'Check API';
       button[0].style = 'display:none';
     });

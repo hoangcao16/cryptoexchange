@@ -103,7 +103,7 @@ export default {
       minmov: 1,
       pricescale: 100,
       has_intraday: true,
-      intraday_multipliers: ['1'],
+      intraday_multipliers: ['1', '5', '15', '30', '60'],
       has_no_volume: true,
       has_weekly_and_monthly: false,
       supported_resolutions: configurationData.supported_resolutions,
@@ -149,7 +149,8 @@ export default {
       fsym: parsedSymbol.fromSymbol,
       tsym: parsedSymbol.toSymbol,
       toTs: to,
-      limit: 2000,
+      limit: 1000,
+      interval: resolution,
     };
     const query = Object.keys(urlParameters)
       .map(name => `${name}=${encodeURIComponent(urlParameters[name])}`)

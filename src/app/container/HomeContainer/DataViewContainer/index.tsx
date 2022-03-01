@@ -25,6 +25,8 @@ const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
   const [dataTradesSocket, setDataTradesSocket]: any = useState({});
   const [dataOrder, setDataOrder]: any = useState({});
+  const [tradeInfor, setTradeInfor]: any = useState({});
+  const [tradeVolumeInfor, setTradeVolumeInfor]: any = useState({});
   const dispatch = useDispatch();
 
   const { actions: actionsTrades } = useTradesSlice();
@@ -80,6 +82,10 @@ const HomeContentContainer = () => {
         setDataOrder(Message.Value);
       } else if (Message.Key === 'Robinhood::OrderFilled') {
         dispatch(actionsWebsocket.updateOrderFilled(Message.Value));
+      } else if (Message.Key === 'PowExchange::TradeInfo') {
+        setTradeInfor(Message.Value);
+      } else if (Message.Key === 'PowExchange::TradeVolumeInfo') {
+        setTradeVolumeInfor(Message.Value);
       }
     };
     // connectSocket();
@@ -111,7 +117,10 @@ const HomeContentContainer = () => {
       <StyledRow>
         <Col md={9}>
           <StyledRow>
-            <ContentHeader />
+            <ContentHeader
+              tradeInforSocket={tradeInfor}
+              tradeVolumeInforSocket={tradeVolumeInfor}
+            />
           </StyledRow>
           <StyledRow>
             <StyledCol md={4} className="orderbook-section">
