@@ -24,6 +24,8 @@ import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
 import { getToken } from 'app/components/common/common';
 import ChangeLanguage from '../ChangeLanguage';
 import { useTranslation } from 'react-i18next';
+import POWlogo from 'app/assets/img/POWlogo.png';
+// import POWlogo2 from 'app/assets/img/logo3.jpg';
 const Title = () => {
   const { t } = useTranslation();
   return (
@@ -40,7 +42,8 @@ const NavMenu = () => {
       <Container fluid style={{ height: '64px' }}>
         <Link to="/">
           <StyledNavBrand>
-            <Logo className="Logo" />
+            <img src={POWlogo} className="logo" alt="POW" />
+            {/* <Logo className="Logo" /> */}
           </StyledNavBrand>
         </Link>
         {/* <Navbar.Collapse id="responsive-navbar-nav"> */}

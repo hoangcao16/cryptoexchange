@@ -18,8 +18,5 @@ export const GlobalStyles = createGlobalStyle`
     @media (min-width: 1200px) {
       max-width: 1190px;
     }
-    @media (min-width: 1400px) {
-      max-width: 1400px;
-    }
   }
   `;

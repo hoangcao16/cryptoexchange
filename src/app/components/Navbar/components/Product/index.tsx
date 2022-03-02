@@ -80,12 +80,12 @@ const ProductNav = () => {
       name: t('labs'),
       description: t('labs-sub'),
     },
-    {
-      id: 9,
-      icon: GrLaunch,
-      name: t('launchpad'),
-      description: t('launchpad-sub'),
-    },
+    // {
+    //   id: 9,
+    //   icon: GrLaunch,
+    //   name: t('launchpad'),
+    //   description: t('launchpad-sub'),
+    // },
     {
       id: 10,
       icon: MdOutlineManageSearch,
@@ -127,7 +127,7 @@ const ProductNav = () => {
               <item.icon
                 style={{
                   fontSize: '24px',
-                  color: '#f0b90b',
+                  color: '#10afff',
                   marginRight: '16px',
                 }}
               />

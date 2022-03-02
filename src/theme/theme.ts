@@ -7,7 +7,7 @@ export const lightTheme: DefaultTheme = {
   background: '#363537',
 };
 export const darkTheme: DefaultTheme = {
-  primary: '#f0b90b',
+  primary: '#10afff',
   brightBlackColor: 'rgb(37, 41, 48)',
   grayColor: '#848E9C', //rgb(132, 142, 156)
   brightGrayColor: '#B7BDC6',
@@ -17,10 +17,10 @@ export const darkTheme: DefaultTheme = {
   slateGrayColor: '#707a8a', //rgb(112, 122, 138)
   darkBrightGrayColor: '#474D57', //rgb(71, 77, 87)
   earthBrownColor: 'rgb(59, 38, 1)',
-  greenColor: 'rgb(116,167,0)',
-  brightGreenColor: 'rgb(14, 203, 129)',
+  greenColor: '#0ecb81', //or (rgb(116,167,0))
+  brightGreenColor: 'rgb(14, 203, 129)', //#0ecb81
   darkWashedGreen: 'rgb(46, 209, 145)',
-  darkPinkColor: 'rgb(234, 0, 112)', //rgb(234, 0, 112)
+  darkPinkColor: '#ff9710', //rgb(234, 0, 112)
   redColor: 'rgb(246, 70, 93)',
   middleWashedRose: 'rgb(255, 66, 101)',
   body: '#161a1e',

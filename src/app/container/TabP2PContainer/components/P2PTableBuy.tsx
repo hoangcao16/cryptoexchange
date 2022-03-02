@@ -294,7 +294,7 @@ function P2PTableBuy() {
             <div className="firstCharacter">{record.advertisers.charAt(0)}</div>
             <div className="advertisers">{record.advertisers}</div>
             <div className="checked">
-              {record.checked && <BsFillCheckCircleFill color="#f0b90b" />}
+              {record.checked && <BsFillCheckCircleFill color="#10afff" />}
             </div>
           </div>
 

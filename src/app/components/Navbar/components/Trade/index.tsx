@@ -44,12 +44,12 @@ const TradeNav = () => {
       name: t('advanced'),
       description: t('advanced-sub'),
     },
-    {
-      id: 4,
-      icon: GrUpgrade,
-      name: t('margin'),
-      description: t('increase-your-profits'),
-    },
+    // {
+    //   id: 4,
+    //   icon: GrUpgrade,
+    //   name: t('margin'),
+    //   description: t('increase-your-profits'),
+    // },
     {
       id: 5,
       icon: BsPeople,
@@ -95,7 +95,7 @@ const TradeNav = () => {
               <item.icon
                 style={{
                   fontSize: '24px',
-                  color: '#f0b90b',
+                  color: '#10afff',
                   marginRight: '16px',
                 }}
               />

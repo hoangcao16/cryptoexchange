@@ -28,10 +28,18 @@ export const StyledNavBrand = styled(Navbar.Brand)`
   display: flex;
   margin-right: 4px;
   width: 120px;
-  height: 24px;
+  height: 40px;
   padding: 0;
   svg {
     color: ${({ theme }) => theme.primary};
+  }
+  .logo {
+    margin-left: 12px;
+    width: 120px;
+    height: 34px;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 4px;
   }
 `;
 export const Tag = styled.span`
@@ -94,17 +102,14 @@ export const RegisterButton = styled(Link)`
   min-height: 24px;
   border: none;
   background-image: linear-gradient(
-    rgb(248, 209, 47) 0%,
+    ${({ theme }) => theme.primary} 0%,
     ${({ theme }) => theme.primary} 100%
   );
   font-weight: 400;
   margin-left: 12px;
   &:hover {
     box-shadow: none;
-    background-image: linear-gradient(
-      rgb(255, 226, 81) 0%,
-      rgb(237, 196, 35) 100%
-    );
+    background-image: linear-gradient(#ff9710 0%, #ff9710 100%);
   }
 `;
 export const StyledNav = styled(Nav)`
