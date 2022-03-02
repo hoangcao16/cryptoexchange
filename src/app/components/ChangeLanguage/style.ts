@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Modal from 'react-bootstrap/Modal';
 export const LanguageName = styled.div`
+  color: ${({ theme }) => theme.text};
   &:hover {
     cursor: pointer;
     color: ${({ theme }) => theme.primary};

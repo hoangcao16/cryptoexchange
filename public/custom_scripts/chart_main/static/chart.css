@@ -157,9 +157,9 @@ textarea {
   font-size: 11px;
   line-height: 1;
 }
-.pane-legend-item-value-wrap .pane-legend-item-value {
+/* .pane-legend-item-value-wrap .pane-legend-item-value {
   color: #00ffad !important;
-}
+} */
 .pane-legend-line.pane-legend-wrap.main .pane-legend-item-value-wrap span {
   line-height: 1;
 }
@@ -318,13 +318,13 @@ textarea {
 .feature-no-touch .favored-list-container span:active,
 .feature-touch .favored-list-container span:active {
   background: #1e2329 !important;
-  color: #f0b90b;
+  color: #10afff;
 }
 
 .feature-no-touch .header-chart-panel .button:hover,
 .feature-no-touch .symbol-edit-widget .button:hover {
   background: #1e2329;
-  color: #f0b90b;
+  color: #10afff;
 }
 
 .favored-list-container.active span.submenu,
@@ -391,7 +391,7 @@ textarea {
 /* .feature-no-touch .favored-list-container:hover span, */
 .feature-no-touch .favored-list-container span:hover {
   background: #1e2329 !important;
-  color: #f0b90b !important;
+  color: #10afff !important;
   border-color: #1e2329 !important;
 }
 

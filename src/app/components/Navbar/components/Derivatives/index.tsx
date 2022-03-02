@@ -25,12 +25,12 @@ const DerivativesNav = () => {
     setShow(false);
   };
   const data = [
-    {
-      id: 1,
-      icon: GrOverview,
-      name: t('POW-futures-overview'),
-      description: t('view-our-full-range'),
-    },
+    // {
+    //   id: 1,
+    //   icon: GrOverview,
+    //   name: t('POW-futures-overview'),
+    //   description: t('view-our-full-range'),
+    // },
     {
       id: 2,
       icon: BsFilePersonFill,
@@ -83,7 +83,7 @@ const DerivativesNav = () => {
               <item.icon
                 style={{
                   fontSize: '24px',
-                  color: '#f0b90b',
+                  color: '#10afff',
                   marginRight: '16px',
                 }}
               />

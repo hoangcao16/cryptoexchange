@@ -56,7 +56,7 @@ const FinanceNav = () => {
               <item.icon
                 style={{
                   fontSize: '24px',
-                  color: '#f0b90b',
+                  color: '#10afff',
                   marginRight: '16px',
                 }}
               />

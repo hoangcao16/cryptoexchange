@@ -31,12 +31,12 @@ const EarnNav = () => {
       name: t('POW-earn'),
       description: t('POW-earn-sub'),
     },
-    {
-      id: 2,
-      icon: GrLaunch,
-      name: t('launchpad'),
-      description: t('launchpad-sub'),
-    },
+    // {
+    //   id: 2,
+    //   icon: GrLaunch,
+    //   name: t('launchpad'),
+    //   description: t('launchpad-sub'),
+    // },
     {
       id: 3,
       icon: RiCopperCoinLine,
@@ -95,7 +95,7 @@ const EarnNav = () => {
               <item.icon
                 style={{
                   fontSize: '24px',
-                  color: '#f0b90b',
+                  color: '#10afff',
                   marginRight: '16px',
                 }}
               />
