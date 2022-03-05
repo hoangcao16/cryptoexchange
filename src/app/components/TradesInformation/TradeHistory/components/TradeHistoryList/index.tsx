@@ -4,9 +4,15 @@ import moment from 'moment';
 import numeral from 'numeral';
 import { Div } from './style';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useTradehistorySlice } from '../../slice';
 
 const TradeHistoryList = ({ dataSource }: any) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { actions } = useTradehistorySlice();
+
   const columns: ColumnsType<any> = [
     {
       title: t('date'),
@@ -91,6 +97,19 @@ const TradeHistoryList = ({ dataSource }: any) => {
       },
     },
   ];
+  useEffect(() => {
+    const node = document.querySelector<HTMLElement>('.table .ant-table-body');
+    if (node) {
+      node.addEventListener('scroll', () => {
+        const perc =
+          (node.scrollTop / (node.scrollHeight - node.clientHeight)) * 100;
+        if (perc >= 100) {
+          console.log('load more');
+          dispatch(actions.setPageSize());
+        }
+      });
+    }
+  }, []);
   return (
     <Div>
       <Table
@@ -98,7 +117,8 @@ const TradeHistoryList = ({ dataSource }: any) => {
         columns={columns}
         rowKey="order_id"
         pagination={false}
-        scroll={{ y: 260 }}
+        scroll={{ scrollToFirstRowOnChange: false, y: 260 }}
+        className="table"
       />
     </Div>
   );

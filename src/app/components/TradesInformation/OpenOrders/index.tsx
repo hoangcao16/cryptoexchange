@@ -32,11 +32,11 @@ const Orders = () => {
 
   useEffect(() => {
     const param = {
-      pageIndex: 0,
-      pageSize: null,
+      pageIndex: dataOrders?.pageIndex,
+      pageSize: dataOrders?.pageSize,
     };
     dispatch(actions.getopenOrderRequest(param));
-  }, []);
+  }, [dataOrders?.pageSize]);
   useEffect(() => {
     if (dataOrders?.data?.list?.length > 0) {
       setDataOpenOrders(dataOrders?.data?.list);

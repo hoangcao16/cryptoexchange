@@ -20,11 +20,11 @@ const OrdersHistory = () => {
       startTime: moment().startOf('day').valueOf(),
       endTime: moment().valueOf(),
       status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
+      pageIndex: dataOrderHistory?.pageIndex,
+      pageSize: dataOrderHistory?.pageSize,
     };
     dispatch(actions.getOrderhistoryRequest(data));
-  }, []);
+  }, [dataOrderHistory?.pageSize]);
   return (
     <>
       {getToken() ? (

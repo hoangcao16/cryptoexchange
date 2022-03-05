@@ -8,9 +8,10 @@ import {
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTradehistorySlice } from '../../slice';
 import { useTranslation } from 'react-i18next';
+import { selectTradehistory } from '../../slice/selectors';
 
 const FilterOrderHistory = () => {
   const { RangePicker } = DatePicker;
@@ -20,6 +21,8 @@ const FilterOrderHistory = () => {
   const { actions } = useTradehistorySlice();
   const [startTimeRange, setStartTimeRange]: any = useState();
   const [endTimeRange, setEndTimeRange]: any = useState();
+  const dataTradeHistory: any = useSelector(selectTradehistory);
+
   const onChangeTimeRange = (value: any) => {
     setStartTimeRange(moment(value[0]).valueOf());
     setEndTimeRange(moment(value[1]).valueOf());
@@ -28,6 +31,8 @@ const FilterOrderHistory = () => {
     const data = {
       startTime: moment().startOf('day').valueOf(),
       endTime: moment().valueOf(),
+      pageIndex: dataTradeHistory?.pageIndex,
+      pageSize: dataTradeHistory?.pageSize,
     };
     setTime(1);
     dispatch(actions.getTradeHistoryRequest(data));
@@ -36,6 +41,8 @@ const FilterOrderHistory = () => {
     const data = {
       startTime: moment().subtract(1, 'w').startOf('day').valueOf(),
       endTime: moment().valueOf(),
+      pageIndex: dataTradeHistory?.pageIndex,
+      pageSize: dataTradeHistory?.pageSize,
     };
     setTime(2);
     dispatch(actions.getTradeHistoryRequest(data));
@@ -44,6 +51,8 @@ const FilterOrderHistory = () => {
     const data = {
       startTime: moment().subtract(1, 'month').startOf('day').valueOf(),
       endTime: moment().valueOf(),
+      pageIndex: dataTradeHistory?.pageIndex,
+      pageSize: dataTradeHistory?.pageSize,
     };
     setTime(3);
     dispatch(actions.getTradeHistoryRequest(data));
@@ -52,6 +61,8 @@ const FilterOrderHistory = () => {
     const data = {
       startTime: moment().subtract(1, 'month').startOf('day').valueOf(),
       endTime: moment().valueOf(),
+      pageIndex: dataTradeHistory?.pageIndex,
+      pageSize: dataTradeHistory?.pageSize,
     };
     setTime(4);
     dispatch(actions.getTradeHistoryRequest(data));
@@ -60,6 +71,8 @@ const FilterOrderHistory = () => {
     const data = {
       startTime: startTimeRange,
       endTime: endTimeRange,
+      pageIndex: dataTradeHistory?.pageIndex,
+      pageSize: dataTradeHistory?.pageSize,
     };
     setTime(1);
     dispatch(actions.getTradeHistoryRequest(data));

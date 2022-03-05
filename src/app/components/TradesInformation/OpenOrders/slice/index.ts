@@ -7,6 +7,8 @@ import { GetopenOrderState } from './types';
 export const initialState: GetopenOrderState = {
   data: {},
   responseCancelOrder: {},
+  pageIndex: 0,
+  pageSize: 100,
 };
 
 const slice = createSlice({
@@ -23,6 +25,9 @@ const slice = createSlice({
       state.responseCancelOrder = action.payload;
     },
     cancelOrderFail(state, action: PayloadAction<any>) {},
+    setPageSize(state) {
+      state.pageSize = state.pageSize + 10;
+    },
   },
 });
 

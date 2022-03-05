@@ -14,10 +14,15 @@ const TradeHistory = () => {
   const { actions } = useTradehistorySlice();
   const dataTradeHistory: any = useSelector(selectTradehistory);
   useEffect(() => {
-    const startTime = moment().startOf('day').valueOf();
-    const endTime = moment().valueOf();
-    dispatch(actions.getTradeHistoryRequest({ startTime, endTime }));
-  }, [actions, dispatch]);
+    const data = {
+      startTime: moment().startOf('day').valueOf(),
+      endTime: moment().valueOf(),
+      pageIndex: dataTradeHistory?.pageIndex,
+      pageSize: dataTradeHistory?.pageSize,
+    };
+    dispatch(actions.getTradeHistoryRequest(data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actions, dispatch, dataTradeHistory?.pageSize]);
   return (
     <>
       {getToken() ? (
