@@ -3,12 +3,14 @@ import { tradehistoryActions as actions } from '.';
 import { tradesServices } from 'services/tradesService';
 
 function* handleGetTradeHistory(action) {
-  const { startTime, endTime } = action.payload;
+  const { startTime, endTime, pageIndex, pageSize } = action.payload;
   try {
     const response = yield call(
       tradesServices.TradeHistory,
       startTime,
       endTime,
+      pageIndex,
+      pageSize,
     );
     if (response.data.rc === 0) {
       yield put(actions.getTradeHistorySuccess(response.data.rows));

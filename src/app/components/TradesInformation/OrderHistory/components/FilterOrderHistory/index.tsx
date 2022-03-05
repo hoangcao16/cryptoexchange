@@ -8,9 +8,10 @@ import {
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useOrderhistorySlice } from '../../slice';
 import { useTranslation } from 'react-i18next';
+import { selectOrderhistory } from '../../slice/selectors';
 
 const FilterOrderHistory = () => {
   const { RangePicker } = DatePicker;
@@ -20,6 +21,8 @@ const FilterOrderHistory = () => {
   const { actions } = useOrderhistorySlice();
   const [startTimeRange, setStartTimeRange]: any = useState();
   const [endTimeRange, setEndTimeRange]: any = useState();
+  const dataOrderHistory: any = useSelector(selectOrderhistory);
+
   const onChangeTimeRange = (value: any) => {
     setStartTimeRange(moment(value[0]).valueOf());
     setEndTimeRange(moment(value[1]).valueOf());
@@ -29,8 +32,8 @@ const FilterOrderHistory = () => {
       startTime: moment().startOf('day').valueOf(),
       endTime: moment().valueOf(),
       status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
+      pageIndex: dataOrderHistory.pageIndex,
+      pageSize: dataOrderHistory.pageSize,
     };
     setTime(1);
     dispatch(actions.getOrderhistoryRequest(data));
@@ -40,8 +43,8 @@ const FilterOrderHistory = () => {
       startTime: moment().subtract(1, 'w').startOf('day').valueOf(),
       endTime: moment().valueOf(),
       status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
+      pageIndex: dataOrderHistory.pageIndex,
+      pageSize: dataOrderHistory.pageSize,
     };
     setTime(2);
     dispatch(actions.getOrderhistoryRequest(data));
@@ -51,8 +54,8 @@ const FilterOrderHistory = () => {
       startTime: moment().subtract(1, 'month').startOf('day').valueOf(),
       endTime: moment().valueOf(),
       status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
+      pageIndex: dataOrderHistory.pageIndex,
+      pageSize: dataOrderHistory.pageSize,
     };
     setTime(3);
     dispatch(actions.getOrderhistoryRequest(data));
@@ -62,8 +65,8 @@ const FilterOrderHistory = () => {
       startTime: moment().subtract(1, 'month').startOf('day').valueOf(),
       endTime: moment().valueOf(),
       status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
+      pageIndex: dataOrderHistory.pageIndex,
+      pageSize: dataOrderHistory.pageSize,
     };
     setTime(4);
     dispatch(actions.getOrderhistoryRequest(data));
@@ -73,8 +76,8 @@ const FilterOrderHistory = () => {
       startTime: startTimeRange,
       endTime: endTimeRange,
       status: 'ALL',
-      pageIndex: 0,
-      pageSize: null,
+      pageIndex: dataOrderHistory.pageIndex,
+      pageSize: dataOrderHistory.pageSize,
     };
     setTime(1);
     dispatch(actions.getOrderhistoryRequest(data));

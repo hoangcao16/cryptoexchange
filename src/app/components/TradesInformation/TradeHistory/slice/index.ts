@@ -6,6 +6,8 @@ import { TradehistoryState } from './types';
 
 export const initialState: TradehistoryState = {
   data: [],
+  pageIndex: 0,
+  pageSize: 10,
 };
 
 const slice = createSlice({
@@ -17,6 +19,9 @@ const slice = createSlice({
       state.data = action.payload;
     },
     getTradeHistoryFail(state, action: PayloadAction<any>) {},
+    setPageSize(state) {
+      state.pageSize = state.pageSize + 10;
+    },
   },
 });
 

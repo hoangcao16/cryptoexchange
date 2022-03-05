@@ -7,13 +7,15 @@ export const tradesServices = {
       url: `/api-svc/trade/getAllTrade?symbol=${pair}`,
     });
   },
-  TradeHistory(startTime, endTime) {
+  TradeHistory(startTime, endTime, pageIndex, pageSize) {
     return apiClient.request({
       method: 'GET',
       url: `/api-svc/trade/getTradeByUser`,
       params: {
         startTime: startTime,
         endTime: endTime,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
       },
     });
   },
