@@ -18,7 +18,9 @@ export interface SvgIconsProps {
     | 'wallet'
     | 'documents'
     | 'menuUnfold'
-    | 'menuFold';
+    | 'menuFold'
+    | 'copy'
+    | 'QR';
   className?: string;
   style?: React.CSSProperties;
   onClick?: any;
@@ -390,6 +392,44 @@ export default function SvgIcons(props: SvgIconsProps) {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M4 4v7h7V4H4zm9 7V4h7v7h-7zm3.5 9.743L12.257 16.5l4.243-4.243 4.243 4.243-4.243 4.243zM4 13h7v7H4v-7z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      );
+    }
+    case 'copy': {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          className={className}
+          style={style}
+          onClick={onClick}
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M9 3h11v13h-3V6H9V3zM4 8v13h11V8.02L4 8z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      );
+    }
+    case 'QR': {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          className={className}
+          style={style}
+          onClick={onClick}
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M4 4h7v7H4V4zm0 9h7v7H4v-7zm11 0h-2v4h4v-2h3v-2h-4v2h-1v-2zm5 3h-2v2h-2v2h4v-4zm-5 2h-2v2h2v-2zM13 4h7v7h-7V4zM8.5 6.5h-2v2h2v-2zm-2 9h2v2h-2v-2zm11-9h-2v2h2v-2z"
             fill="currentColor"
           ></path>
         </svg>

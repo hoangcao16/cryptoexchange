@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from 'styled-components';
 import { Container, Row, Col } from 'react-bootstrap';
 import ContentHeader from 'app/components/ContentHeader';
@@ -17,9 +18,6 @@ import { useWebsocketSlice } from 'app/container/HomeContainer/slice';
 import { useParams } from 'react-router-dom';
 const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
-var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
-  connectionTimeout: 5000,
-});
 // const socket = new WebSocket(`${baseURL}/ws`);
 const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
@@ -27,6 +25,7 @@ const HomeContentContainer = () => {
   const [dataOrder, setDataOrder]: any = useState({});
   const [tradeInfor, setTradeInfor]: any = useState({});
   const [tradeVolumeInfor, setTradeVolumeInfor]: any = useState({});
+  const [webSocket, setWebSocket]: any = useState();
   const dispatch = useDispatch();
 
   const { actions: actionsTrades } = useTradesSlice();
@@ -40,6 +39,16 @@ const HomeContentContainer = () => {
   )}`;
 
   useEffect(() => {
+    console.log('mount');
+    return () => {
+      console.log('unmount');
+    };
+  }, []);
+  useEffect(() => {
+    var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
+      connectionTimeout: 5000,
+    });
+    setWebSocket(socket);
     socket.onopen = () => {
       console.log(`Websocket Market connected`);
       if (
@@ -68,7 +77,6 @@ const HomeContentContainer = () => {
     socket.onclose = () => {
       console.log('WebSocket Closed!');
     };
-
     socket.onmessage = (message: any) => {
       const Message = JSON.parse(message?.data);
       if (
@@ -88,17 +96,14 @@ const HomeContentContainer = () => {
         setTradeVolumeInfor(Message.Value);
       }
     };
-    // connectSocket();
-    // return () => {
-    //   socket.close();
-    // };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      socket.close();
+    };
   }, []);
   useEffect(() => {
     setDataTradesSocket({});
     setDataOrder({});
     setDataMarketSocket({});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataAllPair?.reselectPair]);
 
   useEffect(() => {
@@ -110,7 +115,6 @@ const HomeContentContainer = () => {
         ),
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pair]);
   return (
     <Container>
@@ -139,7 +143,7 @@ const HomeContentContainer = () => {
           <Market
             dataSocket={dataMarketSocket}
             dataApi={dataAllPair}
-            socket={socket}
+            socket={webSocket}
           />
           <Trades dataSocket={dataTradesSocket} dataApi={dataAllTrades} />
           <MarketActivities />

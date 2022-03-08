@@ -25,6 +25,11 @@ const slice = createSlice({
       state.coinList = action.payload;
     },
     getListCoinFail(state, action: PayloadAction<any>) {},
+    getNetworkRequest(state, action: PayloadAction<any>) {},
+    getNetworkSuccess(state, action: PayloadAction<any>) {
+      state.networksList = action.payload;
+    },
+    getNetworkFail(state, action: PayloadAction<any>) {},
   },
 });
 

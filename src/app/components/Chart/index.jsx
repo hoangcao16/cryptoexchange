@@ -73,28 +73,6 @@ const Chart = props => {
       user_id: 'public_user_id',
       style: '1',
       debug: true,
-      customFormatters: {
-        timeFormatter: {
-          format: function (date) {
-            var _format_str = '%h:%m';
-            return _format_str
-              .replace('%h', date.getUTCHours(), 2)
-              .replace('%m', date.getUTCMinutes(), 2)
-              .replace('%s', date.getUTCSeconds(), 2);
-          },
-        },
-        dateFormatter: {
-          format: function (date) {
-            return (
-              date.getUTCFullYear() +
-              '/' +
-              date.getUTCMonth() +
-              '/' +
-              date.getUTCDate()
-            );
-          },
-        },
-      },
       loading_screen: {
         backgroundColor: '#1e2329',
         foregroundColor: '#000000',
@@ -105,15 +83,40 @@ const Chart = props => {
       toolbar_bg: `#1e2329`,
       // saved_data: this.savedData,
       allow_symbol_change: true,
-      studies: [
-        'MASimple@tv-basicstudies',
-        'MAExp@tv-basicstudies',
-        'MAWeighted@tv-basicstudies',
-      ],
+      // studies: [
+      //   'MASimple@tv-basicstudies',
+      //   'MAExp@tv-basicstudies',
+      //   'MAWeighted@tv-basicstudies',
+      // ],
       time_frames: [
-        { text: '1w', resolution: 'D' },
-        { text: '1m', resolution: 'D' },
-        { text: '1d', resolution: '1' },
+        {
+          text: '5y',
+          resolution: 'W',
+        },
+        {
+          text: '1y',
+          resolution: 'W',
+        },
+        {
+          text: '6m',
+          resolution: '120',
+        },
+        {
+          text: '3m',
+          resolution: '60',
+        },
+        {
+          text: '1m',
+          resolution: '30',
+        },
+        {
+          text: '5d',
+          resolution: '5',
+        },
+        {
+          text: '1d',
+          resolution: '1',
+        },
       ],
       drawings_access: {
         type: 'black',

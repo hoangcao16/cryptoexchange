@@ -151,7 +151,7 @@ export default {
       fsym: parsedSymbol.fromSymbol,
       tsym: parsedSymbol.toSymbol,
       toTs: to,
-      limit: 1000,
+      limit: 2000,
       interval: resolution,
     };
     const query = Object.keys(urlParameters)

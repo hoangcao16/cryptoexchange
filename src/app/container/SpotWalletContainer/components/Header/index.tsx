@@ -7,6 +7,7 @@ import {
 } from './style';
 import IconSvg from 'app/assets/img/icon';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const FiatSpotHeader = () => {
   const { t } = useTranslation();
@@ -16,12 +17,10 @@ const FiatSpotHeader = () => {
       <GroupButton>
         <div className="d-flex ">
           <DepositButton>
-            <button>{t('deposit')}</button>
+            <Link to={`/wallet/spot/deposit/crypto/BTC`}>{t('deposit')}</Link>
           </DepositButton>
           <NormalButton href="#" id="spotAccount_top_withdrawal">
-            <button data-bn-type="button" className=" css-sl95de">
-              {t('withdraw')}
-            </button>
+            <button data-bn-type="button">{t('withdraw')}</button>
           </NormalButton>
           <NormalButton
             href="#"

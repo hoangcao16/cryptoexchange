@@ -73,6 +73,7 @@ export const StyledSelect = styled.div`
       padding-top: 14px;
       padding-bottom: 14px;
       cursor: pointer;
+      overflow: hidden;
       .selected {
         box-sizing: border-box;
         margin: 0px 4px 0px 0px;
@@ -164,6 +165,73 @@ export const CoinModal = styled(Modal)`
       font-size: 14px;
     }
   }
+  .coin-list {
+    margin: 16px 0px;
+    min-width: 0px;
+    height: 100%;
+    overflow: scroll;
+    @media screen and (min-width: 767px) {
+      height: 352px;
+    }
+    .coin-item {
+      margin: 0px;
+      min-width: 0px;
+      padding-left: 16px;
+      padding-right: 16px;
+      @media screen and (min-width: 767px) {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      border-style: solid;
+      border-width: 0px 0px 1px;
+      border-color: ${({ theme }) => theme.whiteSmokeColor};
+      border-radius: 4px;
+      &:hover {
+        background-color: ${({ theme }) => theme.colorDescription};
+      }
+      &--wrapper {
+        margin: 0px;
+        min-width: 0px;
+        display: flex;
+        flex: 1 1 0%;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 14px;
+        padding-bottom: 14px;
+        cursor: pointer;
+      }
+      &--icon {
+        width: 32px;
+        height: 32px;
+      }
+      &--information {
+        margin: 0px 0px 0px 16px;
+        min-width: 0px;
+        display: flex;
+        flex: 1 1 0%;
+        flex-direction: column;
+        align-items: flex-start;
+        .coin-name {
+          margin: 0px;
+          min-width: 0px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          color: ${({ theme }) => theme.background};
+        }
+        .coin-note {
+          margin: 0px;
+          min-width: 0px;
+          color: ${({ theme }) => theme.darkBrightGrayColor};
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
 `;
 export const NetworkModal = styled(Modal)`
   .content-header {
@@ -182,6 +250,185 @@ export const NetworkModal = styled(Modal)`
     }
     @media screen and (min-width: 1023px) {
       margin-top: 16px;
+    }
+  }
+  .network-list {
+    height: 100%;
+    margin: 0px;
+    @media screen and (min-width: 767px) {
+      height: auto;
+    }
+    .network-item {
+      margin: 0px;
+      min-width: 0px;
+      padding-left: 16px;
+      padding-right: 16px;
+      @media screen and (min-width: 767px) {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      border-style: solid;
+      border-width: 0px 0px 1px;
+      border-color: ${({ theme }) => theme.whiteSmokeColor};
+      border-radius: 4px;
+      &:hover {
+        background-color: ${({ theme }) => theme.colorDescription};
+      }
+      &--wrapper {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        cursor: pointer;
+      }
+      &--symbol {
+        margin: 0px 0px 4px;
+        min-width: 0px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        color: ${({ theme }) => theme.background};
+        vertical-align: middle;
+      }
+      &--network {
+        margin: 4px 0px 0px;
+        min-width: 0px;
+        font-size: 14px;
+        color: ${({ theme }) => theme.darkBrightGrayColor};
+        line-height: 20px;
+      }
+    }
+  }
+`;
+export const AddressSection = styled.div`
+  .address-section {
+    .content-item {
+      margin: 24px 0px 0px;
+      min-width: 0px;
+      .address-wallet {
+        color: ${({ theme }) => theme.background};
+        .address-title {
+          margin: 0px 0px 4px;
+          min-width: 0px;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+
+  .note {
+    margin: 24px 0px 0px;
+    min-width: 0px;
+    font-size: 14px;
+    line-height: 20px;
+    color: ${({ theme }) => theme.darkBrightGrayColor};
+    ul {
+      padding: 0px 0px 0px 16px;
+      .note-coin-name {
+        color: ${({ theme }) => theme.background};
+        font-size: 14px;
+      }
+      .note-network-name {
+        color: ${({ theme }) => theme.redColor};
+        font-size: 14px;
+      }
+    }
+  }
+`;
+export const StyledWalletAddress = styled.div`
+  margin: 0px;
+  min-width: 0px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  word-break: break-all;
+  .address-wrapper {
+    margin: 0px;
+    min-width: 0px;
+    display: flex;
+    flex: 1 1 0%;
+    .copy-icon {
+      margin: 0px 0px 0px 24px;
+      min-width: 0px;
+      width: 24px;
+      svg {
+        box-sizing: border-box;
+        margin: 0px 0px 0px 4px;
+        min-width: 0px;
+        color: ${({ theme }) => theme.slateGrayColor};
+        font-size: 24px;
+        fill: ${({ theme }) => theme.slateGrayColor};
+        vertical-align: middle;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 1em;
+        height: 1em;
+        &:hover {
+          color: ${({ theme }) => theme.background};
+        }
+      }
+    }
+    .qr-icon {
+      margin: 0px 0px 0px 24px;
+      width: 24px;
+      height: 24px;
+      svg {
+        box-sizing: border-box;
+        margin: 0px;
+        min-width: 0px;
+        cursor: pointer;
+        font-size: 24px;
+        color: ${({ theme }) => theme.slateGrayColor};
+        fill: currentcolor;
+        width: 1em;
+        height: 1em;
+        &:hover {
+          color: ${({ theme }) => theme.background};
+        }
+      }
+    }
+  }
+`;
+export const StyledQRTooltip = styled.div`
+  background-color: ${({ theme }) => theme.matteWhiteColor};
+  padding: 16px 8px;
+  border-radius: 4px;
+  width: max-content;
+  max-width: 290px;
+  .guide {
+    box-sizing: border-box;
+    margin: 0px 0px 16px;
+    min-width: 0px;
+    font-size: 12px;
+    line-height: 16px;
+    color: ${({ theme }) => theme.darkBrightGrayColor};
+    text-align: center;
+  }
+  .qr-code {
+    margin: 0px;
+    min-width: 0px;
+    display: flex;
+    justify-content: center;
+  }
+  .note {
+    margin: 16px 0px 0px;
+    min-width: 0px;
+    font-size: 14px;
+    line-height: 20px;
+    color: ${({ theme }) => theme.darkBrightGrayColor};
+    ul {
+      padding: 0px 0px 0px 16px;
+      margin-bottom: 0;
+      .note-coin-name {
+        color: ${({ theme }) => theme.background};
+        font-size: 14px;
+      }
+      .note-network-name {
+        color: ${({ theme }) => theme.redColor};
+        font-size: 14px;
+      }
     }
   }
 `;

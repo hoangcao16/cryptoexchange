@@ -44,7 +44,7 @@ export const GroupButton = styled.div`
 `;
 export const DepositButton = styled.div`
   margin-right: 4px;
-  button {
+  a {
     margin: 0px;
     appearance: none;
     user-select: none;
