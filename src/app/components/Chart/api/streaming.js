@@ -85,6 +85,8 @@ function getNextDailyBarTime(barTime, resolution) {
       return moment(barTime).add(5, 'm').startOf('minute').valueOf();
     case '1D':
       return moment(barTime).add(1, 'd').startOf('day').valueOf();
+    case 'D':
+      return moment(barTime).add(1, 'w').startOf('week').valueOf();
     case '1W':
       return moment(barTime).add(1, 'w').startOf('week').valueOf();
     case '1M':

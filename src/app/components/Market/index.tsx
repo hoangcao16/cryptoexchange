@@ -95,7 +95,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
         >
           BTC
         </span>
-        <span
+        {/* <span
           className={active === 'ALTS' ? 'slickItem-active' : ''}
           onClick={() => setActive('ALTS')}
         >
@@ -106,7 +106,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
           onClick={() => setActive('ZONE')}
         >
           ZONE
-        </span>
+        </span> */}
       </StyledSlick>
     );
   };

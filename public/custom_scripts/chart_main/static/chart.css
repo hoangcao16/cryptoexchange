@@ -111,7 +111,12 @@ textarea {
 .properties-toolbar .submenu {
   cursor: pointer;
 }
-
+/* .header-chart-panel
+  .header-chart-panel-sizer
+  .header-chart-panel-content
+  .left {
+  float: right;
+} */
 .pane-legend {
   color: #8f98ad !important;
   top: -18px;
