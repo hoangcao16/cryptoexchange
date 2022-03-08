@@ -1,11 +1,12 @@
-import IconSvg from 'app/assets/img/icon';
+import { ReactComponent as PrevIcon } from 'app/assets/img/prev.svg';
+import { ReactComponent as NextIcon } from 'app/assets/img/next.svg';
 
 export function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
   return (
     <>
       <div className={className} style={{ ...style }} onClick={onClick}>
-        <IconSvg name="prev" />
+        <PrevIcon />
       </div>
     </>
   );
@@ -15,7 +16,7 @@ export function SampleNextArrow(props) {
   return (
     <>
       <div className={className} style={{ ...style }} onClick={onClick}>
-        <IconSvg name="next" />
+        <NextIcon />
       </div>
     </>
   );

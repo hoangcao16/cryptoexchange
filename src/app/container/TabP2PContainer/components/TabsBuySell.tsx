@@ -31,7 +31,6 @@ function TabsBuySell() {
 
   useEffect(() => {
     setDefaultActiveKey(P2PSearchParams.action);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   return (

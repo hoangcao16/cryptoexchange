@@ -1,6 +1,8 @@
-import { Steps } from 'antd';
+import { Button, message, Steps } from 'antd';
 import NavMenu from 'app/components/Navbar';
 import NavbarTradeP2P from 'app/components/NavbarTradeP2P';
+import React from 'react';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import HelpGuide from './components/HelpGuide';

@@ -7,11 +7,10 @@ import {
   Subfilter,
   ConvertButton,
 } from './style';
-import IconSvg from 'app/assets/img/icon';
+import { ReactComponent as SearchIcon } from 'app/assets/img/search.svg';
 import { Table, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import numeral from 'numeral';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export interface Dataprops {
@@ -93,16 +92,10 @@ const FiatSpotTable = ({ dataSource }) => {
       title: t('action'),
       key: 'action',
       dataIndex: 'action',
-      render: (text: any, record: any) => {
-        console.log(record);
+      render: (record: any) => {
         return (
           <Space size="middle">
-            <Link
-              to={`/wallet/spot/deposit/crypto/${record.assetName}`}
-              className="coin-action"
-            >
-              {t('deposit')}
-            </Link>
+            <span className="coin-action">{t('deposit')}</span>
             <span className="coin-action">{t('withdraw')}</span>
             <span className="coin-action">{t('convert')}</span>
           </Space>
@@ -132,7 +125,7 @@ const Header = () => {
       <SearchBox>
         <label htmlFor="search-input" className="bn-input-prefix">
           <div className="prefix-icon">
-            <IconSvg name="search" className="search-icon" />
+            <SearchIcon className="search-icon" />
           </div>
         </label>
         <input

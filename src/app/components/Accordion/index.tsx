@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Div, Content, Container, StyledArrow } from './style';
-import IconSvg from 'app/assets/img/icon';
+import { ReactComponent as Arrow } from 'app/assets/img/arrow.svg';
 import data from './data';
 const AccordionNav = () => {
   const [show, setShow] = useState(false);
@@ -40,7 +40,7 @@ const AccordionNav = () => {
               })}
         </Content>
         <StyledArrow Show={show}>
-          <IconSvg name="next" onClick={() => setShow(!show)} />
+          <Arrow onClick={() => setShow(!show)} />
         </StyledArrow>
       </Div>
     </Container>

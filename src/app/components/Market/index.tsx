@@ -1,5 +1,6 @@
+import { ReactComponent as SearchIcon } from 'app/assets/img/search.svg';
+import { ReactComponent as StarIcon } from 'app/assets/img/star.svg';
 import { SampleNextArrow, SamplePrevArrow } from './components/arrow';
-import IconSvg from 'app/assets/img/icon';
 import Header from './components/Header';
 import { useState, useEffect } from 'react';
 import {
@@ -64,8 +65,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
     };
     return (
       <StyledSlick {...settings}>
-        <IconSvg
-          name="star"
+        <StarIcon
           className={
             active === 'Favor' ? 'star-icon slickItem-active' : 'star-icon'
           }
@@ -132,7 +132,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
     <Container>
       <SearchBox>
         <div className="search-icon">
-          <IconSvg name="search" />
+          <SearchIcon />
         </div>
         <input placeholder="Search" />
       </SearchBox>
@@ -153,7 +153,7 @@ const Market = ({ dataSocket, dataApi, socket }) => {
                 onClick={() => setPair(item)}
               >
                 <Pair className="d-flex align-items-center">
-                  <IconSvg name="star" className="tableItem-star" />
+                  <StarIcon className="tableItem-star" />
                   {item.symbol && item.symbol.toUpperCase()}
                 </Pair>
                 <Price data-type={item.isPriceUp ? 'up' : 'down'}>

@@ -20,6 +20,7 @@ import UserLogged from 'app/components/Navbar/components/UserLogged';
 import { BsFillQuestionSquareFill } from 'react-icons/bs';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
 import { getToken } from 'app/components/common/common';
 import ChangeLanguage from '../ChangeLanguage';
 import { useTranslation } from 'react-i18next';
@@ -42,6 +43,7 @@ const NavMenu = () => {
         <Link to="/">
           <StyledNavBrand>
             <img src={POWlogo} className="logo" alt="POW" />
+            {/* <Logo className="Logo" /> */}
           </StyledNavBrand>
         </Link>
         {/* <Navbar.Collapse id="responsive-navbar-nav"> */}

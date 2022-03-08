@@ -30,28 +30,56 @@ export const Header = styled.div`
   //css select
   .react-select-container {
     outline: none;
-    .ant-select-selector {
-      background-color: transparent !important;
-      border: none !important;
-      outline: none !important;
-      color: ${({ theme }) => theme.text};
-      width: 60px;
-      font-size: 12px;
-      min-height: 30px;
-      padding: 0 !important;
-      &:hover {
-        box-shadow: none;
-      }
-      .ant-select-selection-search {
-        cursor: pointer;
-      }
-      .ant-select-selection-item {
-        padding-right: 0 !important;
-      }
+  }
+  .react-select__control {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 50px;
+    font-size: 12px;
+    min-height: 30px;
+    &:hover {
+      box-shadow: none;
     }
-    .ant-select-arrow {
-      color: ${({ theme }) => theme.text};
+  }
+  .react-select__value-container {
+    cursor: pointer;
+
+    padding: 0;
+  }
+  .react-select__indicator-separator {
+    display: none;
+  }
+  .react-select__dropdown-indicator {
+    padding: 0;
+    svg {
+      width: 12px;
+      height: 12px;
     }
+  }
+  .react-select__single-value {
+    text-align: center;
+    color: ${({ theme }) => theme.text};
+  }
+  .react-select__input {
+    /* display: none; */
+  }
+  .react-select__menu {
+    background: transparent;
+  }
+  .react-select__menu-list {
+    background-color: ${({ theme }) => theme.body};
+    border: ${({ theme }) => theme.borderGray};
+    border-radius: 8px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .react-select__option--is-selected {
+    background-color: transparent;
+    color: ${({ theme }) => theme.primary};
+  }
+  .react-select__option--is-focused {
+    background-color: ${({ theme }) => theme.backgroundDropdown};
   }
 `;
 export const GroupButton = styled.div``;
