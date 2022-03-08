@@ -104,6 +104,8 @@ export default {
       pricescale: 100,
       has_intraday: true,
       intraday_multipliers: ['1', '5', '15', '30', '60'],
+      // has_seconds: true,
+      // seconds_multipliers: ['1S', '5S', '15S'],
       has_no_volume: true,
       has_weekly_and_monthly: false,
       supported_resolutions: configurationData.supported_resolutions,

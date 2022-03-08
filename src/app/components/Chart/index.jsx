@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import { Container } from './style';
+import { Container, Span } from './style';
 import { useState, useEffect } from 'react';
 import { widget } from './charting_library';
 import Datafeed1 from './api/datafeeds';
@@ -9,16 +9,55 @@ const Chart = props => {
   const tv_chart_container = 'tv_chart_container';
   const libraryPath = '/custom_scripts/chart_main/';
   let { pair } = useParams();
+  const [selectedTime, setSelectedTime] = useState('1');
+  const [reselect, setReselect] = useState(true);
   const findIndex = pair?.indexOf('_');
   const changeFormatPair = `POW:${pair?.substring(
     0,
     findIndex,
   )}/${pair?.substring(findIndex + 1)}`;
+  const timeFrame = [
+    {
+      title: '1min',
+      value: '1',
+    },
+    {
+      title: '5min',
+      value: '5',
+    },
+    {
+      title: '15min',
+      value: '15',
+    },
+    {
+      title: '30min',
+      value: '30',
+    },
+    {
+      title: '1h',
+      value: '60',
+    },
+    {
+      title: '4h',
+      value: '240',
+    },
+    {
+      title: '1D',
+      value: '1D',
+    },
+    {
+      title: '1W',
+      value: '1W',
+    },
+    {
+      title: '1M',
+      value: '1M',
+    },
+  ];
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     initTradingView();
-  }, [changeFormatPair]);
-
+  }, [changeFormatPair, reselect]);
   const initTradingView = () => {
     const widgetOptions = {
       fullscreen: false,
@@ -29,13 +68,38 @@ const Chart = props => {
       datafeed: Datafeed1,
       locale: 'en',
       timezone: 'Asia/Bangkok', //todo: ustawianie timezone'a po strefie usera
-      charts_storage_api_version: '1.11',
+      charts_storage_api_version: '1.1',
       client_id: 'tradingview.com',
       user_id: 'public_user_id',
       style: '1',
       debug: true,
-      // loading_screen:{ backgroundColor: "#0ecb81",foregroundColor: "#000000", }, //todo:do it
-      interval: '1',
+      customFormatters: {
+        timeFormatter: {
+          format: function (date) {
+            var _format_str = '%h:%m';
+            return _format_str
+              .replace('%h', date.getUTCHours(), 2)
+              .replace('%m', date.getUTCMinutes(), 2)
+              .replace('%s', date.getUTCSeconds(), 2);
+          },
+        },
+        dateFormatter: {
+          format: function (date) {
+            return (
+              date.getUTCFullYear() +
+              '/' +
+              date.getUTCMonth() +
+              '/' +
+              date.getUTCDate()
+            );
+          },
+        },
+      },
+      loading_screen: {
+        backgroundColor: '#1e2329',
+        foregroundColor: '#000000',
+      }, //todo:do it
+      interval: selectedTime,
       enable_publishing: false,
       // timeframe:'',//todo: na koncu
       toolbar_bg: `#1e2329`,
@@ -47,11 +111,9 @@ const Chart = props => {
         'MAWeighted@tv-basicstudies',
       ],
       time_frames: [
-        { text: '1y', resolution: 'W' },
-        { text: '3m', resolution: '60' },
+        { text: '1w', resolution: 'D' },
         { text: '1m', resolution: 'D' },
-        { text: '3d', resolution: '5', description: '3 Days' },
-        { text: '1d', resolution: '1', description: '1 Days' },
+        { text: '1d', resolution: '1' },
       ],
       drawings_access: {
         type: 'black',
@@ -69,21 +131,21 @@ const Chart = props => {
       },
       disabled_features: [
         'header_symbol_search',
-        // 'header_interval_dialog_button',
-        // 'show_interval_dialog_on_key_press',
-        // 'symbol_search_hot_key',
+        'header_interval_dialog_button',
+        'show_interval_dialog_on_key_press',
+        'symbol_search_hot_key',
         // 'study_dialog_search_control',
         // 'display_market_status',
         // 'header_compare',
         // 'edit_buttons_in_legend',
-        // 'symbol_info',
+        'symbol_info',
         // 'border_around_the_chart',
         // 'main_series_scale_menu',
         // 'star_some_intervals_by_default',
         // 'datasource_copypaste',
         // 'right_bar_stays_on_scroll',
-        // 'context_menus',
-        // 'go_to_date',
+        'context_menus',
+        'go_to_date',
         // 'compare_symbol',
         // 'border_around_the_chart',
         // 'timezone_menu',
@@ -91,23 +153,25 @@ const Chart = props => {
         // 'control_bar', //todo: przetestowac
         // 'edit_buttons_in_legend', //todo: przetestowac
         // 'remove_library_container_border',
+        // 'constraint_dialogs_movement',
       ],
       enabled_features: [
         // 'header_symbol_search',
-        'header_interval_dialog_button',
-        'show_interval_dialog_on_key_press',
-        'symbol_search_hot_key',
+        // 'header_interval_dialog_button',
+        // 'show_interval_dialog_on_key_press',
+        // 'symbol_search_hot_key',
         'study_dialog_search_control',
         'display_market_status',
         'header_compare',
-        'symbol_info',
+        'adaptive_logo',
+        // 'symbol_info',
         'border_around_the_chart',
         'main_series_scale_menu',
         'star_some_intervals_by_default',
         'datasource_copypaste',
         'right_bar_stays_on_scroll',
-        'context_menus',
-        'go_to_date',
+        // 'context_menus',
+        // 'go_to_date',
         'study_templates',
         'compare_symbol',
         'timezone_menu',
@@ -120,7 +184,7 @@ const Chart = props => {
         'save_chart_properties_to_local_storage',
         'side_toolbar_in_fullscreen_mode',
         'hide_last_na_study_output',
-        'constraint_dialogs_movement', //todo: nie do końca jestem pewien
+        // 'constraint_dialogs_movement', //todo: nie do końca jestem pewien
       ],
       studies_overrides: {
         'volume.volume.color.0': '#ff9710',
@@ -258,6 +322,25 @@ const Chart = props => {
       button[0].style = 'display:none';
     });
   };
-  return <Container id={tv_chart_container}> Here is chart</Container>;
+  return (
+    <Container>
+      {/* <div className="timeframe-filter">
+        <span className="timeframe-filter--title">Time :</span>
+        {timeFrame.map((item, index) => (
+          <Span
+            key={index}
+            className={selectedTime === item.value && 'active'}
+            onClick={() => {
+              setSelectedTime(item.value);
+              setReselect(!reselect);
+            }}
+          >
+            {item.title}
+          </Span>
+        ))}
+      </div> */}
+      <div id={tv_chart_container} className="chart"></div>
+    </Container>
+  );
 };
 export default Chart;

@@ -21,5 +21,8 @@ export const GlobalStyles = createGlobalStyle`
     @media (min-width: 1400px) {
       max-width: 1320px;
     }
+    /* @media screen and (min-width: 1700px) {
+      max-width: 1680px;
+    } */
   }
   `;
