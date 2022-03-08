@@ -1,5 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { StyledSelect, CoinModal, NetworkModal } from './style';
+import {
+  StyledSelect,
+  CoinModal,
+  NetworkModal,
+  AddressSection,
+  StyledWalletAddress,
+  StyledQRTooltip,
+} from './style';
+import { Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import UpDownIcon from 'app/assets/img/UpDownIcon';
@@ -8,20 +16,29 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDepositCryptoSlice } from './slice';
 import { selectDepositCrypto } from './slice/selectors';
+import { isEmpty } from 'app/components/common/common';
+import QRCode from 'react-qr-code';
 const DepositSection = () => {
   const { t } = useTranslation();
   const [isCoinModalVisible, setIsCoinModalVisible] = useState(false);
   const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
-  const [selectedNetwork, setSelectedNetwork] = useState({});
+  const [selectedNetwork, setSelectedNetwork]: any = useState({});
+  const { selectedCoin, networksList, coinList }: any =
+    useSelector(selectDepositCrypto);
   const { currency } = useParams();
   const dispatch = useDispatch();
   const { actions } = useDepositCryptoSlice();
-  const { selectedCoin }: any = useSelector(selectDepositCrypto);
   useEffect(() => {
-    dispatch(actions.getCoinRequest({ coin: currency }));
+    dispatch(actions.getCoinRequest(currency));
   }, []);
+  useEffect(() => {
+    if (!isEmpty(selectedCoin)) {
+      dispatch(actions.getNetworkRequest(selectedCoin.id));
+    }
+  }, [selectedCoin]);
   const showCoinModal = () => {
     setIsCoinModalVisible(true);
+    dispatch(actions.getListCoinRequest({ name: '' }));
   };
   const handleCoinModalCancel = () => {
     setIsCoinModalVisible(false);
@@ -31,6 +48,22 @@ const DepositSection = () => {
   };
   const handleNetworkModalCancel = () => {
     setIsNetworkModalVisible(false);
+  };
+  const handleSelectNetwork = (network: any) => {
+    setSelectedNetwork(network);
+    setIsNetworkModalVisible(false);
+  };
+  const handleSelectCoin = (coin: any) => {
+    dispatch(actions.getCoinSuccess(coin));
+    setIsCoinModalVisible(false);
+    setSelectedNetwork({});
+  };
+  const handleSearchCoin = (value: string) => {
+    console.log(value);
+    dispatch(actions.getListCoinRequest({ name: value }));
+  };
+  const handleCopyAddress = () => {
+    navigator.clipboard.writeText('buồn cười quá');
   };
   return (
     <>
@@ -42,7 +75,12 @@ const DepositSection = () => {
             <div className="select--input" onClick={showCoinModal}>
               <div className="selected--wrapper">
                 <div className="selected">
-                  <img src={selectedCoin?.icon} width="24" height="24" />
+                  <img
+                    src={selectedCoin?.icon}
+                    width="24"
+                    height="24"
+                    alt="icon"
+                  />
                   <div className="selected-information">
                     <span className="selected-name">
                       {selectedCoin?.assetName}
@@ -63,15 +101,85 @@ const DepositSection = () => {
               <div className="selected--wrapper">
                 <div className="selected">
                   <div className="selected-information">
-                    <span className="selected-name">BTC</span>
-                    <span className="selected-desc">Bitcoin</span>
+                    {!isEmpty(selectedNetwork) ? (
+                      <>
+                        <span className="selected-name">
+                          {selectedNetwork?.symbolName}
+                        </span>
+                        <span className="selected-desc">
+                          {selectedNetwork?.networkName}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="selected-desc">Select network</span>
+                    )}
                   </div>
                 </div>
               </div>
               <UpDownIcon name="down" className="down-icon" />
             </div>
+            {!isEmpty(selectedNetwork) ? (
+              <AddressSection>
+                <div className="address-section">
+                  <div className="content-item">
+                    <div className="address-wallet">
+                      <div className="address-title">Address</div>
+                      <StyledWalletAddress>
+                        <div className="address-wrapper">
+                          <div>bc1q4lrpff99h05kj3taqwpn7suze8t9t59jvfyp67</div>
+                          <Tooltip title="Click to copy" color="#707a8a">
+                            <div
+                              className="copy-icon"
+                              onClick={() => handleCopyAddress()}
+                            >
+                              <IconSvg name="copy" />
+                            </div>
+                          </Tooltip>
+                          <Tooltip
+                            title={
+                              <QRTooltip
+                                value="haha"
+                                coinname={selectedCoin?.assetName}
+                                networkname={selectedNetwork?.symbolName}
+                              />
+                            }
+                            color="#eaecef"
+                          >
+                            <div className="qr-icon">
+                              <IconSvg name="QR" />
+                            </div>
+                          </Tooltip>
+                        </div>
+                      </StyledWalletAddress>
+                    </div>
+                  </div>
+                  <div className="content-item"></div>
+                </div>
+                <div className="note">
+                  <ul>
+                    <li>
+                      Send only{' '}
+                      <span className="note-coin-name">
+                        {selectedCoin?.assetName}{' '}
+                      </span>
+                      to this deposit address.
+                    </li>
+                    <li>
+                      Ensure the network is{' '}
+                      <span className="note-network-name">
+                        {selectedNetwork?.symbolName}
+                      </span>
+                      .
+                    </li>
+                  </ul>
+                </div>
+              </AddressSection>
+            ) : (
+              ''
+            )}
           </div>
         </StyledSelect>
+
         <CoinModal
           title="Select coin to deposit"
           visible={isCoinModalVisible}
@@ -85,8 +193,26 @@ const DepositSection = () => {
             <input
               placeholder="Search coin name"
               className="search-input"
-              value=""
+              // value=""
+              onChange={e => handleSearchCoin(e.target.value)}
             ></input>
+          </div>
+          <div className="coin-list">
+            {coinList.map((coin: any, index: number) => (
+              <div
+                className="coin-item"
+                key={index}
+                onClick={() => handleSelectCoin(coin)}
+              >
+                <div className="coin-item--wrapper">
+                  <img src={coin.icon} alt="Icon" className="coin-item--icon" />
+                  <div className="coin-item--information">
+                    <span className="coin-name">{coin.assetName}</span>
+                    <div className="coin-note">{coin.note}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </CoinModal>
         <NetworkModal
@@ -99,9 +225,53 @@ const DepositSection = () => {
             Ensure the network you choose to deposit matches the withdrawal
             network, or assets may be lost.
           </div>
+          <div className="network-list">
+            {networksList.map((item: any, index: number) => (
+              <div
+                className="network-item"
+                key={index}
+                onClick={() => handleSelectNetwork(item)}
+              >
+                <div className="network-item--wrapper">
+                  <span className="network-item--symbol">
+                    {item.symbolName}
+                  </span>
+                  <div className="network-item--network">
+                    {item.networkName}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </NetworkModal>
       </div>
     </>
+  );
+};
+
+const QRTooltip = ({ value, coinname, networkname }) => {
+  return (
+    <StyledQRTooltip>
+      <div className="guide">
+        Scan the code on the withdrawal page of the trading platform APP or
+        wallet APP
+      </div>
+      <div className="qr-code">
+        <QRCode value={value} size={160} />
+      </div>
+      <div className="note">
+        <ul>
+          <li>
+            Send only <span className="note-coin-name">{coinname} </span>
+            to this deposit address.
+          </li>
+          <li>
+            Ensure the network is{' '}
+            <span className="note-network-name">{networkname}</span>.
+          </li>
+        </ul>
+      </div>
+    </StyledQRTooltip>
   );
 };
 export default DepositSection;

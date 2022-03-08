@@ -22,7 +22,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useSpotWalletSlice } from './slice';
 import { selectSpotWallet } from './slice/selectors';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
 const SpotWalletContainer = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();

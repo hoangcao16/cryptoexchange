@@ -94,7 +94,6 @@ const FiatSpotTable = ({ dataSource }) => {
       key: 'action',
       dataIndex: 'action',
       render: (text: any, record: any) => {
-        console.log(record);
         return (
           <Space size="middle">
             <Link
