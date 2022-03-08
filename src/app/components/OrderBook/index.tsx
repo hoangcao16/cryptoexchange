@@ -10,10 +10,9 @@ import {
   StyledDropdown,
   StyledRow,
 } from './style';
-import IconSvg from 'app/assets/img/icon';
+import { ReactComponent as MoreIcon } from 'app/assets/img/more.svg';
 import OrderBookIcon from 'app/assets/img/Orderbook';
-// import Select from 'react-select';
-import { Select } from 'antd';
+import Select from 'react-select';
 import { Dropdown } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOrderbookSlice } from './slice';
@@ -106,8 +105,9 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
         <div className="d-flex align-items-center">
           <Select
             className="react-select-container"
-            dropdownClassName="react-select-dropdown"
+            classNamePrefix="react-select"
             options={options}
+            isSearchable={false}
             defaultValue={options[0]}
           />
           <MoreButton>
@@ -117,7 +117,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
               onMouseLeave={hideDropdown}
             >
               <Dropdown.Toggle variant="success" id="dropdown-basic">
-                <IconSvg name="more" className="more-icon" />
+                <MoreIcon className="more-icon" />
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <div className="label">

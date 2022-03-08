@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer } from 'utils/redux-injectors';
-import { TabP2PState } from './type';
+import { SearchParam, TabP2PState } from './type';
 
 export const initialState: TabP2PState = {
   data: {},

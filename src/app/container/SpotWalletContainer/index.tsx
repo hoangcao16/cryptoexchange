@@ -15,7 +15,7 @@ import {
   Tooltip,
 } from './style';
 import ShowIcon from 'app/assets/img/showpassIcon';
-import IconSvg from 'app/assets/img/icon';
+import { ReactComponent as NextIcon } from 'app/assets/img/next.svg';
 import { Container } from 'react-bootstrap';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -96,7 +96,7 @@ const SpotWalletContainer = () => {
                     <div className="title-text">{t('yesterday-pnl')}</div>
                   </div>
                   <div className="title-icon">
-                    <IconSvg name="next" />
+                    <NextIcon />
                   </div>
                 </div>
                 <FirstLinePnl>

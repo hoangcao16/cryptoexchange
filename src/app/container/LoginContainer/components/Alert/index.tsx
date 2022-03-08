@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import IconSvg from 'app/assets/img/icon';
+import { ReactComponent as LockIcon } from 'app/assets/img/lock.svg';
 import { useTranslation } from 'react-i18next';
 const Alert = () => {
   const { t } = useTranslation();
   return (
     <Container>
-      <IconSvg name="lock" className="icon" />
+      <LockIcon className="icon" />
       <div className="title">{t('url-verification')}:</div>
       <div className="linkUrl">
         <span className="linkUrl-special">https://</span>accounts.POW.com
