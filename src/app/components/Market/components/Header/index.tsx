@@ -1,6 +1,6 @@
 import { THeader } from './style';
 import { Col } from 'react-bootstrap';
-import { ReactComponent as ChangeIcon } from 'app/assets/img/change.svg';
+import IconSvg from 'app/assets/img/icon';
 import { useGlobalContext } from '../../../common/context';
 import SortIcon from 'app/assets/img/sortIcon';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,8 @@ const OrderBookHeader = () => {
         <Col className="text-end">
           {activeChangeColumnMarket ? t('change') : t('Volume')}
           <SortIcon name="detail" className="sort-icon" />
-          <ChangeIcon
+          <IconSvg
+            name="change"
             className="change-icon"
             onClick={() =>
               setActiveChangeColumnMarket(!activeChangeColumnMarket)

@@ -26,6 +26,7 @@ export const App = styled.div`
     color: ${({ theme }) => theme.primary};
     opacity: 0.7;
     cursor: pointer;
+    text-decoration: none;
     &:hover {
       opacity: 1;
     }
