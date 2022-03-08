@@ -1,5 +1,4 @@
 import { Checkbox, Col, Input, Row, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';

@@ -5,7 +5,7 @@ import {
   NormalButton,
   WalletDirect,
 } from './style';
-import { ReactComponent as WalletIcon } from 'app/assets/img/wallet.svg';
+import IconSvg from 'app/assets/img/icon';
 import { useTranslation } from 'react-i18next';
 
 const FiatSpotHeader = () => {
@@ -44,7 +44,7 @@ const FiatSpotHeader = () => {
               className="css-cyve3b"
             >
               <button>
-                <WalletIcon />
+                <IconSvg name="wallet" />
                 {t('wallet-direct')}
               </button>
             </NormalButton>

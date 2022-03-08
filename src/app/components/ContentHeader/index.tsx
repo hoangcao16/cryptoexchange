@@ -6,8 +6,7 @@ import {
   ContentLeft,
   ContentRight,
 } from './style';
-import { ReactComponent as PlayIcon } from 'app/assets/img/play.svg';
-import { ReactComponent as OpenIcon } from 'app/assets/img/openIcon.svg';
+import IconSvg from 'app/assets/img/icon';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
@@ -84,7 +83,7 @@ const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
             <div className="contentLeft-coin">
               <div className="coin">{changeFormatPair}</div>
               <div className="InformationCoin">
-                <OpenIcon />
+                <IconSvg name="openIcon" />
                 <a href="/#">Bitcoin</a>
               </div>
             </div>
@@ -154,7 +153,7 @@ const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
           </ContentRight>
         </Content>
         <SpotTutorial>
-          <PlayIcon />
+          <IconSvg name="play" />
           <span>{t('spot-tutorial')}</span>
         </SpotTutorial>
       </Div>

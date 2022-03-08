@@ -33,6 +33,7 @@ function TabsCrypto() {
 
   useEffect(() => {
     setCurrentCrypto(P2PSearchParams.crypto);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   return (

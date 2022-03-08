@@ -7,7 +7,7 @@ import {
   Subfilter,
   ConvertButton,
 } from './style';
-import { ReactComponent as SearchIcon } from 'app/assets/img/search.svg';
+import IconSvg from 'app/assets/img/icon';
 import { Table, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import numeral from 'numeral';
@@ -125,7 +125,7 @@ const Header = () => {
       <SearchBox>
         <label htmlFor="search-input" className="bn-input-prefix">
           <div className="prefix-icon">
-            <SearchIcon className="search-icon" />
+            <IconSvg name="search" className="search-icon" />
           </div>
         </label>
         <input

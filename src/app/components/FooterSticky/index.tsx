@@ -1,7 +1,5 @@
 import { Container, SupportSection } from './style';
-import { ReactComponent as ConnectIcon } from 'app/assets/img/connect.svg';
-import { ReactComponent as DownloadIcon } from 'app/assets/img/download.svg';
-import { ReactComponent as DocsIcon } from 'app/assets/img/docs.svg';
+import IconSvg from 'app/assets/img/icon';
 import { useTranslation } from 'react-i18next';
 
 const FooterSticky = () => {
@@ -9,16 +7,16 @@ const FooterSticky = () => {
   return (
     <Container>
       <div>
-        <ConnectIcon className="connect-icon" />
+        <IconSvg name="connect" className="connect-icon" />
         <span className="connect-title">{t('connection')}</span>
       </div>
       <SupportSection>
         <div className="d-flex download-section">
-          <DownloadIcon className="download-icon" />
+          <IconSvg name="download" className="download-icon" />
           <span className="download-title">{t('download')}</span>
         </div>
         <div className="d-flex online-section">
-          <DocsIcon className="docs-icon" />
+          <IconSvg name="docs" className="docs-icon" />
           <span className="docs-title">{t('online-support')}</span>
         </div>
       </SupportSection>
