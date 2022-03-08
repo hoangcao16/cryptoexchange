@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Container, Header, A, StyledDropdown } from './style';
-import { ReactComponent as MoreIcon } from 'app/assets/img/more.svg';
+import IconSvg from 'app/assets/img/icon';
 import { Dropdown } from 'react-bootstrap';
 import OrderForm from 'app/components/OrderForm';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +29,7 @@ const OrderFormContainer = () => {
             onMouseLeave={hideDropdown}
           >
             <Dropdown.Toggle variant="success" id="dropdown-basic">
-              <MoreIcon className="more-icon" />
+              <IconSvg name="more" className="more-icon" />
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item href="/#">{t('trading-rules')}</Dropdown.Item>

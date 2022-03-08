@@ -1,5 +1,5 @@
 import { Container, Tabs, StyledDropdown, Tooltip } from './style';
-import { ReactComponent as InformationIcon } from 'app/assets/img/information.svg';
+import IconSvg from 'app/assets/img/icon';
 import { SplitButton, Dropdown } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import LimitForm from './components/LimitForm';
@@ -100,7 +100,7 @@ const OrderForm = () => {
             </SplitButton>
           </StyledDropdown>
           <Tooltip className="d-flex align-items-center">
-            <InformationIcon className="information-icon" />
+            <IconSvg name="information" className="information-icon" />
             <div className="tooltiptext">
               <div className="tooltip-content">
                 {tabActive === 1

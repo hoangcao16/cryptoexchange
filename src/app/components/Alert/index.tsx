@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyledAlert, StyledAlertLink } from './style';
-import { ReactComponent as AlertIcon } from 'app/assets/img/alert.svg';
+import IconSvg from 'app/assets/img/icon';
+
 import { BiChevronRight } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 const WarningAlert = () => {
@@ -9,7 +10,7 @@ const WarningAlert = () => {
   if (show) {
     return (
       <StyledAlert variant="warning" onClose={() => setShow(false)} dismissible>
-        <AlertIcon />
+        <IconSvg name="alert" />
         {t('alert-home')}
         <StyledAlertLink href="#">
           {t('view-more')}
