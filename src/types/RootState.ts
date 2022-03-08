@@ -16,6 +16,7 @@ import { P2PWalletState } from 'app/container/P2PWalletContainer/slice/types';
 import { GetBalancePairState } from 'app/components/OrderForm/slice/types';
 import { TradehistoryState } from 'app/components/TradesInformation/TradeHistory/slice/types';
 import { TabP2PState } from 'app/container/TabP2PContainer/slice/type';
+import { DepositCryptoState } from 'app/container/DepositContainer/components/DepositSection/slice/types';
 
 import { PostAdP2PState } from 'app/container/PostAdP2PContainer/slice/types';
 
@@ -42,6 +43,7 @@ export interface RootState {
   p2pWallet: P2PWalletState;
   getBalancePair: GetBalancePairState;
   tradehistory: TradehistoryState;
+  depositCrypto: DepositCryptoState;
   tabP2P: TabP2PState;
 
   postAdP2P: PostAdP2PState;

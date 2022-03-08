@@ -34,6 +34,7 @@ import { PostAdP2P } from './pages/PostAdP2P/Loadable';
 import { RegisterPage } from './pages/RegisterPage/Loadable';
 import { TradeP2PPage } from './pages/TradeP2P/Loadable';
 import { StyledToastContainer } from './style';
+import { DepositPage } from './pages/DepositPage/Loadable';
 
 export function App() {
   const dispatch = useDispatch();
@@ -83,6 +84,15 @@ export function App() {
             element={
               <PrivateRoute>
                 <SpotWalletPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/wallet/spot/deposit/crypto/:currency"
+            element={
+              <PrivateRoute>
+                <DepositPage />
               </PrivateRoute>
             }
           />

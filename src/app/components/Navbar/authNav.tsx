@@ -2,7 +2,6 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import { StyledNavBrand, StyledNav, StyledNavBar } from './style';
 import { BsSun } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import { ReactComponent as Logo } from 'app/assets/img/logo.svg';
 import ChangeLanguage from '../ChangeLanguage';
 import POWlogo from 'app/assets/img/POWlogo.png';
 
@@ -12,7 +11,6 @@ const NavMenu = () => {
       <Container fluid style={{ height: '64px' }}>
         <Link to="/">
           <StyledNavBrand>
-            {/* <Logo className="Logo" /> */}
             <img src={POWlogo} className="logo" alt="POW" />
           </StyledNavBrand>
         </Link>

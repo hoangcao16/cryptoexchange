@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createSearchParams,
@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import { useTabP2PSlice } from '../slice';
 import { selectTabP2P } from '../slice/selectors';
-import { SearchParam, TabP2PState } from '../slice/type';
+import { TabP2PState } from '../slice/type';
 
 function HandleP2PTradeUrl() {
   const navigate = useNavigate();
@@ -31,6 +31,7 @@ function HandleP2PTradeUrl() {
       pathname: '/trade-p2p/p2p/',
       search: `?${createSearchParams(param)}`,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [TabP2PState.searchParam]);
 
   // FOLLOW URL -> DISPATCH TO STORE FIRST TIME
@@ -43,6 +44,7 @@ function HandleP2PTradeUrl() {
     };
 
     dispatch(actions.upTabP2P(param));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <></>;
