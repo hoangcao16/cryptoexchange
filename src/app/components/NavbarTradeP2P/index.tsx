@@ -222,7 +222,7 @@ const ContentOrdersStyled = styled.div`
     }
 
     &__link {
-      color: ${({ theme }) => theme.powColor};
+      color: ${({ theme }) => theme.primary};
     }
 
     border-bottom: 1px solid ${({ theme }) => theme.p2pBorder};
@@ -248,7 +248,7 @@ const ContentMoreStyled = styled.div`
 
     &:hover {
       font-weight: bold;
-      color: ${({ theme }) => theme.powColor};
+      color: ${({ theme }) => theme.primary};
     }
   }
   .moreIcon {

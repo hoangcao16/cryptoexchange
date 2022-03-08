@@ -5,19 +5,25 @@ import styled from 'styled-components';
 
 interface Props {
   mode: 'display' | 'select';
+  data: any;
+  onClick?: () => void;
 }
 
 function CardPaymentMethod(props: Props) {
-  const { mode } = props;
-  const handleSelect = () => {
-    if (mode === 'display') {
-      return;
+  const { mode, data, onClick } = props;
+
+  const handleSelectCart = () => {
+    if (onClick) {
+      onClick();
     }
+
+    return;
   };
+
   return (
-    <Wrapper onClick={handleSelect}>
+    <Wrapper onClick={handleSelectCart}>
       <div className="cardPM--header">
-        <div className="cardPM--payment">Momo</div>
+        <div className="cardPM--payment">{data.bankName}</div>
         {mode === 'display' && (
           <Button
             type="link"
@@ -55,10 +61,15 @@ const Wrapper = styled.div`
   cursor: pointer;
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.powColor};
+    border: 1px solid ${({ theme }) => theme.primary};
   }
 
   .cardPM {
+    &--payment {
+      font-weight: 500;
+      font-size: 16px;
+    }
+
     &--header {
       display: flex;
       align-items: center;
@@ -81,7 +92,7 @@ const Wrapper = styled.div`
     }
 
     &--icon {
-      color: ${({ theme }) => theme.powColor};
+      color: ${({ theme }) => theme.primary};
     }
   }
 `;

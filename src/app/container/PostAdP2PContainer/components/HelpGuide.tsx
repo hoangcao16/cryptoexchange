@@ -26,6 +26,6 @@ const WrapperLink = styled(Link)`
   }
 
   &:hover {
-    color: ${({ theme }) => theme.powColor};
+    color: ${({ theme }) => theme.primary};
   }
 `;

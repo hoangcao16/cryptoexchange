@@ -75,12 +75,12 @@ const TabsCryptoButton = styled.button`
   &:focus,
   &:focus-within,
   &:active {
-    border-bottom: 2px solid ${({ theme }) => theme.powColor};
+    border-bottom: 2px solid ${({ theme }) => theme.primary};
   }
 
   &.TabsCryptoButton-active {
-    border-bottom: 2px solid ${({ theme }) => theme.powColor};
-    color: ${({ theme }) => theme.powColor};
+    border-bottom: 2px solid ${({ theme }) => theme.primary};
+    color: ${({ theme }) => theme.primary};
     font-weight: bold;
   }
 `;
