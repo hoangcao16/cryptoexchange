@@ -2,10 +2,11 @@ import { Button, message } from 'antd';
 import React from 'react';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
+import { postAdP2PServices } from 'services/postAdP2PService';
 import styled from 'styled-components';
 import { usePostAdP2PSlice } from '../slice';
 import { selectPostAdP2P } from '../slice/selectors';
-import { PostAdP2PState } from '../slice/types';
+import { DataPostAdP2PState, PostAdP2PState } from '../slice/types';
 
 interface Props {
   next: () => void;
@@ -24,6 +25,11 @@ function SwitchStep(props: Props) {
   const handlePrevStep = () => {
     dispatch(actions.setCurrentStep(PostAdP2PState.currentStep - 1));
   };
+
+  const handlePost = async () => {
+    post();
+  };
+
   return (
     <Wrapper>
       <div className="steps-action">
@@ -60,7 +66,7 @@ function SwitchStep(props: Props) {
               <Button
                 className="btnPostAd btnPostAd--next"
                 type="link"
-                onClick={() => message.success('Processing complete!')}
+                onClick={handlePost}
               >
                 Post
               </Button>
@@ -101,7 +107,7 @@ const Wrapper = styled.div`
 
         &--next {
           color: ${({ theme }) => theme.p2pTextLight};
-          background: ${({ theme }) => theme.powColor};
+          background: ${({ theme }) => theme.primary};
 
           &:hover {
             opacity: 0.8;
@@ -109,11 +115,11 @@ const Wrapper = styled.div`
         }
 
         &--prev {
-          color: ${({ theme }) => theme.powColor};
+          color: ${({ theme }) => theme.primary};
           border: 1px solid ${({ theme }) => theme.p2pBorder};
 
           &:hover {
-            border: 1px solid ${({ theme }) => theme.powColor};
+            border: 1px solid ${({ theme }) => theme.primary};
           }
         }
       }

@@ -399,7 +399,7 @@ const ColAdvertisers = styled.div`
       height: 20px;
       line-height: 20px;
       border-radius: 10px;
-      background-color: ${({ theme }) => theme.powColor};
+      background-color: ${({ theme }) => theme.primary};
     }
 
     .advertisers {
@@ -409,7 +409,7 @@ const ColAdvertisers = styled.div`
   .row2 {
     margin-left: 28px;
     font-size: 12px;
-    color: ${({ theme }) => theme.powColorLight};
+    color: ${({ theme }) => theme.primary};
   }
 `;
 
@@ -430,7 +430,7 @@ const ColLimitAvailable = styled.div`
       margin-right: 8px;
 
       font-size: 12px;
-      color: ${({ theme }) => theme.powColorLight};
+      color: ${({ theme }) => theme.primary};
     }
   }
 `;

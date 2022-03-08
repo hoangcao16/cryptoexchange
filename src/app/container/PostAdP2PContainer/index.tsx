@@ -67,23 +67,23 @@ const Wrapper = styled.div`
   }
 
   .ant-steps-item-finish .ant-steps-item-icon {
-    border-color: ${({ theme }) => theme.powColor};
+    border-color: ${({ theme }) => theme.primary};
 
     .ant-steps-icon {
-      color: ${({ theme }) => theme.powColor};
+      color: ${({ theme }) => theme.primary};
       top: -3px;
     }
   }
 
   .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
-    background: ${({ theme }) => theme.powColor};
-    border-color: ${({ theme }) => theme.powColor};
+    background: ${({ theme }) => theme.primary};
+    border-color: ${({ theme }) => theme.primary};
   }
   .ant-steps-item-finish
     > .ant-steps-item-container
     > .ant-steps-item-content
     > .ant-steps-item-title::after {
-    background-color: ${({ theme }) => theme.powColor};
+    background-color: ${({ theme }) => theme.primary};
     height: 3px;
   }
 `;

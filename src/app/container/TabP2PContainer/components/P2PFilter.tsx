@@ -148,12 +148,12 @@ const Wrapper = styled(Container)`
   .ant-select:hover .ant-select-selector,
   .ant-selected-focus .ant-select-selector,
   .ant-selected-focused.ant-select .ant-select-selector {
-    border-color: ${({ theme }) => theme.powColor} !important;
+    border-color: ${({ theme }) => theme.primary} !important;
     box-shadow: none !important;
   }
 
   .ant-select-focused.ant-select .ant-select-selector {
-    border-color: ${({ theme }) => theme.powColor} !important;
+    border-color: ${({ theme }) => theme.primary} !important;
     box-shadow: none !important;
   }
 
@@ -162,12 +162,12 @@ const Wrapper = styled(Container)`
   .ant-checkbox-wrapper:hover .ant-checkbox-inner,
   .ant-checkbox:hover .ant-checkbox-inner,
   .ant-checkbox-input:focus + .ant-checkbox-inner {
-    border-color: ${({ theme }) => theme.powColor};
+    border-color: ${({ theme }) => theme.primary};
   }
 
   .ant-checkbox-checked .ant-checkbox-inner {
-    background-color: ${({ theme }) => theme.powColor};
-    border-color: ${({ theme }) => theme.powColor};
+    background-color: ${({ theme }) => theme.primary};
+    border-color: ${({ theme }) => theme.primary};
   }
 `;
 
@@ -181,7 +181,7 @@ const SearchStyled = styled(Search)`
   .ant-input-affix-wrapper-lg:hover,
   .ant-input-affix-wrapper-lg:focus,
   .ant-input-affix-wrapper-focused {
-    border: 1px solid ${({ theme }) => theme.powColor};
+    border: 1px solid ${({ theme }) => theme.primary};
     box-shadow: none;
   }
 
@@ -193,13 +193,13 @@ const SearchStyled = styled(Search)`
     height: 32px;
     margin-bottom: -1px;
     background-color: ${({ theme }) => theme.text};
-    color: ${({ theme }) => theme.powColor};
+    color: ${({ theme }) => theme.primary};
     box-shadow: none;
     border: 1px solid ${({ theme }) => theme.p2pBorder};
     font-weight: bold;
 
     &:hover {
-      border-color: ${({ theme }) => theme.powColor};
+      border-color: ${({ theme }) => theme.primary};
     }
   }
 
@@ -228,7 +228,7 @@ const SelectRefreshStyled = styled(Select)`
 
   span.ant-select-selection-placeholder,
   span.ant-select-selection-item {
-    color: ${({ theme }) => theme.powColor} !important;
+    color: ${({ theme }) => theme.primary} !important;
     font-weight: bold;
   }
 `;
