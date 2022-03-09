@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input, InputNumber, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,8 +15,12 @@ const { Option } = Select;
 function StepTotalAndPayment() {
   const { actions } = usePostAdP2PSlice();
   const dispatch = useDispatch();
+
   const [form] = Form.useForm();
+
   const PostAdP2PState: PostAdP2PState = useSelector(selectPostAdP2P);
+  const TokenName = PostAdP2PState.data.tokenName;
+  const FiatName = PostAdP2PState.data.fiatName;
 
   const [total, setTotal] = useState<number>();
 
@@ -25,9 +29,11 @@ function StepTotalAndPayment() {
   const [modalSelectPaymentMethod, setModalSelectPaymentMethod] =
     useState(false);
   const [paymentMethodSelected, setPaymentMethodSelected] = useState<any[]>([]);
+  const [isEmptyPaymentMethods, setIsEmptyPaymentMethods] = useState(false);
 
   const handleSelectPayment = (payment: any) => {
     setPaymentMethodSelected([...paymentMethodSelected, payment]);
+    setIsEmptyPaymentMethods(false);
   };
 
   const handleOpenModal = () => {
@@ -54,9 +60,8 @@ function StepTotalAndPayment() {
   };
 
   const handleChangeAmount = (e: any) => {
-    const amount = e.target.value;
     if (PostAdP2PState.data.price) {
-      setTotal(PostAdP2PState.data.price * amount);
+      setTotal(PostAdP2PState.data.price * e);
     }
   };
 
@@ -64,8 +69,14 @@ function StepTotalAndPayment() {
     form
       .validateFields()
       .then(res => {
+        if (paymentMethodSelected.length === 0) {
+          setIsEmptyPaymentMethods(true);
+          return;
+        }
+        console.log('💙TuanHQ💖 ~> handleNextStep ~> res', res);
+
         const param: DataPostAdP2PState = {
-          amount: parseInt(res.amount),
+          amount: res.amount,
           orderLowerBound: parseInt(res.orderLowerBound),
           orderUpperBound: parseInt(res.orderUpperBound),
           paymentTimeId: res.paymentTimeId,
@@ -91,46 +102,172 @@ function StepTotalAndPayment() {
         <div className="stepTAP--label">Total Amount</div>
         <Form.Item
           name="amount"
-          rules={[{ required: true, message: 'This field is required!' }]}
+          rules={[
+            {
+              required: true,
+              message: 'Enter trading amount',
+            },
+            {
+              validator: (_, value) => {
+                if (!value) {
+                  return Promise.reject();
+                }
+
+                if (
+                  (TokenName === 'USDT' ||
+                    TokenName === 'BUSD' ||
+                    TokenName === 'DAI') &&
+                  value < 100
+                ) {
+                  return Promise.reject(
+                    new Error('Total amount should not be less than 100'),
+                  );
+                }
+
+                if (TokenName === 'BTC ' && value < 0.0001) {
+                  return Promise.reject(
+                    new Error('Total amount should not be less than 0.0001'),
+                  );
+                }
+
+                if (TokenName === 'BNB  ' && value < 0.01) {
+                  return Promise.reject(
+                    new Error('Total amount should not be less than 0.01'),
+                  );
+                }
+
+                if (TokenName === 'ETH  ' && value < 0.001) {
+                  return Promise.reject(
+                    new Error('Total amount should not be less than 0.001 '),
+                  );
+                }
+
+                if (
+                  (TokenName === 'ADA' || TokenName === 'SLP ') &&
+                  value < 50
+                ) {
+                  return Promise.reject(
+                    new Error('Total amount should not be less than 50'),
+                  );
+                }
+
+                if (TokenName === 'SHIB' && value < 3000) {
+                  return Promise.reject(
+                    new Error('Total amount should not be less than 3000 '),
+                  );
+                }
+
+                return Promise.resolve();
+              },
+            },
+          ]}
           extra={
-            <ExtraTotal>
-              <div className="left">
-                <span>Available: 0 {PostAdP2PState.data.tokenName}</span>
-                <Button type="link">All</Button>
-              </div>
-              <div className="right">
-                ≈ {total} {PostAdP2PState.data.fiatName}
-              </div>
-            </ExtraTotal>
+            form.getFieldWarning('amount') && (
+              <ExtraTotal>
+                <div className="left">
+                  <span>Available: 0 {PostAdP2PState.data.tokenName}</span>
+                  <Button type="link">All</Button>
+                </div>
+                <div className="right">
+                  ≈ {total} {PostAdP2PState.data.fiatName}
+                </div>
+              </ExtraTotal>
+            )
           }
         >
-          <Input
+          <InputNumber
             className="stepTAP--input stepTAP--input-total"
-            suffix={<>{PostAdP2PState.data.tokenName}</>}
+            addonAfter={<>{PostAdP2PState.data.tokenName}</>}
             type="number"
             onChange={handleChangeAmount}
           />
         </Form.Item>
+
         <div className="stepTAP--label">Order Limit</div>
         <div className="stepTAP--orderLimit">
           <Form.Item
             name="orderLowerBound"
-            rules={[{ required: true, message: 'This field is required!' }]}
+            rules={[
+              { required: true, message: 'Please enter min order limit' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value) {
+                    return Promise.reject();
+                  }
+
+                  if (getFieldValue('orderUpperBound') < value) {
+                    return Promise.reject(
+                      new Error(
+                        'Min order limit should not exceed the max order limit',
+                      ),
+                    );
+                  }
+
+                  if (FiatName === 'USDT ' && value < 2) {
+                    return Promise.reject(
+                      new Error('Min limit should not be less than 2'),
+                    );
+                  }
+
+                  if (FiatName === 'PHP ' && value < 70) {
+                    return Promise.reject(
+                      new Error('Min limit should not be less than 70'),
+                    );
+                  }
+
+                  if (
+                    (FiatName === 'HKD' ||
+                      FiatName === 'AUD' ||
+                      FiatName === 'EUR') &&
+                    value < 10
+                  ) {
+                    return Promise.reject(
+                      new Error('Total amount should not be less than 10'),
+                    );
+                  }
+
+                  if (FiatName === 'RUB ' && value < 500) {
+                    return Promise.reject(
+                      new Error('Min limit should not be less than 500'),
+                    );
+                  }
+
+                  if (FiatName === 'GBP ' && value < 1) {
+                    return Promise.reject(
+                      new Error('Min limit should not be less than 1'),
+                    );
+                  }
+
+                  if (FiatName === 'JPY ' && value < 150) {
+                    return Promise.reject(
+                      new Error('Min limit should not be less than 150'),
+                    );
+                  }
+
+                  if (FiatName === 'RON ' && value < 5) {
+                    return Promise.reject(
+                      new Error('Min limit should not be less than 5'),
+                    );
+                  }
+
+                  return Promise.resolve();
+                },
+              }),
+            ]}
           >
-            <Input
+            <InputNumber
               className="stepTAP--input stepTAP--input-order"
-              suffix={<>{PostAdP2PState.data.fiatName}</>}
+              addonAfter={<>{PostAdP2PState.data.fiatName}</>}
               type="number"
             />
           </Form.Item>
+
           <AiOutlineMinus className="mt-2" />
-          <Form.Item
-            name="orderUpperBound"
-            rules={[{ required: true, message: 'This field is required!' }]}
-          >
-            <Input
+
+          <Form.Item name="orderUpperBound" initialValue={10}>
+            <InputNumber
               className="stepTAP--input stepTAP--input-order"
-              suffix={<>{PostAdP2PState.data.fiatName}</>}
+              addonAfter={<>{PostAdP2PState.data.fiatName}</>}
               type="number"
             />
           </Form.Item>
@@ -145,11 +282,14 @@ function StepTotalAndPayment() {
         ))}
         <Button
           type="link"
-          className="stepTAP--btnAdd mb-4"
+          className="stepTAP--btnAdd"
           onClick={handleOpenModal}
         >
           <AiOutlinePlus /> Add
         </Button>
+        <div className="stepTAP-error-message">
+          {isEmptyPaymentMethods && 'Please select at least 1 payment method'}
+        </div>
 
         <div className="stepTAP--label">Payment Time Limit</div>
         <Form.Item
@@ -193,18 +333,28 @@ const Wrapper = styled.div`
     &--input {
       &-total {
         width: 100%;
-        max-width: 550px;
+        max-width: 620px;
       }
 
       &-order {
-        width: 240px;
+        width: 100%;
+        /* max-width: 200px; */
       }
     }
 
     &--orderLimit {
-      max-width: 550px;
+      max-width: 620px;
       display: flex;
       justify-content: space-between;
+
+      .ant-form-item {
+        width: 48%;
+      }
+
+      .ant-form-item-explain-error {
+        /* width: 200px; */
+        font-size: 12px;
+      }
     }
 
     &--dash {
@@ -222,6 +372,12 @@ const Wrapper = styled.div`
     &--timeLimit {
       width: 150px;
     }
+
+    &-error-message {
+      font-size: 12px;
+      color: #ff4d4f;
+      height: 40px;
+    }
   }
 `;
 
@@ -231,7 +387,7 @@ const ExtraTotal = styled.div`
   justify-content: space-between;
 
   width: 100%;
-  max-width: 550px;
+  max-width: 620px;
   height: 18px;
 
   font-size: 12px;

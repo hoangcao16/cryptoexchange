@@ -1,4 +1,4 @@
-import { Button, Form, Input, Radio, Skeleton } from 'antd';
+import { Button, Form, Input, InputNumber, Radio, Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
   AiOutlineInfoCircle,
@@ -23,15 +23,19 @@ function StepTypeAndPrice() {
 
   const [tokens, setTokens] = useState<any[]>([]);
   const [assetSelected, setAssetSelected] = useState();
+  const [tokenName, setTokenName] = useState();
 
   const [fiat, setFiat] = useState<any[]>([]);
+  const [fiatName, setFiatName] = useState<string>();
   const [fiatSelected, setFiatSelected] = useState();
 
   const [priceType, setPriceType] = useState<0 | 1>(0); //0 fixed, 1 floating
-  const [price, setPrice] = useState<number>(123);
+  const [price, setPrice] = useState<number>(123.34);
 
   const [loadingToken, setLoadingToken] = useState(false);
   const [loadingFiat, setLoadingFiat] = useState(false);
+
+  const [marketPrice, setMarketPrice] = useState(100.34);
 
   const handleType = (key: 0 | 1) => {
     if (key === active) {
@@ -41,10 +45,14 @@ function StepTypeAndPrice() {
   };
 
   const handleSelectAsset = (e: any) => {
+    const name = tokens.find(token => token.id === e.target.value).assetName;
     setAssetSelected(e.target.value);
+    setTokenName(name);
   };
 
   const handleSelectFiat = (e: any) => {
+    const name = fiat.find(fiat => fiat.id === e.target.value).name;
+    setFiatName(name);
     setFiatSelected(e.target.value);
   };
 
@@ -52,26 +60,52 @@ function StepTypeAndPrice() {
     setPriceType(e.target.value);
   };
 
-  const handleChangePrice = (changedValues: any) => {
-    const p = Number(parseInt(changedValues.price).toFixed(2));
-    setPrice(p);
+  const displayWarningPriceFixed = (): null | string => {
+    if (!fiatName) {
+      return null;
+    }
+
+    if (fiatName === 'USD' || fiatName === 'VND' || fiatName === 'EUR') {
+      const min = Number((marketPrice * 0.8).toFixed(2));
+      const max = Number((marketPrice * 2).toFixed(2));
+
+      if (price < min || price > max) {
+        return `Fixed Price should be [${min}, ${max}]`;
+      }
+    }
+
+    const a = ['PHP', 'HKD', 'AUD', 'IDR', 'RUB', 'GBP', 'JPY', 'RON'];
+
+    if (a.includes(fiatName)) {
+      const min = Number((marketPrice * 0.8).toFixed(2));
+      const max = Number((marketPrice * 1.2).toFixed(2));
+
+      if (price < min || price > max) {
+        return `Fixed Price should be [${min}, ${max}]`;
+      }
+    }
+
+    return null;
+  };
+
+  const handleChangePrice = (value: any) => {
+    setPrice(value);
   };
 
   const handleButtonPriceFixed = (type: 'minus' | 'plus') => {
     if (type === 'minus') {
-      setPrice(Number(price.toFixed(2)) - 0.01);
+      setPrice(Number((price - 0.01).toFixed(2)));
     }
 
     if (type === 'plus') {
-      setPrice(Number(price.toFixed(2)) + 0.01);
+      setPrice(Number((price + 0.01).toFixed(2)));
     }
   };
 
   const handleNextStep = () => {
-    const fiatName = fiat.find(fiat => fiat.id === fiatSelected).name;
-    const tokenName = tokens.find(
-      token => token.id === assetSelected,
-    ).assetName;
+    if (displayWarningPriceFixed() !== null) {
+      return;
+    }
 
     const param: DataPostAdP2PState = {
       orderType: active,
@@ -99,6 +133,7 @@ function StepTypeAndPrice() {
 
         setTokens(res.data.rows);
         setAssetSelected(res.data.rows[0].id);
+        setTokenName(res.data.rows[0].assetName);
       })
       .catch(err => {
         console.log(err);
@@ -119,6 +154,7 @@ function StepTypeAndPrice() {
 
         setFiat(res.data.rows);
         setFiatSelected(res.data.rows[0].id);
+        setFiatName(res.data.rows[0].name);
       })
       .catch(err => {
         console.log(err);
@@ -205,7 +241,9 @@ function StepTypeAndPrice() {
         <div className="contentSTP--detailPrice">
           <div className="contentSTP--detailPrice-col">
             <div className="contentSTP--label">Your Price</div>
-            <div className="contentSTP--price">$ {price.toFixed(2)}</div>
+            <div className="contentSTP--price">
+              $ {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            </div>
           </div>
 
           <div className="contentSTP--detailPrice-col">
@@ -213,7 +251,7 @@ function StepTypeAndPrice() {
               Lowest Order Price{' '}
               <AiOutlineInfoCircle className="contentSTP--label-icon" />
             </div>
-            <div className="contentSTP--price">$ 403.36</div>
+            <div className="contentSTP--price">$ {marketPrice}</div>
           </div>
         </div>
 
@@ -235,63 +273,65 @@ function StepTypeAndPrice() {
         </div>
 
         <div className="contentSTP--range">
-          <Form onValuesChange={handleChangePrice}>
-            {priceType === 0 && (
-              <>
-                <div className="contentSTP--label mb-2">Fixed</div>
-                <Form.Item name="price" initialValue={price.toFixed(2)}>
-                  <Input
-                    suffix={
-                      <Button
-                        className="contentSTP--range-btn"
-                        type="link"
-                        icon={<AiOutlinePlus />}
-                        onClick={() => handleButtonPriceFixed('plus')}
-                      />
-                    }
-                    prefix={
-                      <Button
-                        className="contentSTP--range-btn"
-                        type="link"
-                        icon={<AiOutlineMinus />}
-                        onClick={() => handleButtonPriceFixed('minus')}
-                      />
-                    }
-                    className="contentSTP--range-input"
-                    type="number"
-                  ></Input>
-                </Form.Item>
-              </>
-            )}
-
-            {priceType === 1 && (
-              <>
-                <div className="contentSTP--label mb-2">
-                  Floating Price Margin
-                </div>
-                <Input
-                  suffix={
-                    <Button
-                      className="contentSTP--range-btn"
-                      type="link"
-                      icon={<AiOutlinePlus />}
-                    />
-                  }
-                  prefix={
-                    <Button
-                      className="contentSTP--range-btn"
-                      type="link"
-                      icon={<AiOutlineMinus />}
-                    />
-                  }
+          {priceType === 0 && (
+            <>
+              <div className="contentSTP--label mb-2">Fixed</div>
+              <div
+                className={
+                  displayWarningPriceFixed() !== null
+                    ? 'contentSTP--range-container contentSTP--range-container__error'
+                    : 'contentSTP--range-container'
+                }
+              >
+                <Button onClick={() => handleButtonPriceFixed('minus')}>
+                  -
+                </Button>
+                <InputNumber
+                  bordered={false}
                   className="contentSTP--range-input"
-                  type="number"
+                  formatter={value =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                  }
+                  step="0.01"
+                  onChange={handleChangePrice}
+                  precision={2}
                   value={price}
-                ></Input>
-                <div>Pricing formula: 7.80 * 100.00% ≈ 7.80 HKD</div>
-              </>
-            )}
-          </Form>
+                ></InputNumber>
+                <Button onClick={() => handleButtonPriceFixed('plus')}>
+                  +
+                </Button>
+              </div>
+              <div>{displayWarningPriceFixed()}</div>
+            </>
+          )}
+
+          {priceType === 1 && (
+            <>
+              <div className="contentSTP--label mb-2">
+                Floating Price Margin
+              </div>
+              <Input
+                suffix={
+                  <Button
+                    className="contentSTP--range-btn"
+                    type="link"
+                    icon={<AiOutlinePlus />}
+                  />
+                }
+                prefix={
+                  <Button
+                    className="contentSTP--range-btn"
+                    type="link"
+                    icon={<AiOutlineMinus />}
+                  />
+                }
+                className="contentSTP--range-input"
+                type="number"
+                value={price}
+              ></Input>
+              <div>Pricing formula: 7.80 * 100.00% ≈ 7.80 HKD</div>
+            </>
+          )}
         </div>
       </div>
 
@@ -376,11 +416,26 @@ const Wrapper = styled.div`
     }
 
     &--range {
-      &-input {
-        max-width: 250px;
-        height: 32px;
+      &-container {
+        border: 1px solid ${({ theme }) => theme.p2pBorder};
+        max-width: 270px;
+        display: flex;
+        justify-content: space-between;
+        padding: 2px;
 
-        input.ant-input {
+        &__error {
+          border: 1px solid red;
+        }
+      }
+
+      &-input {
+        width: 180px;
+        height: 32px;
+        .ant-input-number-handler-wrap {
+          display: none;
+        }
+
+        .ant-input-number-input {
           text-align: center;
         }
       }
