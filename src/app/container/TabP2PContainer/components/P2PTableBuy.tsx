@@ -1,9 +1,10 @@
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
+import { tabP2PService } from '../../../../services/tabP2PServices';
 
 const gen_uuid = (): string => {
   return '_' + Math.random().toString(36).substr(2, 9);
@@ -282,6 +283,10 @@ const data = [
 ];
 
 function P2PTableBuy() {
+  const [listP2POrdersBuy, setListP2POrdersBuy] = useState<any>([]);
+
+  const { getListOrderBuy } = tabP2PService;
+
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
@@ -369,6 +374,18 @@ function P2PTableBuy() {
       },
     },
   ];
+
+  useEffect(() => {
+    getListOrderBuy()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListP2POrdersBuy(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  }, []);
 
   return (
     <Wrapper>
