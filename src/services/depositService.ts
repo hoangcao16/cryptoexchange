@@ -20,4 +20,10 @@ export const DepositServices = {
       url: `/api-svc/token/${id}/network`,
     });
   },
+  GetWallet(network_id, token_id) {
+    return apiClient.request({
+      method: 'GET',
+      url: `/trading-wallet-svc/wallet?network_id=${network_id}&token_id=${token_id}`,
+    });
+  },
 };

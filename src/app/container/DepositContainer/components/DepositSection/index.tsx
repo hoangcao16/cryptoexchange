@@ -6,6 +6,7 @@ import {
   AddressSection,
   StyledWalletAddress,
   StyledQRTooltip,
+  StyledNoticed,
 } from './style';
 import { Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -18,12 +19,14 @@ import { useDepositCryptoSlice } from './slice';
 import { selectDepositCrypto } from './slice/selectors';
 import { isEmpty } from 'app/components/common/common';
 import QRCode from 'react-qr-code';
+
 const DepositSection = () => {
   const { t } = useTranslation();
   const [isCoinModalVisible, setIsCoinModalVisible] = useState(false);
   const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
   const [selectedNetwork, setSelectedNetwork]: any = useState({});
-  const { selectedCoin, networksList, coinList }: any =
+  const [isNotice, setIsNotice] = useState(false);
+  const { selectedCoin, networksList, coinList, selectedWallet }: any =
     useSelector(selectDepositCrypto);
   const { currency } = useParams();
   const dispatch = useDispatch();
@@ -33,12 +36,12 @@ const DepositSection = () => {
   }, []);
   useEffect(() => {
     if (!isEmpty(selectedCoin)) {
-      dispatch(actions.getNetworkRequest(selectedCoin.id));
+      dispatch(actions.getNetworkRequest(selectedCoin?.id));
     }
   }, [selectedCoin]);
   const showCoinModal = () => {
     setIsCoinModalVisible(true);
-    dispatch(actions.getListCoinRequest({ name: '' }));
+    dispatch(actions.getListCoinRequest({ whitelist: 1 }));
   };
   const handleCoinModalCancel = () => {
     setIsCoinModalVisible(false);
@@ -52,6 +55,12 @@ const DepositSection = () => {
   const handleSelectNetwork = (network: any) => {
     setSelectedNetwork(network);
     setIsNetworkModalVisible(false);
+    dispatch(
+      actions.getWalletRequest({
+        token_id: selectedCoin?.id,
+        network_id: network?.networkId,
+      }),
+    );
   };
   const handleSelectCoin = (coin: any) => {
     dispatch(actions.getCoinSuccess(coin));
@@ -63,7 +72,7 @@ const DepositSection = () => {
     dispatch(actions.getListCoinRequest({ name: value }));
   };
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText('buồn cười quá');
+    navigator.clipboard.writeText(selectedWallet);
   };
   return (
     <>
@@ -118,7 +127,28 @@ const DepositSection = () => {
               </div>
               <UpDownIcon name="down" className="down-icon" />
             </div>
-            {!isEmpty(selectedNetwork) ? (
+            {!isEmpty(selectedNetwork) && !isNotice ? (
+              <StyledNoticed>
+                <div className="wrapper">
+                  <div className="notice-content">
+                    <div className="notice-message">
+                      No {selectedNetwork?.networkName} deposit addresses have
+                      been applied for before. Please retrieve the deposit
+                      address.
+                    </div>
+                    <button
+                      id="crypto_deposit_get_address"
+                      className="get-address-btn"
+                      onClick={() => {
+                        setIsNotice(true);
+                      }}
+                    >
+                      Get Address
+                    </button>
+                  </div>
+                </div>
+              </StyledNoticed>
+            ) : !isEmpty(selectedNetwork) && isNotice ? (
               <AddressSection>
                 <div className="address-section">
                   <div className="content-item">
@@ -126,7 +156,7 @@ const DepositSection = () => {
                       <div className="address-title">Address</div>
                       <StyledWalletAddress>
                         <div className="address-wrapper">
-                          <div>bc1q4lrpff99h05kj3taqwpn7suze8t9t59jvfyp67</div>
+                          <div>{selectedWallet}</div>
                           <Tooltip title="Click to copy" color="#707a8a">
                             <div
                               className="copy-icon"
@@ -138,7 +168,7 @@ const DepositSection = () => {
                           <Tooltip
                             title={
                               <QRTooltip
-                                value="haha"
+                                value={selectedWallet}
                                 coinname={selectedCoin?.assetName}
                                 networkname={selectedNetwork?.symbolName}
                               />
@@ -179,7 +209,6 @@ const DepositSection = () => {
             )}
           </div>
         </StyledSelect>
-
         <CoinModal
           title="Select coin to deposit"
           visible={isCoinModalVisible}
