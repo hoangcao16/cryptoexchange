@@ -11,6 +11,8 @@ export const initialState: TabP2PState = {
     fiat: '',
     payment: '',
   },
+  listToken: [],
+  listFiat: [],
 };
 
 const slice = createSlice({
@@ -59,6 +61,14 @@ const slice = createSlice({
      */
     paymentTabP2P(state, action: PayloadAction<string>) {
       state.searchParam = { ...state.searchParam, payment: action.payload };
+    },
+
+    getListToken(state, action: PayloadAction<any>) {
+      state.listToken = action.payload;
+    },
+
+    getListFiat(state, action: PayloadAction<any>) {
+      state.listFiat = action.payload;
     },
   },
 });

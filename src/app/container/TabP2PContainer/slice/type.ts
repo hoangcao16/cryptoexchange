@@ -8,4 +8,6 @@ export interface SearchParam {
 export interface TabP2PState {
   data: Object;
   searchParam: SearchParam;
+  listToken: any;
+  listFiat: any;
 }

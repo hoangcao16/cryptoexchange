@@ -8,20 +8,22 @@ import { tabP2PService } from '../../../../services/tabP2PServices';
 import { useSelector } from 'react-redux';
 import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
+import { useDispatch } from 'react-redux';
+import { useTabP2PSlice } from '../slice';
 
 function P2PTableBuy() {
   const [listP2POrdersBuy, setListP2POrdersBuy] = useState<any>([]);
-  const [listFiat, setListFiat] = useState<any>([]);
-  const [listToken, setListToken] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const findTokens = useTabP2PSlice().actions;
+  const findFiats = useTabP2PSlice().actions;
 
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const { getListOrderBuy, getListFiat, getListToken } = tabP2PService;
-  const token = listToken.find(
-    x => x.assetName === TabP2PState.searchParam.crypto,
-  );
-  const fiat = listFiat.find(x => x.name === TabP2PState.searchParam.fiat);
-  console.log(111, fiat);
+
+  const listFiat = TabP2PState.listFiat;
+  const token = TabP2PState.listToken;
+  console.log(1, token);
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
@@ -57,7 +59,7 @@ function P2PTableBuy() {
             {record.price}{' '}
             {listFiat.map(fiat => {
               if (fiat.id === record.fiatId) {
-                return <span>{fiat.name}</span>;
+                return <span key={fiat.id}>{fiat.name}</span>;
               } else return null;
             })}
           </ColPrice>
@@ -119,11 +121,8 @@ function P2PTableBuy() {
     getListOrderBuy()
       .then(res => {
         if (res.data.rc === 0) {
-          console.log(res.data.rows.filter(order => order.orderType === 0));
           setListP2POrdersBuy(
-            res.data.rows.filter(
-              order => order.orderType === 0 && order.tokenId === token.id,
-            ),
+            res.data.rows.filter(order => order.orderType === 0),
           );
           setLoading(false);
         } else {
@@ -137,7 +136,7 @@ function P2PTableBuy() {
     getListFiat()
       .then(res => {
         if (res.data.rc === 0) {
-          setListFiat(res.data.rows);
+          dispatch(findFiats.getListFiat(res.data.rows));
         } else {
           console.log(res.data.rd);
         }
@@ -149,7 +148,7 @@ function P2PTableBuy() {
     getListToken()
       .then(res => {
         if (res.data.rc === 0) {
-          setListToken(res.data.rows);
+          dispatch(findTokens.getListToken(res.data.rows));
         } else {
           console.log(res.data.rd);
         }
@@ -160,12 +159,8 @@ function P2PTableBuy() {
     findAllOrderBuy();
     findAllFiat();
     findAllToken();
+    console.log(2);
   }, []);
-
-  useEffect(() => {
-    findAllOrderBuy();
-    console.log(token);
-  }, [token]);
 
   return (
     <Wrapper>
