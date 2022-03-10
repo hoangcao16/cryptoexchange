@@ -1,63 +1,23 @@
 import { Checkbox, Col, Input, Row, Select } from 'antd';
+import { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useTabP2PSlice } from '../slice';
 import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
+import { tabP2PService } from '../../../../services/tabP2PServices';
 const { Search } = Input;
 const { Option } = Select;
-
-const fiats = [
-  {
-    name: 'FIAT1',
-    icon: 'https://phongvunghean.com/wp-content/uploads/2020/07/safety-icon-with-png-and-vector-format-f-178900-png-images-pngio-safety-icon-png-512_512.png',
-  },
-  {
-    name: 'FIAT2',
-    icon: 'https://phongvunghean.com/wp-content/uploads/2020/07/safety-icon-with-png-and-vector-format-f-178900-png-images-pngio-safety-icon-png-512_512.png',
-  },
-  {
-    name: 'FIAT3',
-    icon: 'https://phongvunghean.com/wp-content/uploads/2020/07/safety-icon-with-png-and-vector-format-f-178900-png-images-pngio-safety-icon-png-512_512.png',
-  },
-  {
-    name: 'FIAT4',
-    icon: 'https://phongvunghean.com/wp-content/uploads/2020/07/safety-icon-with-png-and-vector-format-f-178900-png-images-pngio-safety-icon-png-512_512.png',
-  },
-];
-
-const payments = [
-  {
-    name: 'Momo',
-    icon: 'https://business.momo.vn/assets/landingpage/img/931b119cf710fb54746d5be0e258ac89-logo-momo.png',
-  },
-  {
-    name: 'Momo2',
-    icon: 'https://business.momo.vn/assets/landingpage/img/931b119cf710fb54746d5be0e258ac89-logo-momo.png',
-  },
-  {
-    name: 'Momo3',
-    icon: 'https://business.momo.vn/assets/landingpage/img/931b119cf710fb54746d5be0e258ac89-logo-momo.png',
-  },
-  {
-    name: 'Momo4',
-    icon: 'https://business.momo.vn/assets/landingpage/img/931b119cf710fb54746d5be0e258ac89-logo-momo.png',
-  },
-  {
-    name: 'Momo5',
-    icon: 'https://business.momo.vn/assets/landingpage/img/931b119cf710fb54746d5be0e258ac89-logo-momo.png',
-  },
-  {
-    name: 'Momo6',
-    icon: 'https://business.momo.vn/assets/landingpage/img/931b119cf710fb54746d5be0e258ac89-logo-momo.png',
-  },
-];
 
 function P2PFilter() {
   const { actions } = useTabP2PSlice();
   const dispatch = useDispatch();
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
+  const [listFiat, setListFiat] = useState<any>([]);
+  const [listPayments, setListPayments] = useState<any>([]);
+
+  const { getListFiat, getListPayments } = tabP2PService;
 
   const handleFiat = (value: any) => {
     dispatch(actions.fiatTabP2P(value));
@@ -66,6 +26,37 @@ function P2PFilter() {
   const handlePaymentMethod = (value: any) => {
     dispatch(actions.paymentTabP2P(value));
   };
+
+  const findAllFiat = () => {
+    getListFiat()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListFiat(res.data.rows);
+          console.log(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
+
+  const findAllPayments = () => {
+    getListPayments()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListPayments(res.data.rows);
+          console.log(222, res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
+
+  useEffect(() => {
+    findAllFiat();
+    findAllPayments();
+  }, []);
 
   return (
     <Wrapper>
@@ -88,7 +79,7 @@ function P2PFilter() {
             onChange={handleFiat}
             value={TabP2PState.searchParam.fiat}
           >
-            {fiats.map((f, i) => (
+            {listFiat.map((f, i) => (
               <Option value={f.name} key={i}>
                 <img
                   style={{ maxWidth: '12px', marginRight: '8px' }}
@@ -109,7 +100,7 @@ function P2PFilter() {
             onChange={handlePaymentMethod}
             value={TabP2PState.searchParam.payment}
           >
-            {payments.map((p, i) => (
+            {listPayments.map((p, i) => (
               <Option value={p.name} key={i}>
                 <img
                   style={{ maxWidth: '12px', marginRight: '8px' }}

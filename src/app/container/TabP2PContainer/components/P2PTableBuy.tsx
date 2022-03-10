@@ -5,306 +5,43 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { tabP2PService } from '../../../../services/tabP2PServices';
-
-const gen_uuid = (): string => {
-  return '_' + Math.random().toString(36).substr(2, 9);
-};
-
-const gen_string = (length = 10) => {
-  var result = '';
-  var characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
-
-const random = (min = 1, max = 10) =>
-  Math.floor(Math.random() * (max - min)) + min;
-
-const data = [
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-];
+import { useSelector } from 'react-redux';
+import { selectTabP2P } from '../slice/selectors';
+import { TabP2PState } from '../slice/type';
 
 function P2PTableBuy() {
   const [listP2POrdersBuy, setListP2POrdersBuy] = useState<any>([]);
+  const [listFiat, setListFiat] = useState<any>([]);
+  const [listToken, setListToken] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
 
-  const { getListOrderBuy } = tabP2PService;
-
+  const TabP2PState: TabP2PState = useSelector(selectTabP2P);
+  const { getListOrderBuy, getListFiat, getListToken } = tabP2PService;
+  const token = listToken.find(
+    x => x.assetName === TabP2PState.searchParam.crypto,
+  );
+  const fiat = listFiat.find(x => x.name === TabP2PState.searchParam.fiat);
+  console.log(111, fiat);
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
       key: 'Advertisers',
-      dataIndex: 'advertisers',
+      dataIndex: 'accountEmail',
       width: 400,
       render: (text: any, record: any) => (
         <ColAdvertisers>
           <div className="row1">
-            <div className="firstCharacter">{record.advertisers.charAt(0)}</div>
-            <div className="advertisers">{record.advertisers}</div>
+            <div className="firstCharacter">
+              {record.accountEmail.charAt(0)}
+            </div>
+            <div className="advertisers">{record.accountEmail}</div>
             <div className="checked">
-              {record.checked && <BsFillCheckCircleFill color="#10afff" />}
+              {<BsFillCheckCircleFill color="#10afff" />}
             </div>
           </div>
 
           <div className="row2">
-            {record.orders} orders | {record.completion}% completion
+            {/* {record.orders} orders | {record.completion}% completion */}
           </div>
         </ColAdvertisers>
       ),
@@ -314,31 +51,33 @@ function P2PTableBuy() {
       key: 'Price',
       dataIndex: 'price',
       width: 200,
-      render: (text: any, record: any) => (
-        <ColPrice>
-          {record.price} <span>{record.crypto}</span>
-        </ColPrice>
-      ),
+      render: (text: any, record: any) => {
+        return (
+          <ColPrice>
+            {record.price}{' '}
+            {listFiat.map(fiat => {
+              if (fiat.id === record.fiatId) {
+                return <span>{fiat.name}</span>;
+              } else return null;
+            })}
+          </ColPrice>
+        );
+      },
     },
     {
       title: 'Limit/Available',
       key: 'Limit/Available',
-      dataIndex: 'limit',
+      // dataIndex: 'limit',
       width: 300,
       render: (text: any, record: any) => (
         <ColLimitAvailable>
           <div className="rowLimitAvailable">
             <div className="col1">Available</div>
-            <div className="col2">
-              {record.available} {record.crypto}
-            </div>
+            <div className="col2">{record.amount - record.executed}</div>
           </div>
           <div className="rowLimitAvailable">
             <div className="col1">Limit</div>
-            <div className="col2">
-              {record.preLimit}.{record.limit} - {record.preLimit}.
-              {record.limit}
-            </div>
+            <div className="col2">{record.amount * record.total}</div>
           </div>
         </ColLimitAvailable>
       ),
@@ -346,50 +85,96 @@ function P2PTableBuy() {
     {
       title: 'Payment',
       key: 'Payment',
-      dataIndex: 'payment',
-      width: 280,
+      // dataIndex: 'payment',
+      // width: 280,
 
-      render: (text: any, record: any) => (
-        <ColPayment>
-          {text.map((t, i) => (
-            <div className="payment" key={i}>
-              {t}
-            </div>
-          ))}
-        </ColPayment>
-      ),
+      // render: (text: any, record: any) => (
+      //   <ColPayment>
+      //     {text.map((t, i) => (
+      //       <div className="payment" key={i}>
+      //         {t}
+      //       </div>
+      //     ))}
+      //   </ColPayment>
+      // ),
     },
     {
       title: (
         <ColumnsTrade>
           <div className="title">Trade</div>
-          <div className="fee">0Fee</div>
+          <div className="fee">0 Fee</div>
         </ColumnsTrade>
       ),
       key: 'trade',
-      dataIndex: 'trade',
+      // dataIndex: 'trade',
       width: 200,
       render: (text: any, record: any) => {
-        return <ButtonSell>Buy {record.crypto}</ButtonSell>;
+        return <ButtonSell>Buy {TabP2PState.searchParam.crypto}</ButtonSell>;
       },
     },
   ];
 
-  useEffect(() => {
+  const findAllOrderBuy = () => {
+    setLoading(true);
     getListOrderBuy()
       .then(res => {
         if (res.data.rc === 0) {
-          setListP2POrdersBuy(res.data.rows);
+          console.log(res.data.rows.filter(order => order.orderType === 0));
+          setListP2POrdersBuy(
+            res.data.rows.filter(
+              order => order.orderType === 0 && order.tokenId === token.id,
+            ),
+          );
+          setLoading(false);
         } else {
           console.log(res.data.rd);
         }
       })
       .catch(res => console.log(res));
+  };
+
+  const findAllFiat = () => {
+    getListFiat()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListFiat(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
+
+  const findAllToken = () => {
+    getListToken()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListToken(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
+  useEffect(() => {
+    findAllOrderBuy();
+    findAllFiat();
+    findAllToken();
   }, []);
+
+  useEffect(() => {
+    findAllOrderBuy();
+    console.log(token);
+  }, [token]);
 
   return (
     <Wrapper>
-      <Table rowKey={'id'} columns={columns} dataSource={data} />
+      <Table
+        rowKey={'id'}
+        loading={loading}
+        columns={columns}
+        dataSource={listP2POrdersBuy}
+      />
     </Wrapper>
   );
 }
@@ -486,6 +271,9 @@ const ButtonSell = styled(Button)`
   padding: 0px 30px;
   background-color: ${({ theme }) => theme.p2pBuy};
   border: none;
+  width: 80%;
+  display: block;
+  margin: 0 auto;
 
   &:hover,
   &:focus,
