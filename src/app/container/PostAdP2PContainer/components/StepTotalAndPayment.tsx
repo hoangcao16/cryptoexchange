@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Select } from 'antd';
+import { Button, Form, InputNumber, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,10 +28,14 @@ function StepTotalAndPayment() {
 
   const [modalSelectPaymentMethod, setModalSelectPaymentMethod] =
     useState(false);
+  const [paymentMethodIDSelected, setPaymentMethodIDSelected] = useState<any[]>(
+    [],
+  );
   const [paymentMethodSelected, setPaymentMethodSelected] = useState<any[]>([]);
   const [isEmptyPaymentMethods, setIsEmptyPaymentMethods] = useState(false);
 
-  const handleSelectPayment = (payment: any) => {
+  const handleSelectPayment = (paymentID: any, payment: any) => {
+    setPaymentMethodIDSelected([...paymentMethodIDSelected, paymentID]);
     setPaymentMethodSelected([...paymentMethodSelected, payment]);
     setIsEmptyPaymentMethods(false);
   };
@@ -69,19 +73,24 @@ function StepTotalAndPayment() {
     form
       .validateFields()
       .then(res => {
-        if (paymentMethodSelected.length === 0) {
+        if (paymentMethodIDSelected.length === 0) {
           setIsEmptyPaymentMethods(true);
           return;
         }
-        console.log('💙TuanHQ💖 ~> handleNextStep ~> res', res);
+
+        const paymentTime = paymentTimes.find(
+          time => res.paymentTimeId === time.id,
+        );
 
         const param: DataPostAdP2PState = {
           amount: res.amount,
           orderLowerBound: parseInt(res.orderLowerBound),
           orderUpperBound: parseInt(res.orderUpperBound),
           paymentTimeId: res.paymentTimeId,
+          paymentTime: paymentTime,
           total: total,
-          paymentIds: paymentMethodSelected,
+          paymentIds: paymentMethodIDSelected,
+          paymentMethodSelected: paymentMethodSelected,
         };
         dispatch(actions.setDataPostAdP2P(param));
         dispatch(actions.setCurrentStep(3));
@@ -278,7 +287,7 @@ function StepTotalAndPayment() {
         <div className="stepTAP--label">Payment Method</div>
         <div>Select up to 5 methods</div>
         {paymentMethodSelected.map((e, i) => (
-          <CardPaymentMethod mode="display" key={i} data={{}} />
+          <CardPaymentMethod mode="display" key={i} data={e} />
         ))}
         <Button
           type="link"

@@ -31,6 +31,8 @@ export interface DataPostAdP2PState {
   //
   fiatName?: string;
   tokenName?: string;
+  paymentMethodSelected?: any[];
+  paymentTime?: any;
 }
 
 export interface PostAdP2PState {

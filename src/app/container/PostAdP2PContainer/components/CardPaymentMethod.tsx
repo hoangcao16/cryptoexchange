@@ -41,12 +41,12 @@ function CardPaymentMethod(props: Props) {
 
       <div className="cardPM--row">
         <div className="cardPM--label">Full name</div>
-        <div className="cardPM--value">Ha Quoc Tuan</div>
+        <div className="cardPM--value">{data.fullName}</div>
       </div>
 
       <div className="cardPM--row">
         <div className="cardPM--label">Mobile phone</div>
-        <div className="cardPM--value">0918273645</div>
+        <div className="cardPM--value">{data.mobilePhone}</div>
       </div>
     </Wrapper>
   );
