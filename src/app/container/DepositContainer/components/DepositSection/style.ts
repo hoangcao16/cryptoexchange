@@ -432,3 +432,61 @@ export const StyledQRTooltip = styled.div`
     }
   }
 `;
+export const StyledNoticed = styled.div`
+  .wrapper {
+    margin: 16px 0px;
+    min-width: 0px;
+    display: flex;
+    height: 216px;
+    background-color: ${({ theme }) => theme.matteWhiteColor};
+    border-radius: 4px;
+    padding: 24px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    .notice-content {
+      margin: 0px;
+      min-width: 0px;
+      max-width: 312px;
+      text-align: center;
+      .notice-message {
+        margin: 0px;
+        min-width: 0px;
+        font-size: 14px;
+        line-height: 20px;
+        color: ${({ theme }) => theme.slateGrayColor};
+      }
+      .get-address-btn {
+        margin: 24px 0px 0px;
+        appearance: none;
+        user-select: none;
+        cursor: pointer;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        box-sizing: border-box;
+        font-family: inherit;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        padding: 10px 16px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        word-break: keep-all;
+        color: ${({ theme }) => theme.backgroundFooter};
+        border-radius: 4px;
+        min-height: 24px;
+        border: none;
+        background-image: none;
+        background-color: ${({ theme }) => theme.primary};
+        min-width: 180px;
+      }
+    }
+  }
+`;

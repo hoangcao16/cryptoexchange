@@ -8,7 +8,7 @@ export const initialState: DepositCryptoState = {
   coinList: [],
   selectedCoin: {},
   networksList: [],
-  selectedNetwork: {},
+  selectedWallet: '',
 };
 
 const slice = createSlice({
@@ -30,6 +30,11 @@ const slice = createSlice({
       state.networksList = action.payload;
     },
     getNetworkFail(state, action: PayloadAction<any>) {},
+    getWalletRequest(state, action: PayloadAction<any>) {},
+    getWalletSuccess(state, action: PayloadAction<any>) {
+      state.selectedWallet = action.payload;
+    },
+    getWalletFail(state, action: PayloadAction<any>) {},
   },
 });
 

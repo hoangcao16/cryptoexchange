@@ -38,6 +38,25 @@ function* handlegetListNetwork(action) {
     console.log(err);
   }
 }
+function* handlegetWallet(action) {
+  console.log('action', action);
+  const { network_id, token_id } = action.payload;
+  try {
+    const response = yield call(
+      DepositServices.GetWallet,
+      network_id,
+      token_id,
+    );
+    console.log('response', response);
+    if (response.data.rc === 0) {
+      yield put(actions.getWalletSuccess(response.data.address));
+    }
+  } catch (err: any) {
+    yield put(actions.getWalletFail(err.response));
+    console.log(err);
+  }
+}
+
 function* watchGetCoin() {
   yield takeEvery(actions.getCoinRequest, handlegetCoin);
 }
@@ -47,6 +66,14 @@ function* watchGetListCoin() {
 function* watchGetListNetwork() {
   yield takeEvery(actions.getNetworkRequest, handlegetListNetwork);
 }
+function* watchGetWallet() {
+  yield takeEvery(actions.getWalletRequest, handlegetWallet);
+}
 export function* depositCryptoSaga() {
-  yield all([watchGetCoin(), watchGetListCoin(), watchGetListNetwork()]);
+  yield all([
+    watchGetCoin(),
+    watchGetListCoin(),
+    watchGetListNetwork(),
+    watchGetWallet(),
+  ]);
 }
