@@ -1,12 +1,14 @@
-import { Modal, Skeleton } from 'antd';
+import { Button, Modal, Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { postAdP2PServices } from 'services/postAdP2PService';
+import styled from 'styled-components';
 import CardPaymentMethod from './CardPaymentMethod';
+import { PlusOutlined, UndoOutlined } from '@ant-design/icons';
 
 interface Props {
   visible: boolean;
   handleCancel: () => void;
-  handleSelect: (payment: any) => void;
+  handleSelect: (paymentID: any, payment: any) => void;
 }
 
 function ModalSelectPaymentMethod(props: Props) {
@@ -16,7 +18,7 @@ function ModalSelectPaymentMethod(props: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleSelectPayment = (value: any) => {
-    handleSelect(value.id);
+    handleSelect(value.id, value);
     handleCancel();
   };
 
@@ -52,24 +54,47 @@ function ModalSelectPaymentMethod(props: Props) {
       title="Select payment method"
       footer={false}
     >
-      {loading ? (
-        <Skeleton />
-      ) : (
-        <>
-          {payments.map((payment, i) => (
-            <CardPaymentMethod
-              mode="select"
-              key={i}
-              data={payment}
-              onClick={() => {
-                handleSelectPayment(payment);
-              }}
-            />
-          ))}
-        </>
-      )}
+      <Wrapper>
+        {loading ? (
+          <Skeleton />
+        ) : (
+          <>
+            {payments.map((payment, i) => (
+              <CardPaymentMethod
+                mode="select"
+                key={i}
+                data={payment}
+                onClick={() => {
+                  handleSelectPayment(payment);
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        <div className="selectPM-containerButton">
+          <Button className="selectPM-btn" icon={<PlusOutlined />}>
+            Add New
+          </Button>
+          <Button className="selectPM-btn" icon={<UndoOutlined />}>
+            Refresh
+          </Button>
+        </div>
+      </Wrapper>
     </Modal>
   );
 }
 
 export default ModalSelectPaymentMethod;
+
+const Wrapper = styled.div`
+  .selectPM-containerButton {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .selectPM-btn {
+    display: flex;
+    align-items: center;
+  }
+`;
