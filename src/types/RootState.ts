@@ -17,7 +17,7 @@ import { GetBalancePairState } from 'app/components/OrderForm/slice/types';
 import { TradehistoryState } from 'app/components/TradesInformation/TradeHistory/slice/types';
 import { TabP2PState } from 'app/container/TabP2PContainer/slice/type';
 import { DepositCryptoState } from 'app/container/DepositContainer/components/DepositSection/slice/types';
-
+import { WithdrawCryptoState } from 'app/container/WithdrawContainer/components/WithdrawSection/slice/types';
 import { PostAdP2PState } from 'app/container/PostAdP2PContainer/slice/types';
 
 import { CurrentPairState } from 'app/components/ContentHeader/slice/types';
@@ -44,6 +44,7 @@ export interface RootState {
   getBalancePair: GetBalancePairState;
   tradehistory: TradehistoryState;
   depositCrypto: DepositCryptoState;
+  withdrawCrypto: WithdrawCryptoState;
   tabP2P: TabP2PState;
 
   postAdP2P: PostAdP2PState;

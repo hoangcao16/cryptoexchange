@@ -102,7 +102,12 @@ const FiatSpotTable = ({ dataSource }) => {
             >
               {t('deposit')}
             </Link>
-            <span className="coin-action">{t('withdraw')}</span>
+            <Link
+              to={`/wallet/spot/withdraw/crypto/${record.assetName}`}
+              className="coin-action"
+            >
+              {t('withdraw')}
+            </Link>
             <span className="coin-action">{t('convert')}</span>
           </Space>
         );
