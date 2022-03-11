@@ -8,6 +8,20 @@ export const tabP2PService = {
     });
   },
 
+  getListOrderBy(params) {
+    return apiClient.request({
+      method: 'GET',
+      url: `/p2p-api/api/v1/p2pOrder/orders`,
+      params: {
+        fiat: params.fiat,
+        payment: params.payments,
+        amount: params.amount,
+        orderType: params.orderType,
+        tokenId: params.tokenId,
+      },
+    });
+  },
+
   getListFiat() {
     return apiClient.request({
       method: 'GET',
@@ -26,6 +40,13 @@ export const tabP2PService = {
     return apiClient.request({
       method: 'GET',
       url: `admin-api/token`,
+    });
+  },
+
+  getOrderByEmail(params) {
+    return apiClient.request({
+      method: 'GET',
+      url: `p2p-api/api/v1/p2pOrder/p2POrdersByEmail?email=${params}`,
     });
   },
 };

@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import React, { useEffect, useState } from 'react';
@@ -17,36 +17,59 @@ function P2PTableBuy() {
   const dispatch = useDispatch();
   const findTokens = useTabP2PSlice().actions;
   const findFiats = useTabP2PSlice().actions;
+  const findPayments = useTabP2PSlice().actions;
 
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
-  const { getListOrderBuy, getListFiat, getListToken } = tabP2PService;
+  const {
+    getListOrderBuy,
+    getListFiat,
+    getListToken,
+    getListOrderBy,
+    getListPayments,
+  } = tabP2PService;
 
-  const listFiat = TabP2PState.listFiat;
-  const token = TabP2PState.listToken;
-  console.log(1, token);
+  const token = TabP2PState.searchParam.crypto;
+
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
       key: 'Advertisers',
       dataIndex: 'accountEmail',
       width: 400,
-      render: (text: any, record: any) => (
-        <ColAdvertisers>
-          <div className="row1">
-            <div className="firstCharacter">
-              {record.accountEmail.charAt(0)}
-            </div>
-            <div className="advertisers">{record.accountEmail}</div>
-            <div className="checked">
-              {<BsFillCheckCircleFill color="#10afff" />}
-            </div>
-          </div>
+      render: (text: any, record: any) => {
+        let orders = 0;
+        let numberOrderDone = 0;
+        listP2POrdersBuy.forEach(order => {
+          if (order.accountEmail === text) {
+            orders += 1;
+            if (order.status === 'DONE') {
+              numberOrderDone += 1;
+            }
+          }
+        });
 
-          <div className="row2">
-            {/* {record.orders} orders | {record.completion}% completion */}
-          </div>
-        </ColAdvertisers>
-      ),
+        return (
+          <ColAdvertisers>
+            <div className="row1">
+              <div className="firstCharacter">
+                {record.accountEmail.charAt(0).toUpperCase()}
+              </div>
+              <div className="advertisers">{record.accountEmail}</div>
+              <div className="checked">
+                {<BsFillCheckCircleFill color="#10afff" />}
+              </div>
+            </div>
+
+            <div className="row2">
+              {''}
+              <span>{orders} Orders</span>
+              <span className="numberOrderComplete">
+                {((numberOrderDone / orders) * 100).toFixed(2)} % completed
+              </span>
+            </div>
+          </ColAdvertisers>
+        );
+      },
     },
     {
       title: 'Price',
@@ -56,12 +79,7 @@ function P2PTableBuy() {
       render: (text: any, record: any) => {
         return (
           <ColPrice>
-            {record.price}{' '}
-            {listFiat.map(fiat => {
-              if (fiat.id === record.fiatId) {
-                return <span key={fiat.id}>{fiat.name}</span>;
-              } else return null;
-            })}
+            {record.price} <span> {record.fiatName}</span>
           </ColPrice>
         );
       },
@@ -74,31 +92,43 @@ function P2PTableBuy() {
       render: (text: any, record: any) => (
         <ColLimitAvailable>
           <div className="rowLimitAvailable">
-            <div className="col1">Available</div>
-            <div className="col2">{record.amount - record.executed}</div>
+            <div className="col1">
+              <span>Available</span>
+            </div>
+            <div className="col2">
+              {record.amount - record.executed}{' '}
+              <span>{TabP2PState.searchParam.crypto}</span>
+            </div>
           </div>
           <div className="rowLimitAvailable">
             <div className="col1">Limit</div>
-            <div className="col2">{record.amount * record.total}</div>
+            <div className="col2">
+              {record.orderLowerBound} <span>{record.fiatName} - </span>
+            </div>
+            <div className="col3">
+              {record.orderUpperBound} <span>{record.fiatName}</span>
+            </div>
           </div>
         </ColLimitAvailable>
       ),
     },
     {
-      title: 'Payment',
-      key: 'Payment',
-      // dataIndex: 'payment',
-      // width: 280,
+      title: 'Payments',
+      key: 'Payments',
+      dataIndex: 'payments',
 
-      // render: (text: any, record: any) => (
-      //   <ColPayment>
-      //     {text.map((t, i) => (
-      //       <div className="payment" key={i}>
-      //         {t}
-      //       </div>
-      //     ))}
-      //   </ColPayment>
-      // ),
+      render: (text: any, record: any) => (
+        <ColPayment>
+          {text.map(payment => (
+            <Tag key={record.id}>
+              <img src={payment.paymentMethodIcon} alt="#" />{' '}
+              <span style={{ color: `${payment.paymentMethodColor}` }}>
+                {payment.paymentMethodName}
+              </span>
+            </Tag>
+          ))}
+        </ColPayment>
+      ),
     },
     {
       title: (
@@ -111,25 +141,51 @@ function P2PTableBuy() {
       // dataIndex: 'trade',
       width: 200,
       render: (text: any, record: any) => {
-        return <ButtonSell>Buy {TabP2PState.searchParam.crypto}</ButtonSell>;
+        return <ButtonSell>Buy </ButtonSell>;
       },
     },
   ];
 
-  const findAllOrderBuy = () => {
+  const findAllOrdersBuy = () => {
     setLoading(true);
-    getListOrderBuy()
-      .then(res => {
-        if (res.data.rc === 0) {
-          setListP2POrdersBuy(
-            res.data.rows.filter(order => order.orderType === 0),
-          );
-          setLoading(false);
-        } else {
-          console.log(res.data.rd);
-        }
-      })
-      .catch(res => console.log(res));
+    const listFiat = TabP2PState.listFiat;
+    const listToken = TabP2PState.listToken;
+    const listPaymet = TabP2PState.listPayment;
+    let payment = TabP2PState.searchParam.payment;
+    let fiat = TabP2PState.searchParam.fiat;
+    let crypto = TabP2PState.searchParam.crypto;
+    let paymentId = 0;
+    let fiatId = 0;
+    let cryptoId = 0;
+    if (listToken.length !== 0 && crypto) {
+      cryptoId = listToken.find(token => token.assetName === crypto).id;
+    }
+    if (listFiat.length !== 0 && fiat) {
+      fiatId = listFiat.find(x => x.name === fiat).id;
+    }
+    if (listPaymet.length !== 0 && payment) {
+      paymentId = listPaymet.find(x => x.name === payment).id;
+    }
+
+    getListOrderBy({
+      fiat: fiatId,
+      payments: paymentId || -1,
+      tokenId: cryptoId,
+      orderType: 0,
+      amount: -1,
+    }).then((res: any) => {
+      if (res.data.rc === 0) {
+        console.log('payload: ', {
+          fiat: fiatId,
+          payments: paymentId || -1,
+          tokenId: cryptoId,
+          orderType: 0,
+        });
+        console.log('res ', res.data.rows);
+        setListP2POrdersBuy(res.data.rows);
+        setLoading(false);
+      }
+    });
   };
 
   const findAllFiat = () => {
@@ -155,12 +211,30 @@ function P2PTableBuy() {
       })
       .catch(res => console.log(res));
   };
+
+  const findAllPayment = () => {
+    getListPayments()
+      .then(res => {
+        if (res.data.rc === 0) {
+          dispatch(findPayments.getListPayment(res.data.rows));
+          console.log(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
   useEffect(() => {
-    findAllOrderBuy();
     findAllFiat();
     findAllToken();
-    console.log(2);
+    findAllPayment();
+    // findAllOrderBuy();
+    findAllOrdersBuy();
   }, []);
+
+  useEffect(() => {
+    findAllOrdersBuy();
+  }, [TabP2PState]);
 
   return (
     <Wrapper>
@@ -207,6 +281,11 @@ const ColAdvertisers = styled.div`
     margin-left: 28px;
     font-size: 12px;
     color: ${({ theme }) => theme.primary};
+    .numberOrderComplete {
+      margin-left: 10px;
+      padding-left: 5px;
+      border-left: 1px solid #ccc;
+    }
   }
 `;
 
@@ -221,6 +300,7 @@ const ColPrice = styled.div`
 const ColLimitAvailable = styled.div`
   .rowLimitAvailable {
     display: flex;
+    align-items: baseline;
 
     .col1 {
       min-width: 50px;
@@ -229,13 +309,20 @@ const ColLimitAvailable = styled.div`
       font-size: 12px;
       color: ${({ theme }) => theme.primary};
     }
+
+    .col3 {
+      margin-left: 2px;
+    }
   }
 `;
 
 const ColPayment = styled.div`
   display: flex;
   flex-wrap: wrap;
-
+  align-items: center;
+  img {
+    width: 30px;
+  }
   .payment {
     font-size: 12px;
     padding: 0px 4px;

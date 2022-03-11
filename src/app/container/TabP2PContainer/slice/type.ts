@@ -10,4 +10,6 @@ export interface TabP2PState {
   searchParam: SearchParam;
   listToken: any;
   listFiat: any;
+  listPayment: any;
+  amount: any;
 }

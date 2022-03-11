@@ -13,6 +13,8 @@ export const initialState: TabP2PState = {
   },
   listToken: [],
   listFiat: [],
+  listPayment: [],
+  amount: 0,
 };
 
 const slice = createSlice({
@@ -69,6 +71,14 @@ const slice = createSlice({
 
     getListFiat(state, action: PayloadAction<any>) {
       state.listFiat = action.payload;
+    },
+
+    getListPayment(state, action: PayloadAction<any>) {
+      state.listPayment = action.payload;
+    },
+
+    amountTabP2P(state, action: PayloadAction<any>) {
+      state.amount = action.payload;
     },
   },
 });

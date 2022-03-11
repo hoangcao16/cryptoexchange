@@ -1,6 +1,6 @@
 import { Checkbox, Col, Input, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Popover, Tooltip } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useTabP2PSlice } from '../slice';
@@ -18,6 +18,9 @@ function P2PFilter() {
   const [listPayments, setListPayments] = useState<any>([]);
 
   const { getListFiat, getListPayments } = tabP2PService;
+  if (TabP2PState.searchParam.fiat === '') {
+    dispatch(actions.fiatTabP2P('USD'));
+  }
 
   const handleFiat = (value: any) => {
     dispatch(actions.fiatTabP2P(value));
@@ -27,12 +30,15 @@ function P2PFilter() {
     dispatch(actions.paymentTabP2P(value));
   };
 
+  const handleAmount = (value: any) => {
+    dispatch(actions.amountTabP2P(value));
+  };
+
   const findAllFiat = () => {
     getListFiat()
       .then(res => {
         if (res.data.rc === 0) {
           setListFiat(res.data.rows);
-          console.log(res.data.rows);
         } else {
           console.log(res.data.rd);
         }
@@ -45,12 +51,17 @@ function P2PFilter() {
       .then(res => {
         if (res.data.rc === 0) {
           setListPayments(res.data.rows);
-          console.log(222, res.data.rows);
         } else {
           console.log(res.data.rd);
         }
       })
       .catch(res => console.log(res));
+  };
+
+  const handleSearchAmount = (value: any) => {
+    if (value) {
+      handleAmount(Number(value));
+    }
   };
 
   useEffect(() => {
@@ -66,6 +77,8 @@ function P2PFilter() {
           <SearchStyled
             placeholder="Enter amount"
             enterButton="Search"
+            onSearch={handleSearchAmount}
+            type="number"
             size="large"
             suffix={TabP2PState.searchParam.fiat || ' '}
           />
@@ -78,6 +91,7 @@ function P2PFilter() {
             showSearch
             onChange={handleFiat}
             value={TabP2PState.searchParam.fiat}
+            defaultValue={TabP2PState.searchParam.fiat}
           >
             {listFiat.map((f, i) => (
               <Option value={f.name} key={i}>
