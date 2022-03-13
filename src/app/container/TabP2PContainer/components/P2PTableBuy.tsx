@@ -173,19 +173,27 @@ function P2PTableBuy() {
       tokenId: cryptoId,
       orderType: 0,
       amount: -1,
-    }).then((res: any) => {
-      if (res.data.rc === 0) {
-        console.log('payload: ', {
-          fiat: fiatId,
-          payments: paymentId || -1,
-          tokenId: cryptoId,
-          orderType: 0,
-        });
-        console.log('res ', res.data.rows);
-        setListP2POrdersBuy(res.data.rows);
+    })
+      .then((res: any) => {
+        if (res.data.rc === 0) {
+          console.log('payload: ', {
+            fiat: fiatId,
+            payments: paymentId || -1,
+            tokenId: cryptoId,
+            orderType: 0,
+          });
+          console.log('res ', res.data.rows);
+          setListP2POrdersBuy(res.data.rows);
+          setLoading(false);
+        } else {
+          console.log(res.rd);
+          setLoading(false);
+        }
+      })
+      .catch(res => {
+        console.log(res);
         setLoading(false);
-      }
-    });
+      });
   };
 
   const findAllFiat = () => {

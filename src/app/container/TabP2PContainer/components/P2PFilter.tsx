@@ -59,9 +59,9 @@ function P2PFilter() {
   };
 
   const handleSearchAmount = (value: any) => {
-    if (value) {
+    if (value && value >= 0) {
       handleAmount(Number(value));
-    }
+    } else handleAmount(-1);
   };
 
   useEffect(() => {
@@ -78,6 +78,7 @@ function P2PFilter() {
             placeholder="Enter amount"
             enterButton="Search"
             onSearch={handleSearchAmount}
+            min={0}
             type="number"
             size="large"
             suffix={TabP2PState.searchParam.fiat || ' '}
