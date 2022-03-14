@@ -9,10 +9,11 @@ interface Props {
   visible: boolean;
   handleCancel: () => void;
   handleSelect: (paymentID: any, payment: any) => void;
+  paymentMethodSelected: any[];
 }
 
 function ModalSelectPaymentMethod(props: Props) {
-  const { visible, handleCancel, handleSelect } = props;
+  const { visible, handleCancel, handleSelect, paymentMethodSelected } = props;
 
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,16 +60,22 @@ function ModalSelectPaymentMethod(props: Props) {
           <Skeleton />
         ) : (
           <>
-            {payments.map((payment, i) => (
-              <CardPaymentMethod
-                mode="select"
-                key={i}
-                data={payment}
-                onClick={() => {
-                  handleSelectPayment(payment);
-                }}
-              />
-            ))}
+            {payments?.map((payment, i) => {
+              if (paymentMethodSelected.includes(payment.id)) {
+                return null;
+              }
+
+              return (
+                <CardPaymentMethod
+                  mode="select"
+                  key={i}
+                  data={payment}
+                  onClick={() => {
+                    handleSelectPayment(payment);
+                  }}
+                />
+              );
+            })}
           </>
         )}
 

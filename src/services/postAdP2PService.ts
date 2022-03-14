@@ -44,4 +44,11 @@ export const postAdP2PServices = {
       url: '/account-svc/users/auth/getUser',
     });
   },
+
+  getOrderPrice(type: 0 | 1, tokenId: string, fiatId: string) {
+    return apiClient.request({
+      method: 'get',
+      url: `/p2p-api/api/v1/p2pOrder/orderPrice?type=${type}&tokenId=${tokenId}&fiatId=${fiatId}`,
+    });
+  },
 };

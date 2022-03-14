@@ -7,14 +7,23 @@ interface Props {
   mode: 'display' | 'select';
   data: any;
   onClick?: () => void;
+  onRemove?: (id: any) => void;
 }
 
 function CardPaymentMethod(props: Props) {
-  const { mode, data, onClick } = props;
+  const { mode, data, onClick, onRemove } = props;
 
   const handleSelectCart = () => {
     if (onClick) {
       onClick();
+    }
+
+    return;
+  };
+
+  const handleClose = () => {
+    if (onRemove) {
+      onRemove(data.id);
     }
 
     return;
@@ -28,6 +37,7 @@ function CardPaymentMethod(props: Props) {
           <Button
             type="link"
             icon={<AiOutlineClose className="cardPM--icon" />}
+            onClick={handleClose}
           ></Button>
         )}
 

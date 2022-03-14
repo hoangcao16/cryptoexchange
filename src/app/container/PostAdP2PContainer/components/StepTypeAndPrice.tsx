@@ -1,4 +1,5 @@
 import { Button, Form, Input, InputNumber, Radio, Skeleton } from 'antd';
+import { A } from 'app/container/OrderFormContainer/style';
 import React, { useEffect, useState } from 'react';
 import {
   AiOutlineInfoCircle,
@@ -22,22 +23,22 @@ function StepTypeAndPrice() {
   const [active, setActive] = useState<0 | 1>(1); // 0 : buy, 1 : sell
 
   const [tokens, setTokens] = useState<any[]>([]);
-  const [assetSelected, setAssetSelected] = useState();
+  const [assetSelected, setAssetSelected] = useState<any>();
   const [tokenName, setTokenName] = useState();
 
   const [fiat, setFiat] = useState<any[]>([]);
   const [fiatName, setFiatName] = useState<string>();
-  const [fiatSelected, setFiatSelected] = useState();
+  const [fiatSelected, setFiatSelected] = useState<any>();
 
   const [priceType, setPriceType] = useState<0 | 1>(0); //0 fixed, 1 floating
-  const [price, setPrice] = useState<number>(123.34);
+  const [price, setPrice] = useState<number>(0);
+  const [marketPrice, setMarketPrice] = useState(0);
+  const [symbol, setSymbol] = useState('');
 
   const [loadingToken, setLoadingToken] = useState(false);
   const [loadingFiat, setLoadingFiat] = useState(false);
 
-  const [marketPrice, setMarketPrice] = useState(100.34);
-
-  const handleType = (key: 0 | 1) => {
+  const handleType = (key: 1 | 0) => {
     if (key === active) {
       return;
     }
@@ -169,6 +170,26 @@ function StepTypeAndPrice() {
     handleGetAllFiat();
   }, []);
 
+  useEffect(() => {
+    if (!assetSelected || !fiatSelected) {
+      return;
+    }
+
+    postAdP2PServices
+      .getOrderPrice(active, assetSelected, fiatSelected)
+      .then(res => {
+        if (res.data.rc !== 0) {
+          setMarketPrice(0);
+          setPrice(0);
+          return;
+        }
+
+        setMarketPrice(res.data.price);
+        setPrice(res.data.price);
+        setSymbol(res.data.fiatSymbol);
+      });
+  }, [active, assetSelected, fiatSelected]);
+
   return (
     <Wrapper>
       <div className="containerTabsSTP">
@@ -242,7 +263,7 @@ function StepTypeAndPrice() {
           <div className="contentSTP--detailPrice-col">
             <div className="contentSTP--label">Your Price</div>
             <div className="contentSTP--price">
-              $ {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              {symbol} {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             </div>
           </div>
 
@@ -251,7 +272,9 @@ function StepTypeAndPrice() {
               Lowest Order Price{' '}
               <AiOutlineInfoCircle className="contentSTP--label-icon" />
             </div>
-            <div className="contentSTP--price">$ {marketPrice}</div>
+            <div className="contentSTP--price">
+              {symbol} {marketPrice}
+            </div>
           </div>
         </div>
 
@@ -266,9 +289,9 @@ function StepTypeAndPrice() {
             <RadioStyled value={0} className="contentSTP--item">
               Fixed
             </RadioStyled>
-            <RadioStyled value={1} className="contentSTP--item">
+            {/* <RadioStyled value={1} className="contentSTP--item">
               Floating
-            </RadioStyled>
+            </RadioStyled> */}
           </Radio.Group>
         </div>
 
@@ -301,7 +324,9 @@ function StepTypeAndPrice() {
                   +
                 </Button>
               </div>
-              <div>{displayWarningPriceFixed()}</div>
+              <div className="contentSTP--error">
+                {displayWarningPriceFixed()}
+              </div>
             </>
           )}
 
@@ -384,6 +409,10 @@ const Wrapper = styled.div`
       &-icon {
         font-size: 18px;
       }
+    }
+
+    &--error {
+      color: ${({ theme }) => theme.errorColor};
     }
 
     &--options {
