@@ -20,13 +20,8 @@ function P2PTableBuy() {
   const findPayments = useTabP2PSlice().actions;
 
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
-  const {
-    getListOrderBuy,
-    getListFiat,
-    getListToken,
-    getListOrderBy,
-    getListPayments,
-  } = tabP2PService;
+  const { getListFiat, getListToken, getListOrderBy, getListPayments } =
+    tabP2PService;
 
   const token = TabP2PState.searchParam.crypto;
 
@@ -138,10 +133,9 @@ function P2PTableBuy() {
         </ColumnsTrade>
       ),
       key: 'trade',
-      // dataIndex: 'trade',
       width: 200,
-      render: (text: any, record: any) => {
-        return <ButtonSell>Buy </ButtonSell>;
+      render: () => {
+        return <ButtonSell>Buy {token}</ButtonSell>;
       },
     },
   ];
@@ -154,6 +148,7 @@ function P2PTableBuy() {
     let payment = TabP2PState.searchParam.payment;
     let fiat = TabP2PState.searchParam.fiat;
     let crypto = TabP2PState.searchParam.crypto;
+    let amount = TabP2PState.amount;
     let paymentId = 0;
     let fiatId = 0;
     let cryptoId = 0;
@@ -172,17 +167,10 @@ function P2PTableBuy() {
       payments: paymentId || -1,
       tokenId: cryptoId,
       orderType: 0,
-      amount: -1,
+      amount: amount,
     })
       .then((res: any) => {
         if (res.data.rc === 0) {
-          console.log('payload: ', {
-            fiat: fiatId,
-            payments: paymentId || -1,
-            tokenId: cryptoId,
-            orderType: 0,
-          });
-          console.log('res ', res.data.rows);
           setListP2POrdersBuy(res.data.rows);
           setLoading(false);
         } else {
@@ -225,7 +213,6 @@ function P2PTableBuy() {
       .then(res => {
         if (res.data.rc === 0) {
           dispatch(findPayments.getListPayment(res.data.rows));
-          console.log(res.data.rows);
         } else {
           console.log(res.data.rd);
         }
@@ -236,7 +223,6 @@ function P2PTableBuy() {
     findAllFiat();
     findAllToken();
     findAllPayment();
-    // findAllOrderBuy();
     findAllOrdersBuy();
   }, []);
 

@@ -14,7 +14,7 @@ export const initialState: TabP2PState = {
   listToken: [],
   listFiat: [],
   listPayment: [],
-  amount: 0,
+  amount: -1,
 };
 
 const slice = createSlice({

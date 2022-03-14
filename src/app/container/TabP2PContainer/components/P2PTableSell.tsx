@@ -3,23 +3,20 @@ import { ColumnsType } from 'antd/es/table';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Button, Tab } from 'react-bootstrap';
-import { useTabP2PSlice } from '../slice';
+import { Button } from 'react-bootstrap';
 import { tabP2PService } from 'services/tabP2PServices';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { TabP2PState } from '../slice/type';
 import { selectTabP2P } from '../slice/selectors';
 
 function P2PTableSell() {
   const [listP2POrdersSell, setListP2POrdersSell] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const findTokens = useTabP2PSlice().actions;
-  const findFiats = useTabP2PSlice().actions;
-  const findPayments = useTabP2PSlice().actions;
 
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const { getListOrderBy } = tabP2PService;
+
+  const token = TabP2PState.searchParam.crypto;
 
   const columns: ColumnsType<any> = [
     {
@@ -111,7 +108,7 @@ function P2PTableSell() {
       render: (text: any, record: any) => (
         <ColPayment>
           {text.map(payment => (
-            <Tag key={record.id}>
+            <Tag key={record.id} className="paymentTag">
               <img src={payment.paymentMethodIcon} alt="#" />{' '}
               <span style={{ color: `${payment.paymentMethodColor}` }}>
                 {payment.paymentMethodName}
@@ -129,10 +126,9 @@ function P2PTableSell() {
         </ColumnsTrade>
       ),
       key: 'trade',
-      // dataIndex: 'trade',
       width: 200,
-      render: (text: any, record: any) => {
-        return <ButtonSell>Buy </ButtonSell>;
+      render: () => {
+        return <ButtonSell>Buy {token}</ButtonSell>;
       },
     },
   ];
@@ -145,6 +141,7 @@ function P2PTableSell() {
     let payment = TabP2PState.searchParam.payment;
     let fiat = TabP2PState.searchParam.fiat;
     let crypto = TabP2PState.searchParam.crypto;
+    let amount = TabP2PState.amount;
     let paymentId = 0;
     let fiatId = 0;
     let cryptoId = 0;
@@ -163,17 +160,10 @@ function P2PTableSell() {
       payments: paymentId || -1,
       tokenId: cryptoId,
       orderType: 1,
-      amount: -1,
+      amount: amount,
     })
       .then((res: any) => {
         if (res.data.rc === 0) {
-          console.log('payload: ', {
-            fiat: fiatId,
-            payments: paymentId || -1,
-            tokenId: cryptoId,
-            orderType: 0,
-          });
-          console.log('res ', res.data.rows);
           setListP2POrdersSell(res.data.rows);
           setLoading(false);
         } else {
@@ -193,7 +183,12 @@ function P2PTableSell() {
 
   return (
     <Wrapper>
-      <Table rowKey={'id'} loading={loading} columns={columns} />
+      <Table
+        rowKey={'id'}
+        loading={loading}
+        columns={columns}
+        dataSource={listP2POrdersSell}
+      />
     </Wrapper>
   );
 }
@@ -260,6 +255,18 @@ const ColPayment = styled.div`
   display: flex;
   flex-wrap: wrap;
 
+  .paymentTag {
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 25px;
+      padding: 2px;
+      margin-right: 3px;
+    }
+  }
+
   .payment {
     font-size: 12px;
     padding: 0px 4px;
@@ -287,6 +294,9 @@ const ColumnsTrade = styled.div`
 
 const ButtonSell = styled(Button)`
   height: 30px;
+  width: 80%;
+  display: block;
+  margin: 0 auto;
   padding: 0px 30px;
   background-color: ${({ theme }) => theme.p2pSell};
   border: none;
