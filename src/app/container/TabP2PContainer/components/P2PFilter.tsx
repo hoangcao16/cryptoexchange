@@ -1,6 +1,6 @@
 import { Checkbox, Col, Input, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import { Container, Popover, Tooltip } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useTabP2PSlice } from '../slice';
@@ -27,7 +27,11 @@ function P2PFilter() {
   };
 
   const handlePaymentMethod = (value: any) => {
-    dispatch(actions.paymentTabP2P(value));
+    if (value) {
+      dispatch(actions.paymentTabP2P(value));
+    } else {
+      dispatch(actions.paymentTabP2P('All payments'));
+    }
   };
 
   const handleAmount = (value: any) => {
@@ -61,7 +65,11 @@ function P2PFilter() {
   const handleSearchAmount = (value: any) => {
     if (value && value >= 0) {
       handleAmount(Number(value));
-    } else handleAmount(-1);
+    } else if (value) {
+      handleAmount(Math.abs(value));
+    } else {
+      handleAmount(-1);
+    }
   };
 
   useEffect(() => {
@@ -77,6 +85,7 @@ function P2PFilter() {
           <SearchStyled
             placeholder="Enter amount"
             enterButton="Search"
+            allowClear
             onSearch={handleSearchAmount}
             min={0}
             type="number"
@@ -114,6 +123,7 @@ function P2PFilter() {
             showSearch
             onChange={handlePaymentMethod}
             value={TabP2PState.searchParam.payment}
+            allowClear
           >
             {listPayments.map((p, i) => (
               <Option value={p.name} key={i}>

@@ -9,7 +9,7 @@ export const initialState: TabP2PState = {
     action: 'buy',
     crypto: '',
     fiat: '',
-    payment: '',
+    payment: 'All payments',
   },
   listToken: [],
   listFiat: [],

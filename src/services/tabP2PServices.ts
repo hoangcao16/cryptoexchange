@@ -1,7 +1,7 @@
 import apiClient from './apiService';
 
 export const tabP2PService = {
-  getListOrderBuy() {
+  getListOrder() {
     return apiClient.request({
       method: 'GET',
       url: `/p2p-api/api/v1/p2pOrder`,
@@ -47,6 +47,13 @@ export const tabP2PService = {
     return apiClient.request({
       method: 'GET',
       url: `p2p-api/api/v1/p2pOrder/p2POrdersByEmail?email=${params}`,
+    });
+  },
+
+  getListTimeLimit() {
+    return apiClient.request({
+      method: 'GET',
+      url: 'admin-api/api/v1/p2PPaymentTime',
     });
   },
 };

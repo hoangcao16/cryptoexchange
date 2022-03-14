@@ -8,13 +8,15 @@ import { tabP2PService } from 'services/tabP2PServices';
 import { useSelector } from 'react-redux';
 import { TabP2PState } from '../slice/type';
 import { selectTabP2P } from '../slice/selectors';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 function P2PTableSell() {
   const [listP2POrdersSell, setListP2POrdersSell] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [listP2POrders, setListP2POrders] = useState<any>([]);
 
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
-  const { getListOrderBy } = tabP2PService;
+  const { getListOrderBy, getListOrder } = tabP2PService;
 
   const token = TabP2PState.searchParam.crypto;
 
@@ -27,8 +29,8 @@ function P2PTableSell() {
       render: (text: any, record: any) => {
         let orders = 0;
         let numberOrderDone = 0;
-        listP2POrdersSell.forEach(order => {
-          if (order.accountEmail === text) {
+        listP2POrders.forEach(order => {
+          if (order.accountEmail === text && order.orderType === 1) {
             orders += 1;
             if (order.status === 'DONE') {
               numberOrderDone += 1;
@@ -107,14 +109,26 @@ function P2PTableSell() {
 
       render: (text: any, record: any) => (
         <ColPayment>
-          {text.map(payment => (
-            <Tag key={record.id} className="paymentTag">
-              <img src={payment.paymentMethodIcon} alt="#" />{' '}
-              <span style={{ color: `${payment.paymentMethodColor}` }}>
-                {payment.paymentMethodName}
-              </span>
-            </Tag>
-          ))}
+          {text.length === 0 ? (
+            <h6>Unknow payment!</h6>
+          ) : (
+            text.map(payment => {
+              if (payment) {
+                return (
+                  <Tag key={record.id} className="paymentTag">
+                    <img src={payment.paymentMethodIcon} alt="#" />{' '}
+                    <span
+                      style={{
+                        color: `${payment.paymentMethodColor}`,
+                      }}
+                    >
+                      {payment.paymentMethodName}
+                    </span>
+                  </Tag>
+                );
+              }
+            })
+          )}
         </ColPayment>
       ),
     },
@@ -138,20 +152,25 @@ function P2PTableSell() {
     const listFiat = TabP2PState.listFiat;
     const listToken = TabP2PState.listToken;
     const listPaymet = TabP2PState.listPayment;
+
     let payment = TabP2PState.searchParam.payment;
     let fiat = TabP2PState.searchParam.fiat;
     let crypto = TabP2PState.searchParam.crypto;
     let amount = TabP2PState.amount;
+
     let paymentId = 0;
     let fiatId = 0;
     let cryptoId = 0;
+
     if (listToken.length !== 0 && crypto) {
       cryptoId = listToken.find(token => token.assetName === crypto).id;
     }
+
     if (listFiat.length !== 0 && fiat) {
       fiatId = listFiat.find(x => x.name === fiat).id;
     }
-    if (listPaymet.length !== 0 && payment) {
+
+    if (listPaymet.length !== 0 && payment !== 'All payments' && payment) {
       paymentId = listPaymet.find(x => x.name === payment).id;
     }
 
@@ -167,7 +186,6 @@ function P2PTableSell() {
           setListP2POrdersSell(res.data.rows);
           setLoading(false);
         } else {
-          console.log(res.rd);
           setLoading(false);
         }
       })
@@ -177,6 +195,22 @@ function P2PTableSell() {
       });
   };
 
+  const findAllOrders = () => {
+    getListOrder()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListP2POrders(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
+
+  useEffect(() => {
+    findAllOrders();
+  }, []);
+
   useEffect(() => {
     findAllOrdersSell();
   }, [TabP2PState]);
@@ -185,7 +219,10 @@ function P2PTableSell() {
     <Wrapper>
       <Table
         rowKey={'id'}
-        loading={loading}
+        loading={{
+          spinning: loading,
+          indicator: <AiOutlineLoading3Quarters className="loadingIcon" />,
+        }}
         columns={columns}
         dataSource={listP2POrdersSell}
       />
@@ -195,7 +232,23 @@ function P2PTableSell() {
 
 export default P2PTableSell;
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  @keyframes spining {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+
+  .loadingIcon {
+    -webkit-animation: spining 1.1s infinite linear;
+    animation: spining 1.1s infinite linear;
+  }
+`;
 
 const ColAdvertisers = styled.div`
   display: flex;
@@ -226,6 +279,11 @@ const ColAdvertisers = styled.div`
     margin-left: 28px;
     font-size: 12px;
     color: ${({ theme }) => theme.primary};
+    .numberOrderComplete {
+      margin-left: 10px;
+      padding-left: 5px;
+      border-left: 1px solid #ccc;
+    }
   }
 `;
 

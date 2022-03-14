@@ -1,4 +1,4 @@
-import { Table, Tag } from 'antd';
+import { Descriptions, Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import React, { useEffect, useState } from 'react';
@@ -10,60 +10,92 @@ import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
 import { useDispatch } from 'react-redux';
 import { useTabP2PSlice } from '../slice';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import HandleOrder from './HandleOrder';
 
 function P2PTableBuy() {
   const [listP2POrdersBuy, setListP2POrdersBuy] = useState<any>([]);
+  const [listP2POrders, setListP2POrders] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [openOrders, setOpenOrders] = useState<any>([]);
+  const [listTimeLimit, setListTimeLimit] = useState<any>([]);
   const dispatch = useDispatch();
   const findTokens = useTabP2PSlice().actions;
   const findFiats = useTabP2PSlice().actions;
   const findPayments = useTabP2PSlice().actions;
 
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
-  const { getListFiat, getListToken, getListOrderBy, getListPayments } =
-    tabP2PService;
+  const {
+    getListFiat,
+    getListToken,
+    getListOrderBy,
+    getListPayments,
+    getListOrder,
+    getListTimeLimit,
+  } = tabP2PService;
 
   const token = TabP2PState.searchParam.crypto;
-
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
       key: 'Advertisers',
       dataIndex: 'accountEmail',
       width: 400,
-      render: (text: any, record: any) => {
-        let orders = 0;
-        let numberOrderDone = 0;
-        listP2POrdersBuy.forEach(order => {
-          if (order.accountEmail === text) {
-            orders += 1;
-            if (order.status === 'DONE') {
-              numberOrderDone += 1;
+      render: (text: any, record: any, index: any) => {
+        if (!openOrders.includes(index)) {
+          let orders = 0;
+          let numberOrderDone = 0;
+          listP2POrders.forEach(order => {
+            if (order.accountEmail === text && order.orderType === 0) {
+              orders += 1;
+              if (order.status === 'DONE') {
+                numberOrderDone += 1;
+              }
             }
-          }
-        });
+          });
 
-        return (
-          <ColAdvertisers>
-            <div className="row1">
-              <div className="firstCharacter">
-                {record.accountEmail.charAt(0).toUpperCase()}
+          return (
+            <ColAdvertisers>
+              <div className="row1">
+                <div className="firstCharacter">
+                  {record.accountEmail.charAt(0).toUpperCase()}
+                </div>
+                <div className="advertisers">{record.accountEmail}</div>
+                <div className="checked">
+                  {<BsFillCheckCircleFill color="#10afff" />}
+                </div>
               </div>
-              <div className="advertisers">{record.accountEmail}</div>
-              <div className="checked">
-                {<BsFillCheckCircleFill color="#10afff" />}
-              </div>
-            </div>
 
-            <div className="row2">
-              {''}
-              <span>{orders} Orders</span>
-              <span className="numberOrderComplete">
-                {((numberOrderDone / orders) * 100).toFixed(2)} % completed
-              </span>
-            </div>
-          </ColAdvertisers>
-        );
+              <div className="row2">
+                {''}
+                <span>{orders} Orders</span>
+                <span className="numberOrderComplete">
+                  {((numberOrderDone / orders) * 100).toFixed(2)} % completed
+                </span>
+              </div>
+            </ColAdvertisers>
+          );
+        } else {
+          let timeLimit = listTimeLimit.find(
+            time => time.id === record.paymentTimeId,
+          ).timeLimit;
+          return (
+            <HandleOrder
+              listP2POrders={listP2POrders}
+              text={text}
+              record={record}
+              index={index}
+              hanldeCloseOrder={hanldeCloseOrder}
+              timeLimit={timeLimit}
+            />
+          );
+        }
+      },
+
+      onCell: (_, index) => {
+        return {
+          colSpan: openOrders.includes(index) ? 5 : 1,
+        };
       },
     },
     {
@@ -78,6 +110,9 @@ function P2PTableBuy() {
           </ColPrice>
         );
       },
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 0 : 1,
+      }),
     },
     {
       title: 'Limit/Available',
@@ -106,6 +141,9 @@ function P2PTableBuy() {
           </div>
         </ColLimitAvailable>
       ),
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 0 : 1,
+      }),
     },
     {
       title: 'Payments',
@@ -114,16 +152,31 @@ function P2PTableBuy() {
 
       render: (text: any, record: any) => (
         <ColPayment>
-          {text.map(payment => (
-            <Tag key={record.id}>
-              <img src={payment.paymentMethodIcon} alt="#" />{' '}
-              <span style={{ color: `${payment.paymentMethodColor}` }}>
-                {payment.paymentMethodName}
-              </span>
-            </Tag>
-          ))}
+          {text.length === 0 ? (
+            <h6>Unknow payment!</h6>
+          ) : (
+            text.map(payment => {
+              if (payment) {
+                return (
+                  <Tag key={record.id} className="paymentTag">
+                    <img src={payment.paymentMethodIcon} alt="#" />{' '}
+                    <span
+                      style={{
+                        color: `${payment.paymentMethodColor}`,
+                      }}
+                    >
+                      {payment.paymentMethodName}
+                    </span>
+                  </Tag>
+                );
+              }
+            })
+          )}
         </ColPayment>
       ),
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 0 : 1,
+      }),
     },
     {
       title: (
@@ -134,31 +187,51 @@ function P2PTableBuy() {
       ),
       key: 'trade',
       width: 200,
-      render: () => {
-        return <ButtonSell>Buy {token}</ButtonSell>;
+      render: (_, record, index: any) => {
+        return (
+          <ButtonSell
+            onClick={() => {
+              setOpenOrders([...openOrders, index]);
+            }}
+          >
+            Buy {token}
+          </ButtonSell>
+        );
       },
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 0 : 1,
+      }),
     },
   ];
+
+  const hanldeCloseOrder = value => {
+    setOpenOrders(value);
+  };
 
   const findAllOrdersBuy = () => {
     setLoading(true);
     const listFiat = TabP2PState.listFiat;
     const listToken = TabP2PState.listToken;
     const listPaymet = TabP2PState.listPayment;
+
     let payment = TabP2PState.searchParam.payment;
     let fiat = TabP2PState.searchParam.fiat;
     let crypto = TabP2PState.searchParam.crypto;
     let amount = TabP2PState.amount;
+
     let paymentId = 0;
     let fiatId = 0;
     let cryptoId = 0;
+
     if (listToken.length !== 0 && crypto) {
       cryptoId = listToken.find(token => token.assetName === crypto).id;
     }
+
     if (listFiat.length !== 0 && fiat) {
       fiatId = listFiat.find(x => x.name === fiat).id;
     }
-    if (listPaymet.length !== 0 && payment) {
+
+    if (listPaymet.length !== 0 && payment !== 'All payments' && payment) {
       paymentId = listPaymet.find(x => x.name === payment).id;
     }
 
@@ -182,6 +255,18 @@ function P2PTableBuy() {
         console.log(res);
         setLoading(false);
       });
+  };
+
+  const findAllOrders = () => {
+    getListOrder()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListP2POrders(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
   };
 
   const findAllFiat = () => {
@@ -219,11 +304,25 @@ function P2PTableBuy() {
       })
       .catch(res => console.log(res));
   };
+
+  const findAllPaymentTime = () => {
+    getListTimeLimit()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListTimeLimit(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
   useEffect(() => {
     findAllFiat();
     findAllToken();
     findAllPayment();
     findAllOrdersBuy();
+    findAllOrders();
+    findAllPaymentTime();
   }, []);
 
   useEffect(() => {
@@ -234,7 +333,10 @@ function P2PTableBuy() {
     <Wrapper>
       <Table
         rowKey={'id'}
-        loading={loading}
+        loading={{
+          spinning: loading,
+          indicator: <AiOutlineLoading3Quarters className="loadingIcon" />,
+        }}
         columns={columns}
         dataSource={listP2POrdersBuy}
       />
@@ -244,7 +346,72 @@ function P2PTableBuy() {
 
 export default P2PTableBuy;
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  @keyframes spining {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+
+  .loadingIcon {
+    -webkit-animation: spining 1.1s infinite linear;
+    animation: spining 1.1s infinite linear;
+  }
+`;
+
+const ColHandleOrder = styled.div`
+  display: flex;
+  .orderInfo {
+    flex: 6;
+    border-right: 1px solid #ccc;
+  }
+  .formOrder {
+    padding-left: 20px;
+    flex: 4;
+  }
+`;
+
+const ColOrderAdvertisers = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+
+  .row1 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .firstCharacter {
+      text-align: center;
+      font-size: 12px;
+      color: ${({ theme }) => theme.text};
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      border-radius: 10px;
+      background-color: ${({ theme }) => theme.primary};
+    }
+
+    .advertisers {
+      margin: 0px 8px;
+    }
+  }
+  .row2 {
+    margin-left: 28px;
+    font-size: 12px;
+    color: ${({ theme }) => theme.primary};
+    .numberOrderComplete {
+      margin-left: 10px;
+      padding-left: 5px;
+      border-left: 1px solid #ccc;
+    }
+  }
+`;
 
 const ColAdvertisers = styled.div`
   display: flex;
