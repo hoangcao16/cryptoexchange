@@ -67,11 +67,11 @@ const HandleOrder = (props: any) => {
             <Descriptions.Item span={1} label="Buyer's payment method">
               <span className="orderDescriptionSpan">
                 {
-                  <div>
-                    {text.length === 0 ? (
+                  <div className="colPayments">
+                    {record.payments.length === 0 ? (
                       <h6>Unknow payment!</h6>
                     ) : (
-                      text.map(payment => {
+                      record.payments.map(payment => {
                         if (payment) {
                           return (
                             <Tag key={record.id} className="paymentTag">
@@ -85,7 +85,7 @@ const HandleOrder = (props: any) => {
                               </span>
                             </Tag>
                           );
-                        }
+                        } else return null;
                       })
                     )}
                   </div>
@@ -123,6 +123,26 @@ export default HandleOrder;
 const ColHandleOrder = styled.div`
   display: flex;
 
+  .colPayments {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    img {
+      width: 30px;
+    }
+    .payment {
+      font-size: 12px;
+      padding: 0px 4px;
+      border-radius: 4px;
+      margin-right: 4px;
+      margin-bottom: 4px;
+      min-width: 70px;
+      text-align: center;
+
+      background-color: ${({ theme }) => theme.p2pBorder};
+      color: #e72258;
+    }
+  }
   .orderDescription {
     margin-left: 25px;
     margin-top: 10px;
