@@ -40,6 +40,14 @@ function StepTotalAndPayment() {
     setIsEmptyPaymentMethods(false);
   };
 
+  const handleRemovePaymentMethod = (id: string) => {
+    const newPMIDs = paymentMethodIDSelected.filter(p => p !== id);
+    const newPDs = paymentMethodSelected.filter(p => p.id !== id);
+
+    setPaymentMethodIDSelected(newPMIDs);
+    setPaymentMethodSelected(newPDs);
+  };
+
   const handleOpenModal = () => {
     setModalSelectPaymentMethod(true);
   };
@@ -287,7 +295,12 @@ function StepTotalAndPayment() {
         <div className="stepTAP--label">Payment Method</div>
         <div>Select up to 5 methods</div>
         {paymentMethodSelected.map((e, i) => (
-          <CardPaymentMethod mode="display" key={i} data={e} />
+          <CardPaymentMethod
+            mode="display"
+            key={i}
+            data={e}
+            onRemove={handleRemovePaymentMethod}
+          />
         ))}
         <Button
           type="link"
@@ -320,6 +333,7 @@ function StepTotalAndPayment() {
         visible={modalSelectPaymentMethod}
         handleCancel={handleCloseModal}
         handleSelect={handleSelectPayment}
+        paymentMethodSelected={paymentMethodIDSelected}
       />
       <SwitchStep next={handleNextStep} post={() => {}} />
     </Wrapper>
