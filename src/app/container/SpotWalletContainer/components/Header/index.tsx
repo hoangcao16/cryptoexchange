@@ -4,6 +4,7 @@ import {
   DepositButton,
   NormalButton,
   WalletDirect,
+  StyledLink,
 } from './style';
 import IconSvg from 'app/assets/img/icon';
 import { useTranslation } from 'react-i18next';
@@ -19,9 +20,12 @@ const FiatSpotHeader = () => {
           <DepositButton>
             <Link to={`/wallet/spot/deposit/crypto/BTC`}>{t('deposit')}</Link>
           </DepositButton>
-          <NormalButton href="#" id="spotAccount_top_withdrawal">
+          <StyledLink
+            to={`/wallet/spot/withdraw/crypto/BTC`}
+            id="spotAccount_top_withdrawal"
+          >
             <button data-bn-type="button">{t('withdraw')}</button>
-          </NormalButton>
+          </StyledLink>
           <NormalButton
             href="#"
             rel="noopener noreferrer"

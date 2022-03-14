@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import { Link } from 'react-router-dom';
 export const Title = styled.div`
   margin: 0px;
   min-width: 0px;
@@ -197,5 +197,62 @@ export const WalletDirect = styled.div`
   }
   .gap-fill {
     position: absolute;
+  }
+`;
+export const StyledLink = styled(Link)`
+  box-sizing: border-box;
+  margin: 0px 8px;
+  min-width: 0px;
+  flex-shrink: 0;
+  color: ${({ theme }) => theme.primary};
+  display: inline-block;
+  text-decoration: none !important;
+  background-color: transparent !important;
+  button {
+    margin: 0px;
+    appearance: none;
+    user-select: none;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    padding: 10px 12px;
+    min-width: 60px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    word-break: keep-all;
+    color: ${({ theme }) => theme.background};
+    border-radius: 4px;
+    min-height: 24px;
+    border: none;
+    background-image: none;
+    background-color: ${({ theme }) => theme.matteWhiteColor};
+    @media screen and (min-width: 767px) {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    &:hover {
+      box-shadow: none;
+      background-image: none;
+      background-color: ${({ theme }) => theme.whiteSmokeColor};
+    }
+    .wallet-icon {
+      margin: 0px 8px 0px 0px;
+      min-width: 0px;
+      color: ${({ theme }) => theme.background};
+      font-size: 16px;
+      fill: ${({ theme }) => theme.background};
+      width: 1em;
+      height: 1em;
+    }
   }
 `;
