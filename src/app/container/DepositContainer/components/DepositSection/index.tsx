@@ -120,7 +120,9 @@ const DepositSection = () => {
                         </span>
                       </>
                     ) : (
-                      <span className="selected-desc">Select network</span>
+                      <span className="selected-desc">
+                        {t('select-network')}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -132,9 +134,8 @@ const DepositSection = () => {
                 <div className="wrapper">
                   <div className="notice-content">
                     <div className="notice-message">
-                      No {selectedNetwork?.networkName} deposit addresses have
-                      been applied for before. Please retrieve the deposit
-                      address.
+                      {t('no')} {selectedNetwork?.networkName}{' '}
+                      {t('deposit-addresses-have-been')}
                     </div>
                     <button
                       id="crypto_deposit_get_address"
@@ -143,7 +144,7 @@ const DepositSection = () => {
                         setIsNotice(true);
                       }}
                     >
-                      Get Address
+                      {t('get-address')}
                     </button>
                   </div>
                 </div>
@@ -153,7 +154,7 @@ const DepositSection = () => {
                 <div className="address-section">
                   <div className="content-item">
                     <div className="address-wallet">
-                      <div className="address-title">Address</div>
+                      <div className="address-title">{t('address')}</div>
                       <StyledWalletAddress>
                         <div className="address-wrapper">
                           <div>{selectedWallet}</div>
@@ -188,14 +189,14 @@ const DepositSection = () => {
                 <div className="note">
                   <ul>
                     <li>
-                      Send only{' '}
+                      {t('send-only')}{' '}
                       <span className="note-coin-name">
                         {selectedCoin?.assetName}{' '}
                       </span>
-                      to this deposit address.
+                      {t('to-this-deposit-address')}
                     </li>
                     <li>
-                      Ensure the network is{' '}
+                      {t('ensure-the-network')}{' '}
                       <span className="note-network-name">
                         {selectedNetwork?.symbolName}
                       </span>
@@ -251,8 +252,7 @@ const DepositSection = () => {
           footer={null}
         >
           <div className="content-header">
-            Ensure the network you choose to deposit matches the withdrawal
-            network, or assets may be lost.
+            {t('endsure-the-network-you-choose')}
           </div>
           <div className="network-list">
             {networksList.map((item: any, index: number) => (
@@ -279,23 +279,21 @@ const DepositSection = () => {
 };
 
 const QRTooltip = ({ value, coinname, networkname }) => {
+  const { t } = useTranslation();
   return (
     <StyledQRTooltip>
-      <div className="guide">
-        Scan the code on the withdrawal page of the trading platform APP or
-        wallet APP
-      </div>
+      <div className="guide">{t('scan-the-code')}</div>
       <div className="qr-code">
         <QRCode value={value} size={160} />
       </div>
       <div className="note">
         <ul>
           <li>
-            Send only <span className="note-coin-name">{coinname} </span>
-            to this deposit address.
+            {t('send-only')} <span className="note-coin-name">{coinname} </span>
+            {t('to-this-deposit-address')}
           </li>
           <li>
-            Ensure the network is{' '}
+            {t('ensure-the-network')}{' '}
             <span className="note-network-name">{networkname}</span>.
           </li>
         </ul>

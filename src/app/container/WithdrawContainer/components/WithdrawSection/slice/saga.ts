@@ -73,6 +73,19 @@ function* handlegetCoinBalance(action) {
     console.log(err);
   }
 }
+function* handlewithdraw(action) {
+  console.log(action.payload);
+  try {
+    const response = yield call(WalletServices.Withdraw, action.payload);
+    console.log('response', response);
+    if (response.data.rc === 0) {
+      yield put(actions.withdrawSuccess(response.data.balance));
+    }
+  } catch (err: any) {
+    yield put(actions.withdrawFail(err.response));
+    console.log(err);
+  }
+}
 function* watchGetCoin() {
   yield takeEvery(actions.getCoinRequest, handlegetCoin);
 }
@@ -88,6 +101,9 @@ function* watchGetFeeTransfer() {
 function* watchGetCoinBalance() {
   yield takeEvery(actions.getCoinBalanceRequest, handlegetCoinBalance);
 }
+function* watchWithdraw() {
+  yield takeEvery(actions.withdrawRequest, handlewithdraw);
+}
 export function* withdrawCryptoSaga() {
   yield all([
     watchGetCoin(),
@@ -95,5 +111,6 @@ export function* withdrawCryptoSaga() {
     watchGetListNetwork(),
     watchGetFeeTransfer(),
     watchGetCoinBalance(),
+    watchWithdraw(),
   ]);
 }

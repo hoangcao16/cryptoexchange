@@ -90,7 +90,7 @@ export function App() {
           />
 
           <Route
-            path="/wallet/spot/deposit/crypto/:currency"
+            path="/wallet/:wallettype/deposit/crypto/:currency"
             element={
               <PrivateRoute>
                 <DepositPage />
@@ -98,7 +98,7 @@ export function App() {
             }
           />
           <Route
-            path="/wallet/spot/withdraw/crypto/:currency"
+            path="/wallet/:wallettype/withdraw/crypto/:currency"
             element={
               <PrivateRoute>
                 <WithdrawPage />

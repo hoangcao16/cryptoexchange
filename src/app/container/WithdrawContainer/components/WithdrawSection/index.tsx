@@ -24,7 +24,10 @@ const WithdrawSection = () => {
   const { TabPane } = Tabs;
   const [isCoinModalVisible, setIsCoinModalVisible] = useState(false);
   const [inputAddress, setInputAddress] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
   const wallet_type = 1;
+  const { currency, wallettype } = useParams();
+  const dispatch = useDispatch();
   const [isNetworkFeeModalVisible, setIsNetworkFeeModalVisible] =
     useState(false);
   const [selectedNetwork, setSelectedNetwork]: any = useState({});
@@ -35,8 +38,6 @@ const WithdrawSection = () => {
     feeTransfer,
     coinBalance,
   }: any = useSelector(selectWithdrawCrypto);
-  const { currency } = useParams();
-  const dispatch = useDispatch();
   const { actions } = useWithdrawCryptoSlice();
   useEffect(() => {
     dispatch(actions.getCoinRequest(currency));
@@ -88,6 +89,20 @@ const WithdrawSection = () => {
     setInputAddress(value);
     console.log(value);
   };
+  const handleChangeAmount = (value: string) => {
+    setWithdrawAmount(value);
+    console.log(value);
+  };
+  const handleWithdraw = () => {
+    dispatch(
+      actions.withdrawRequest({
+        token_id: selectedCoin?.id,
+        network_id: selectedNetwork?.networkId,
+        address: inputAddress,
+        amount: withdrawAmount,
+      }),
+    );
+  };
   return (
     <>
       <div>
@@ -123,7 +138,7 @@ const WithdrawSection = () => {
               <StyledTabPane className="select">
                 <div>
                   <div className="input-address">
-                    <div className="address-label">Address</div>
+                    <div className="address-label">{t('address')}</div>
                     <input
                       className="input-field"
                       placeholder="Enter address here"
@@ -149,7 +164,7 @@ const WithdrawSection = () => {
                             </>
                           ) : (
                             <span className="selected-desc">
-                              Select network
+                              {t('select-network')}
                             </span>
                           )}
                         </div>
@@ -167,7 +182,7 @@ const WithdrawSection = () => {
                     <div className="withdraw-detail--row">
                       <div className="detail-item">
                         <div className="detail-item--label">
-                          {selectedCoin?.assetName} spot balance
+                          {selectedCoin?.assetName} {t('spot-balance')}
                         </div>
                         <div className="detail-item--value">
                           {coinBalance} {selectedCoin?.assetName}
@@ -175,7 +190,7 @@ const WithdrawSection = () => {
                       </div>
                       <div className="detail-item">
                         <div className="detail-item--label">
-                          Minimum withdrawal
+                          {t('minimum-withdrawal')}
                         </div>
                         <div className="detail-item--value">
                           {numeral(feeTransfer?.min).format('0,0.00')}{' '}
@@ -185,7 +200,9 @@ const WithdrawSection = () => {
                     </div>
                     <div className="withdraw-detail--row">
                       <div className="detail-item">
-                        <div className="detail-item--label">Network fee</div>
+                        <div className="detail-item--label">
+                          {t('network-fee')}
+                        </div>
                         <div className="detail-item--value">
                           {numeral(feeTransfer?.estimate_fee).format('0,0.00')}{' '}
                           {selectedCoin?.assetName}
@@ -193,7 +210,7 @@ const WithdrawSection = () => {
                       </div>
                       <div className="detail-item">
                         <div className="detail-item--label">
-                          24h remaining limit
+                          {t('remaining limit')}
                         </div>
                         <div className="detail-item--value">
                           8,000.00 BUSD/8,000.00 BUSD
@@ -220,14 +237,23 @@ const WithdrawSection = () => {
               <div>{t('amount')}</div>
               <div className="right">
                 <div className="right-value">8,000.00 BUSD/8,000.00 BUSD</div>
-                <div className="css-rxpm2l">24h remaining limit</div>
+                <div className="css-rxpm2l">{t('remaining limit')}</div>
               </div>
             </div>
             <div className="input-area">
-              <input className="input-amount" />
+              <input
+                className="input-amount"
+                value={withdrawAmount}
+                onChange={e => handleChangeAmount(e.target.value)}
+              />
               <div className="input-suffix">
                 <div className="input-suffix--wrapper">
-                  <div className="max">MAX</div>
+                  <div
+                    className="max"
+                    onClick={() => setWithdrawAmount(coinBalance)}
+                  >
+                    MAX
+                  </div>
                   <div className="separate"></div>
                   <div className="coin-name">{selectedCoin?.assetName}</div>
                 </div>
@@ -240,21 +266,30 @@ const WithdrawSection = () => {
             inputAddress === '' || isEmpty(selectedNetwork) ? 'hide' : ''
           }
         >
-          <div className="left">Receive amount</div>
+          <div className="left">{t('receive-amount')}</div>
           <div className="right">
             <div className="content-wrapper">
               <div className="amount-counted">
                 <div>
                   <div className="receive-amount">
-                    0 {selectedCoin?.assetName}
+                    {isNaN(
+                      parseFloat(withdrawAmount) -
+                        parseFloat(feeTransfer?.estimate_fee),
+                    )
+                      ? 0
+                      : parseFloat(withdrawAmount) -
+                        parseFloat(feeTransfer?.estimate_fee)}{' '}
+                    {selectedCoin?.assetName}
                   </div>
                   <div className="fee-amount">
                     {numeral(feeTransfer?.estimate_fee).format('0,0.00')}{' '}
-                    {selectedCoin?.assetName} network fee included
+                    {selectedCoin?.assetName} {t('network-fee-included')}
                   </div>
                 </div>
               </div>
-              <button className="submit-btn">Withdraw</button>
+              <button className="submit-btn" onClick={() => handleWithdraw()}>
+                {t('withdraw')}
+              </button>
             </div>
           </div>
         </StyledWithdrawSubmit>
@@ -295,15 +330,12 @@ const WithdrawSection = () => {
         </div>
       </CoinModal>
       <NetworkWithFeeModal
-        title="Select network"
+        title={t('select-network')}
         visible={isNetworkFeeModalVisible}
         onCancel={handleNetworkFeeModalCancel}
         footer={null}
       >
-        <div className="content-header">
-          Ensure the network matches the addresses network entered to avoid
-          withdrawal losses.
-        </div>
+        <div className="content-header">{t('ensure-network-withdraw')}</div>
         <div className="network-list">
           {networksList.map((item: any, index: number) => (
             <div
@@ -322,10 +354,10 @@ const WithdrawSection = () => {
                 </div>
                 <div className="right">
                   <div className="arrived-time">
-                    Arrival time <span className="value">≈ 5 mins</span>
+                    {t('arrival-time')} <span className="value">≈ 5 mins</span>
                   </div>
                   <div className="fee">
-                    fee{' '}
+                    {t('fee')}{' '}
                     <span className="value">
                       0.0000047 {selectedCoin?.assetName} ( ≈ $0.193026)
                     </span>
