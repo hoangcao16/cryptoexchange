@@ -1,28 +1,13 @@
 import AuthMandatory from 'app/components/AuthMandatory';
 import { Container } from './style';
 import { getToken } from 'app/components/common/common';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTradehistorySlice } from './slice';
+import { useSelector } from 'react-redux';
 import { selectTradehistory } from './slice/selectors';
 import FilterOrderHistory from './components/FilterOrderHistory';
 import TradeHistoryList from './components/TradeHistoryList';
-import moment from 'moment';
 
 const TradeHistory = () => {
-  const dispatch = useDispatch();
-  const { actions } = useTradehistorySlice();
   const dataTradeHistory: any = useSelector(selectTradehistory);
-  useEffect(() => {
-    const data = {
-      startTime: moment().startOf('day').valueOf(),
-      endTime: moment().valueOf(),
-      pageIndex: dataTradeHistory?.pageIndex,
-      pageSize: dataTradeHistory?.pageSize,
-    };
-    dispatch(actions.getTradeHistoryRequest(data));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actions, dispatch, dataTradeHistory?.pageSize]);
   return (
     <>
       {getToken() ? (
