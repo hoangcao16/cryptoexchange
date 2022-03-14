@@ -1,35 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   StyledSelect,
-  CoinModal,
   StyledTabs,
-  StyledTabPane,
-  NetworkWithFeeModal,
   StyledWithdrawAmount,
   StyledWithdrawSubmit,
+  ErrorMessage,
 } from './style';
 import numeral from 'numeral';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import UpDownIcon from 'app/assets/img/UpDownIcon';
-import IconSvg from 'app/assets/img/icon';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useWithdrawCryptoSlice } from './slice';
 import { selectWithdrawCrypto } from './slice/selectors';
 import { isEmpty } from 'app/components/common/common';
 import { Tabs } from 'antd';
+import ModalSelectCoin from './components/CoinModal';
+import ModalSelectNetworkWithFee from './components/NetworkWithFeeModal';
+import TabNewAddress from './components/NewAddressTab';
+import TabArressBook from './components/AddressBookTab';
+import ModalSelectAddressBook from './components/AddressBookModal';
+import ModalSubmit from './components/SubmitModal';
+import { useForm } from 'react-hook-form';
 const WithdrawSection = () => {
   const { t } = useTranslation();
   const { TabPane } = Tabs;
   const [isCoinModalVisible, setIsCoinModalVisible] = useState(false);
-  const [inputAddress, setInputAddress] = useState('');
-  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [receiveAmount, setReceiveAmount] = useState(0);
   const wallet_type = 1;
   const { currency, wallettype } = useParams();
   const dispatch = useDispatch();
   const [isNetworkFeeModalVisible, setIsNetworkFeeModalVisible] =
     useState(false);
+  const [isAddressBookModalVisible, setIsAddressBookModalVisible] =
+    useState(false);
+  const [isSubmitModalVisible, setIsSubmitModalVisible] = useState(false);
   const [selectedNetwork, setSelectedNetwork]: any = useState({});
   const {
     selectedCoin,
@@ -39,6 +45,15 @@ const WithdrawSection = () => {
     coinBalance,
   }: any = useSelector(selectWithdrawCrypto);
   const { actions } = useWithdrawCryptoSlice();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm({ mode: 'all' });
+  const withdrawAmount = getValues('amount');
+  const inputAddress = getValues('address');
   useEffect(() => {
     dispatch(actions.getCoinRequest(currency));
   }, []);
@@ -66,6 +81,18 @@ const WithdrawSection = () => {
   const handleNetworkFeeModalCancel = () => {
     setIsNetworkFeeModalVisible(false);
   };
+  const showAddressBookModal = () => {
+    setIsAddressBookModalVisible(true);
+  };
+  const handleAddressBookModalCancel = () => {
+    setIsAddressBookModalVisible(false);
+  };
+  const showSubmitModal = () => {
+    setIsSubmitModalVisible(true);
+  };
+  const handleSubmitModalCancel = () => {
+    setIsSubmitModalVisible(false);
+  };
   const handleSelectNetwork = (network: any) => {
     setSelectedNetwork(network);
     setIsNetworkFeeModalVisible(false);
@@ -85,9 +112,18 @@ const WithdrawSection = () => {
     console.log(value);
     dispatch(actions.getListCoinRequest({ name: value }));
   };
-  const handleChangeAddress = (value: string) => {
-    setInputAddress(value);
-    console.log(value);
+  const handlesetMax = coinBalance => {
+    setValue('amount', coinBalance, { shouldValidate: true });
+  };
+  const onSubmit = data => {
+    dispatch(
+      actions.withdrawRequest({
+        token_id: selectedCoin?.id,
+        network_id: selectedNetwork?.networkId,
+        address: data?.address,
+        amount: data?.amount,
+      }),
+    );
   };
   const handleChangeAmount = (value: string) => {
     setWithdrawAmount(value);
@@ -105,7 +141,7 @@ const WithdrawSection = () => {
   };
   return (
     <>
-      <div>
+      <form>
         <StyledSelect>
           <div className="select-title">{t('select-coin')}</div>
           <div className="select">
@@ -135,94 +171,26 @@ const WithdrawSection = () => {
           <div className="select-title">{t('withdraw-to')}</div>
           <StyledTabs defaultActiveKey="1" type="card">
             <TabPane tab="New Address" key="1">
-              <StyledTabPane className="select">
-                <div>
-                  <div className="input-address">
-                    <div className="address-label">{t('address')}</div>
-                    <input
-                      className="input-field"
-                      placeholder="Enter address here"
-                      // value={inputAddress}
-                      onChange={e => handleChangeAddress(e.target.value)}
-                    ></input>
-                  </div>
-                </div>
-                <div>
-                  <div className="select--label">{t('network')}</div>
-                  <div className="select--input" onClick={showNetworkFeeModal}>
-                    <div className="selected--wrapper">
-                      <div className="selected">
-                        <div className="selected-information">
-                          {!isEmpty(selectedNetwork) ? (
-                            <>
-                              <span className="selected-name">
-                                {selectedNetwork?.symbolName}
-                              </span>
-                              <span className="selected-desc">
-                                {selectedNetwork?.networkName}
-                              </span>
-                            </>
-                          ) : (
-                            <span className="selected-desc">
-                              {t('select-network')}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <UpDownIcon name="down" className="down-icon" />
-                  </div>
-                  <div
-                    className={
-                      inputAddress === '' || isEmpty(selectedNetwork)
-                        ? 'withdraw-detail'
-                        : 'withdraw-detail  hide'
-                    }
-                  >
-                    <div className="withdraw-detail--row">
-                      <div className="detail-item">
-                        <div className="detail-item--label">
-                          {selectedCoin?.assetName} {t('spot-balance')}
-                        </div>
-                        <div className="detail-item--value">
-                          {coinBalance} {selectedCoin?.assetName}
-                        </div>
-                      </div>
-                      <div className="detail-item">
-                        <div className="detail-item--label">
-                          {t('minimum-withdrawal')}
-                        </div>
-                        <div className="detail-item--value">
-                          {numeral(feeTransfer?.min).format('0,0.00')}{' '}
-                          {selectedCoin?.assetName}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="withdraw-detail--row">
-                      <div className="detail-item">
-                        <div className="detail-item--label">
-                          {t('network-fee')}
-                        </div>
-                        <div className="detail-item--value">
-                          {numeral(feeTransfer?.estimate_fee).format('0,0.00')}{' '}
-                          {selectedCoin?.assetName}
-                        </div>
-                      </div>
-                      <div className="detail-item">
-                        <div className="detail-item--label">
-                          {t('remaining limit')}
-                        </div>
-                        <div className="detail-item--value">
-                          8,000.00 BUSD/8,000.00 BUSD
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </StyledTabPane>
+              <TabNewAddress
+                showNetworkFeeModal={showNetworkFeeModal}
+                selectedNetwork={selectedNetwork}
+                inputAddress={inputAddress}
+                selectedCoin={selectedCoin}
+                coinBalance={coinBalance}
+                feeTransfer={feeTransfer}
+                register={register}
+                errors={errors}
+              />
             </TabPane>
             <TabPane tab="Address Book" key="2">
-              Content of Tab Pane 2
+              <TabArressBook
+                showAddressBookModal={showAddressBookModal}
+                selectedNetwork={selectedNetwork}
+                inputAddress={inputAddress}
+                selectedCoin={selectedCoin}
+                coinBalance={coinBalance}
+                feeTransfer={feeTransfer}
+              />
             </TabPane>
           </StyledTabs>
         </StyledSelect>
@@ -240,17 +208,30 @@ const WithdrawSection = () => {
                 <div className="css-rxpm2l">{t('remaining limit')}</div>
               </div>
             </div>
-            <div className="input-area">
+            <div
+              className={
+                errors.amount?.message ? 'input-area error' : 'input-area'
+              }
+            >
               <input
                 className="input-amount"
-                value={withdrawAmount}
-                onChange={e => handleChangeAmount(e.target.value)}
+                type="number"
+                placeholder="Minimum 0.01"
+                step={0.00001}
+                {...register('amount', {
+                  required: 'Please enter an amount',
+                  onChange: value =>
+                    setReceiveAmount(
+                      parseFloat(value.target.value) -
+                        parseFloat(feeTransfer?.estimate_fee),
+                    ),
+                })}
               />
               <div className="input-suffix">
                 <div className="input-suffix--wrapper">
                   <div
                     className="max"
-                    onClick={() => setWithdrawAmount(coinBalance)}
+                    onClick={() => handlesetMax(coinBalance)}
                   >
                     MAX
                   </div>
@@ -259,6 +240,7 @@ const WithdrawSection = () => {
                 </div>
               </div>
             </div>
+            <ErrorMessage>{errors.amount?.message}</ErrorMessage>
           </div>
         </StyledWithdrawAmount>
         <StyledWithdrawSubmit
@@ -277,8 +259,7 @@ const WithdrawSection = () => {
                         parseFloat(feeTransfer?.estimate_fee),
                     )
                       ? 0
-                      : parseFloat(withdrawAmount) -
-                        parseFloat(feeTransfer?.estimate_fee)}{' '}
+                      : receiveAmount}{' '}
                     {selectedCoin?.assetName}
                   </div>
                   <div className="fee-amount">
@@ -287,87 +268,48 @@ const WithdrawSection = () => {
                   </div>
                 </div>
               </div>
-              <button className="submit-btn" onClick={() => handleWithdraw()}>
+              <button
+                className={
+                  receiveAmount > 0 ? 'submit-btn' : 'submit-btn disable'
+                }
+                type="button"
+                onClick={() => showSubmitModal()}
+              >
                 {t('withdraw')}
               </button>
             </div>
           </div>
         </StyledWithdrawSubmit>
-      </div>
-      <CoinModal
-        title="Select coin to deposit"
-        visible={isCoinModalVisible}
-        onCancel={handleCoinModalCancel}
-        footer={null}
-      >
-        <div className="search-coin">
-          <div className="search-icon">
-            <IconSvg name="search" className="icon-search" />
-          </div>
-          <input
-            placeholder="Search coin name"
-            className="search-input"
-            // value=""
-            onChange={e => handleSearchCoin(e.target.value)}
-          ></input>
-        </div>
-        <div className="coin-list">
-          {coinList.map((coin: any, index: number) => (
-            <div
-              className="coin-item"
-              key={index}
-              onClick={() => handleSelectCoin(coin)}
-            >
-              <div className="coin-item--wrapper">
-                <img src={coin.icon} alt="Icon" className="coin-item--icon" />
-                <div className="coin-item--information">
-                  <span className="coin-name">{coin.assetName}</span>
-                  <div className="coin-note">{coin.note}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </CoinModal>
-      <NetworkWithFeeModal
-        title={t('select-network')}
-        visible={isNetworkFeeModalVisible}
-        onCancel={handleNetworkFeeModalCancel}
-        footer={null}
-      >
-        <div className="content-header">{t('ensure-network-withdraw')}</div>
-        <div className="network-list">
-          {networksList.map((item: any, index: number) => (
-            <div
-              className="network-item"
-              key={index}
-              onClick={() => handleSelectNetwork(item)}
-            >
-              <div className="network-item--wrapper">
-                <div className="left">
-                  <span className="network-item--symbol">
-                    {item.symbolName}
-                  </span>
-                  <div className="network-item--network">
-                    {item.networkName}
-                  </div>
-                </div>
-                <div className="right">
-                  <div className="arrived-time">
-                    {t('arrival-time')} <span className="value">≈ 5 mins</span>
-                  </div>
-                  <div className="fee">
-                    {t('fee')}{' '}
-                    <span className="value">
-                      0.0000047 {selectedCoin?.assetName} ( ≈ $0.193026)
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </NetworkWithFeeModal>
+        <ModalSubmit
+          submitForm={handleSubmit(onSubmit)}
+          handleSubmitModalCancel={handleSubmitModalCancel}
+          isSubmitModalVisible={isSubmitModalVisible}
+          receiveAmount={receiveAmount}
+          coinName={selectedCoin?.assetName}
+          fee={feeTransfer?.estimate_fee}
+          address={inputAddress}
+          networkName={selectedNetwork?.networkName}
+          icon={selectedCoin?.icon}
+        />
+      </form>
+      <ModalSelectCoin
+        isCoinModalVisible={isCoinModalVisible}
+        handleCoinModalCancel={handleCoinModalCancel}
+        coinList={coinList}
+        handleSearchCoin={handleSearchCoin}
+        handleSelectCoin={handleSelectCoin}
+      />
+      <ModalSelectNetworkWithFee
+        isNetworkFeeModalVisible={isNetworkFeeModalVisible}
+        handleNetworkFeeModalCancel={handleNetworkFeeModalCancel}
+        networksList={networksList}
+        handleSelectNetwork={handleSelectNetwork}
+        selectedCoin={selectedCoin}
+      />
+      <ModalSelectAddressBook
+        handleAddressBookModalCancel={handleAddressBookModalCancel}
+        isAddressBookModalVisible={isAddressBookModalVisible}
+      />
     </>
   );
 };

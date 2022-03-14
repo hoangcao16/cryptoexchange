@@ -7,7 +7,7 @@ import {
 } from './style';
 import { DatePicker } from 'antd';
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOrderhistorySlice } from '../../slice';
 import { useTranslation } from 'react-i18next';
@@ -79,12 +79,26 @@ const FilterOrderHistory = () => {
       pageIndex: dataOrderHistory.pageIndex,
       pageSize: dataOrderHistory.pageSize,
     };
-    setTime(1);
+    setTime(5);
     dispatch(actions.getOrderhistoryRequest(data));
   };
   const handleReset = () => {
     select1Day();
   };
+  useEffect(() => {
+    if (time === 1) {
+      select1Day();
+    } else if (time === 2) {
+      select1Week();
+    } else if (time === 3) {
+      select1Month();
+    } else if (time === 4) {
+      select3Months();
+    } else if (time === 5) {
+      handleSearch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actions, dispatch, dataOrderHistory?.pageSize]);
   return (
     <Container>
       <div className="d-flex align-items-center">

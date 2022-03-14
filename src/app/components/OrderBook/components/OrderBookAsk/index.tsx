@@ -13,56 +13,68 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
   const { actions } = useOrderbookSlice();
 
   useEffect(() => {
-    (async () => {
-      await (function () {
-        setDataView(dataApi);
-      })();
-      await (function () {
-        if (!isEmpty(dataSocket)) {
-          if (
-            dataView === null ||
-            (dataView === undefined && Number(dataSocket?.sign) > 0)
-          ) {
-            setDataView([
-              {
-                price: dataSocket?.price,
-                quantity: dataSocket?.delta,
-              },
-            ]);
-          } else if (dataView !== undefined && dataView !== null) {
-            const index = dataView.findIndex((item: any) => {
-              return item.price === dataSocket?.price;
+    if (dataApi?.length > 0 && isEmpty(dataSocket)) {
+      setDataView(dataApi);
+    } else {
+      // console.log(dataSocket);
+      // console.log(dataSocket.sign);
+      // console.log(dataView);
+      if (!isEmpty(dataSocket)) {
+        if (dataView === null || dataView === undefined) {
+          // console.log(dataView);
+          // console.log(Number(dataSocket?.sign));
+          // const fk = {
+          //   price: dataSocket?.price,
+          //   quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
+          // };
+          setDataView([
+            {
+              price: dataSocket?.price,
+              quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
+            },
+          ]);
+          // console.log(fk);
+        } else if (dataView !== undefined && dataView !== null) {
+          // console.log(dataView);
+          // console.log(Number(dataSocket?.sign));
+          const index = dataView.findIndex((item: any) => {
+            return item.price === dataSocket?.price;
+          });
+          // console.log(index);
+          if (index === -1) {
+            const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
+            dataCopy.push({
+              price: dataSocket.price,
+              quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
             });
-            if (index === -1 && Number(dataSocket?.sign) > 0) {
-              const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
-              dataCopy.push({
-                price: dataSocket.price,
-                quantity: dataSocket.delta,
-              });
-              dataCopy.sort(function (a, b) {
-                return b.price - a.price;
-              });
+            dataCopy.sort(function (a, b) {
+              return b.price - a.price;
+            });
+            setDataView(dataCopy);
+            // console.log(dataCopy);
+          } else if (index !== -1) {
+            const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
+            const sumQuantity = Number(
+              (
+                Number(dataCopy[index].quantity) +
+                Number(dataSocket.delta * dataSocket.sign)
+              ).toPrecision(5),
+            );
+            if (sumQuantity > 0) {
+              dataCopy[index].quantity = sumQuantity;
               setDataView(dataCopy);
-            } else if (index !== -1) {
-              const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
-              const sumQuantity = Number(
-                (
-                  Number(dataCopy[index].quantity) +
-                  Number(dataSocket.delta * dataSocket.sign)
-                ).toPrecision(5),
-              );
-              if (sumQuantity > 0) {
-                dataCopy[index].quantity = sumQuantity;
-                setDataView(dataCopy);
-              } else if (sumQuantity === 0 || sumQuantity < 0) {
-                dataCopy.splice(index, 1);
-                setDataView(dataCopy);
-              }
+              // console.log(dataCopy);
+            } else if (sumQuantity === 0 || sumQuantity < 0) {
+              dataCopy.splice(index, 1);
+              setDataView(dataCopy);
+              // console.log(dataCopy);
             }
           }
         }
-      })();
-    })();
+        // console.log('end life cycle');
+      }
+    }
+
     return () => {
       setDataView([]);
     };

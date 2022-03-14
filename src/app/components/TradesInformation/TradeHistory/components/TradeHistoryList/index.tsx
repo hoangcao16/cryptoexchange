@@ -115,7 +115,7 @@ const TradeHistoryList = ({ dataSource }: any) => {
       <Table
         dataSource={dataSource}
         columns={columns}
-        rowKey="order_id"
+        rowKey="trade_id"
         pagination={false}
         scroll={{ scrollToFirstRowOnChange: false, y: 260 }}
         className="table"

@@ -316,6 +316,9 @@ export const StyledTabPane = styled.div`
     font-size: 14px;
     line-height: 20px;
     color: ${({ theme }) => theme.darkBrightGrayColor};
+    &[data-type='adr-book'] {
+      margin: 0;
+    }
   }
   .select--input {
     margin: 0px;
@@ -433,6 +436,9 @@ export const StyledTabPane = styled.div`
   }
   .hide {
     display: none;
+  }
+  .error {
+    border-color: ${({ theme }) => theme.errorColor} !important;
   }
 `;
 export const NetworkWithFeeModal = styled(Modal)`
@@ -605,6 +611,9 @@ export const StyledWithdrawAmount = styled(StyledSelect)`
       }
     }
   }
+  .error {
+    border-color: ${({ theme }) => theme.errorColor} !important;
+  }
 `;
 export const StyledWithdrawSubmit = styled.div`
   margin: 24px 0px 0px;
@@ -715,6 +724,73 @@ export const StyledWithdrawSubmit = styled.div`
           margin-top: 0px;
         }
       }
+      .disable {
+        background-color: ${({ theme }) => theme.matteWhiteColor};
+        color: ${({ theme }) => theme.colorDescription};
+        cursor: not-allowed;
+      }
     }
+  }
+`;
+export const ErrorMessage = styled.div`
+  color: ${({ theme }) => theme.errorColor};
+  font-size: 12px;
+`;
+export const StyledAddressBookModal = styled(Modal)``;
+export const StyledSubmitModal = styled(Modal)`
+  text-align: center;
+  .transition-detail {
+    font-size: 16px;
+    background-color: ${({ theme }) => theme.matteWhiteColor};
+    border-radius: 4px;
+    padding: 2rem;
+    text-align: left;
+    .title {
+      color: ${({ theme }) => theme.slateGrayColor};
+    }
+    margin-bottom: 2rem;
+  }
+  .submit-btn {
+    margin: 12px 0px 0px;
+    appearance: none;
+    user-select: none;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    padding: 12px 24px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    word-break: keep-all;
+    color: ${({ theme }) => theme.backgroundFooter};
+    border-radius: 4px;
+    min-height: 24px;
+    border: none;
+    background-image: none;
+    background-color: ${({ theme }) => theme.primary};
+    min-width: 180px;
+    width: 100%;
+    @media screen and (min-width: 767px) {
+      width: auto;
+      margin-top: 0px;
+    }
+  }
+  .disable {
+    background-color: ${({ theme }) => theme.matteWhiteColor};
+    color: ${({ theme }) => theme.colorDescription};
+    cursor: not-allowed;
+  }
+  .icon-coin {
+    border-radius: 50%;
+    margin-right: 4px;
   }
 `;

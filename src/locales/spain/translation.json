@@ -251,6 +251,9 @@
   "network-fee-included": "Tarifa de red incluida",
   "ensure-network-withdraw": "Asegúrese de que la red coincida con la red de direcciones ingresada para evitar pérdidas por retiro.",
   "arrival-time": "Hora de llegada",
+  "address-book": "Directorio",
+  "select-form-address-book": "Seleccionar de la libreta de direcciones",
+  "security-verificattion": "Verificación de seguridad",
   "auth": {
     "forgot-password": "¿Se te olvidó tu contraseña?",
     "welcome-title": "Inicio de sesión de cuenta de POW",

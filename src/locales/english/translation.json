@@ -251,6 +251,9 @@
   "network-fee-included": "Network fee included",
   "ensure-network-withdraw": "Ensure the network matches the addresses network entered to avoid withdrawal losses.",
   "arrival-time": "Arrival time",
+  "address-book": "Address Book",
+  "select-form-address-book": "Select from Address Book",
+  "security-verificattion": "Security Verification",
   "auth": {
     "forgot-password": "Forgot password?",
     "welcome-title": "POW Account Login",
