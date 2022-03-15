@@ -14,7 +14,7 @@ export const tabP2PService = {
       url: `/p2p-api/api/v1/p2pOrder/orders`,
       params: {
         fiat: params.fiat,
-        payment: params.payments,
+        paymentMethod: params.paymentMethod,
         amount: params.amount,
         orderType: params.orderType,
         tokenId: params.tokenId,

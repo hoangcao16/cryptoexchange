@@ -133,10 +133,11 @@ function P2PTableBuy() {
           <div className="rowLimitAvailable">
             <div className="col1">Limit</div>
             <div className="col2">
-              {record.orderLowerBound} <span>{record.fiatName} - </span>
+              {record.fiatSymbol} {record.orderLowerBound} <span> - </span>
             </div>
             <div className="col3">
-              {record.orderUpperBound} <span>{record.fiatName}</span>
+              {record.fiatSymbol}{' '}
+              {record.price * (record.amount - record.executed)}
             </div>
           </div>
         </ColLimitAvailable>
@@ -237,7 +238,7 @@ function P2PTableBuy() {
 
     getListOrderBy({
       fiat: fiatId,
-      payments: paymentId || -1,
+      paymentMethod: paymentId || -1,
       tokenId: cryptoId,
       orderType: 0,
       amount: amount,

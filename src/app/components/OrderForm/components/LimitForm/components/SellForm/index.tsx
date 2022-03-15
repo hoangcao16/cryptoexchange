@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { Tooltip } from 'antd';
 import { selectOrderbook } from 'app/components/OrderBook/slice/selectors';
 import { useTranslation } from 'react-i18next';
+
 //declare type
 type SubmitForm = {
   price: number;
