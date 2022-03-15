@@ -6,9 +6,13 @@ import styled from 'styled-components';
 import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
 import { useForm } from 'react-hook-form';
+import CurrencyInput from 'app/components/CurrencyInput/index';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
+  const [validateState, setValidateState] = useState(false);
+  const [pricePay, setPricePay] = useState('');
+  const [receive, setReceive] = useState('');
 
   const { listP2POrders, text, record, index, hanldeCloseOrder, timeLimit } =
     props;
@@ -41,24 +45,20 @@ const HandleOrder = (props: any) => {
     }
   });
 
-  const handleChangeRecive = e => {
-    // trigger('inputPay');
-  };
+  const handleChangeReceive = value => {};
 
   const handleChangePay = value => {
-    setValue('inputPay', Number(Math.abs(parseFloat(value)).toFixed(2)), {
-      shouldValidate: true,
-    });
-
-    setValue(
-      'inputReceive',
-      Number((Math.abs(parseFloat(value)) / record.price).toFixed(2)),
-      {
-        shouldValidate: true,
-      },
-    );
-
-    console.log(typeof getValues('inputReceive'));
+    setValue('inputPay', value);
+    if (
+      Number(getValues('inputPay').replace(/,/g, '')) <
+        record.orderLowerBound ||
+      Number(getValues('inputPay').replace(/,/g, '')) >
+        record.orderLowerBound * record.price
+    ) {
+      setValidateState(true);
+    } else {
+      setValidateState(false);
+    }
   };
 
   return (
@@ -153,22 +153,20 @@ const HandleOrder = (props: any) => {
             <label htmlFor="disabledTextInput" className="form-label labelText">
               I want to pay
             </label>
-            <input
+            <CurrencyInput
               {...register('inputPay', {
-                min: record.orderLowerBound,
-                max: record.orderLowerBound * record.price,
                 onChange: e => handleChangePay(e.target.value),
               })}
-              step={0.01}
-              type="number"
+              type="text"
               id="disabledTextInput"
+              autocomplete="off"
               className="form-control bargain"
               placeholder={`${record.orderLowerBound.toFixed(2)} - ${(
                 record.orderLowerBound * record.price
               ).toFixed(2)}`}
-              style={{ borderColor: errors.inputPay && 'red' }}
+              style={{ borderColor: validateState && 'red' }}
             />
-            {errors.inputPay && (
+            {validateState && (
               <p className="validateMessage">
                 Buy limit: {record.orderLowerBound.toFixed(2)} -{' '}
                 {(record.orderLowerBound * record.price).toFixed(2)}{' '}
@@ -185,15 +183,16 @@ const HandleOrder = (props: any) => {
             <label htmlFor="disabledTextInput" className="form-label">
               I will receive
             </label>
-            <input
-              {...register('inputReceive')}
-              style={{ borderColor: errors.inputPay && 'red' }}
-              type="number"
+            <CurrencyInput
+              {...register('inputReceive', {
+                onChange: e => handleChangeReceive(e.target.value),
+                value: '',
+              })}
+              style={{ borderColor: validateState && 'red' }}
+              type="text"
               id="disabledTextInput"
               className="form-control bargain"
-              step="0.01"
               placeholder="0.00"
-              onChange={e => handleChangeRecive(e)}
             />
             <div className="apponAfter">
               <span className="fiatNameInput">{crypto}</span>
@@ -213,6 +212,7 @@ const HandleOrder = (props: any) => {
               type="submit"
               className="btn btn-lg btn-primary btn-buy"
               onClick={() => {}}
+              disabled={validateState}
             >
               Buy {crypto}
             </Button>
