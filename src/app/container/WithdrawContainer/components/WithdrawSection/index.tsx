@@ -125,20 +125,6 @@ const WithdrawSection = () => {
       }),
     );
   };
-  const handleChangeAmount = (value: string) => {
-    setWithdrawAmount(value);
-    console.log(value);
-  };
-  const handleWithdraw = () => {
-    dispatch(
-      actions.withdrawRequest({
-        token_id: selectedCoin?.id,
-        network_id: selectedNetwork?.networkId,
-        address: inputAddress,
-        amount: withdrawAmount,
-      }),
-    );
-  };
   return (
     <>
       <form>
