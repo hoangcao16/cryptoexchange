@@ -11,8 +11,8 @@ import CurrencyInput from 'app/components/CurrencyInput/index';
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const [validateState, setValidateState] = useState(false);
-  const [pricePay, setPricePay] = useState('');
-  const [receive, setReceive] = useState('');
+  const [pricePay, setPricePay] = useState(0);
+  const [receive, setReceive] = useState(0);
 
   const { listP2POrders, text, record, index, hanldeCloseOrder, timeLimit } =
     props;
@@ -45,7 +45,25 @@ const HandleOrder = (props: any) => {
     }
   });
 
-  const handleChangeReceive = value => {};
+  const handleChangeReceive = value => {
+    setValue('inputReceive', value);
+    if (value) {
+      setReceive(Number(getValues('inputReceive').replace(/,/g, '')));
+      setPricePay(
+        Number(getValues('inputReceive').replace(/,/g, '')) * record.price,
+      );
+    }
+    if (
+      Number(getValues('inputPay').replace(/,/g, '')) <
+        record.orderLowerBound ||
+      Number(getValues('inputPay').replace(/,/g, '')) >
+        record.orderLowerBound * record.price
+    ) {
+      setValidateState(true);
+    } else {
+      setValidateState(false);
+    }
+  };
 
   const handleChangePay = value => {
     setValue('inputPay', value);
@@ -58,6 +76,15 @@ const HandleOrder = (props: any) => {
       setValidateState(true);
     } else {
       setValidateState(false);
+    }
+    if (value) {
+      setPricePay(Number(getValues('inputPay').replace(/,/g, '')));
+      setReceive(
+        Number(getValues('inputPay').replace(/,/g, '')) / record.price,
+      );
+    } else {
+      setPricePay(0);
+      setReceive(0);
     }
   };
 
@@ -165,6 +192,7 @@ const HandleOrder = (props: any) => {
                 record.orderLowerBound * record.price
               ).toFixed(2)}`}
               style={{ borderColor: validateState && 'red' }}
+              value={pricePay || ''}
             />
             {validateState && (
               <p className="validateMessage">
@@ -193,6 +221,7 @@ const HandleOrder = (props: any) => {
               id="disabledTextInput"
               className="form-control bargain"
               placeholder="0.00"
+              value={receive.toFixed(2)}
             />
             <div className="apponAfter">
               <span className="fiatNameInput">{crypto}</span>
