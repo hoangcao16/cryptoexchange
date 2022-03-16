@@ -176,7 +176,7 @@ function P2PTableSell() {
 
     getListOrderBy({
       fiat: fiatId,
-      payments: paymentId || -1,
+      paymentMethod: paymentId || -1,
       tokenId: cryptoId,
       orderType: 1,
       amount: amount,
