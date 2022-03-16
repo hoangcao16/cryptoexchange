@@ -1,356 +1,134 @@
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
-
-const gen_uuid = (): string => {
-  return '_' + Math.random().toString(36).substr(2, 9);
-};
-
-const gen_string = (length = 10) => {
-  var result = '';
-  var characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
-
-const random = (min = 1, max = 10) =>
-  Math.floor(Math.random() * (max - min)) + min;
-
-const data = [
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: false,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-  {
-    id: gen_uuid(),
-    checked: true,
-    advertisers: gen_string(),
-    orders: random(0, 999),
-    completion: random(0, 100),
-
-    price: random(0, 1000),
-    fiat: 'FIAT',
-
-    available: random(0, 1000),
-    limit: random(0, 10000000),
-    preLimit: 'pre',
-    crypto: 'USDT',
-
-    payment: ['Momo', 'Momo', 'Momo', ' Banking'],
-  },
-];
+import { tabP2PService } from 'services/tabP2PServices';
+import { useSelector } from 'react-redux';
+import { TabP2PState } from '../slice/type';
+import { selectTabP2P } from '../slice/selectors';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 function P2PTableSell() {
+  const [listP2POrdersSell, setListP2POrdersSell] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+  const [listP2POrders, setListP2POrders] = useState<any>([]);
+
+  const TabP2PState: TabP2PState = useSelector(selectTabP2P);
+  const { getListOrderBy, getListOrder } = tabP2PService;
+
+  const token = TabP2PState.searchParam.crypto;
+
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
       key: 'Advertisers',
-      dataIndex: 'advertisers',
+      dataIndex: 'accountEmail',
       width: 400,
-      render: (text: any, record: any) => (
-        <ColAdvertisers>
-          <div className="row1">
-            <div className="firstCharacter">{record.advertisers.charAt(0)}</div>
-            <div className="advertisers">{record.advertisers}</div>
-            <div className="checked">
-              {record.checked && <BsFillCheckCircleFill color="#10afff" />}
-            </div>
-          </div>
+      render: (text: any, record: any) => {
+        let orders = 0;
+        let numberOrderDone = 0;
+        listP2POrders.forEach(order => {
+          if (order.accountEmail === text && order.orderType === 1) {
+            orders += 1;
+            if (order.status === 'DONE') {
+              numberOrderDone += 1;
+            }
+          }
+        });
 
-          <div className="row2">
-            {record.orders} orders | {record.completion}% completion
-          </div>
-        </ColAdvertisers>
-      ),
+        return (
+          <ColAdvertisers>
+            <div className="row1">
+              <div className="firstCharacter">
+                {record.accountEmail.charAt(0).toUpperCase()}
+              </div>
+              <div className="advertisers">{record.accountEmail}</div>
+              <div className="checked">
+                {<BsFillCheckCircleFill color="#10afff" />}
+              </div>
+            </div>
+
+            <div className="row2">
+              {''}
+              <span>{orders} Orders</span>
+              <span className="numberOrderComplete">
+                {((numberOrderDone / orders) * 100).toFixed(2)} % completed
+              </span>
+            </div>
+          </ColAdvertisers>
+        );
+      },
     },
     {
       title: 'Price',
       key: 'Price',
       dataIndex: 'price',
       width: 200,
-      render: (text: any, record: any) => (
-        <ColPrice>
-          {record.price} <span>{record.crypto}</span>
-        </ColPrice>
-      ),
+      render: (text: any, record: any) => {
+        return (
+          <ColPrice>
+            {record.price} <span> {record.fiatName}</span>
+          </ColPrice>
+        );
+      },
     },
     {
       title: 'Limit/Available',
       key: 'Limit/Available',
-      dataIndex: 'limit',
+      // dataIndex: 'limit',
       width: 300,
       render: (text: any, record: any) => (
         <ColLimitAvailable>
           <div className="rowLimitAvailable">
-            <div className="col1">Available</div>
+            <div className="col1">
+              <span>Available</span>
+            </div>
             <div className="col2">
-              {record.available} {record.crypto}
+              {record.amount - record.executed}{' '}
+              <span>{TabP2PState.searchParam.crypto}</span>
             </div>
           </div>
           <div className="rowLimitAvailable">
             <div className="col1">Limit</div>
             <div className="col2">
-              {record.preLimit}.{record.limit} - {record.preLimit}.
-              {record.limit}
+              {record.orderLowerBound} <span>{record.fiatName} - </span>
+            </div>
+            <div className="col3">
+              {record.orderUpperBound} <span>{record.fiatName}</span>
             </div>
           </div>
         </ColLimitAvailable>
       ),
     },
     {
-      title: 'Payment',
-      key: 'Payment',
-      dataIndex: 'payment',
-      width: 280,
+      title: 'Payments',
+      key: 'Payments',
+      dataIndex: 'payments',
 
       render: (text: any, record: any) => (
         <ColPayment>
-          {text.map((t, i) => (
-            <div className="payment" key={i}>
-              {t}
-            </div>
-          ))}
+          {text.length === 0 ? (
+            <h6>Unknow payment!</h6>
+          ) : (
+            text.map(payment => {
+              if (payment) {
+                return (
+                  <Tag key={record.id} className="paymentTag">
+                    <img src={payment.paymentMethodIcon} alt="#" />{' '}
+                    <span
+                      style={{
+                        color: `${payment.paymentMethodColor}`,
+                      }}
+                    >
+                      {payment.paymentMethodName}
+                    </span>
+                  </Tag>
+                );
+              }
+            })
+          )}
         </ColPayment>
       ),
     },
@@ -358,28 +136,119 @@ function P2PTableSell() {
       title: (
         <ColumnsTrade>
           <div className="title">Trade</div>
-          <div className="fee">0Fee</div>
+          <div className="fee">0 Fee</div>
         </ColumnsTrade>
       ),
       key: 'trade',
-      dataIndex: 'trade',
       width: 200,
-      render: (text: any, record: any) => {
-        return <ButtonSell>Sell {record.crypto}</ButtonSell>;
+      render: () => {
+        return <ButtonSell>Buy {token}</ButtonSell>;
       },
     },
   ];
 
+  const findAllOrdersSell = () => {
+    setLoading(true);
+    const listFiat = TabP2PState.listFiat;
+    const listToken = TabP2PState.listToken;
+    const listPaymet = TabP2PState.listPayment;
+
+    let payment = TabP2PState.searchParam.payment;
+    let fiat = TabP2PState.searchParam.fiat;
+    let crypto = TabP2PState.searchParam.crypto;
+    let amount = TabP2PState.amount;
+
+    let paymentId = 0;
+    let fiatId = 0;
+    let cryptoId = 0;
+
+    if (listToken.length !== 0 && crypto) {
+      cryptoId = listToken.find(token => token.assetName === crypto).id;
+    }
+
+    if (listFiat.length !== 0 && fiat) {
+      fiatId = listFiat.find(x => x.name === fiat).id;
+    }
+
+    if (listPaymet.length !== 0 && payment !== 'All payments' && payment) {
+      paymentId = listPaymet.find(x => x.name === payment).id;
+    }
+
+    getListOrderBy({
+      fiat: fiatId,
+      paymentMethod: paymentId || -1,
+      tokenId: cryptoId,
+      orderType: 1,
+      amount: amount,
+    })
+      .then((res: any) => {
+        if (res.data.rc === 0) {
+          setListP2POrdersSell(res.data.rows);
+          setLoading(false);
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(res => {
+        console.log(res);
+        setLoading(false);
+      });
+  };
+
+  const findAllOrders = () => {
+    getListOrder()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListP2POrders(res.data.rows);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
+
+  useEffect(() => {
+    findAllOrders();
+  }, []);
+
+  useEffect(() => {
+    findAllOrdersSell();
+  }, [TabP2PState]);
+
   return (
     <Wrapper>
-      <Table rowKey={'id'} columns={columns} dataSource={data} />
+      <Table
+        rowKey={'id'}
+        loading={{
+          spinning: loading,
+          indicator: <AiOutlineLoading3Quarters className="loadingIcon" />,
+        }}
+        columns={columns}
+        dataSource={listP2POrdersSell}
+      />
     </Wrapper>
   );
 }
 
 export default P2PTableSell;
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  @keyframes spining {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+
+  .loadingIcon {
+    -webkit-animation: spining 1.1s infinite linear;
+    animation: spining 1.1s infinite linear;
+  }
+`;
 
 const ColAdvertisers = styled.div`
   display: flex;
@@ -410,6 +279,11 @@ const ColAdvertisers = styled.div`
     margin-left: 28px;
     font-size: 12px;
     color: ${({ theme }) => theme.primary};
+    .numberOrderComplete {
+      margin-left: 10px;
+      padding-left: 5px;
+      border-left: 1px solid #ccc;
+    }
   }
 `;
 
@@ -439,6 +313,18 @@ const ColPayment = styled.div`
   display: flex;
   flex-wrap: wrap;
 
+  .paymentTag {
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 25px;
+      padding: 2px;
+      margin-right: 3px;
+    }
+  }
+
   .payment {
     font-size: 12px;
     padding: 0px 4px;
@@ -466,6 +352,9 @@ const ColumnsTrade = styled.div`
 
 const ButtonSell = styled(Button)`
   height: 30px;
+  width: 80%;
+  display: block;
+  margin: 0 auto;
   padding: 0px 30px;
   background-color: ${({ theme }) => theme.p2pSell};
   border: none;

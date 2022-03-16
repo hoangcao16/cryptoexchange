@@ -6,11 +6,11 @@ import { useTabP2PSlice } from '../slice';
 
 const Cryptos = [
   { name: 'USDT' },
-  { name: 'BTC' },
-  { name: 'BUSD' },
+  { name: 'BTNC' },
+  { name: 'SOL' },
   { name: 'BNB' },
   { name: 'ETH' },
-  { name: 'DAI' },
+  { name: 'BAKE' },
 ];
 
 function TabsCrypto() {

@@ -9,8 +9,12 @@ export const initialState: TabP2PState = {
     action: 'buy',
     crypto: '',
     fiat: '',
-    payment: '',
+    payment: 'All payments',
   },
+  listToken: [],
+  listFiat: [],
+  listPayment: [],
+  amount: -1,
 };
 
 const slice = createSlice({
@@ -59,6 +63,22 @@ const slice = createSlice({
      */
     paymentTabP2P(state, action: PayloadAction<string>) {
       state.searchParam = { ...state.searchParam, payment: action.payload };
+    },
+
+    getListToken(state, action: PayloadAction<any>) {
+      state.listToken = action.payload;
+    },
+
+    getListFiat(state, action: PayloadAction<any>) {
+      state.listFiat = action.payload;
+    },
+
+    getListPayment(state, action: PayloadAction<any>) {
+      state.listPayment = action.payload;
+    },
+
+    amountTabP2P(state, action: PayloadAction<any>) {
+      state.amount = action.payload;
     },
   },
 });
