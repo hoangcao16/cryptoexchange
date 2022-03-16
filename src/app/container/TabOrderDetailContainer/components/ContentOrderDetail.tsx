@@ -1,23 +1,18 @@
 import styled from 'styled-components';
-import { Steps, Button, message } from 'antd';
+import { Steps, Button, Radio } from 'antd';
 import { useState } from 'react';
-import { Tabs, Radio, Space } from 'antd';
-import { Nav } from 'react-bootstrap';
+import { Tabs } from 'antd';
+import { Collapse } from 'antd';
+import { HiPlusCircle } from 'react-icons/hi';
 
 const ContentOrderDetail = () => {
   const [current, setCurrent] = useState(0);
   const [visiableNote, setVisiableNote] = useState(true);
 
+  const { Panel } = Collapse;
   const { Step } = Steps;
   const { TabPane } = Tabs;
 
-  const next = () => {
-    setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    setCurrent(current - 1);
-  };
   const onChange = current => {
     console.log('onChange:', current);
     setCurrent(current);
@@ -41,13 +36,9 @@ const ContentOrderDetail = () => {
     <Wrapper>
       <div className="orderStep">
         <div className="firstStep">
-          <Steps className="st1Step" current={current} onChange={onChange}>
+          <Steps className="st1Step" size="small">
             {steps.map((step, index) => (
-              <Step
-                key={index}
-                title={`Step ${index + 1}`}
-                description={step.title}
-              />
+              <Step key={index} description={step.title} />
             ))}
           </Steps>
           {visiableNote && (
@@ -94,25 +85,75 @@ const ContentOrderDetail = () => {
               title="Transfer funds to the account provided below"
               description={
                 <div>
-                  <Tabs tabPosition="left" className="paymentTab">
-                    <TabPane tab="Tab 1" key="1">
-                      Content of Tab 1
+                  <Tabs type="card" tabPosition="left" className="paymentTab">
+                    <TabPane
+                      tab={
+                        <Radio>
+                          <span className="tabIcon">| </span> Chuyển khoản ngân
+                          hàng
+                        </Radio>
+                      }
+                      key="1"
+                    >
+                      <p>Content of Tab Pane 1</p>
+                      <p>Content of Tab Pane 1</p>
+                      <p>Content of Tab Pane 1</p>
                     </TabPane>
-                    <TabPane tab="Tab 2" key="2">
-                      Content of Tab 2
+                    <TabPane
+                      tab={
+                        <Radio>
+                          {' '}
+                          <span className="tabIcon">| </span> Momo
+                        </Radio>
+                      }
+                      key="2"
+                    >
+                      <p>Content of Tab Pane 2</p>
+                      <p>Content of Tab Pane 2</p>
+                      <p>Content of Tab Pane 2</p>
                     </TabPane>
-                    <TabPane tab="Tab 3" key="3">
-                      Content of Tab 3
+                    <TabPane
+                      tab={
+                        <Radio>
+                          {' '}
+                          <span className="tabIcon">| </span> Zalo Pay
+                        </Radio>
+                      }
+                      key="3"
+                    >
+                      <p>Content of Tab Pane 3</p>
+                      <p>Content of Tab Pane 3</p>
+                      <p>Content of Tab Pane 3</p>
                     </TabPane>
                   </Tabs>
                 </div>
               }
             />
-            <Step
-              title="In Progress"
-              description="This is a description. This is a description."
-            />
+            <Step title='After transferring the money, click the button "Transferred, notify the seller"' />
           </Steps>
+        </div>
+
+        <Button className="btnTransferred" type="primary">
+          Transferred, notify the seller
+        </Button>
+        <Button className="btnCancelOrder">Cancel order</Button>
+        <div className="faq">
+          <h5 className="faq-title">FAQ</h5>
+          <Collapse
+            defaultActiveKey={['1']}
+            expandIcon={() => <HiPlusCircle className="plusIcon" />}
+          >
+            <Panel header="This is panel header 1" key="1">
+              <p>{123}</p>
+            </Panel>
+            <Panel header="This is panel header 2" key="2">
+              <p>{123}</p>
+            </Panel>
+            <Panel header="This is panel header 3" key="3">
+              <p>{123}</p>
+            </Panel>
+          </Collapse>
+          ,
         </div>
       </div>
       <div className="chat"></div>
@@ -132,10 +173,28 @@ const Wrapper = styled.div`
     .firstStep {
       padding-bottom: 20px;
       border-bottom: 2px solid ${({ theme }) => theme.p2pGrayLight};
+
+      .ant-steps-item-container {
+        display: flex;
+        flex-direction: column;
+      }
+      .ant-steps-item-description {
+        margin-top: 10px;
+        width: 120%;
+      }
+
+      .ant-steps-item-title {
+        &::after {
+          top: 0;
+          transform: translate(20px, -10px);
+        }
+      }
       .st1Step {
         width: 80%;
       }
-
+      .anticon {
+        transform: translateY(-3px);
+      }
       .note {
         margin-top: 20px;
         background-color: ${({ theme }) => theme.p2pGrayLight};
@@ -164,6 +223,7 @@ const Wrapper = styled.div`
     }
 
     .secondStep {
+      padding-top: 20px;
       .descriptionStep1 {
         display: flex;
         div {
@@ -179,8 +239,79 @@ const Wrapper = styled.div`
       }
 
       .paymentTab {
-        border: 1px solid #ccc;
-        border-radius: 5px;
+        border-radius: 3px;
+        transition: all 0.25s linear;
+        padding-top: 15px;
+
+        .tabIcon {
+          font-weight: bold;
+          color: ${({ theme }) => theme.primary};
+          font-size: 18px;
+        }
+        .ant-tabs-tab {
+          border-right: 1px solid transparent !important;
+          transition: all 0.25s linear;
+          margin: 0;
+          border: none;
+        }
+
+        .ant-tabs-tab-active {
+          transition: all 0.25s linear;
+          border-right: 1px solid ${({ theme }) => theme.primary} !important;
+        }
+
+        .ant-tabs-content-left {
+          padding-top: 15px;
+          padding-right: 15px;
+          border-left: 1px solid ${({ theme }) => theme.p2pBorder};
+          text-align: justify;
+          height: 300px;
+          overflow: scroll;
+          &::-webkit-scrollbar {
+            height: 100%;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            border-radius: 0px;
+            background-color: ${({ theme }) => theme.primary};
+          }
+        }
+      }
+    }
+
+    .btnCancelOrder {
+      margin-left: 20px;
+      color: ${({ theme }) => theme.primary};
+      font-weight: bold;
+    }
+
+    .btnTransferred {
+      font-weight: bold;
+    }
+
+    .faq {
+      margin-top: 60px;
+
+      &-title {
+        margin-bottom: 20px;
+      }
+
+      .plusIcon {
+        color: ${({ theme }) => theme.primary};
+        font-size: 16px;
+        transform: translateY(3px);
+      }
+
+      .ant-collapse {
+        border: none;
+      }
+
+      .ant-collapse-item {
+        border: none;
+      }
+
+      .ant-collapse-content {
+        border: none;
       }
     }
   }
