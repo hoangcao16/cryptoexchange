@@ -46,23 +46,23 @@ const HandleOrder = (props: any) => {
   });
 
   const handleChangeReceive = value => {
-    setValue('inputReceive', value);
-    if (value) {
-      setReceive(Number(getValues('inputReceive').replace(/,/g, '')));
-      setPricePay(
-        Number(getValues('inputReceive').replace(/,/g, '')) * record.price,
-      );
-    }
-    if (
-      Number(getValues('inputPay').replace(/,/g, '')) <
-        record.orderLowerBound ||
-      Number(getValues('inputPay').replace(/,/g, '')) >
-        record.orderLowerBound * record.price
-    ) {
-      setValidateState(true);
-    } else {
-      setValidateState(false);
-    }
+    // setValue('inputReceive', value);
+    // if (value) {
+    //   setReceive(Number(getValues('inputReceive').replace(/,/g, '')));
+    //   setPricePay(
+    //     Number(getValues('inputReceive').replace(/,/g, '')) * record.price,
+    //   );
+    // }
+    // if (
+    //   Number(getValues('inputPay').replace(/,/g, '')) <
+    //     record.orderLowerBound ||
+    //   Number(getValues('inputPay').replace(/,/g, '')) >
+    //     record.orderLowerBound * record.price
+    // ) {
+    //   setValidateState(true);
+    // } else {
+    //   setValidateState(false);
+    // }
   };
 
   const handleChangePay = value => {
