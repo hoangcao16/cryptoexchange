@@ -7,16 +7,28 @@ import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
 import { useForm } from 'react-hook-form';
 import CurrencyInput from 'app/components/CurrencyInput/index';
+import { tabP2PService } from 'services/tabP2PServices';
+import { payments } from 'app/container/PostAdP2PContainer/data';
+import { useNavigate } from 'react-router-dom';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
+  const navigate = useNavigate();
   const [validateState, setValidateState] = useState(false);
-  const [pricePay, setPricePay] = useState(0);
-  const [receive, setReceive] = useState(0);
+  const [pricePay, setPricePay] = useState('');
+  const [receive, setReceive] = useState('');
+  const { createTrade } = tabP2PService;
+  const {
+    listP2POrders,
+    text,
+    record,
+    index,
+    hanldeCloseOrder,
+    timeLimit,
+    available,
+  } = props;
 
-  const { listP2POrders, text, record, index, hanldeCloseOrder, timeLimit } =
-    props;
-
+  const maxPrice = available * record.price;
   const {
     register,
     handleSubmit,
@@ -27,10 +39,6 @@ const HandleOrder = (props: any) => {
     mode: 'all',
     reValidateMode: 'onChange',
   });
-
-  const onSubmit = data => {
-    console.log(data);
-  };
 
   let fiatName = TabP2PState.searchParam.fiat;
   let crypto = TabP2PState.searchParam.crypto;
@@ -46,46 +54,96 @@ const HandleOrder = (props: any) => {
   });
 
   const handleChangeReceive = value => {
-    // setValue('inputReceive', value);
-    // if (value) {
-    //   setReceive(Number(getValues('inputReceive').replace(/,/g, '')));
-    //   setPricePay(
-    //     Number(getValues('inputReceive').replace(/,/g, '')) * record.price,
-    //   );
-    // }
-    // if (
-    //   Number(getValues('inputPay').replace(/,/g, '')) <
-    //     record.orderLowerBound ||
-    //   Number(getValues('inputPay').replace(/,/g, '')) >
-    //     record.orderLowerBound * record.price
-    // ) {
-    //   setValidateState(true);
-    // } else {
-    //   setValidateState(false);
-    // }
+    setValue(
+      'inputReceive',
+      Number(Math.floor(parseFloat(value) * 100) / 100).toString(),
+    );
+    if (value) {
+      setReceive(
+        Number(getValues('inputReceive').replace(/,/g, '')).toString(),
+      );
+      setPricePay(
+        (
+          Number(getValues('inputReceive').replace(/,/g, '')) * record.price
+        ).toString(),
+      );
+    } else {
+      setReceive('');
+      setPricePay('');
+    }
+    if (
+      Number(getValues('inputReceive').replace(/,/g, '')) * record.price <
+        record.orderLowerBound ||
+      Number(getValues('inputReceive').replace(/,/g, '')) * record.price >
+        maxPrice
+    ) {
+      setValidateState(true);
+    } else {
+      setValidateState(false);
+    }
   };
 
   const handleChangePay = value => {
-    setValue('inputPay', value);
+    setValue(
+      'inputPay',
+      Number(Math.floor(parseFloat(value) * 100) / 100).toString(),
+    );
     if (
-      Number(getValues('inputPay').replace(/,/g, '')) <
+      Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) <
         record.orderLowerBound ||
-      Number(getValues('inputPay').replace(/,/g, '')) >
-        record.orderLowerBound * record.price
+      Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) > maxPrice
     ) {
       setValidateState(true);
     } else {
       setValidateState(false);
     }
     if (value) {
-      setPricePay(Number(getValues('inputPay').replace(/,/g, '')));
+      setPricePay(
+        (
+          Math.floor(
+            Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) * 100,
+          ) / 100
+        ).toString(),
+      );
       setReceive(
-        Number(getValues('inputPay').replace(/,/g, '')) / record.price,
+        (
+          Math.floor(
+            Number(
+              parseFloat(getValues('inputPay').replace(/,/g, '')) /
+                record.price,
+            ) * 100,
+          ) / 100
+        ).toString(),
       );
     } else {
-      setPricePay(0);
-      setReceive(0);
+      setPricePay('');
+      setReceive('');
     }
+  };
+
+  const handleBuy = () => {
+    if (receive && pricePay) {
+      // let newValue = {
+      //   amount: Number(receive),
+      //   fiatId: record.fiatId,
+      //   orderId: record.id,
+      //   // paymentId: record.payments[0].id,
+      //   price: record.price,
+      //   tokenId: record.tokenId,
+      //   total: Number(pricePay),
+      // };
+      // createTrade(newValue).then(res => {
+      //   console.log(res);
+      // });
+      navigate(`/order/orderDetail/${record.id}`);
+    } else setValidateState(true);
+  };
+
+  const handelChooseAll = e => {
+    e.preventDefault();
+    setPricePay(maxPrice.toString());
+    setReceive((maxPrice / record.price).toString());
+    setValidateState(false);
   };
 
   return (
@@ -135,30 +193,28 @@ const HandleOrder = (props: any) => {
             </Descriptions.Item>
             <Descriptions.Item span={1} label="Buyer's payment method">
               <span className="orderDescriptionSpan">
-                {
-                  <div className="colPayments">
-                    {record.payments.length === 0 ? (
-                      <h6>Unknow payment!</h6>
-                    ) : (
-                      record.payments.map(payment => {
-                        if (payment) {
-                          return (
-                            <Tag key={record.id} className="paymentTag">
-                              <img src={payment.paymentMethodIcon} alt="#" />{' '}
-                              <span
-                                style={{
-                                  color: `${payment.paymentMethodColor}`,
-                                }}
-                              >
-                                {payment.paymentMethodName}
-                              </span>
-                            </Tag>
-                          );
-                        } else return null;
-                      })
-                    )}
-                  </div>
-                }
+                <div className="colPayments">
+                  {record.payments.length === 0 ? (
+                    <h6>Unknow payment!</h6>
+                  ) : (
+                    record.payments.map((payment, index) => {
+                      if (payment) {
+                        return (
+                          <Tag key={index} className="paymentTag">
+                            <img src={payment.paymentMethod.icon} alt="#" />{' '}
+                            <span
+                              style={{
+                                color: `${payment.paymentMethod.colorCode}`,
+                              }}
+                            >
+                              {payment.paymentMethod.name}
+                            </span>
+                          </Tag>
+                        );
+                      } else return null;
+                    })
+                  )}
+                </div>
               </span>
             </Descriptions.Item>
           </Descriptions>
@@ -175,24 +231,25 @@ const HandleOrder = (props: any) => {
         ,
       </div>
       <div className="formOrder">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <div className="mb-3 inputBuy">
             <label htmlFor="disabledTextInput" className="form-label labelText">
               I want to pay
             </label>
             <CurrencyInput
               {...register('inputPay', {
+                required: true,
                 onChange: e => handleChangePay(e.target.value),
               })}
               type="text"
               id="disabledTextInput"
-              autocomplete="off"
+              autoComplete="off"
               className="form-control bargain"
-              placeholder={`${record.orderLowerBound.toFixed(2)} - ${(
-                record.orderLowerBound * record.price
-              ).toFixed(2)}`}
+              placeholder={`${record.orderLowerBound.toFixed(
+                2,
+              )} - ${maxPrice.toFixed(2)}`}
               style={{ borderColor: validateState && 'red' }}
-              value={pricePay || ''}
+              value={pricePay}
             />
             {validateState && (
               <p className="validateMessage">
@@ -202,7 +259,12 @@ const HandleOrder = (props: any) => {
               </p>
             )}
             <div className="apponAfter">
-              <button className="btnChooseAll">All</button>
+              <button
+                className="btnChooseAll"
+                onClick={e => handelChooseAll(e)}
+              >
+                All
+              </button>
               <span className="fiatNameInput">{fiatName}</span>
             </div>
           </div>
@@ -213,6 +275,7 @@ const HandleOrder = (props: any) => {
             </label>
             <CurrencyInput
               {...register('inputReceive', {
+                required: true,
                 onChange: e => handleChangeReceive(e.target.value),
                 value: '',
               })}
@@ -221,7 +284,7 @@ const HandleOrder = (props: any) => {
               id="disabledTextInput"
               className="form-control bargain"
               placeholder="0.00"
-              value={receive.toFixed(2)}
+              value={receive}
             />
             <div className="apponAfter">
               <span className="fiatNameInput">{crypto}</span>
@@ -238,9 +301,10 @@ const HandleOrder = (props: any) => {
               Cancel
             </Button>
             <Button
-              type="submit"
               className="btn btn-lg btn-primary btn-buy"
-              onClick={() => {}}
+              onClick={() => {
+                handleBuy();
+              }}
               disabled={validateState}
             >
               Buy {crypto}
@@ -295,6 +359,18 @@ const ColHandleOrder = styled.div`
     margin-top: 10px;
     padding-right: 20px;
 
+    .paymentTag {
+      margin-bottom: 2px;
+      padding-right: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 25px;
+        padding: 2px;
+        margin-left: 2px;
+      }
+    }
     .orderPrice {
       color: ${({ theme }) => theme.redColor};
     }

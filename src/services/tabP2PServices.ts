@@ -56,4 +56,12 @@ export const tabP2PService = {
       url: 'admin-api/api/v1/p2PPaymentTime',
     });
   },
+
+  createTrade(data: any) {
+    return apiClient.request({
+      method: 'POST',
+      url: 'p2p-api/api/v1/p2pTrade',
+      data: data,
+    });
+  },
 };
