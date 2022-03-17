@@ -77,7 +77,7 @@ function P2PTableBuy() {
         } else {
           let timeLimit = listTimeLimit.find(
             time => time.id === record.paymentTimeId,
-          ).timeLimit;
+          )?.timeLimit;
           return (
             <HandleOrder
               listP2POrders={listP2POrders}
@@ -213,7 +213,6 @@ function P2PTableBuy() {
   };
 
   const findAllOrdersBuy = () => {
-    console.log(111, listP2POrdersBuy);
     setLoading(true);
     const listFiat = TabP2PState.listFiat;
     const listToken = TabP2PState.listToken;
@@ -250,15 +249,12 @@ function P2PTableBuy() {
       .then((res: any) => {
         if (res.data.rc === 0) {
           setListP2POrdersBuy(res.data.rows);
-          console.log(res.data.rows);
           setLoading(false);
         } else {
-          console.log(res.rd);
           setLoading(false);
         }
       })
       .catch(res => {
-        console.log(res);
         setLoading(false);
       });
   };

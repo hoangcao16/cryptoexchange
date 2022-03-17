@@ -8,6 +8,13 @@ export const tabP2PService = {
     });
   },
 
+  getOrderById(id) {
+    return apiClient.request({
+      method: 'GET',
+      url: `/p2p-api/api/v1/p2pOrder/${id}`,
+    });
+  },
+
   getListOrderBy(params) {
     return apiClient.request({
       method: 'GET',
@@ -54,14 +61,6 @@ export const tabP2PService = {
     return apiClient.request({
       method: 'GET',
       url: 'admin-api/api/v1/p2PPaymentTime',
-    });
-  },
-
-  createTrade(data: any) {
-    return apiClient.request({
-      method: 'POST',
-      url: 'p2p-api/api/v1/p2pTrade',
-      data: data,
     });
   },
 };

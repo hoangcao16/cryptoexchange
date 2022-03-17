@@ -1,4 +1,4 @@
-import { Descriptions, Input, Tag } from 'antd';
+import { Descriptions, Tag } from 'antd';
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -7,9 +7,9 @@ import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
 import { useForm } from 'react-hook-form';
 import CurrencyInput from 'app/components/CurrencyInput/index';
-import { tabP2PService } from 'services/tabP2PServices';
-import { payments } from 'app/container/PostAdP2PContainer/data';
+import { tabOrderDetailService } from 'services/orderDetailService';
 import { useNavigate } from 'react-router-dom';
+import openNotification from 'app/components/NotificationAntd';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
@@ -17,7 +17,8 @@ const HandleOrder = (props: any) => {
   const [validateState, setValidateState] = useState(false);
   const [pricePay, setPricePay] = useState('');
   const [receive, setReceive] = useState('');
-  const { createTrade } = tabP2PService;
+  const [loading, setLoading] = useState(false);
+  const { createTrade } = tabOrderDetailService;
   const {
     listP2POrders,
     text,
@@ -29,9 +30,9 @@ const HandleOrder = (props: any) => {
   } = props;
 
   const maxPrice = available * record.price;
+
   const {
     register,
-    handleSubmit,
     setValue,
     getValues,
     formState: { errors },
@@ -123,19 +124,29 @@ const HandleOrder = (props: any) => {
 
   const handleBuy = () => {
     if (receive && pricePay) {
-      // let newValue = {
-      //   amount: Number(receive),
-      //   fiatId: record.fiatId,
-      //   orderId: record.id,
-      //   // paymentId: record.payments[0].id,
-      //   price: record.price,
-      //   tokenId: record.tokenId,
-      //   total: Number(pricePay),
-      // };
-      // createTrade(newValue).then(res => {
-      //   console.log(res);
-      // });
-      navigate(`/order/orderDetail/${record.id}`);
+      setLoading(true);
+      let newValue = {
+        amount: Number(receive),
+        fiatId: record.fiatId,
+        orderId: record.id,
+        paymentId: record.payments[0].id,
+        price: record.price,
+        tokenId: record.tokenId,
+        total: Number(pricePay),
+      };
+      createTrade(newValue)
+        .then(res => {
+          if (res.data.rc === 0) {
+            console.log(res.data);
+            openNotification('Success', 'Created your order');
+            setTimeout(() => {
+              setLoading(false);
+              localStorage.setItem('timeLimit', JSON.stringify(null));
+              navigate(`/order/orderDetail/${res.data?.item?.id}`);
+            }, 2000);
+          } else openNotification('Error', res.data.rd);
+        })
+        .catch(res => console.log('Error', res));
     } else setValidateState(true);
   };
 
@@ -305,13 +316,13 @@ const HandleOrder = (props: any) => {
               onClick={() => {
                 handleBuy();
               }}
-              disabled={validateState}
+              disabled={validateState || loading}
             >
-              Buy {crypto}
+              {loading ? <div className="loader"></div> : `Buy ${crypto}`}
             </Button>
           </div>
           <div className="desc">
-            <span>T+1:</span>
+            <span className="underDot">T+1:</span>
             <span>
               {' '}
               T+1 withdrawal limit will be imposed on the purchased asset to
@@ -319,7 +330,7 @@ const HandleOrder = (props: any) => {
             </span>
             <span>
               {' '}
-              <a>Learn more {'>'}</a>
+              <span>Learn more {'>'}</span>
             </span>
           </div>
         </form>
@@ -454,6 +465,67 @@ const ColHandleOrder = styled.div`
         &:focus {
           box-shadow: none;
         }
+
+        .loader,
+        .loader:before,
+        .loader:after {
+          background: ${({ theme }) => theme.p2pBackground};
+          -webkit-animation: load1 1s infinite ease-in-out;
+          animation: load1 1s infinite ease-in-out;
+          width: 6px;
+          height: 3px;
+        }
+        .loader {
+          color: ${({ theme }) => theme.p2pBackground};
+          text-indent: -9999em;
+          margin: 0 auto;
+          position: relative;
+          font-size: 11px;
+          -webkit-transform: translateZ(0);
+          -ms-transform: translateZ(0);
+          transform: translateZ(0);
+          -webkit-animation-delay: -0.16s;
+          animation-delay: -0.16s;
+          margin-top: 6px;
+        }
+        .loader:before,
+        .loader:after {
+          position: absolute;
+          top: 0;
+          content: '';
+        }
+        .loader:before {
+          left: -1.5em;
+          -webkit-animation-delay: -0.32s;
+          animation-delay: -0.32s;
+        }
+        .loader:after {
+          left: 1.5em;
+        }
+        @-webkit-keyframes load1 {
+          0%,
+          80%,
+          100% {
+            box-shadow: 0 0;
+            height: 1em;
+          }
+          40% {
+            box-shadow: 0 -1em;
+            height: 2em;
+          }
+        }
+        @keyframes load1 {
+          0%,
+          80%,
+          100% {
+            box-shadow: 0 0;
+            height: 1em;
+          }
+          40% {
+            box-shadow: 0 -1em;
+            height: 2em;
+          }
+        }
       }
     }
 
@@ -499,13 +571,14 @@ const ColHandleOrder = styled.div`
       margin-top: 20px;
       text-align: center;
 
-      span:first-child {
+      .underDot {
         font-weight: bold;
         border-bottom: 2px dotted black;
       }
 
       span:last-child {
         color: ${({ theme }) => theme.primary};
+        cursor: pointer;
       }
     }
   }

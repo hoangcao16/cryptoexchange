@@ -1,18 +1,56 @@
 import Countdown from 'antd/lib/statistic/Countdown';
 import styled from 'styled-components';
+import { tabOrderDetailService } from 'services/orderDetailService';
+import openNotification from 'app/components/NotificationAntd';
 
-const HeaderOrderDetail = () => {
-  const deadline = Date.now() + 1000 * 10;
+const HeaderOrderDetail = ({ trade, reload }) => {
+  const { updateTradeById } = tabOrderDetailService;
+  const time =
+    trade?.status === 'CANCEL' ? null : trade?.order?.paymentTime?.timeLimit;
+  const deadline = time * 60 * 1000;
+  if (JSON.parse(localStorage.getItem('timeLimit') as never) === null) {
+    localStorage.setItem('timeLimit', JSON.stringify(deadline));
+  }
+
+  const date = new Date(trade?.createTime);
+
+  const countDownChange = value => {
+    localStorage.setItem('timeLimit', JSON.stringify(value));
+  };
+
+  const finishedCountDown = () => {
+    updateTradeById({
+      id: trade.id,
+      status: 'CANCEL',
+      paymentId: -1,
+    })
+      .then(res => {
+        if (res.data.rc === 0) {
+          openNotification('Error', 'Canceled this order due to time limit!');
+          localStorage.setItem('timeLimit', JSON.stringify(null));
+          reload();
+        } else {
+          openNotification('Error', res.data.rd);
+        }
+      })
+      .catch(res => console.log(res));
+  };
   return (
     <Wrapper>
       <div className="container">
         <div className="sellInfo">
-          <h4>Buy USDT from WF Nguyễn</h4>
+          <h4>
+            Buy {trade?.order?.token?.assetName} from {trade?.sellEmail}
+          </h4>
           <div className="countdown">
             Created order. Please wait for the system to confirm{' '}
             <Countdown
-              onFinish={() => console.log(123)}
-              value={deadline}
+              onChange={countDownChange}
+              onFinish={() => finishedCountDown()}
+              value={
+                Date.now() +
+                JSON.parse(localStorage.getItem('timeLimit') as never)
+              }
               className="countdownTimer"
             ></Countdown>
             <span className="bg"></span>
@@ -20,10 +58,16 @@ const HeaderOrderDetail = () => {
         </div>
         <div className="orderInfo">
           <p>
-            <span className="clgray">Order number</span>: 12312321632
+            <span className="clgray">Order number</span>: {trade?.orderNumber}
           </p>
           <p>
-            <span className="clgray">Create at</span>: 12/10/2022
+            <span className="clgray">Create at</span>:{' '}
+            {date && (
+              <span>
+                {date.getHours()}:{date.getMinutes()}:{date.getSeconds()} -{' '}
+                {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}
+              </span>
+            )}
           </p>
         </div>
       </div>
