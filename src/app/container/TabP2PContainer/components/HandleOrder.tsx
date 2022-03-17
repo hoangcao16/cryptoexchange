@@ -1,22 +1,21 @@
-import { Descriptions, Tag } from 'antd';
+import { Descriptions, Input, InputNumber, Tag } from 'antd';
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
-import { useForm } from 'react-hook-form';
-import CurrencyInput from 'app/components/CurrencyInput/index';
 import { tabOrderDetailService } from 'services/orderDetailService';
 import { useNavigate } from 'react-router-dom';
 import openNotification from 'app/components/NotificationAntd';
+import { darkTheme } from 'theme/theme';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const navigate = useNavigate();
   const [validateState, setValidateState] = useState(false);
-  const [pricePay, setPricePay] = useState('');
-  const [receive, setReceive] = useState('');
+  const [pricePay, setPricePay] = useState<number>();
+  const [receive, setReceive] = useState<number>();
   const [loading, setLoading] = useState(false);
   const { createTrade } = tabOrderDetailService;
   const {
@@ -30,16 +29,6 @@ const HandleOrder = (props: any) => {
   } = props;
 
   const maxPrice = available * record.price;
-
-  const {
-    register,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm({
-    mode: 'all',
-    reValidateMode: 'onChange',
-  });
 
   let fiatName = TabP2PState.searchParam.fiat;
   let crypto = TabP2PState.searchParam.crypto;
@@ -55,29 +44,12 @@ const HandleOrder = (props: any) => {
   });
 
   const handleChangeReceive = value => {
-    setValue(
-      'inputReceive',
-      Number(Math.floor(parseFloat(value) * 100) / 100).toString(),
-    );
-    if (value) {
-      setReceive(
-        Number(getValues('inputReceive').replace(/,/g, '')).toString(),
-      );
-      setPricePay(
-        (
-          Number(getValues('inputReceive').replace(/,/g, '')) * record.price
-        ).toString(),
-      );
-    } else {
-      setReceive('');
-      setPricePay('');
+    if (value >= 0) {
+      setReceive(Number(value));
+      setPricePay(Number(Math.floor(value * record?.price * 100) / 100));
     }
-    if (
-      Number(getValues('inputReceive').replace(/,/g, '')) * record.price <
-        record.orderLowerBound ||
-      Number(getValues('inputReceive').replace(/,/g, '')) * record.price >
-        maxPrice
-    ) {
+
+    if (value < record?.orderLowerBound / record?.price || value > available) {
       setValidateState(true);
     } else {
       setValidateState(false);
@@ -85,40 +57,15 @@ const HandleOrder = (props: any) => {
   };
 
   const handleChangePay = value => {
-    setValue(
-      'inputPay',
-      Number(Math.floor(parseFloat(value) * 100) / 100).toString(),
-    );
-    if (
-      Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) <
-        record.orderLowerBound ||
-      Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) > maxPrice
-    ) {
+    if (value >= 0) {
+      setPricePay(Number(value));
+      setReceive(Number(Math.floor((value / record?.price) * 100) / 100));
+    }
+
+    if (value < record?.orderLowerBound || value > record?.price * available) {
       setValidateState(true);
     } else {
       setValidateState(false);
-    }
-    if (value) {
-      setPricePay(
-        (
-          Math.floor(
-            Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) * 100,
-          ) / 100
-        ).toString(),
-      );
-      setReceive(
-        (
-          Math.floor(
-            Number(
-              parseFloat(getValues('inputPay').replace(/,/g, '')) /
-                record.price,
-            ) * 100,
-          ) / 100
-        ).toString(),
-      );
-    } else {
-      setPricePay('');
-      setReceive('');
     }
   };
 
@@ -150,11 +97,9 @@ const HandleOrder = (props: any) => {
     } else setValidateState(true);
   };
 
-  const handelChooseAll = e => {
-    e.preventDefault();
-    setPricePay(maxPrice.toString());
-    setReceive((maxPrice / record.price).toString());
-    setValidateState(false);
+  const handelChooseAll = () => {
+    setPricePay(record?.price * available);
+    setReceive(available);
   };
 
   return (
@@ -242,98 +187,85 @@ const HandleOrder = (props: any) => {
         ,
       </div>
       <div className="formOrder">
-        <form>
-          <div className="mb-3 inputBuy">
-            <label htmlFor="disabledTextInput" className="form-label labelText">
-              I want to pay
-            </label>
-            <CurrencyInput
-              {...register('inputPay', {
-                required: true,
-                onChange: e => handleChangePay(e.target.value),
-              })}
-              type="text"
-              id="disabledTextInput"
-              autoComplete="off"
-              className="form-control bargain"
-              placeholder={`${record.orderLowerBound.toFixed(
-                2,
-              )} - ${maxPrice.toFixed(2)}`}
-              style={{ borderColor: validateState && 'red' }}
-              value={pricePay}
-            />
-            {validateState && (
-              <p className="validateMessage">
-                Buy limit: {record.orderLowerBound.toFixed(2)} -{' '}
-                {(record.orderLowerBound * record.price).toFixed(2)}{' '}
-                {record.fiatName}
-              </p>
-            )}
-            <div className="apponAfter">
-              <button
-                className="btnChooseAll"
-                onClick={e => handelChooseAll(e)}
-              >
-                All
-              </button>
-              <span className="fiatNameInput">{fiatName}</span>
-            </div>
+        <div className="mb-3 inputBuy">
+          <label htmlFor="disabledTextInput" className="form-label labelText">
+            I want to pay
+          </label>
+          <InputNumber
+            onChange={handleChangePay}
+            value={pricePay}
+            autoComplete="off"
+            min={0}
+            className="form-control bargain"
+            placeholder={`${record.orderLowerBound.toFixed(
+              2,
+            )} - ${maxPrice.toFixed(2)}`}
+            style={{ borderColor: validateState ? 'red' : '' }}
+          />
+          {validateState && (
+            <p className="validateMessage">
+              Buy limit: {record.orderLowerBound.toFixed(2)} -{' '}
+              {(record.orderLowerBound * record.price).toFixed(2)}{' '}
+              {record.fiatName}
+            </p>
+          )}
+          <div className="apponAfter">
+            <button className="btnChooseAll" onClick={() => handelChooseAll()}>
+              All
+            </button>
+            <span className="fiatNameInput">{fiatName}</span>
           </div>
+        </div>
 
-          <div className="mb-3 inputBuy">
-            <label htmlFor="disabledTextInput" className="form-label">
-              I will receive
-            </label>
-            <CurrencyInput
-              {...register('inputReceive', {
-                required: true,
-                onChange: e => handleChangeReceive(e.target.value),
-                value: '',
-              })}
-              style={{ borderColor: validateState && 'red' }}
-              type="text"
-              id="disabledTextInput"
-              className="form-control bargain"
-              placeholder="0.00"
-              value={receive}
-            />
-            <div className="apponAfter">
-              <span className="fiatNameInput">{crypto}</span>
-            </div>
+        <div className="mb-3 inputBuy">
+          <label htmlFor="disabledTextInput" className="form-label">
+            I will receive
+          </label>
+          <InputNumber
+            style={{ borderColor: validateState ? 'red' : darkTheme.grayColor }}
+            id="disabledTextInput"
+            className="form-control bargain"
+            placeholder="0.00"
+            min={0}
+            value={receive}
+            onChange={handleChangeReceive}
+          />
+          <div className="apponAfter">
+            <span className="fiatNameInput">{crypto}</span>
           </div>
+        </div>
 
-          <div className="btn-control">
-            <Button
-              className="btn btn-secondary btn-lg btn-cancel"
-              onClick={() => {
-                hanldeCloseOrder(prev => prev.filter(order => order !== index));
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              className="btn btn-lg btn-primary btn-buy"
-              onClick={() => {
-                handleBuy();
-              }}
-              disabled={validateState || loading}
-            >
-              {loading ? <div className="loader"></div> : `Buy ${crypto}`}
-            </Button>
-          </div>
-          <div className="desc">
-            <span className="underDot">T+1:</span>
-            <span>
-              {' '}
-              T+1 withdrawal limit will be imposed on the purchased asset to
-              enhance fund safety.
-            </span>
-            <span>
-              {' '}
-              <span>Learn more {'>'}</span>
-            </span>
-          </div>
-        </form>
+        <div className="btn-control">
+          <Button
+            className="btn btn-secondary btn-lg btn-cancel"
+            onClick={() => {
+              hanldeCloseOrder(prev => prev.filter(order => order !== index));
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="btn btn-lg btn-primary btn-buy"
+            onClick={() => {
+              handleBuy();
+            }}
+            disabled={validateState || loading}
+          >
+            {loading ? <div className="loader"></div> : `Buy ${crypto}`}
+          </Button>
+        </div>
+        <div className="desc">
+          <span className="underDot">T+1:</span>
+          <span>
+            {' '}
+            T+1 withdrawal limit will be imposed on the purchased asset to
+            enhance fund safety.
+          </span>
+          <span>
+            {' '}
+            <span>Learn more {'>'}</span>
+          </span>
+        </div>
       </div>
     </ColHandleOrder>
   );
@@ -396,7 +328,7 @@ const ColHandleOrder = styled.div`
   }
   .orderInfo {
     flex: 6;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid ${({ theme }) => theme.grayColor};
     overflow: scroll;
     ::-webkit-scrollbar {
       height: 100%;
@@ -411,11 +343,21 @@ const ColHandleOrder = styled.div`
     padding-left: 20px;
     flex: 4;
 
+    .ant-input-number-handler-wrap {
+      display: none;
+    }
+
     .bargain {
       transition: all 0.25s linear;
       font-size: 14px;
       width: 100%;
       height: 40px;
+      box-shadow: none;
+      padding: 4px 10px;
+
+      input {
+        padding: 0;
+      }
 
       &:hover {
         border: 1px solid ${({ theme }) => theme.primary};

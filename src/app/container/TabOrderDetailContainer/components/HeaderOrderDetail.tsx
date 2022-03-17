@@ -13,10 +13,14 @@ const HeaderOrderDetail = ({ trade, reload }) => {
   }
 
   const date = new Date(trade?.createTime);
+  const date1 = Date.now();
+  console.log(date1 - date.getTime());
 
   const countDownChange = value => {
-    localStorage.setItem('timeLimit', JSON.stringify(value));
+    // localStorage.setItem('timeLimit', JSON.stringify(value));
   };
+
+  console.log(trade?.order);
 
   const finishedCountDown = () => {
     updateTradeById({
@@ -35,6 +39,10 @@ const HeaderOrderDetail = ({ trade, reload }) => {
       })
       .catch(res => console.log(res));
   };
+  console.log(
+    Date.now() +
+      (trade?.order?.paymentTime?.timeLimit * 1800 - (date1 - date.getTime())),
+  );
   return (
     <Wrapper>
       <div className="container">
@@ -48,8 +56,9 @@ const HeaderOrderDetail = ({ trade, reload }) => {
               onChange={countDownChange}
               onFinish={() => finishedCountDown()}
               value={
-                Date.now() +
-                JSON.parse(localStorage.getItem('timeLimit') as never)
+                Date.now() + trade?.order?.paymentTime?.timeLimit * 1800
+                // Date.now() +
+                // JSON.parse(localStorage.getItem('timeLimit') as never)
               }
               className="countdownTimer"
             ></Countdown>
