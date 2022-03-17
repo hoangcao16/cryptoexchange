@@ -13,7 +13,7 @@ const defaultMaskOptions = {
   decimalLimit: 2, // how many digits allowed after the decimal
   integerLimit: 1000000000000000000, // limit length of integer numbers
   allowNegative: false,
-  allowLeadingZeroes: false,
+  allowLeadingZeroes: true,
 };
 
 const CurrencyInput = ({ maskOptions, ...inputProps }: any) => {

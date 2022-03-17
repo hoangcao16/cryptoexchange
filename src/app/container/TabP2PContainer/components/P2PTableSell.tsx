@@ -18,8 +18,6 @@ function P2PTableSell() {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const { getListOrderBy, getListOrder } = tabP2PService;
 
-  const token = TabP2PState.searchParam.crypto;
-
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
@@ -69,7 +67,7 @@ function P2PTableSell() {
       render: (text: any, record: any) => {
         return (
           <ColPrice>
-            {record.price} <span> {record.fiatName}</span>
+            {record.price} <span> {record.fiat.name}</span>
           </ColPrice>
         );
       },
@@ -93,10 +91,11 @@ function P2PTableSell() {
           <div className="rowLimitAvailable">
             <div className="col1">Limit</div>
             <div className="col2">
-              {record.orderLowerBound} <span>{record.fiatName} - </span>
+              {record.fiat.symbol} {record.orderLowerBound} <span> - </span>
             </div>
             <div className="col3">
-              {record.orderUpperBound} <span>{record.fiatName}</span>
+              {record.fiat.symbol}{' '}
+              {record.price * (record.amount - record.executed)}
             </div>
           </div>
         </ColLimitAvailable>
@@ -109,20 +108,20 @@ function P2PTableSell() {
 
       render: (text: any, record: any) => (
         <ColPayment>
-          {text.length === 0 ? (
+          {text?.length === 0 ? (
             <h6>Unknow payment!</h6>
           ) : (
-            text.map(payment => {
+            text?.map((payment, index) => {
               if (payment) {
                 return (
-                  <Tag key={record.id} className="paymentTag">
-                    <img src={payment.paymentMethodIcon} alt="#" />{' '}
+                  <Tag key={index} className="paymentTag">
+                    <img src={payment.paymentMethod.icon} alt="#" />{' '}
                     <span
                       style={{
-                        color: `${payment.paymentMethodColor}`,
+                        color: `${payment.paymentMethod.colorCode}`,
                       }}
                     >
-                      {payment.paymentMethodName}
+                      {payment.paymentMethod.name}
                     </span>
                   </Tag>
                 );
@@ -141,8 +140,8 @@ function P2PTableSell() {
       ),
       key: 'trade',
       width: 200,
-      render: () => {
-        return <ButtonSell>Buy {token}</ButtonSell>;
+      render: (_, record) => {
+        return <ButtonSell>Sell {record.token.assetName}</ButtonSell>;
       },
     },
   ];
@@ -178,7 +177,7 @@ function P2PTableSell() {
       fiat: fiatId,
       paymentMethod: paymentId || -1,
       tokenId: cryptoId,
-      orderType: 1,
+      orderType: 0,
       amount: amount,
     })
       .then((res: any) => {
@@ -282,7 +281,7 @@ const ColAdvertisers = styled.div`
     .numberOrderComplete {
       margin-left: 10px;
       padding-left: 5px;
-      border-left: 1px solid #ccc;
+      border-left: 1px solid ${({ theme }) => theme.brightGrayColor};
     }
   }
 `;
@@ -305,6 +304,10 @@ const ColLimitAvailable = styled.div`
 
       font-size: 12px;
       color: ${({ theme }) => theme.primary};
+    }
+
+    .col3 {
+      margin-left: 2px;
     }
   }
 `;
@@ -335,7 +338,7 @@ const ColPayment = styled.div`
     text-align: center;
 
     background-color: ${({ theme }) => theme.p2pBorder};
-    color: #e72258;
+    color: ${({ theme }) => theme.p2pSell};
   }
 `;
 
@@ -345,8 +348,9 @@ const ColumnsTrade = styled.div`
 
   .fee {
     padding: 0px 10px;
-    color: rgb(0, 192, 135);
-    background-color: rgb(226, 253, 244);
+    color: ${({ theme }) => theme.greenColor};
+    background-color: ${({ theme }) => theme.p2pBackground};
+    border-radius: 3px;
   }
 `;
 

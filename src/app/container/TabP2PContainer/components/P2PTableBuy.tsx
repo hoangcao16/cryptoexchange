@@ -34,7 +34,6 @@ function P2PTableBuy() {
     getListTimeLimit,
   } = tabP2PService;
 
-  const token = TabP2PState.searchParam.crypto;
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
@@ -78,7 +77,7 @@ function P2PTableBuy() {
         } else {
           let timeLimit = listTimeLimit.find(
             time => time.id === record.paymentTimeId,
-          ).timeLimit;
+          )?.timeLimit;
           return (
             <HandleOrder
               listP2POrders={listP2POrders}
@@ -87,6 +86,7 @@ function P2PTableBuy() {
               index={index}
               hanldeCloseOrder={hanldeCloseOrder}
               timeLimit={timeLimit}
+              available={record.amount - record.executed}
             />
           );
         }
@@ -102,11 +102,12 @@ function P2PTableBuy() {
       title: 'Price',
       key: 'Price',
       dataIndex: 'price',
+
       width: 200,
       render: (text: any, record: any) => {
         return (
           <ColPrice>
-            {record.price} <span> {record.fiatName}</span>
+            {record.price} <span> {record.fiat?.name}</span>
           </ColPrice>
         );
       },
@@ -133,10 +134,10 @@ function P2PTableBuy() {
           <div className="rowLimitAvailable">
             <div className="col1">Limit</div>
             <div className="col2">
-              {record.fiatSymbol} {record.orderLowerBound} <span> - </span>
+              {record.fiat.symbol} {record.orderLowerBound} <span> - </span>
             </div>
             <div className="col3">
-              {record.fiatSymbol}{' '}
+              {record.fiat.symbol}{' '}
               {record.price * (record.amount - record.executed)}
             </div>
           </div>
@@ -151,30 +152,32 @@ function P2PTableBuy() {
       key: 'Payments',
       dataIndex: 'payments',
 
-      render: (text: any, record: any) => (
-        <ColPayment>
-          {text.length === 0 ? (
-            <h6>Unknow payment!</h6>
-          ) : (
-            text.map(payment => {
-              if (payment) {
-                return (
-                  <Tag key={record.id} className="paymentTag">
-                    <img src={payment.paymentMethodIcon} alt="#" />{' '}
-                    <span
-                      style={{
-                        color: `${payment.paymentMethodColor}`,
-                      }}
-                    >
-                      {payment.paymentMethodName}
-                    </span>
-                  </Tag>
-                );
-              }
-            })
-          )}
-        </ColPayment>
-      ),
+      render: (text: any, record: any) => {
+        return (
+          <ColPayment>
+            {text?.length === 0 ? (
+              <h6>Unknow payment!</h6>
+            ) : (
+              text?.map((payment, index) => {
+                if (payment) {
+                  return (
+                    <Tag key={index} className="paymentTag">
+                      <img src={payment.paymentMethod.icon} alt="#" />{' '}
+                      <span
+                        style={{
+                          color: `${payment.paymentMethod.colorCode}`,
+                        }}
+                      >
+                        {payment.paymentMethod.name}
+                      </span>
+                    </Tag>
+                  );
+                }
+              })
+            )}
+          </ColPayment>
+        );
+      },
       onCell: (_, index) => ({
         colSpan: openOrders.includes(index) ? 0 : 1,
       }),
@@ -195,7 +198,7 @@ function P2PTableBuy() {
               setOpenOrders([...openOrders, index]);
             }}
           >
-            Buy {token}
+            Buy {record.token.assetName}
           </ButtonSell>
         );
       },
@@ -205,7 +208,7 @@ function P2PTableBuy() {
     },
   ];
 
-  const hanldeCloseOrder = value => {
+  const hanldeCloseOrder = async value => {
     setOpenOrders(value);
   };
 
@@ -240,7 +243,7 @@ function P2PTableBuy() {
       fiat: fiatId,
       paymentMethod: paymentId || -1,
       tokenId: cryptoId,
-      orderType: 0,
+      orderType: 1,
       amount: amount,
     })
       .then((res: any) => {
@@ -248,17 +251,15 @@ function P2PTableBuy() {
           setListP2POrdersBuy(res.data.rows);
           setLoading(false);
         } else {
-          console.log(res.rd);
           setLoading(false);
         }
       })
       .catch(res => {
-        console.log(res);
         setLoading(false);
       });
   };
 
-  const findAllOrders = () => {
+  const findAllOrders = async () => {
     getListOrder()
       .then(res => {
         if (res.data.rc === 0) {
@@ -270,7 +271,7 @@ function P2PTableBuy() {
       .catch(res => console.log(res));
   };
 
-  const findAllFiat = () => {
+  const findAllFiat = async () => {
     getListFiat()
       .then(res => {
         if (res.data.rc === 0) {
@@ -282,7 +283,7 @@ function P2PTableBuy() {
       .catch(res => console.log(res));
   };
 
-  const findAllToken = () => {
+  const findAllToken = async () => {
     getListToken()
       .then(res => {
         if (res.data.rc === 0) {
@@ -294,7 +295,7 @@ function P2PTableBuy() {
       .catch(res => console.log(res));
   };
 
-  const findAllPayment = () => {
+  const findAllPayment = async () => {
     getListPayments()
       .then(res => {
         if (res.data.rc === 0) {
@@ -306,7 +307,7 @@ function P2PTableBuy() {
       .catch(res => console.log(res));
   };
 
-  const findAllPaymentTime = () => {
+  const findAllPaymentTime = async () => {
     getListTimeLimit()
       .then(res => {
         if (res.data.rc === 0) {
@@ -317,17 +318,22 @@ function P2PTableBuy() {
       })
       .catch(res => console.log(res));
   };
+
   useEffect(() => {
-    findAllFiat();
-    findAllToken();
-    findAllPayment();
-    findAllOrdersBuy();
-    findAllOrders();
-    findAllPaymentTime();
+    Promise.all([
+      findAllFiat(),
+      findAllToken(),
+      findAllPayment(),
+      findAllOrdersBuy(),
+      findAllOrders(),
+      findAllPaymentTime(),
+    ]).then(() => findAllOrdersBuy());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     findAllOrdersBuy();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [TabP2PState]);
 
   return (
@@ -482,8 +488,15 @@ const ColPayment = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+
+  .paymentTag {
+    margin-bottom: 2px;
+    margin-right: 2px;
+  }
   img {
-    width: 30px;
+    width: 25px;
+    padding: 2px;
+    margin-right: 3px;
   }
   .payment {
     font-size: 12px;

@@ -36,6 +36,7 @@ import { TradeP2PPage } from './pages/TradeP2P/Loadable';
 import { StyledToastContainer } from './style';
 import { DepositPage } from './pages/DepositPage/Loadable';
 import { WithdrawPage } from './pages/WithdrawPage/Loadable';
+import { OrderDetailPage } from './pages/OrderDetailPage';
 
 export function App() {
   const dispatch = useDispatch();
@@ -136,6 +137,14 @@ export function App() {
             element={
               <PrivateRoute>
                 <PostAdP2P />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/order/orderDetail/:id"
+            element={
+              <PrivateRoute>
+                <OrderDetailPage />
               </PrivateRoute>
             }
           />

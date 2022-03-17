@@ -1,4 +1,4 @@
-import { Descriptions, Input, Tag } from 'antd';
+import { Descriptions, Tag } from 'antd';
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -7,19 +7,32 @@ import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
 import { useForm } from 'react-hook-form';
 import CurrencyInput from 'app/components/CurrencyInput/index';
+import { tabOrderDetailService } from 'services/orderDetailService';
+import { useNavigate } from 'react-router-dom';
+import openNotification from 'app/components/NotificationAntd';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
+  const navigate = useNavigate();
   const [validateState, setValidateState] = useState(false);
-  const [pricePay, setPricePay] = useState(0);
-  const [receive, setReceive] = useState(0);
+  const [pricePay, setPricePay] = useState('');
+  const [receive, setReceive] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { createTrade } = tabOrderDetailService;
+  const {
+    listP2POrders,
+    text,
+    record,
+    index,
+    hanldeCloseOrder,
+    timeLimit,
+    available,
+  } = props;
 
-  const { listP2POrders, text, record, index, hanldeCloseOrder, timeLimit } =
-    props;
+  const maxPrice = available * record.price;
 
   const {
     register,
-    handleSubmit,
     setValue,
     getValues,
     formState: { errors },
@@ -27,10 +40,6 @@ const HandleOrder = (props: any) => {
     mode: 'all',
     reValidateMode: 'onChange',
   });
-
-  const onSubmit = data => {
-    console.log(data);
-  };
 
   let fiatName = TabP2PState.searchParam.fiat;
   let crypto = TabP2PState.searchParam.crypto;
@@ -46,46 +55,106 @@ const HandleOrder = (props: any) => {
   });
 
   const handleChangeReceive = value => {
-    // setValue('inputReceive', value);
-    // if (value) {
-    //   setReceive(Number(getValues('inputReceive').replace(/,/g, '')));
-    //   setPricePay(
-    //     Number(getValues('inputReceive').replace(/,/g, '')) * record.price,
-    //   );
-    // }
-    // if (
-    //   Number(getValues('inputPay').replace(/,/g, '')) <
-    //     record.orderLowerBound ||
-    //   Number(getValues('inputPay').replace(/,/g, '')) >
-    //     record.orderLowerBound * record.price
-    // ) {
-    //   setValidateState(true);
-    // } else {
-    //   setValidateState(false);
-    // }
+    setValue(
+      'inputReceive',
+      Number(Math.floor(parseFloat(value) * 100) / 100).toString(),
+    );
+    if (value) {
+      setReceive(
+        Number(getValues('inputReceive').replace(/,/g, '')).toString(),
+      );
+      setPricePay(
+        (
+          Number(getValues('inputReceive').replace(/,/g, '')) * record.price
+        ).toString(),
+      );
+    } else {
+      setReceive('');
+      setPricePay('');
+    }
+    if (
+      Number(getValues('inputReceive').replace(/,/g, '')) * record.price <
+        record.orderLowerBound ||
+      Number(getValues('inputReceive').replace(/,/g, '')) * record.price >
+        maxPrice
+    ) {
+      setValidateState(true);
+    } else {
+      setValidateState(false);
+    }
   };
 
   const handleChangePay = value => {
-    setValue('inputPay', value);
+    setValue(
+      'inputPay',
+      Number(Math.floor(parseFloat(value) * 100) / 100).toString(),
+    );
     if (
-      Number(getValues('inputPay').replace(/,/g, '')) <
+      Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) <
         record.orderLowerBound ||
-      Number(getValues('inputPay').replace(/,/g, '')) >
-        record.orderLowerBound * record.price
+      Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) > maxPrice
     ) {
       setValidateState(true);
     } else {
       setValidateState(false);
     }
     if (value) {
-      setPricePay(Number(getValues('inputPay').replace(/,/g, '')));
+      setPricePay(
+        (
+          Math.floor(
+            Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) * 100,
+          ) / 100
+        ).toString(),
+      );
       setReceive(
-        Number(getValues('inputPay').replace(/,/g, '')) / record.price,
+        (
+          Math.floor(
+            Number(
+              parseFloat(getValues('inputPay').replace(/,/g, '')) /
+                record.price,
+            ) * 100,
+          ) / 100
+        ).toString(),
       );
     } else {
-      setPricePay(0);
-      setReceive(0);
+      setPricePay('');
+      setReceive('');
     }
+  };
+
+  const handleBuy = () => {
+    if (receive && pricePay) {
+      setLoading(true);
+      let newValue = {
+        amount: Number(receive),
+        fiatId: record.fiatId,
+        orderId: record.id,
+        paymentId: record.payments[0].id,
+        price: record.price,
+        tokenId: record.tokenId,
+        total: Number(pricePay),
+      };
+      createTrade(newValue)
+        .then(res => {
+          if (res.data.rc === 0) {
+            console.log(res.data);
+            openNotification('Success', 'Created your order');
+            setTimeout(() => {
+              setLoading(false);
+              localStorage.setItem('timeLimit', JSON.stringify(null));
+              navigate(`/order/orderDetail/${res.data?.item?.id}`);
+            }, 2000);
+          } else openNotification('Error', res.data.rd);
+        })
+        .catch(res => console.log('Error', res));
+    } else setValidateState(true);
+  };
+
+  const handelChooseAll = e => {
+    e.preventDefault();
+    setPricePay(maxPrice.toString());
+    setReceive((maxPrice / record.price).toString());
+    setValidateState(false);
   };
 
   return (
@@ -135,30 +204,28 @@ const HandleOrder = (props: any) => {
             </Descriptions.Item>
             <Descriptions.Item span={1} label="Buyer's payment method">
               <span className="orderDescriptionSpan">
-                {
-                  <div className="colPayments">
-                    {record.payments.length === 0 ? (
-                      <h6>Unknow payment!</h6>
-                    ) : (
-                      record.payments.map(payment => {
-                        if (payment) {
-                          return (
-                            <Tag key={record.id} className="paymentTag">
-                              <img src={payment.paymentMethodIcon} alt="#" />{' '}
-                              <span
-                                style={{
-                                  color: `${payment.paymentMethodColor}`,
-                                }}
-                              >
-                                {payment.paymentMethodName}
-                              </span>
-                            </Tag>
-                          );
-                        } else return null;
-                      })
-                    )}
-                  </div>
-                }
+                <div className="colPayments">
+                  {record.payments.length === 0 ? (
+                    <h6>Unknow payment!</h6>
+                  ) : (
+                    record.payments.map((payment, index) => {
+                      if (payment) {
+                        return (
+                          <Tag key={index} className="paymentTag">
+                            <img src={payment.paymentMethod.icon} alt="#" />{' '}
+                            <span
+                              style={{
+                                color: `${payment.paymentMethod.colorCode}`,
+                              }}
+                            >
+                              {payment.paymentMethod.name}
+                            </span>
+                          </Tag>
+                        );
+                      } else return null;
+                    })
+                  )}
+                </div>
               </span>
             </Descriptions.Item>
           </Descriptions>
@@ -175,24 +242,25 @@ const HandleOrder = (props: any) => {
         ,
       </div>
       <div className="formOrder">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <div className="mb-3 inputBuy">
             <label htmlFor="disabledTextInput" className="form-label labelText">
               I want to pay
             </label>
             <CurrencyInput
               {...register('inputPay', {
+                required: true,
                 onChange: e => handleChangePay(e.target.value),
               })}
               type="text"
               id="disabledTextInput"
-              autocomplete="off"
+              autoComplete="off"
               className="form-control bargain"
-              placeholder={`${record.orderLowerBound.toFixed(2)} - ${(
-                record.orderLowerBound * record.price
-              ).toFixed(2)}`}
+              placeholder={`${record.orderLowerBound.toFixed(
+                2,
+              )} - ${maxPrice.toFixed(2)}`}
               style={{ borderColor: validateState && 'red' }}
-              value={pricePay || ''}
+              value={pricePay}
             />
             {validateState && (
               <p className="validateMessage">
@@ -202,7 +270,12 @@ const HandleOrder = (props: any) => {
               </p>
             )}
             <div className="apponAfter">
-              <button className="btnChooseAll">All</button>
+              <button
+                className="btnChooseAll"
+                onClick={e => handelChooseAll(e)}
+              >
+                All
+              </button>
               <span className="fiatNameInput">{fiatName}</span>
             </div>
           </div>
@@ -213,6 +286,7 @@ const HandleOrder = (props: any) => {
             </label>
             <CurrencyInput
               {...register('inputReceive', {
+                required: true,
                 onChange: e => handleChangeReceive(e.target.value),
                 value: '',
               })}
@@ -221,7 +295,7 @@ const HandleOrder = (props: any) => {
               id="disabledTextInput"
               className="form-control bargain"
               placeholder="0.00"
-              value={receive.toFixed(2)}
+              value={receive}
             />
             <div className="apponAfter">
               <span className="fiatNameInput">{crypto}</span>
@@ -238,16 +312,17 @@ const HandleOrder = (props: any) => {
               Cancel
             </Button>
             <Button
-              type="submit"
               className="btn btn-lg btn-primary btn-buy"
-              onClick={() => {}}
-              disabled={validateState}
+              onClick={() => {
+                handleBuy();
+              }}
+              disabled={validateState || loading}
             >
-              Buy {crypto}
+              {loading ? <div className="loader"></div> : `Buy ${crypto}`}
             </Button>
           </div>
           <div className="desc">
-            <span>T+1:</span>
+            <span className="underDot">T+1:</span>
             <span>
               {' '}
               T+1 withdrawal limit will be imposed on the purchased asset to
@@ -255,7 +330,7 @@ const HandleOrder = (props: any) => {
             </span>
             <span>
               {' '}
-              <a>Learn more {'>'}</a>
+              <span>Learn more {'>'}</span>
             </span>
           </div>
         </form>
@@ -295,6 +370,18 @@ const ColHandleOrder = styled.div`
     margin-top: 10px;
     padding-right: 20px;
 
+    .paymentTag {
+      margin-bottom: 2px;
+      padding-right: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 25px;
+        padding: 2px;
+        margin-left: 2px;
+      }
+    }
     .orderPrice {
       color: ${({ theme }) => theme.redColor};
     }
@@ -378,6 +465,67 @@ const ColHandleOrder = styled.div`
         &:focus {
           box-shadow: none;
         }
+
+        .loader,
+        .loader:before,
+        .loader:after {
+          background: ${({ theme }) => theme.p2pBackground};
+          -webkit-animation: load1 1s infinite ease-in-out;
+          animation: load1 1s infinite ease-in-out;
+          width: 6px;
+          height: 3px;
+        }
+        .loader {
+          color: ${({ theme }) => theme.p2pBackground};
+          text-indent: -9999em;
+          margin: 0 auto;
+          position: relative;
+          font-size: 11px;
+          -webkit-transform: translateZ(0);
+          -ms-transform: translateZ(0);
+          transform: translateZ(0);
+          -webkit-animation-delay: -0.16s;
+          animation-delay: -0.16s;
+          margin-top: 6px;
+        }
+        .loader:before,
+        .loader:after {
+          position: absolute;
+          top: 0;
+          content: '';
+        }
+        .loader:before {
+          left: -1.5em;
+          -webkit-animation-delay: -0.32s;
+          animation-delay: -0.32s;
+        }
+        .loader:after {
+          left: 1.5em;
+        }
+        @-webkit-keyframes load1 {
+          0%,
+          80%,
+          100% {
+            box-shadow: 0 0;
+            height: 1em;
+          }
+          40% {
+            box-shadow: 0 -1em;
+            height: 2em;
+          }
+        }
+        @keyframes load1 {
+          0%,
+          80%,
+          100% {
+            box-shadow: 0 0;
+            height: 1em;
+          }
+          40% {
+            box-shadow: 0 -1em;
+            height: 2em;
+          }
+        }
       }
     }
 
@@ -423,13 +571,14 @@ const ColHandleOrder = styled.div`
       margin-top: 20px;
       text-align: center;
 
-      span:first-child {
+      .underDot {
         font-weight: bold;
         border-bottom: 2px dotted black;
       }
 
       span:last-child {
         color: ${({ theme }) => theme.primary};
+        cursor: pointer;
       }
     }
   }

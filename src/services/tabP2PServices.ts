@@ -8,6 +8,13 @@ export const tabP2PService = {
     });
   },
 
+  getOrderById(id) {
+    return apiClient.request({
+      method: 'GET',
+      url: `/p2p-api/api/v1/p2pOrder/${id}`,
+    });
+  },
+
   getListOrderBy(params) {
     return apiClient.request({
       method: 'GET',
