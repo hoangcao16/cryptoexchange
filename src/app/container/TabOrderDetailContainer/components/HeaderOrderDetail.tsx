@@ -2,26 +2,21 @@ import Countdown from 'antd/lib/statistic/Countdown';
 import styled from 'styled-components';
 import { tabOrderDetailService } from 'services/orderDetailService';
 import openNotification from 'app/components/NotificationAntd';
+import { useSelector } from 'react-redux';
+import { selectTabOrderDetail } from '../slice/selectors';
+import { TabOrderDetailState } from '../slice/types';
 
 const HeaderOrderDetail = ({ trade, reload }) => {
   const { updateTradeById } = tabOrderDetailService;
-  const time =
-    trade?.status === 'CANCEL' ? null : trade?.order?.paymentTime?.timeLimit;
-  const deadline = time * 60 * 1000;
-  if (JSON.parse(localStorage.getItem('timeLimit') as never) === null) {
-    localStorage.setItem('timeLimit', JSON.stringify(deadline));
-  }
 
   const date = new Date(trade?.createTime);
   const date1 = Date.now();
-  console.log(date1 - date.getTime());
+  const TabOrderDetailState: TabOrderDetailState =
+    useSelector(selectTabOrderDetail);
 
-  const countDownChange = value => {
-    // localStorage.setItem('timeLimit', JSON.stringify(value));
-  };
-
-  console.log(trade?.order);
-
+  const tradeStatus = TabOrderDetailState.tradeStatus;
+  const buyerStatus = TabOrderDetailState.buyerStatus;
+  const sellerStatus = TabOrderDetailState.sellerStatus;
   const finishedCountDown = () => {
     updateTradeById({
       id: trade.id,
@@ -39,32 +34,35 @@ const HeaderOrderDetail = ({ trade, reload }) => {
       })
       .catch(res => console.log(res));
   };
-  console.log(
-    Date.now() +
-      (trade?.order?.paymentTime?.timeLimit * 1800 - (date1 - date.getTime())),
-  );
   return (
     <Wrapper>
       <div className="container">
-        <div className="sellInfo">
-          <h4>
-            Buy {trade?.order?.token?.assetName} from {trade?.sellEmail}
-          </h4>
-          <div className="countdown">
-            Created order. Please wait for the system to confirm{' '}
-            <Countdown
-              onChange={countDownChange}
-              onFinish={() => finishedCountDown()}
-              value={
-                Date.now() + trade?.order?.paymentTime?.timeLimit * 1800
-                // Date.now() +
-                // JSON.parse(localStorage.getItem('timeLimit') as never)
-              }
-              className="countdownTimer"
-            ></Countdown>
-            <span className="bg"></span>
+        {buyerStatus === 'NOT_PAID' && (
+          <div className="sellInfo">
+            <h4>
+              Buy {trade?.order?.token?.assetName} from {trade?.sellEmail}
+            </h4>
+            <div className="countdown">
+              Created order. Please wait for the system to confirm{' '}
+              <Countdown
+                onFinish={() => finishedCountDown()}
+                value={
+                  Date.now() +
+                  trade?.order?.paymentTime?.timeLimit * 60000 -
+                  (date1 - date.getTime())
+                }
+                className="countdownTimer"
+              ></Countdown>
+              <span className="bg"></span>
+            </div>
           </div>
-        </div>
+        )}
+        {buyerStatus === 'CANCEL' && (
+          <div className="sellInfo">
+            <h4>Canceled this order</h4>
+            <div className="countdown">You canceled this order</div>
+          </div>
+        )}
         <div className="orderInfo">
           <p>
             <span className="clgray">Order number</span>: {trade?.orderNumber}

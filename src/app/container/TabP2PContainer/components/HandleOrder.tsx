@@ -1,7 +1,8 @@
-import { Descriptions, Input, InputNumber, Tag } from 'antd';
-import { useState } from 'react';
+import { Descriptions, InputNumber, Tag } from 'antd';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import Select from 'react-select';
 import styled from 'styled-components';
 import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
@@ -9,13 +10,24 @@ import { tabOrderDetailService } from 'services/orderDetailService';
 import { useNavigate } from 'react-router-dom';
 import openNotification from 'app/components/NotificationAntd';
 import { darkTheme } from 'theme/theme';
+import { tabP2PService } from 'services/tabP2PServices';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const navigate = useNavigate();
-  const [validateState, setValidateState] = useState(false);
-  const [pricePay, setPricePay] = useState<number>();
-  const [receive, setReceive] = useState<number>();
+  const { getUserPayments } = tabP2PService;
+
+  //BUY
+  const [validateStateBuy, setValidateStateBuy] = useState(false);
+  const [pricePayBuy, setPricePayBuy] = useState<number>();
+  const [receiveBuy, setReceiveBuy] = useState<number>();
+
+  //SELL
+  const [validateStateSell, setValidateStateSell] = useState(false);
+  const [cryptoSell, setCryptoSell] = useState<number>();
+  const [receivePriceSell, setReceivePriceSell] = useState<number>();
+  const [sellerPayments, setSellerPayments] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const { createTrade } = tabOrderDetailService;
   const {
@@ -26,7 +38,21 @@ const HandleOrder = (props: any) => {
     hanldeCloseOrder,
     timeLimit,
     available,
+    type,
   } = props;
+
+  const options = sellerPayments.map((payment: any) => {
+    return {
+      key: payment.id,
+      value: payment.id,
+      label: (
+        <p>
+          <span>{payment?.paymentMethod.name}</span>
+          <span>{payment?.fullName}</span>
+        </p>
+      ),
+    };
+  });
 
   const maxPrice = available * record.price;
 
@@ -43,48 +69,47 @@ const HandleOrder = (props: any) => {
     }
   });
 
-  const handleChangeReceive = value => {
+  const handleChangeReceiveBuy = value => {
     if (value >= 0) {
-      setReceive(Number(value));
-      setPricePay(Number(Math.floor(value * record?.price * 100) / 100));
+      setReceiveBuy(Number(value));
+      setPricePayBuy(Number(Math.floor(value * record?.price * 100) / 100));
     }
 
     if (value < record?.orderLowerBound / record?.price || value > available) {
-      setValidateState(true);
+      setValidateStateBuy(true);
     } else {
-      setValidateState(false);
+      setValidateStateBuy(false);
     }
   };
 
-  const handleChangePay = value => {
+  const handleChangePayBuy = value => {
     if (value >= 0) {
-      setPricePay(Number(value));
-      setReceive(Number(Math.floor((value / record?.price) * 100) / 100));
+      setPricePayBuy(Number(value));
+      setReceiveBuy(Number(Math.floor((value / record?.price) * 100) / 100));
     }
 
     if (value < record?.orderLowerBound || value > record?.price * available) {
-      setValidateState(true);
+      setValidateStateBuy(true);
     } else {
-      setValidateState(false);
+      setValidateStateBuy(false);
     }
   };
 
   const handleBuy = () => {
-    if (receive && pricePay) {
+    if (receiveBuy && pricePayBuy) {
       setLoading(true);
       let newValue = {
-        amount: Number(receive),
+        amount: Number(receiveBuy),
         fiatId: record.fiatId,
         orderId: record.id,
         paymentId: record.payments[0].id,
         price: record.price,
         tokenId: record.tokenId,
-        total: Number(pricePay),
+        total: Number(pricePayBuy),
       };
       createTrade(newValue)
         .then(res => {
           if (res.data.rc === 0) {
-            console.log(res.data);
             openNotification('Success', 'Created your order');
             setTimeout(() => {
               setLoading(false);
@@ -94,13 +119,55 @@ const HandleOrder = (props: any) => {
           } else openNotification('Error', res.data.rd);
         })
         .catch(res => console.log('Error', res));
-    } else setValidateState(true);
+    } else setValidateStateBuy(true);
   };
 
   const handelChooseAll = () => {
-    setPricePay(record?.price * available);
-    setReceive(available);
+    setPricePayBuy(record?.price * available);
+    setReceiveBuy(available);
+    setValidateStateBuy(false);
   };
+
+  //SELL
+  const handleSell = () => {};
+
+  const handleChangeCryptoSell = value => {
+    setCryptoSell(Number(value?.toFixed(2)));
+    setReceivePriceSell(
+      Number(Math.floor(value?.toFixed(2) * record?.price * 100) / 100),
+    );
+
+    if (
+      Number(value?.toFixed(2)) < record?.orderLowerBound / record?.price ||
+      Number(value?.toFixed(2)) > available
+    ) {
+      setValidateStateSell(true);
+    } else setValidateStateSell(false);
+  };
+
+  const handleChangeRecieve = value => {
+    setCryptoSell(
+      Number(Math.floor((value?.toFixed(2) / record?.price) * 100) / 100),
+    );
+    setReceivePriceSell(Number(value?.toFixed(2)));
+    if (
+      Number(value?.toFixed(2)) < record?.orderLowerBound ||
+      Number(value?.toFixed(2)) > record?.price * available
+    ) {
+      setValidateStateSell(true);
+    } else setValidateStateSell(false);
+  };
+
+  useEffect(() => {
+    if (type === 'Sell') {
+      getUserPayments().then(res => {
+        if (res.data.rc === 0) {
+          setSellerPayments(res.data.rows);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ColHandleOrder>
@@ -125,7 +192,7 @@ const HandleOrder = (props: any) => {
           <Descriptions size="small">
             <Descriptions.Item span={1} label="Price">
               <span className="orderDescriptionSpan orderPrice">
-                {record.fiatSymbol} {record.price}
+                {record?.fiat?.symbol} {record?.price}
               </span>
             </Descriptions.Item>
             <Descriptions.Item span={1} label="Available">
@@ -147,13 +214,13 @@ const HandleOrder = (props: any) => {
                 )}
               </span>
             </Descriptions.Item>
-            <Descriptions.Item span={1} label="Buyer's payment method">
+            <Descriptions.Item span={1} label={`${type}er's payment method`}>
               <span className="orderDescriptionSpan">
                 <div className="colPayments">
-                  {record.payments.length === 0 ? (
+                  {record?.payments?.length === 0 ? (
                     <h6>Unknow payment!</h6>
                   ) : (
-                    record.payments.map((payment, index) => {
+                    record?.payments?.map((payment, index) => {
                       if (payment) {
                         return (
                           <Tag key={index} className="paymentTag">
@@ -186,87 +253,175 @@ const HandleOrder = (props: any) => {
         </div>
         ,
       </div>
-      <div className="formOrder">
-        <div className="mb-3 inputBuy">
-          <label htmlFor="disabledTextInput" className="form-label labelText">
-            I want to pay
-          </label>
-          <InputNumber
-            onChange={handleChangePay}
-            value={pricePay}
-            autoComplete="off"
-            min={0}
-            className="form-control bargain"
-            placeholder={`${record.orderLowerBound.toFixed(
-              2,
-            )} - ${maxPrice.toFixed(2)}`}
-            style={{ borderColor: validateState ? 'red' : '' }}
-          />
-          {validateState && (
-            <p className="validateMessage">
-              Buy limit: {record.orderLowerBound.toFixed(2)} -{' '}
-              {(record.orderLowerBound * record.price).toFixed(2)}{' '}
-              {record.fiatName}
-            </p>
-          )}
-          <div className="apponAfter">
-            <button className="btnChooseAll" onClick={() => handelChooseAll()}>
-              All
-            </button>
-            <span className="fiatNameInput">{fiatName}</span>
+      {type === 'Buy' && (
+        <div className="formOrderBuy">
+          <div className="mb-3 inputBuy">
+            <label htmlFor="disabledTextInput" className="form-label labelText">
+              I want to pay
+            </label>
+            <InputNumber
+              onChange={handleChangePayBuy}
+              value={pricePayBuy}
+              autoComplete="off"
+              min={0}
+              className="form-control bargain"
+              placeholder={`${record.orderLowerBound.toFixed(
+                2,
+              )} - ${maxPrice.toFixed(2)}`}
+              style={{ borderColor: validateStateBuy ? 'red' : '' }}
+            />
+            {validateStateBuy && (
+              <p className="validateMessage">
+                Buy limit: {record.orderLowerBound.toFixed(2)} -{' '}
+                {(record.orderLowerBound * record.price).toFixed(2)}{' '}
+                {record.fiatName}
+              </p>
+            )}
+            <div className="apponAfter">
+              <button
+                className="btnChooseAll"
+                onClick={() => handelChooseAll()}
+              >
+                All
+              </button>
+              <span className="fiatNameInput">{fiatName}</span>
+            </div>
+          </div>
+
+          <div className="mb-3 inputBuy">
+            <label htmlFor="disabledTextInput" className="form-label">
+              I will receive
+            </label>
+            <InputNumber
+              style={{
+                borderColor: validateStateBuy ? darkTheme.redColor : '',
+              }}
+              id="disabledTextInput"
+              className="form-control bargain"
+              placeholder="0.00"
+              min={0}
+              value={receiveBuy}
+              onChange={handleChangeReceiveBuy}
+            />
+            <div className="apponAfter">
+              <span className="fiatNameInput">{crypto}</span>
+            </div>
+          </div>
+
+          <div className="btn-control">
+            <Button
+              className="btn btn-secondary btn-lg btn-cancel"
+              onClick={() => {
+                hanldeCloseOrder(prev => prev.filter(order => order !== index));
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="btn btn-lg btn-primary btn-buy"
+              onClick={() => {
+                handleBuy();
+              }}
+              disabled={validateStateBuy || loading}
+            >
+              {loading ? <div className="loader"></div> : `Buy ${crypto}`}
+            </Button>
+          </div>
+          <div className="desc">
+            <span className="underDot">T+1:</span>
+            <span>
+              {' '}
+              T+1 withdrawal limit will be imposed on the purchased asset to
+              enhance fund safety.
+            </span>
+            <span>
+              {' '}
+              <span>Learn more {'>'}</span>
+            </span>
           </div>
         </div>
+      )}
 
-        <div className="mb-3 inputBuy">
-          <label htmlFor="disabledTextInput" className="form-label">
-            I will receive
-          </label>
-          <InputNumber
-            style={{ borderColor: validateState ? 'red' : darkTheme.grayColor }}
-            id="disabledTextInput"
-            className="form-control bargain"
-            placeholder="0.00"
-            min={0}
-            value={receive}
-            onChange={handleChangeReceive}
-          />
-          <div className="apponAfter">
-            <span className="fiatNameInput">{crypto}</span>
+      {/* {SELL} */}
+      {type === 'Sell' && (
+        <div className="formOrderSell">
+          <div className="mb-3 inputBuy">
+            <label htmlFor="disabledTextInput" className="form-label">
+              I want to sell
+            </label>
+            <InputNumber
+              style={{
+                borderColor: validateStateSell ? darkTheme.redColor : '',
+              }}
+              id="disabledTextInput"
+              className="form-control bargain"
+              placeholder="0.00"
+              min={0}
+              value={cryptoSell}
+              onChange={handleChangeCryptoSell}
+            />
+            <div className="apponAfter">
+              <button
+                className="btnChooseAll"
+                onClick={() => handelChooseAll()}
+              >
+                All
+              </button>
+              <span className="fiatNameInput">{crypto}</span>
+            </div>
+            {validateStateSell && (
+              <p className="validateMessage">
+                Buy limit: {record.orderLowerBound.toFixed(2)} -{' '}
+                {(record.orderLowerBound * record.price).toFixed(2)}{' '}
+                {record.fiatName}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3 inputBuy">
+            <label htmlFor="disabledTextInput" className="form-label labelText">
+              I will receive
+            </label>
+            <InputNumber
+              onChange={handleChangeRecieve}
+              value={receivePriceSell}
+              autoComplete="off"
+              min={0}
+              className="form-control bargain"
+              placeholder={`${record.orderLowerBound.toFixed(
+                2,
+              )} - ${maxPrice.toFixed(2)}`}
+              style={{
+                borderColor: validateStateSell ? darkTheme.redColor : '',
+              }}
+            />
+            <div className="apponAfter">
+              <span className="fiatNameInput">{fiatName}</span>
+            </div>
+          </div>
+          <p className="paymentTitle">Payments method</p>
+          <Select options={options} />
+          <div className="btn-control">
+            <Button
+              className="btn btn-secondary btn-lg btn-cancel"
+              onClick={() => {
+                hanldeCloseOrder(prev => prev.filter(order => order !== index));
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="btn btn-lg btn-primary btn-sell"
+              onClick={() => {
+                handleSell();
+              }}
+              disabled={validateStateSell || loading}
+            >
+              {loading ? <div className="loader"></div> : `Sell ${crypto}`}
+            </Button>
           </div>
         </div>
-
-        <div className="btn-control">
-          <Button
-            className="btn btn-secondary btn-lg btn-cancel"
-            onClick={() => {
-              hanldeCloseOrder(prev => prev.filter(order => order !== index));
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="btn btn-lg btn-primary btn-buy"
-            onClick={() => {
-              handleBuy();
-            }}
-            disabled={validateState || loading}
-          >
-            {loading ? <div className="loader"></div> : `Buy ${crypto}`}
-          </Button>
-        </div>
-        <div className="desc">
-          <span className="underDot">T+1:</span>
-          <span>
-            {' '}
-            T+1 withdrawal limit will be imposed on the purchased asset to
-            enhance fund safety.
-          </span>
-          <span>
-            {' '}
-            <span>Learn more {'>'}</span>
-          </span>
-        </div>
-      </div>
+      )}
     </ColHandleOrder>
   );
 };
@@ -339,7 +494,130 @@ const ColHandleOrder = styled.div`
       background-color: ${({ theme }) => theme.grayColor};
     }
   }
-  .formOrder {
+  .formOrderSell {
+    padding-left: 20px;
+    flex: 4;
+
+    .labelText {
+      width: 100%;
+    }
+
+    .inputBuy {
+      position: relative !important;
+      margin-bottom: 30px !important;
+    }
+
+    .validateMessage {
+      position: absolute;
+      bottom: -100;
+      color: ${({ theme }) => theme.redColor};
+    }
+
+    .apponAfter {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(10%);
+      transition: all 0.25s linear;
+      margin-right: 10px;
+      color: ${({ theme }) => theme.brightGrayColor};
+
+      .btnChooseAll {
+        margin-right: 15px;
+        border: none;
+        color: ${({ theme }) => theme.primary} !important;
+        background-color: ${({ theme }) => theme.p2pBackground};
+        border-radius: 5px;
+        transition: all 0.25s linear;
+        margin-bottom: 2px;
+
+        &:hover {
+          background-color: ${({ theme }) => theme.brightGrayColor};
+        }
+      }
+    }
+
+    .ant-input-number-handler-wrap {
+      display: none;
+    }
+
+    .bargain {
+      transition: all 0.25s linear;
+      font-size: 14px;
+      width: 100% !important;
+      height: 40px;
+      box-shadow: none;
+      padding: 4px 10px;
+
+      input {
+        padding: 0;
+      }
+      &:hover {
+        border: 1px solid ${({ theme }) => theme.primary};
+      }
+
+      &:focus {
+        border: 1px solid ${({ theme }) => theme.primary};
+        box-shadow: none;
+      }
+    }
+
+    .paymentTitle {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    .ant-select {
+      width: 100% !important;
+
+      .ant-select-selector {
+        border-radius: 5px !important;
+        height: 40px;
+        padding-top: 3px;
+      }
+    }
+
+    .btn-control {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+
+      .btn {
+        height: 40px;
+        font-size: 16px;
+        padding-bottom: 20px;
+      }
+      .btn-cancel {
+        flex: 3;
+        margin-right: 10px;
+        background-color: ${({ theme }) => theme.grayColor};
+        border-color: ${({ theme }) => theme.grayColor};
+        transition: all 0.25s linear;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+
+      .btn-sell {
+        flex: 7;
+        background-color: ${({ theme }) => theme.redColor};
+        border: ${({ theme }) => theme.redColor};
+        transition: all 0.25s linear;
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+  .formOrderBuy {
     padding-left: 20px;
     flex: 4;
 

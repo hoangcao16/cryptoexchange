@@ -7,11 +7,18 @@ import ContentOrderDetail from './components/ContentOrderDetail/ContentOrderDeta
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { tabOrderDetailService } from 'services/orderDetailService';
+import { useDispatch } from 'react-redux';
+import { useTabOrderDetailSlice } from './slice';
 function TabOrderDetailContainer() {
   const tradeId = Number(useParams()?.id);
 
   const [tradeDetail, setTradeDetail] = useState();
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+  const setBuyerStatus = useTabOrderDetailSlice().actions;
+  const setSellerStatus = useTabOrderDetailSlice().actions;
+  const setTradeStatus = useTabOrderDetailSlice().actions;
 
   const { getTradeById } = tabOrderDetailService;
 
@@ -22,6 +29,11 @@ function TabOrderDetailContainer() {
         .then(res => {
           if (res.data.rc === 0) {
             setTradeDetail(res.data.item);
+            dispatch(setBuyerStatus.setBuyerStatus(res.data.item.buyerStatus));
+            dispatch(
+              setSellerStatus.setSellerStatus(res.data.item.sellerStatus),
+            );
+            dispatch(setTradeStatus.setTradeStatus(res.data.item.status));
             setLoading(false);
           } else {
             setLoading(false);

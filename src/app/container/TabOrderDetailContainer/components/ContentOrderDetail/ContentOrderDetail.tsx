@@ -11,18 +11,19 @@ import { tabOrderDetailService } from 'services/orderDetailService';
 import { RiErrorWarningFill } from 'react-icons/ri';
 
 const ContentOrderDetail = ({ trade, reload }) => {
-  const [current, setCurrent] = useState(0);
   const [visiableNote, setVisiableNote] = useState(true);
   const [visiableModalCancel, setVisiableModalCancel] = useState(false);
   const [listAppeal, setListAppeal] = useState([]);
   const [inputAnother, setInputAnother] = useState(false);
+  const [currentTab, setCurrentTab] = useState<number>(0);
+  const [currentFirstSteps, setCurrentFirstSteps] = useState<number>(0);
 
   const { Panel } = Collapse;
   const { Step } = Steps;
   const { TabPane } = Tabs;
 
   const { updateTradeById, getListAppealReason } = tabOrderDetailService;
-
+  console.log(trade);
   const steps = [
     {
       title: 'Transfer money to the seller',
@@ -38,8 +39,25 @@ const ContentOrderDetail = ({ trade, reload }) => {
     },
   ];
 
+  const handleChangeTabPayment = value => {
+    if (Number(value) !== trade.paymentId) {
+      setCurrentTab(Number(value));
+    } else setCurrentTab(0);
+  };
+
   const handelTransfer = () => {
-    setCurrent(1);
+    updateTradeById({
+      id: trade?.id,
+      paymentId: currentTab !== 0 ? currentTab : -1,
+      status: 'PAID',
+    })
+      .then(res => {
+        if (res.data.rc === 0) {
+          openNotification('Success', 'Notified to the seller!');
+          reload();
+        } else openNotification('Error', res.data.rd);
+      })
+      .catch(() => openNotification('Error', 'Some thing went wrong!'));
   };
 
   const handleCopy = value => {
@@ -83,13 +101,32 @@ const ContentOrderDetail = ({ trade, reload }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    switch (trade?.buyerStatus) {
+      case 'NOT_PAID':
+        setCurrentFirstSteps(0);
+        break;
+      case 'PAID':
+        setCurrentFirstSteps(1);
+        break;
+      default:
+        setCurrentFirstSteps(-1);
+    }
+    console.log(currentFirstSteps);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trade?.buyerStatus]);
+
   return (
     <Wrapper>
       <div className="mainContent">
         {trade?.status === 'PROCESSING' && (
           <div className="orderStep">
             <div className="firstStep">
-              <Steps className="st1Step" size="small" current={current}>
+              <Steps
+                className="st1Step"
+                size="small"
+                current={currentFirstSteps}
+              >
                 {steps.map((step, index) => (
                   <Step key={index} description={step.title} />
                 ))}
@@ -153,6 +190,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
                         type="card"
                         tabPosition="left"
                         className="paymentTab"
+                        defaultActiveKey={trade?.paymentId}
+                        onChange={handleChangeTabPayment}
                       >
                         {trade?.order?.payments?.map(payment => {
                           return (
