@@ -30,6 +30,7 @@ const HandleOrder = (props: any) => {
 
   const [loading, setLoading] = useState(false);
   const { createTrade } = tabOrderDetailService;
+  const [paymentSeller, setPaymentSeller] = useState<any>();
   const {
     listP2POrders,
     text,
@@ -40,16 +41,20 @@ const HandleOrder = (props: any) => {
     available,
     type,
   } = props;
-
   const options = sellerPayments.map((payment: any) => {
     return {
       key: payment.id,
       value: payment.id,
       label: (
-        <p>
-          <span>{payment?.paymentMethod.name}</span>
+        <div className="selectPaymentContent">
+          <Tag
+            className="paymentMethodTag"
+            color={payment.paymentMethod.colorCode}
+          >
+            {payment?.paymentMethod.name}
+          </Tag>
           <span>{payment?.fullName}</span>
-        </p>
+        </div>
       ),
     };
   });
@@ -129,7 +134,34 @@ const HandleOrder = (props: any) => {
   };
 
   //SELL
-  const handleSell = () => {};
+  const handleSell = () => {
+    if (cryptoSell && receivePriceSell && paymentSeller.value) {
+      console.log(cryptoSell);
+      console.log(receivePriceSell);
+      console.log(paymentSeller);
+      let newValue = {
+        amount: Number(cryptoSell),
+        fiatId: record.fiatId,
+        orderId: record.id,
+        paymentId: paymentSeller.value,
+        price: record.price,
+        tokenId: record.tokenId,
+        total: Number(receivePriceSell),
+      };
+      createTrade(newValue)
+        .then(res => {
+          if (res.data.rc === 0) {
+            openNotification('Success', 'Created your order');
+            setTimeout(() => {
+              setLoading(false);
+              localStorage.setItem('timeLimit', JSON.stringify(null));
+              navigate(`/order/orderDetail/${res.data?.item?.id}`);
+            }, 2000);
+          } else openNotification('Error', res.data.rd);
+        })
+        .catch(res => console.log('Error', res));
+    } else setValidateStateSell(true);
+  };
 
   const handleChangeCryptoSell = value => {
     setCryptoSell(Number(value?.toFixed(2)));
@@ -143,6 +175,9 @@ const HandleOrder = (props: any) => {
     ) {
       setValidateStateSell(true);
     } else setValidateStateSell(false);
+  };
+  const changePaymentSeller = value => {
+    setPaymentSeller(value);
   };
 
   const handleChangeRecieve = value => {
@@ -158,11 +193,28 @@ const HandleOrder = (props: any) => {
     } else setValidateStateSell(false);
   };
 
+  const handelChooseAllSeller = () => {};
+
   useEffect(() => {
     if (type === 'Sell') {
       getUserPayments().then(res => {
         if (res.data.rc === 0) {
           setSellerPayments(res.data.rows);
+          setPaymentSeller({
+            key: res.data.rows[0].id,
+            value: res.data.rows[0].id,
+            label: (
+              <div className="selectPaymentContent">
+                <Tag
+                  className="paymentMethodTag"
+                  color={res.data.rows[0].paymentMethod.colorCode}
+                >
+                  {res.data.rows[0]?.paymentMethod.name}
+                </Tag>
+                <span>{res.data.rows[0]?.fullName}</span>
+              </div>
+            ),
+          });
         }
       });
     }
@@ -363,7 +415,7 @@ const HandleOrder = (props: any) => {
             <div className="apponAfter">
               <button
                 className="btnChooseAll"
-                onClick={() => handelChooseAll()}
+                onClick={() => handelChooseAllSeller()}
               >
                 All
               </button>
@@ -400,7 +452,12 @@ const HandleOrder = (props: any) => {
             </div>
           </div>
           <p className="paymentTitle">Payments method</p>
-          <Select options={options} />
+          <Select
+            className="selectPaymentSell basic-single"
+            options={options}
+            value={paymentSeller}
+            onChange={changePaymentSeller}
+          />
           <div className="btn-control">
             <Button
               className="btn btn-secondary btn-lg btn-cancel"
@@ -511,6 +568,29 @@ const ColHandleOrder = styled.div`
       position: absolute;
       bottom: -100;
       color: ${({ theme }) => theme.redColor};
+    }
+    .selectPaymentSell {
+      margin-top: -10px;
+      border: none;
+
+      .css-1pahdxg-control {
+        border: 1px solid ${({ theme }) => theme.primary};
+        box-shadow: none;
+      }
+      .css-4ljt47-MenuList {
+        height: 200px;
+        &::-webkit-scrollbar-thumb {
+          background-color: ${({ theme }) => theme.primary};
+          border-radius: 0;
+          scroll-behavior: smooth;
+        }
+      }
+      .selectPaymentContent {
+      }
+      .paymentMethodTag {
+        border-radius: 3px;
+        opacity: 0.9;
+      }
     }
 
     .apponAfter {

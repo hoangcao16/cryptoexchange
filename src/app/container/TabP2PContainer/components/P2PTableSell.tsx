@@ -226,7 +226,6 @@ function P2PTableSell() {
       .then((res: any) => {
         if (res.data.rc === 0) {
           setListP2POrdersSell(res.data.rows);
-          console.log(res.data.rows);
           setLoading(false);
         } else {
           setLoading(false);
