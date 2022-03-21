@@ -1,6 +1,6 @@
 import { Descriptions, InputNumber, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import styled from 'styled-components';
@@ -11,11 +11,15 @@ import { useNavigate } from 'react-router-dom';
 import openNotification from 'app/components/NotificationAntd';
 import { darkTheme } from 'theme/theme';
 import { tabP2PService } from 'services/tabP2PServices';
+import { SpotWalletServices } from 'services/spotWalletService';
+import { GrFormClose } from 'react-icons/gr';
+import { RiErrorWarningFill } from 'react-icons/ri';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const navigate = useNavigate();
   const { getUserPayments } = tabP2PService;
+  const { getAllSpotWallet } = SpotWalletServices;
 
   //BUY
   const [validateStateBuy, setValidateStateBuy] = useState(false);
@@ -27,6 +31,8 @@ const HandleOrder = (props: any) => {
   const [cryptoSell, setCryptoSell] = useState<number>();
   const [receivePriceSell, setReceivePriceSell] = useState<number>();
   const [sellerPayments, setSellerPayments] = useState([]);
+  const [walletUser, setWalletUser] = useState(0);
+  const [showModalWarning, setShowModalWarning] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const { createTrade } = tabOrderDetailService;
@@ -135,7 +141,12 @@ const HandleOrder = (props: any) => {
 
   //SELL
   const handleSell = () => {
-    if (cryptoSell && receivePriceSell && paymentSeller.value) {
+    if (
+      cryptoSell &&
+      receivePriceSell &&
+      paymentSeller.value &&
+      walletUser >= record.orderLowerBound / record.price
+    ) {
       console.log(cryptoSell);
       console.log(receivePriceSell);
       console.log(paymentSeller);
@@ -160,7 +171,12 @@ const HandleOrder = (props: any) => {
           } else openNotification('Error', res.data.rd);
         })
         .catch(res => console.log('Error', res));
-    } else setValidateStateSell(true);
+    } else {
+      setValidateStateSell(true);
+      setCryptoSell(walletUser);
+      setReceivePriceSell(walletUser * record.price);
+      setShowModalWarning(true);
+    }
   };
 
   const handleChangeCryptoSell = value => {
@@ -193,30 +209,57 @@ const HandleOrder = (props: any) => {
     } else setValidateStateSell(false);
   };
 
-  const handelChooseAllSeller = () => {};
+  const handelChooseAllSeller = () => {
+    if (walletUser > available) {
+      setCryptoSell(available);
+      setReceivePriceSell(available * record.price);
+    } else setCryptoSell(walletUser);
+    if (walletUser < record.orderLowerBound / record.price) {
+      setValidateStateSell(true);
+    } else setValidateStateSell(false);
+  };
+
+  const findAllUserPayments = () => {
+    getUserPayments().then(res => {
+      if (res.data.rc === 0) {
+        setSellerPayments(res.data.rows);
+        setPaymentSeller({
+          key: res.data.rows[0].id,
+          value: res.data.rows[0].id,
+          label: (
+            <div className="selectPaymentContent">
+              <Tag
+                className="paymentMethodTag"
+                color={res.data.rows[0].paymentMethod.colorCode}
+              >
+                {res.data.rows[0]?.paymentMethod.name}
+              </Tag>
+              <span>{res.data.rows[0]?.fullName}</span>
+            </div>
+          ),
+        });
+      }
+    });
+  };
+
+  const findWalletUser = () => {
+    getAllSpotWallet()
+      .then(res => {
+        if (res.data.rc === 0) {
+          let tokenId = record.token?.id;
+          setWalletUser(
+            res.data.rows?.find(coin => coin?.tokenId === tokenId).total,
+          );
+          console.log(record);
+        }
+      })
+      .catch(res => console.log(res));
+  };
 
   useEffect(() => {
     if (type === 'Sell') {
-      getUserPayments().then(res => {
-        if (res.data.rc === 0) {
-          setSellerPayments(res.data.rows);
-          setPaymentSeller({
-            key: res.data.rows[0].id,
-            value: res.data.rows[0].id,
-            label: (
-              <div className="selectPaymentContent">
-                <Tag
-                  className="paymentMethodTag"
-                  color={res.data.rows[0].paymentMethod.colorCode}
-                >
-                  {res.data.rows[0]?.paymentMethod.name}
-                </Tag>
-                <span>{res.data.rows[0]?.fullName}</span>
-              </div>
-            ),
-          });
-        }
-      });
+      findAllUserPayments();
+      findWalletUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -477,6 +520,25 @@ const HandleOrder = (props: any) => {
               {loading ? <div className="loader"></div> : `Sell ${crypto}`}
             </Button>
           </div>
+          <ModalWarining
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => setShowModalWarning(false)}
+            show={showModalWarning}
+          >
+            <Modal.Body>
+              <div className="border">
+                <RiErrorWarningFill className="wariningIcon" />
+              </div>
+              <p>Not enough balance, please transfer money first.</p>
+              <GrFormClose
+                className="iconClose"
+                onClick={() => setShowModalWarning(false)}
+              />
+              <Button className="moneyTrans">Go to money transfer</Button>
+            </Modal.Body>
+          </ModalWarining>
         </div>
       )}
     </ColHandleOrder>
@@ -882,6 +944,10 @@ const ColHandleOrder = styled.div`
       }
     }
   }
+
+  .modalWarining {
+    width: 100px;
+  }
 `;
 
 const ColOrderAdvertisers = styled.div`
@@ -917,6 +983,57 @@ const ColOrderAdvertisers = styled.div`
       margin-left: 10px;
       padding-left: 5px;
       border-left: 1px solid #ccc;
+    }
+  }
+`;
+
+const ModalWarining = styled(Modal)`
+  .modal-content {
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .modal-body {
+    color: ${({ theme }) => theme.p2pText};
+    position: relative;
+
+    .iconClose {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 30px;
+      cursor: pointer;
+      opacity: 0.3;
+    }
+    .border {
+      margin-bottom: 20px;
+      margin-top: 10px;
+      display: inline-block;
+      border-radius: 50%;
+      padding: 5px;
+    }
+    .wariningIcon {
+      color: ${({ theme }) => theme.primary};
+      font-size: 70px;
+      padding: 0;
+      position: relative;
+    }
+    .moneyTrans {
+      width: 100%;
+      background-color: ${({ theme }) => theme.primary};
+      border: none;
+      transition: all 0.25s linear;
+      margin-top: 10px;
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 `;

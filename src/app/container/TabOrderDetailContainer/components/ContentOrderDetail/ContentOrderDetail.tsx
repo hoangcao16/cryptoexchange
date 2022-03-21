@@ -9,6 +9,7 @@ import { FaCopy } from 'react-icons/fa';
 import openNotification from 'app/components/NotificationAntd';
 import { tabOrderDetailService } from 'services/orderDetailService';
 import { RiErrorWarningFill } from 'react-icons/ri';
+import { SpotWalletServices } from 'services/spotWalletService';
 
 const ContentOrderDetail = ({ trade, reload }) => {
   const [visiableNote, setVisiableNote] = useState(true);
@@ -18,11 +19,13 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [currentFirstSteps, setCurrentFirstSteps] = useState<number>(0);
 
+  const { updateTradeById, getListAppealReason } = tabOrderDetailService;
+  const { getAllSpotWallet } = SpotWalletServices;
+
   const { Panel } = Collapse;
   const { Step } = Steps;
   const { TabPane } = Tabs;
 
-  const { updateTradeById, getListAppealReason } = tabOrderDetailService;
   console.log(trade);
   const steps = [
     {
@@ -120,7 +123,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
     <Wrapper>
       <div className="mainContent">
         {trade?.status === 'PROCESSING' && (
-          <div className="orderStep">
+          <div className="col-8 orderStep">
             <div className="firstStep">
               <Steps
                 className="st1Step"
@@ -306,7 +309,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
           </div>
         )}
         {trade?.status === 'CANCEL' && (
-          <div className="cancelOrderContent">
+          <div className="col-8 cancelOrderContent">
             <h6 className="orderInfoTitle">Order info</h6>
             <div className="descriptionStep1">
               <div className="amount">
@@ -335,7 +338,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
             <h6 className="haq">Have A Question</h6>
           </div>
         )}
-        <div className="chat"></div>
+        <div className="col-4 chat"></div>
       </div>
       <div className="faq">
         <h5 className="faq-title">FAQ</h5>
@@ -412,7 +415,7 @@ const Wrapper = styled.div`
   }
   .orderStep {
     padding-top: 30px;
-    flex: 7;
+    /* flex: 7; */
 
     .firstStep {
       padding-bottom: 20px;
