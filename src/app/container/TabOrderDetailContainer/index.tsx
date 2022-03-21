@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import NavMenu from 'app/components/Navbar';
 import NavbarTradeP2P from 'app/components/NavbarTradeP2P';
 import HeaderOrderDetail from './components/HeaderOrderDetail';
-import ContentOrderDetail from './components/ContentOrderDetail/ContentOrderDetail';
+import ContentOrderDetail from './components/ContentOrderDetail';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { tabOrderDetailService } from 'services/orderDetailService';
@@ -19,6 +19,7 @@ function TabOrderDetailContainer() {
   const setBuyerStatus = useTabOrderDetailSlice().actions;
   const setSellerStatus = useTabOrderDetailSlice().actions;
   const setTradeStatus = useTabOrderDetailSlice().actions;
+  const setTradeType = useTabOrderDetailSlice().actions;
 
   const { getTradeById } = tabOrderDetailService;
 
@@ -34,6 +35,9 @@ function TabOrderDetailContainer() {
               setSellerStatus.setSellerStatus(res.data.item.sellerStatus),
             );
             dispatch(setTradeStatus.setTradeStatus(res.data.item.status));
+            if (res.data.item?.order?.orderType === 0) {
+              dispatch(setTradeType.setTradeType('Sell'));
+            } else dispatch(setTradeType.setTradeType('Buy'));
             setLoading(false);
           } else {
             setLoading(false);

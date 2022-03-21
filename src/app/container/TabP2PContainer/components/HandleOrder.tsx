@@ -147,9 +147,7 @@ const HandleOrder = (props: any) => {
       paymentSeller.value &&
       walletUser >= record.orderLowerBound / record.price
     ) {
-      console.log(cryptoSell);
-      console.log(receivePriceSell);
-      console.log(paymentSeller);
+      setLoading(true);
       let newValue = {
         amount: Number(cryptoSell),
         fiatId: record.fiatId,
@@ -171,10 +169,11 @@ const HandleOrder = (props: any) => {
           } else openNotification('Error', res.data.rd);
         })
         .catch(res => console.log('Error', res));
+    } else if (walletUser > available) {
+      setCryptoSell(available);
+      setReceivePriceSell(available * record.price);
     } else {
       setValidateStateSell(true);
-      setCryptoSell(walletUser);
-      setReceivePriceSell(walletUser * record.price);
       setShowModalWarning(true);
     }
   };
@@ -520,7 +519,7 @@ const HandleOrder = (props: any) => {
               {loading ? <div className="loader"></div> : `Sell ${crypto}`}
             </Button>
           </div>
-          <ModalWarining
+          <ModalWarning
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
@@ -538,7 +537,7 @@ const HandleOrder = (props: any) => {
               />
               <Button className="moneyTrans">Go to money transfer</Button>
             </Modal.Body>
-          </ModalWarining>
+          </ModalWarning>
         </div>
       )}
     </ColHandleOrder>
@@ -827,67 +826,6 @@ const ColHandleOrder = styled.div`
         &:focus {
           box-shadow: none;
         }
-
-        .loader,
-        .loader:before,
-        .loader:after {
-          background: ${({ theme }) => theme.p2pBackground};
-          -webkit-animation: load1 1s infinite ease-in-out;
-          animation: load1 1s infinite ease-in-out;
-          width: 6px;
-          height: 3px;
-        }
-        .loader {
-          color: ${({ theme }) => theme.p2pBackground};
-          text-indent: -9999em;
-          margin: 0 auto;
-          position: relative;
-          font-size: 11px;
-          -webkit-transform: translateZ(0);
-          -ms-transform: translateZ(0);
-          transform: translateZ(0);
-          -webkit-animation-delay: -0.16s;
-          animation-delay: -0.16s;
-          margin-top: 6px;
-        }
-        .loader:before,
-        .loader:after {
-          position: absolute;
-          top: 0;
-          content: '';
-        }
-        .loader:before {
-          left: -1.5em;
-          -webkit-animation-delay: -0.32s;
-          animation-delay: -0.32s;
-        }
-        .loader:after {
-          left: 1.5em;
-        }
-        @-webkit-keyframes load1 {
-          0%,
-          80%,
-          100% {
-            box-shadow: 0 0;
-            height: 1em;
-          }
-          40% {
-            box-shadow: 0 -1em;
-            height: 2em;
-          }
-        }
-        @keyframes load1 {
-          0%,
-          80%,
-          100% {
-            box-shadow: 0 0;
-            height: 1em;
-          }
-          40% {
-            box-shadow: 0 -1em;
-            height: 2em;
-          }
-        }
       }
     }
 
@@ -945,8 +883,66 @@ const ColHandleOrder = styled.div`
     }
   }
 
-  .modalWarining {
-    width: 100px;
+  //loading
+  .loader,
+  .loader:before,
+  .loader:after {
+    background: ${({ theme }) => theme.p2pBackground};
+    -webkit-animation: load1 1s infinite ease-in-out;
+    animation: load1 1s infinite ease-in-out;
+    width: 6px;
+    height: 3px;
+  }
+  .loader {
+    color: ${({ theme }) => theme.p2pBackground};
+    text-indent: -9999em;
+    margin: 0 auto;
+    position: relative;
+    font-size: 11px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+    margin-top: 8px;
+  }
+  .loader:before,
+  .loader:after {
+    position: absolute;
+    top: 0;
+    content: '';
+  }
+  .loader:before {
+    left: -1.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  .loader:after {
+    left: 1.5em;
+  }
+  @-webkit-keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
+    }
+  }
+  @keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
+    }
   }
 `;
 
@@ -987,7 +983,7 @@ const ColOrderAdvertisers = styled.div`
   }
 `;
 
-const ModalWarining = styled(Modal)`
+const ModalWarning = styled(Modal)`
   .modal-content {
     width: 400px;
     margin: 0 auto;

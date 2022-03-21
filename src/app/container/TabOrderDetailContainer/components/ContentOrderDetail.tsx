@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import './style.css';
-import { Steps, Button, Radio, Tooltip, Modal, Input } from 'antd';
+import { Steps, Button, Radio, Tooltip, Input } from 'antd';
+import { Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import { Collapse } from 'antd';
@@ -9,7 +9,10 @@ import { FaCopy } from 'react-icons/fa';
 import openNotification from 'app/components/NotificationAntd';
 import { tabOrderDetailService } from 'services/orderDetailService';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import { SpotWalletServices } from 'services/spotWalletService';
+import { TabOrderDetailState } from '../slice/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectTabOrderDetail } from '../slice/selectors';
+import { useTabOrderDetailSlice } from '../slice';
 
 const ContentOrderDetail = ({ trade, reload }) => {
   const [visiableNote, setVisiableNote] = useState(true);
@@ -19,21 +22,41 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [currentFirstSteps, setCurrentFirstSteps] = useState<number>(0);
 
+  const TabOrderDetailState: TabOrderDetailState =
+    useSelector(selectTabOrderDetail);
+  const tradaType = TabOrderDetailState.tradeType;
+
   const { updateTradeById, getListAppealReason } = tabOrderDetailService;
-  const { getAllSpotWallet } = SpotWalletServices;
+  const dispatch = useDispatch();
+  const setBuyerStatus = useTabOrderDetailSlice().actions;
+  const setSellerStatus = useTabOrderDetailSlice().actions;
 
   const { Panel } = Collapse;
   const { Step } = Steps;
   const { TabPane } = Tabs;
 
-  console.log(trade);
-  const steps = [
+  const stepBuy = [
     {
       title: 'Transfer money to the seller',
       content: 'First-content',
     },
     {
       title: 'Waiting for the seller to unlock the cryptocurrency',
+      content: 'Second-content',
+    },
+    {
+      title: 'Completed',
+      content: 'Last-content',
+    },
+  ];
+
+  const stepSell = [
+    {
+      title: 'Pending Payment',
+      content: 'First-content',
+    },
+    {
+      title: 'Release crypto to the buyer',
       content: 'Second-content',
     },
     {
@@ -57,6 +80,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
       .then(res => {
         if (res.data.rc === 0) {
           openNotification('Success', 'Notified to the seller!');
+          dispatch(setBuyerStatus.setBuyerStatus('PAID'));
           reload();
         } else openNotification('Error', res.data.rd);
       })
@@ -81,8 +105,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
     })
       .then(res => {
         if (res.data.rc === 0) {
-          openNotification('Error', 'Canceled this order!');
+          openNotification('Success', 'Canceled this order!');
           localStorage.setItem('timeLimit', JSON.stringify(null));
+          dispatch(setBuyerStatus.setSellerStatus('CANCEL'));
           reload();
         } else {
           openNotification('Error', res.data.rd);
@@ -119,6 +144,39 @@ const ContentOrderDetail = ({ trade, reload }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trade?.buyerStatus]);
 
+  // eslint-disable-next-line prettier/prettier
+  useEffect(() => {
+    if (TabOrderDetailState?.tradeType === 'Buy') {
+      switch (TabOrderDetailState?.buyerStatus) {
+        case 'NOT_PAID':
+          setCurrentFirstSteps(0);
+          break;
+        case 'PAID':
+          setCurrentFirstSteps(1);
+          break;
+        case 'COMPLETE':
+          setCurrentFirstSteps(2);
+          break;
+        default:
+          setCurrentFirstSteps(-1);
+      }
+    } else {
+      switch (TabOrderDetailState?.sellerStatus) {
+        case 'HOLD':
+          setCurrentFirstSteps(0);
+          break;
+        case 'RELEASE':
+          setCurrentFirstSteps(1);
+          break;
+        case 'COMPLETE':
+          setCurrentFirstSteps(2);
+          break;
+        default:
+          setCurrentFirstSteps(-1);
+      }
+    }
+  }, [TabOrderDetailState]);
+
   return (
     <Wrapper>
       <div className="mainContent">
@@ -130,11 +188,16 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 size="small"
                 current={currentFirstSteps}
               >
-                {steps.map((step, index) => (
-                  <Step key={index} description={step.title} />
-                ))}
+                {tradaType === 'Buy' &&
+                  stepBuy.map((step, index) => (
+                    <Step key={index} description={step.title} />
+                  ))}
+                {tradaType === 'Sell' &&
+                  stepSell.map((step, index) => (
+                    <Step key={index} description={step.title} />
+                  ))}
               </Steps>
-              {visiableNote && (
+              {visiableNote && tradaType === 'Buy' && (
                 <div className="note">
                   <span>
                     <span>
@@ -289,23 +352,29 @@ const ContentOrderDetail = ({ trade, reload }) => {
                     </div>
                   }
                 />
-                <Step title='After transferring the money, click the button "Transferred, notify the seller"' />
+                {tradaType === 'Buy' && (
+                  <Step title='After transferring the money, click the button "Transferred, notify the seller"' />
+                )}
               </Steps>
             </div>
 
-            <Button
-              className="btnTransferred"
-              type="primary"
-              onClick={() => handelTransfer()}
-            >
-              Transferred, notify the seller
-            </Button>
-            <Button
-              className="btnCancelOrder"
-              onClick={() => setVisiableModalCancel(true)}
-            >
-              Cancel order
-            </Button>
+            {tradaType === 'Buy' && (
+              <div>
+                <Button
+                  className="btnTransferred"
+                  type="primary"
+                  onClick={() => handelTransfer()}
+                >
+                  Transferred, notify the seller
+                </Button>
+                <Button
+                  className="btnCancelOrder"
+                  onClick={() => setVisiableModalCancel(true)}
+                >
+                  Cancel order
+                </Button>
+              </div>
+            )}
           </div>
         )}
         {trade?.status === 'CANCEL' && (
@@ -358,41 +427,41 @@ const ContentOrderDetail = ({ trade, reload }) => {
         </Collapse>
         ,
       </div>
-      <Modal
-        visible={visiableModalCancel}
-        title="Cancel order"
-        footer={null}
-        onCancel={() => setVisiableModalCancel(false)}
-        width={400}
-        className="modalCancelOrder"
+      <ModalCancel
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        onHide={() => setVisiableModalCancel(false)}
+        show={visiableModalCancel}
       >
-        <div className="tips">
-          <h6>
-            <RiErrorWarningFill className="warningIcon" /> Tips
-          </h6>
-          <p>1. If you already paid the seller, don't cancel the order</p>
-          <p>
-            2. If you cancel your order 3 times in a day, you will lose the
-            right to trade for the whole day.
-          </p>
-        </div>
-        <div className="reasonCancel">
-          <h6>Why do you want to cancel this order?</h6>
-          <Radio.Group onChange={handelChaneReason}>
-            {listAppeal.map((appeal: any, index) => {
-              if (appeal.reasonType === 'FOR_BUY') {
-                return (
-                  <Radio value={appeal.id} key={index}>
-                    {appeal.appealReason}
-                  </Radio>
-                );
-              } else return null;
-            })}
-            <Radio value={0} key={0}>
-              Khác
-            </Radio>
-          </Radio.Group>
-          {inputAnother && <Input />}
+        <Modal.Body>
+          <div className="tips">
+            <h6>
+              <RiErrorWarningFill className="warningIcon" /> Tips
+            </h6>
+            <p>1. If you already paid the seller, don't cancel the order</p>
+            <p>
+              2. If you cancel your order 3 times in a day, you will lose the
+              right to trade for the whole day.
+            </p>
+          </div>
+          <div className="reasonCancel">
+            <h6>Why do you want to cancel this order?</h6>
+            <Radio.Group onChange={handelChaneReason}>
+              {listAppeal.map((appeal: any, index) => {
+                if (appeal.reasonType === 'FOR_BUY') {
+                  return (
+                    <Radio value={appeal.id} key={index}>
+                      {appeal.appealReason}
+                    </Radio>
+                  );
+                } else return null;
+              })}
+              <Radio value={0} key={0}>
+                Khác
+              </Radio>
+            </Radio.Group>
+            {inputAnother && <Input />}
+          </div>
           <div className="btnModal">
             <Button onClick={() => setVisiableModalCancel(false)}>
               Cancel
@@ -401,8 +470,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
               Confirm
             </Button>
           </div>
-        </div>
-      </Modal>
+        </Modal.Body>
+      </ModalCancel>
     </Wrapper>
   );
 };
@@ -624,5 +693,57 @@ const Wrapper = styled.div`
       cursor: pointer;
       margin-top: 50px;
     }
+  }
+`;
+
+const ModalCancel = styled(Modal)`
+  color: ${({ theme }) => theme.p2pText};
+
+  .tips {
+    background-color: rgba(24, 144, 255, 0.3);
+    padding: 15px;
+    padding-left: 30px;
+    border-radius: 5px;
+    h6 {
+      margin-left: -20px;
+    }
+
+    .warningIcon {
+      color: #1890ff;
+      font-size: 18px;
+    }
+
+    .tips p {
+      margin: 0;
+    }
+  }
+
+  .reasonCancel {
+    margin-top: 30px;
+
+    .ant-radio-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ant-radio-wrapper {
+      padding: 5px 0;
+    }
+
+    .ant-input {
+      margin-top: 10px;
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .btnModal {
+    display: block;
+    margin: 0 auto;
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
   }
 `;

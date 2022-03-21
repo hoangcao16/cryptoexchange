@@ -7,6 +7,7 @@ export const initialState: TabOrderDetailState = {
   buyerStatus: 'NOT_PAID',
   sellerStatus: 'HOLD',
   tradeStatus: 'PROCESSING',
+  tradeType: '',
 };
 
 const slice = createSlice({
@@ -20,8 +21,13 @@ const slice = createSlice({
     setSellerStatus(state, action: PayloadAction<string>) {
       state.sellerStatus = action.payload;
     },
+
     setTradeStatus(state, action: PayloadAction<string>) {
       state.tradeStatus = action.payload;
+    },
+
+    setTradeType(state, action: PayloadAction<string>) {
+      state.tradeType = action.payload;
     },
   },
 });
