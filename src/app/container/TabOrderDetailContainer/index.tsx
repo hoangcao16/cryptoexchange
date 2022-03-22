@@ -9,11 +9,15 @@ import { useParams } from 'react-router-dom';
 import { tabOrderDetailService } from 'services/orderDetailService';
 import { useDispatch } from 'react-redux';
 import { useTabOrderDetailSlice } from './slice';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
+
 function TabOrderDetailContainer() {
   const tradeId = Number(useParams()?.id);
 
   const [tradeDetail, setTradeDetail] = useState();
   const [loading, setLoading] = useState(false);
+  const [webSocket, setWebSocket]: any = useState();
 
   const dispatch = useDispatch();
   const setBuyerStatus = useTabOrderDetailSlice().actions;
@@ -30,12 +34,13 @@ function TabOrderDetailContainer() {
         .then(res => {
           if (res.data.rc === 0) {
             setTradeDetail(res.data.item);
+            console.log(res.data.item);
             dispatch(setBuyerStatus.setBuyerStatus(res.data.item.buyerStatus));
             dispatch(
               setSellerStatus.setSellerStatus(res.data.item.sellerStatus),
             );
             dispatch(setTradeStatus.setTradeStatus(res.data.item.status));
-            if (res.data.item?.order?.orderType === 0) {
+            if (res.data.item?.buyEmail === res.data.item?.partner?.email) {
               dispatch(setTradeType.setTradeType('Sell'));
             } else dispatch(setTradeType.setTradeType('Buy'));
             setLoading(false);
@@ -47,8 +52,33 @@ function TabOrderDetailContainer() {
         .catch(res => console.log(res));
     }
   };
+
   useEffect(() => {
     getTrade();
+  }, []);
+
+  useEffect(() => {
+    var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
+      connectionTimeout: 5000,
+    });
+    setWebSocket(socket);
+    socket.onopen = () => {
+      console.log(`Websocket connected`);
+      socket.send(
+        JSON.stringify({
+          type: 'SUBSCRIBE',
+          tradeId: tradeId,
+        }),
+      );
+      setInterval(
+        () => socket.send(JSON.stringify('Keep socket connection')),
+        5000,
+      );
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket Closed!');
+    };
   }, []);
 
   return (

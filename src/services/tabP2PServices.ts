@@ -57,6 +57,13 @@ export const tabP2PService = {
     });
   },
 
+  getOrderByToken() {
+    return apiClient.request({
+      method: 'GET',
+      url: `p2p-api/api/v1/p2pOrder/p2POrdersByEmail`,
+    });
+  },
+
   getListTimeLimit() {
     return apiClient.request({
       method: 'GET',

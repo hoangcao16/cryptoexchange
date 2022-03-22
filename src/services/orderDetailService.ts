@@ -33,4 +33,11 @@ export const tabOrderDetailService = {
       url: 'p2p-api/api/v1/appeal',
     });
   },
+
+  getQRCode() {
+    return apiClient.request({
+      method: 'GET',
+      url: 'p2p-api/api/v1/code/generate-google-authenticator-qr-code',
+    });
+  },
 };

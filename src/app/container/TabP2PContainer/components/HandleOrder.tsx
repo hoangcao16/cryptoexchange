@@ -14,8 +14,6 @@ import { tabP2PService } from 'services/tabP2PServices';
 import { SpotWalletServices } from 'services/spotWalletService';
 import { GrFormClose } from 'react-icons/gr';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
@@ -36,20 +34,10 @@ const HandleOrder = (props: any) => {
   const [walletUser, setWalletUser] = useState(0);
   const [showModalWarning, setShowModalWarning] = useState(false);
   const [paymentSeller, setPaymentSeller] = useState<any>();
-  const [webSocket, setWebSocket]: any = useState();
   const [loading, setLoading] = useState(false);
 
   const { createTrade } = tabOrderDetailService;
-  const {
-    listP2POrders,
-    text,
-    record,
-    index,
-    hanldeCloseOrder,
-    timeLimit,
-    available,
-    type,
-  } = props;
+  const { record, index, hanldeCloseOrder, timeLimit, available, type } = props;
 
   const options = sellerPayments.map((payment: any) => {
     return {
@@ -122,9 +110,15 @@ const HandleOrder = (props: any) => {
               localStorage.setItem('timeLimit', JSON.stringify(null));
               navigate(`/order/orderDetail/${res.data?.item?.id}`);
             }, 2000);
-          } else openNotification('Error', res.data.rd);
+          } else {
+            setLoading(false);
+            openNotification('Error', res.data.rd);
+          }
         })
-        .catch(res => console.log('Error', res));
+        .catch(res => {
+          setLoading(false);
+          console.log('Error', res);
+        });
     } else setValidateStateBuy(true);
   };
 
@@ -161,9 +155,15 @@ const HandleOrder = (props: any) => {
               localStorage.setItem('timeLimit', JSON.stringify(null));
               navigate(`/order/orderDetail/${res.data?.item?.id}`);
             }, 2000);
-          } else openNotification('Error', res.data.rd);
+          } else {
+            setLoading(false);
+            openNotification('Error', res.data.rd);
+          }
         })
-        .catch(res => console.log('Error', res));
+        .catch(res => {
+          console.log(res);
+          setLoading(false);
+        });
     } else if (walletUser > available) {
       setCryptoSell(available);
       setReceivePriceSell(available * record.price);
@@ -250,44 +250,6 @@ const HandleOrder = (props: any) => {
       })
       .catch(res => console.log(res));
   };
-
-  useEffect(() => {
-    var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
-      connectionTimeout: 5000,
-    });
-    setWebSocket(socket);
-    socket.onopen = () => {
-      console.log(`Websocket connected`);
-      // if (
-      //   changeFormatPair !== '' &&
-      //   changeFormatPair !== undefined &&
-      //   changeFormatPair !== null
-      // ) {
-      //   socket.send(
-      //     JSON.stringify({
-      //       method: 'SUBSCRIBE',
-      //       pair: changeFormatPair,
-      //     }),
-      //   );
-      // }
-      // setInterval(
-      //   () =>
-      //     socket.send(
-      //       JSON.stringify({
-      //         method: 'GET_PROPERTY',
-      //         id: Math.random(),
-      //       }),
-      //     ),
-      //   5000,
-      // );
-    };
-    socket.onclose = () => {
-      console.log('WebSocket Closed!');
-    };
-    return () => {
-      socket.close();
-    };
-  }, []);
 
   useEffect(() => {
     if (type === 'Sell') {
