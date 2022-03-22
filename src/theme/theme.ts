@@ -38,7 +38,6 @@ export const darkTheme: DefaultTheme = {
   borderBlack: '1px solid rgb(37 41 48)',
   borderSectionFooter: '1px solid rgb(35, 40, 45)',
   errorColor: '#dc143c',
-  blackColor: '#000000',
 
   powColor: '#330858',
   powColorLight: '#9761c5',
