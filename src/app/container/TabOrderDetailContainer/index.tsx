@@ -47,6 +47,7 @@ function TabOrderDetailContainer() {
         .catch(res => console.log(res));
     }
   };
+
   useEffect(() => {
     getTrade();
   }, []);

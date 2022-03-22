@@ -16,6 +16,7 @@ import { useTabOrderDetailSlice } from '../slice';
 import ChatBox from 'app/components/ChatBox';
 
 const ContentOrderDetail = ({ trade, reload }) => {
+  console.log(trade);
   const [visiableNote, setVisiableNote] = useState(true);
   const [visiableModalCancel, setVisiableModalCancel] = useState(false);
   const [listAppeal, setListAppeal] = useState([]);
