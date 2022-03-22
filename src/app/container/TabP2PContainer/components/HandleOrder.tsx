@@ -50,6 +50,7 @@ const HandleOrder = (props: any) => {
     available,
     type,
   } = props;
+
   const options = sellerPayments.map((payment: any) => {
     return {
       key: payment.id,
@@ -72,16 +73,6 @@ const HandleOrder = (props: any) => {
 
   let fiatName = TabP2PState.searchParam.fiat;
   let crypto = TabP2PState.searchParam.crypto;
-  let orders = 0;
-  let numberOrderDone = 0;
-  listP2POrders.forEach(order => {
-    if (order.accountEmail === text && order.orderType === 0) {
-      orders += 1;
-      if (order.status === 'DONE') {
-        numberOrderDone += 1;
-      }
-    }
-  });
 
   const handleChangeReceiveBuy = value => {
     if (value >= 0) {
@@ -194,6 +185,7 @@ const HandleOrder = (props: any) => {
       setValidateStateSell(true);
     } else setValidateStateSell(false);
   };
+
   const changePaymentSeller = value => {
     setPaymentSeller(value);
   };

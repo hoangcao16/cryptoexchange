@@ -41,7 +41,8 @@ const TabOrderAllContainer = () => {
       </div>
       <div className="container mainContent">
         <div className="content">
-          <div className="filter">Filter</div>
+          {activeTab === 2 && <div className="filter">Filter</div>}
+          {activeTab === 1 && <div className="filter">All</div>}
         </div>
       </div>
     </Wrapper>
