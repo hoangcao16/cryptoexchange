@@ -20,6 +20,7 @@ import { DepositCryptoState } from 'app/container/DepositContainer/components/De
 import { WithdrawCryptoState } from 'app/container/WithdrawContainer/components/WithdrawSection/slice/types';
 import { PostAdP2PState } from 'app/container/PostAdP2PContainer/slice/types';
 import { TabOrderDetailState } from 'app/container/TabOrderDetailContainer/slice/types';
+import { ChatboxState } from 'app/components/ChatBox/slice/types';
 import { CurrentPairState } from 'app/components/ContentHeader/slice/types';
 /* 
   Because the redux-injectors injects your reducers asynchronously somewhere in your code
@@ -45,6 +46,8 @@ export interface RootState {
   depositCrypto: DepositCryptoState;
   withdrawCrypto: WithdrawCryptoState;
   tabP2P: TabP2PState;
+  chatbox: ChatboxState;
+
   postAdP2P: PostAdP2PState;
   tabOrderDetail: TabOrderDetailState;
   currentPair: CurrentPairState;

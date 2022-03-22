@@ -21,6 +21,7 @@ const HeaderOrderDetail = ({ trade, reload }) => {
   const buyerStatus = TabOrderDetailState.buyerStatus;
   const sellerStatus = TabOrderDetailState.sellerStatus;
   const tradeType = TabOrderDetailState.tradeType;
+
   const finishedCountDown = () => {
     updateTradeById({
       id: trade.id,
@@ -38,13 +39,13 @@ const HeaderOrderDetail = ({ trade, reload }) => {
       })
       .catch(res => console.log(res));
   };
-
+  console.log(trade);
   useEffect(() => {
     if (TabOrderDetailState?.tradeType === 'Buy') {
       switch (TabOrderDetailState?.buyerStatus) {
         case 'NOT_PAID':
           setTitle(
-            `Buy ${trade?.order?.token?.assetName} from ${trade.sellEmail}`,
+            `Buy ${trade?.order?.token?.assetName} from ${trade?.sellEmail}`,
           );
           setSubTitle(
             'The order is created, please wait for system confirmation.Order will be automatically canceled by the system if timed out.',
@@ -53,7 +54,7 @@ const HeaderOrderDetail = ({ trade, reload }) => {
 
         case 'PAID':
           setTitle(
-            `Buy ${trade?.order?.token?.assetName} from ${trade.sellEmail}`,
+            `Buy ${trade?.order?.token?.assetName} from ${trade?.sellEmail}`,
           );
           setSubTitle("Pending seller's release crypto");
           break;

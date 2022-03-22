@@ -1,22 +1,22 @@
 import axios from 'axios';
-import config from '../config';
+import { chatconfig } from '../config';
 import { authService } from './authService';
 
-const apiClient = axios.create(config.api);
+const apiChatClient = axios.create(chatconfig.api);
 
 // Request interceptor
-apiClient.interceptors.request.use(
-  (config: any) => {
+apiChatClient.interceptors.request.use(
+  (chatconfig: any) => {
     const accessToken = localStorage.getItem('access_token');
 
     if (accessToken) {
-      config.headers.common.Authorization = `${accessToken}`;
+      chatconfig.headers.common.Authorization = `${accessToken}`;
     }
 
-    config.headers.common['Content-Type'] = 'application/json';
-    config.headers.common['Accept'] = 'application/json';
+    chatconfig.headers.common['Content-Type'] = 'application/json';
+    chatconfig.headers.common['Accept'] = 'application/json';
 
-    return config;
+    return chatconfig;
   },
   error => {
     return Promise.reject(error);
@@ -24,12 +24,11 @@ apiClient.interceptors.request.use(
 );
 
 // Response interceptor
-apiClient.interceptors.response.use(
+apiChatClient.interceptors.response.use(
   response => {
     return response;
   },
   error => {
-    console.log(error);
     // Clear local storage data and redirect to login page if request is 401 - Unauthorized
     if (error.response.status === 401) {
       authService.removeAccessToken();
@@ -40,4 +39,4 @@ apiClient.interceptors.response.use(
   },
 );
 
-export default apiClient;
+export default apiChatClient;

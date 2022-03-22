@@ -100,6 +100,7 @@ const HandleOrder = (props: any) => {
     }
   };
 
+  console.log(record);
   const handleBuy = () => {
     if (receiveBuy && pricePayBuy) {
       setLoading(true);
@@ -107,7 +108,7 @@ const HandleOrder = (props: any) => {
         amount: Number(receiveBuy),
         fiatId: record.fiatId,
         orderId: record.id,
-        paymentId: record.payments[0].id,
+        paymentId: record.payments[0]?.id,
         price: record.price,
         tokenId: record.tokenId,
         total: Number(pricePayBuy),

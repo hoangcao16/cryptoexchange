@@ -13,6 +13,7 @@ import { TabOrderDetailState } from '../slice/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTabOrderDetail } from '../slice/selectors';
 import { useTabOrderDetailSlice } from '../slice';
+import ChatBox from 'app/components/ChatBox';
 
 const ContentOrderDetail = ({ trade, reload }) => {
   const [visiableNote, setVisiableNote] = useState(true);
@@ -408,7 +409,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
             <h6 className="haq">Have A Question</h6>
           </div>
         )}
-        <div className="col-4 chat"></div>
+        <div className="chat">
+          <ChatBox email={trade?.sellEmail} data={trade} />
+        </div>
       </div>
       <div className="faq">
         <h5 className="faq-title">FAQ</h5>

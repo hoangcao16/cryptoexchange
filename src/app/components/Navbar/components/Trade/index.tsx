@@ -44,12 +44,12 @@ const TradeNav = () => {
       name: t('advanced'),
       description: t('advanced-sub'),
     },
-    // {
-    //   id: 4,
-    //   icon: GrUpgrade,
-    //   name: t('margin'),
-    //   description: t('increase-your-profits'),
-    // },
+    {
+      id: 4,
+      icon: GrUpgrade,
+      name: t('margin'),
+      description: t('increase-your-profits'),
+    },
     {
       id: 5,
       icon: BsPeople,

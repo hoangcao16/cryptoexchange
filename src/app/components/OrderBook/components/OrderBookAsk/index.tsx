@@ -16,31 +16,18 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
     if (dataApi?.length > 0 && isEmpty(dataSocket)) {
       setDataView(dataApi);
     } else {
-      // console.log(dataSocket);
-      // console.log(dataSocket.sign);
-      // console.log(dataView);
       if (!isEmpty(dataSocket)) {
         if (dataView === null || dataView === undefined) {
-          // console.log(dataView);
-          // console.log(Number(dataSocket?.sign));
-          // const fk = {
-          //   price: dataSocket?.price,
-          //   quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
-          // };
           setDataView([
             {
               price: dataSocket?.price,
               quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
             },
           ]);
-          // console.log(fk);
         } else if (dataView !== undefined && dataView !== null) {
-          // console.log(dataView);
-          // console.log(Number(dataSocket?.sign));
           const index = dataView.findIndex((item: any) => {
             return item.price === dataSocket?.price;
           });
-          // console.log(index);
           if (index === -1) {
             const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
             dataCopy.push({
@@ -51,7 +38,6 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
               return b.price - a.price;
             });
             setDataView(dataCopy);
-            // console.log(dataCopy);
           } else if (index !== -1) {
             const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
             const sumQuantity = Number(
@@ -63,15 +49,12 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
             if (sumQuantity > 0) {
               dataCopy[index].quantity = sumQuantity;
               setDataView(dataCopy);
-              // console.log(dataCopy);
             } else if (sumQuantity === 0 || sumQuantity < 0) {
               dataCopy.splice(index, 1);
               setDataView(dataCopy);
-              // console.log(dataCopy);
             }
           }
         }
-        // console.log('end life cycle');
       }
     }
 
