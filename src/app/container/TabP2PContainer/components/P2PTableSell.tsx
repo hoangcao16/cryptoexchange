@@ -40,9 +40,9 @@ function P2PTableSell() {
           <ColAdvertisers>
             <div className="row1">
               <div className="firstCharacter">
-                {record.accountEmail.charAt(0).toUpperCase()}
+                {record.account.email.charAt(0).toUpperCase()}
               </div>
-              <div className="advertisers">{record.accountEmail}</div>
+              <div className="advertisers">{record.account.email}</div>
               <div className="checked">
                 {<BsFillCheckCircleFill color="#10afff" />}
               </div>

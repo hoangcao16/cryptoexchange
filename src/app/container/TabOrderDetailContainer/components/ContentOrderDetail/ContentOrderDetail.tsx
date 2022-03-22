@@ -9,6 +9,7 @@ import { FaCopy } from 'react-icons/fa';
 import openNotification from 'app/components/NotificationAntd';
 import { tabOrderDetailService } from 'services/orderDetailService';
 import { RiErrorWarningFill } from 'react-icons/ri';
+import ChatBox from 'app/components/ChatBox';
 
 const ContentOrderDetail = ({ trade, reload }) => {
   const [current, setCurrent] = useState(0);
@@ -82,7 +83,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
     findAllAppealReason();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  console.log(trade);
   return (
     <Wrapper>
       <div className="mainContent">
@@ -296,7 +297,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
             <h6 className="haq">Have A Question</h6>
           </div>
         )}
-        <div className="chat"></div>
+        <div className="chat">
+          <ChatBox email={trade?.sellEmail} data={trade} />
+        </div>
       </div>
       <div className="faq">
         <h5 className="faq-title">FAQ</h5>
