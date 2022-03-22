@@ -1,23 +1,44 @@
-import { Descriptions, Tag } from 'antd';
-import { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Descriptions, InputNumber, Tag } from 'antd';
+import { useEffect, useState } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import Select from 'react-select';
 import styled from 'styled-components';
 import { selectTabP2P } from '../slice/selectors';
 import { TabP2PState } from '../slice/type';
-import { useForm } from 'react-hook-form';
-import CurrencyInput from 'app/components/CurrencyInput/index';
 import { tabOrderDetailService } from 'services/orderDetailService';
 import { useNavigate } from 'react-router-dom';
 import openNotification from 'app/components/NotificationAntd';
+import { darkTheme } from 'theme/theme';
+import { tabP2PService } from 'services/tabP2PServices';
+import { SpotWalletServices } from 'services/spotWalletService';
+import { GrFormClose } from 'react-icons/gr';
+import { RiErrorWarningFill } from 'react-icons/ri';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const navigate = useNavigate();
-  const [validateState, setValidateState] = useState(false);
-  const [pricePay, setPricePay] = useState('');
-  const [receive, setReceive] = useState('');
+  const { getUserPayments } = tabP2PService;
+  const { getAllSpotWallet } = SpotWalletServices;
+
+  //BUY
+  const [validateStateBuy, setValidateStateBuy] = useState(false);
+  const [pricePayBuy, setPricePayBuy] = useState<number>();
+  const [receiveBuy, setReceiveBuy] = useState<number>();
+
+  //SELL
+  const [validateStateSell, setValidateStateSell] = useState(false);
+  const [cryptoSell, setCryptoSell] = useState<number>();
+  const [receivePriceSell, setReceivePriceSell] = useState<number>();
+  const [sellerPayments, setSellerPayments] = useState([]);
+  const [walletUser, setWalletUser] = useState(0);
+  const [showModalWarning, setShowModalWarning] = useState(false);
+  const [paymentSeller, setPaymentSeller] = useState<any>();
+  const [webSocket, setWebSocket]: any = useState();
   const [loading, setLoading] = useState(false);
+
   const { createTrade } = tabOrderDetailService;
   const {
     listP2POrders,
@@ -27,117 +48,74 @@ const HandleOrder = (props: any) => {
     hanldeCloseOrder,
     timeLimit,
     available,
+    type,
   } = props;
+
+  const options = sellerPayments.map((payment: any) => {
+    return {
+      key: payment.id,
+      value: payment.id,
+      label: (
+        <div className="selectPaymentContent">
+          <Tag
+            className="paymentMethodTag"
+            color={payment.paymentMethod.colorCode}
+          >
+            {payment?.paymentMethod.name}
+          </Tag>
+          <span>{payment?.fullName}</span>
+        </div>
+      ),
+    };
+  });
 
   const maxPrice = available * record.price;
 
-  const {
-    register,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm({
-    mode: 'all',
-    reValidateMode: 'onChange',
-  });
-
   let fiatName = TabP2PState.searchParam.fiat;
   let crypto = TabP2PState.searchParam.crypto;
-  let orders = 0;
-  let numberOrderDone = 0;
-  listP2POrders.forEach(order => {
-    if (order.accountEmail === text && order.orderType === 0) {
-      orders += 1;
-      if (order.status === 'DONE') {
-        numberOrderDone += 1;
-      }
-    }
-  });
 
-  const handleChangeReceive = value => {
-    setValue(
-      'inputReceive',
-      Number(Math.floor(parseFloat(value) * 100) / 100).toString(),
-    );
-    if (value) {
-      setReceive(
-        Number(getValues('inputReceive').replace(/,/g, '')).toString(),
-      );
-      setPricePay(
-        (
-          Number(getValues('inputReceive').replace(/,/g, '')) * record.price
-        ).toString(),
-      );
-    } else {
-      setReceive('');
-      setPricePay('');
+  const handleChangeReceiveBuy = value => {
+    if (value >= 0) {
+      setReceiveBuy(Number(value));
+      setPricePayBuy(Number(Math.floor(value * record?.price * 100) / 100));
     }
-    if (
-      Number(getValues('inputReceive').replace(/,/g, '')) * record.price <
-        record.orderLowerBound ||
-      Number(getValues('inputReceive').replace(/,/g, '')) * record.price >
-        maxPrice
-    ) {
-      setValidateState(true);
+
+    if (value < record?.orderLowerBound / record?.price || value > available) {
+      setValidateStateBuy(true);
     } else {
-      setValidateState(false);
+      setValidateStateBuy(false);
     }
   };
 
-  const handleChangePay = value => {
-    setValue(
-      'inputPay',
-      Number(Math.floor(parseFloat(value) * 100) / 100).toString(),
-    );
-    if (
-      Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) <
-        record.orderLowerBound ||
-      Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) > maxPrice
-    ) {
-      setValidateState(true);
-    } else {
-      setValidateState(false);
+  const handleChangePayBuy = value => {
+    if (value >= 0) {
+      setPricePayBuy(Number(value));
+      setReceiveBuy(Number(Math.floor((value / record?.price) * 100) / 100));
     }
-    if (value) {
-      setPricePay(
-        (
-          Math.floor(
-            Number(parseFloat(getValues('inputPay').replace(/,/g, ''))) * 100,
-          ) / 100
-        ).toString(),
-      );
-      setReceive(
-        (
-          Math.floor(
-            Number(
-              parseFloat(getValues('inputPay').replace(/,/g, '')) /
-                record.price,
-            ) * 100,
-          ) / 100
-        ).toString(),
-      );
+
+    if (value < record?.orderLowerBound || value > record?.price * available) {
+      setValidateStateBuy(true);
     } else {
-      setPricePay('');
-      setReceive('');
+      setValidateStateBuy(false);
     }
   };
 
+  console.log(record);
   const handleBuy = () => {
-    if (receive && pricePay) {
+    if (receiveBuy && pricePayBuy) {
       setLoading(true);
       let newValue = {
-        amount: Number(receive),
+        amount: Number(receiveBuy),
         fiatId: record.fiatId,
         orderId: record.id,
-        paymentId: record.payments[0].id,
+        paymentId: record.payments[0]?.id,
         price: record.price,
         tokenId: record.tokenId,
-        total: Number(pricePay),
+        total: Number(pricePayBuy),
       };
       createTrade(newValue)
         .then(res => {
           if (res.data.rc === 0) {
-            console.log(res.data);
             openNotification('Success', 'Created your order');
             setTimeout(() => {
               setLoading(false);
@@ -147,15 +125,177 @@ const HandleOrder = (props: any) => {
           } else openNotification('Error', res.data.rd);
         })
         .catch(res => console.log('Error', res));
-    } else setValidateState(true);
+    } else setValidateStateBuy(true);
   };
 
-  const handelChooseAll = e => {
-    e.preventDefault();
-    setPricePay(maxPrice.toString());
-    setReceive((maxPrice / record.price).toString());
-    setValidateState(false);
+  const handelChooseAll = () => {
+    setPricePayBuy(record?.price * available);
+    setReceiveBuy(available);
+    setValidateStateBuy(false);
   };
+
+  //SELL
+  const handleSell = () => {
+    if (
+      cryptoSell &&
+      receivePriceSell &&
+      paymentSeller.value &&
+      walletUser >= record.orderLowerBound / record.price
+    ) {
+      setLoading(true);
+      let newValue = {
+        amount: Number(cryptoSell),
+        fiatId: record.fiatId,
+        orderId: record.id,
+        paymentId: paymentSeller.value,
+        price: record.price,
+        tokenId: record.tokenId,
+        total: Number(receivePriceSell),
+      };
+      createTrade(newValue)
+        .then(res => {
+          if (res.data.rc === 0) {
+            openNotification('Success', 'Created your order');
+            setTimeout(() => {
+              setLoading(false);
+              localStorage.setItem('timeLimit', JSON.stringify(null));
+              navigate(`/order/orderDetail/${res.data?.item?.id}`);
+            }, 2000);
+          } else openNotification('Error', res.data.rd);
+        })
+        .catch(res => console.log('Error', res));
+    } else if (walletUser > available) {
+      setCryptoSell(available);
+      setReceivePriceSell(available * record.price);
+    } else {
+      setValidateStateSell(true);
+      setShowModalWarning(true);
+    }
+  };
+
+  const handleChangeCryptoSell = value => {
+    setCryptoSell(Number(value?.toFixed(2)));
+    setReceivePriceSell(
+      Number(Math.floor(value?.toFixed(2) * record?.price * 100) / 100),
+    );
+
+    if (
+      Number(value?.toFixed(2)) < record?.orderLowerBound / record?.price ||
+      Number(value?.toFixed(2)) > available
+    ) {
+      setValidateStateSell(true);
+    } else setValidateStateSell(false);
+  };
+
+  const changePaymentSeller = value => {
+    setPaymentSeller(value);
+  };
+
+  const handleChangeRecieve = value => {
+    setCryptoSell(
+      Number(Math.floor((value?.toFixed(2) / record?.price) * 100) / 100),
+    );
+    setReceivePriceSell(Number(value?.toFixed(2)));
+    if (
+      Number(value?.toFixed(2)) < record?.orderLowerBound ||
+      Number(value?.toFixed(2)) > record?.price * available
+    ) {
+      setValidateStateSell(true);
+    } else setValidateStateSell(false);
+  };
+
+  const handelChooseAllSeller = () => {
+    if (walletUser > available) {
+      setCryptoSell(available);
+      setReceivePriceSell(available * record.price);
+    } else setCryptoSell(walletUser);
+    if (walletUser < record.orderLowerBound / record.price) {
+      setValidateStateSell(true);
+    } else setValidateStateSell(false);
+  };
+
+  const findAllUserPayments = () => {
+    getUserPayments().then(res => {
+      if (res.data.rc === 0) {
+        setSellerPayments(res.data.rows);
+        setPaymentSeller({
+          key: res.data.rows[0].id,
+          value: res.data.rows[0].id,
+          label: (
+            <div className="selectPaymentContent">
+              <Tag
+                className="paymentMethodTag"
+                color={res.data.rows[0].paymentMethod.colorCode}
+              >
+                {res.data.rows[0]?.paymentMethod.name}
+              </Tag>
+              <span>{res.data.rows[0]?.fullName}</span>
+            </div>
+          ),
+        });
+      }
+    });
+  };
+
+  const findWalletUser = () => {
+    getAllSpotWallet()
+      .then(res => {
+        if (res.data.rc === 0) {
+          let tokenId = record.token?.id;
+          setWalletUser(
+            res.data.rows?.find(coin => coin?.tokenId === tokenId).total,
+          );
+          console.log(record);
+        }
+      })
+      .catch(res => console.log(res));
+  };
+
+  useEffect(() => {
+    var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
+      connectionTimeout: 5000,
+    });
+    setWebSocket(socket);
+    socket.onopen = () => {
+      console.log(`Websocket connected`);
+      // if (
+      //   changeFormatPair !== '' &&
+      //   changeFormatPair !== undefined &&
+      //   changeFormatPair !== null
+      // ) {
+      //   socket.send(
+      //     JSON.stringify({
+      //       method: 'SUBSCRIBE',
+      //       pair: changeFormatPair,
+      //     }),
+      //   );
+      // }
+      // setInterval(
+      //   () =>
+      //     socket.send(
+      //       JSON.stringify({
+      //         method: 'GET_PROPERTY',
+      //         id: Math.random(),
+      //       }),
+      //     ),
+      //   5000,
+      // );
+    };
+    socket.onclose = () => {
+      console.log('WebSocket Closed!');
+    };
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (type === 'Sell') {
+      findAllUserPayments();
+      findWalletUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ColHandleOrder>
@@ -170,9 +310,9 @@ const HandleOrder = (props: any) => {
 
           <div className="row2">
             {''}
-            <span>{orders} Orders</span>
+            <span>{record.account.orderIn30Day} Orders</span>
             <span className="numberOrderComplete">
-              {((numberOrderDone / orders) * 100).toFixed(2)} % completed
+              {record.account.rateComplete.toFixed(2)} % completed
             </span>
           </div>
         </ColOrderAdvertisers>
@@ -180,7 +320,7 @@ const HandleOrder = (props: any) => {
           <Descriptions size="small">
             <Descriptions.Item span={1} label="Price">
               <span className="orderDescriptionSpan orderPrice">
-                {record.fiatSymbol} {record.price}
+                {record?.fiat?.symbol} {record?.price}
               </span>
             </Descriptions.Item>
             <Descriptions.Item span={1} label="Available">
@@ -202,13 +342,13 @@ const HandleOrder = (props: any) => {
                 )}
               </span>
             </Descriptions.Item>
-            <Descriptions.Item span={1} label="Buyer's payment method">
+            <Descriptions.Item span={1} label={`${type}er's payment method`}>
               <span className="orderDescriptionSpan">
                 <div className="colPayments">
-                  {record.payments.length === 0 ? (
+                  {record?.payments?.length === 0 ? (
                     <h6>Unknow payment!</h6>
                   ) : (
-                    record.payments.map((payment, index) => {
+                    record?.payments?.map((payment, index) => {
                       if (payment) {
                         return (
                           <Tag key={index} className="paymentTag">
@@ -241,28 +381,24 @@ const HandleOrder = (props: any) => {
         </div>
         ,
       </div>
-      <div className="formOrder">
-        <form>
+      {type === 'Buy' && (
+        <div className="formOrderBuy">
           <div className="mb-3 inputBuy">
             <label htmlFor="disabledTextInput" className="form-label labelText">
               I want to pay
             </label>
-            <CurrencyInput
-              {...register('inputPay', {
-                required: true,
-                onChange: e => handleChangePay(e.target.value),
-              })}
-              type="text"
-              id="disabledTextInput"
+            <InputNumber
+              onChange={handleChangePayBuy}
+              value={pricePayBuy}
               autoComplete="off"
+              min={0}
               className="form-control bargain"
               placeholder={`${record.orderLowerBound.toFixed(
                 2,
               )} - ${maxPrice.toFixed(2)}`}
-              style={{ borderColor: validateState && 'red' }}
-              value={pricePay}
+              style={{ borderColor: validateStateBuy ? 'red' : '' }}
             />
-            {validateState && (
+            {validateStateBuy && (
               <p className="validateMessage">
                 Buy limit: {record.orderLowerBound.toFixed(2)} -{' '}
                 {(record.orderLowerBound * record.price).toFixed(2)}{' '}
@@ -272,7 +408,7 @@ const HandleOrder = (props: any) => {
             <div className="apponAfter">
               <button
                 className="btnChooseAll"
-                onClick={e => handelChooseAll(e)}
+                onClick={() => handelChooseAll()}
               >
                 All
               </button>
@@ -284,18 +420,16 @@ const HandleOrder = (props: any) => {
             <label htmlFor="disabledTextInput" className="form-label">
               I will receive
             </label>
-            <CurrencyInput
-              {...register('inputReceive', {
-                required: true,
-                onChange: e => handleChangeReceive(e.target.value),
-                value: '',
-              })}
-              style={{ borderColor: validateState && 'red' }}
-              type="text"
+            <InputNumber
+              style={{
+                borderColor: validateStateBuy ? darkTheme.redColor : '',
+              }}
               id="disabledTextInput"
               className="form-control bargain"
               placeholder="0.00"
-              value={receive}
+              min={0}
+              value={receiveBuy}
+              onChange={handleChangeReceiveBuy}
             />
             <div className="apponAfter">
               <span className="fiatNameInput">{crypto}</span>
@@ -316,7 +450,7 @@ const HandleOrder = (props: any) => {
               onClick={() => {
                 handleBuy();
               }}
-              disabled={validateState || loading}
+              disabled={validateStateBuy || loading}
             >
               {loading ? <div className="loader"></div> : `Buy ${crypto}`}
             </Button>
@@ -333,8 +467,113 @@ const HandleOrder = (props: any) => {
               <span>Learn more {'>'}</span>
             </span>
           </div>
-        </form>
-      </div>
+        </div>
+      )}
+
+      {/* {SELL} */}
+      {type === 'Sell' && (
+        <div className="formOrderSell">
+          <div className="mb-3 inputBuy">
+            <label htmlFor="disabledTextInput" className="form-label">
+              I want to sell
+            </label>
+            <InputNumber
+              style={{
+                borderColor: validateStateSell ? darkTheme.redColor : '',
+              }}
+              id="disabledTextInput"
+              className="form-control bargain"
+              placeholder="0.00"
+              min={0}
+              value={cryptoSell}
+              onChange={handleChangeCryptoSell}
+            />
+            <div className="apponAfter">
+              <button
+                className="btnChooseAll"
+                onClick={() => handelChooseAllSeller()}
+              >
+                All
+              </button>
+              <span className="fiatNameInput">{crypto}</span>
+            </div>
+            {validateStateSell && (
+              <p className="validateMessage">
+                Buy limit: {record.orderLowerBound.toFixed(2)} -{' '}
+                {(record.orderLowerBound * record.price).toFixed(2)}{' '}
+                {record.fiatName}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3 inputBuy">
+            <label htmlFor="disabledTextInput" className="form-label labelText">
+              I will receive
+            </label>
+            <InputNumber
+              onChange={handleChangeRecieve}
+              value={receivePriceSell}
+              autoComplete="off"
+              min={0}
+              className="form-control bargain"
+              placeholder={`${record.orderLowerBound.toFixed(
+                2,
+              )} - ${maxPrice.toFixed(2)}`}
+              style={{
+                borderColor: validateStateSell ? darkTheme.redColor : '',
+              }}
+            />
+            <div className="apponAfter">
+              <span className="fiatNameInput">{fiatName}</span>
+            </div>
+          </div>
+          <p className="paymentTitle">Payments method</p>
+          <Select
+            className="selectPaymentSell basic-single"
+            options={options}
+            value={paymentSeller}
+            onChange={changePaymentSeller}
+          />
+          <div className="btn-control">
+            <Button
+              className="btn btn-secondary btn-lg btn-cancel"
+              onClick={() => {
+                hanldeCloseOrder(prev => prev.filter(order => order !== index));
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="btn btn-lg btn-primary btn-sell"
+              onClick={() => {
+                handleSell();
+              }}
+              disabled={validateStateSell || loading}
+            >
+              {loading ? <div className="loader"></div> : `Sell ${crypto}`}
+            </Button>
+          </div>
+          <ModalWarning
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            onHide={() => setShowModalWarning(false)}
+            show={showModalWarning}
+          >
+            <Modal.Body>
+              <div className="border">
+                <RiErrorWarningFill className="wariningIcon" />
+              </div>
+              <p>Not enough balance, please transfer money first.</p>
+              <GrFormClose
+                className="iconClose"
+                onClick={() => setShowModalWarning(false)}
+              />
+              <Button className="moneyTrans">Go to money transfer</Button>
+            </Modal.Body>
+          </ModalWarning>
+        </div>
+      )}
     </ColHandleOrder>
   );
 };
@@ -396,7 +635,7 @@ const ColHandleOrder = styled.div`
   }
   .orderInfo {
     flex: 6;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid ${({ theme }) => theme.grayColor};
     overflow: scroll;
     ::-webkit-scrollbar {
       height: 100%;
@@ -407,15 +646,171 @@ const ColHandleOrder = styled.div`
       background-color: ${({ theme }) => theme.grayColor};
     }
   }
-  .formOrder {
+  .formOrderSell {
     padding-left: 20px;
     flex: 4;
+
+    .labelText {
+      width: 100%;
+    }
+
+    .inputBuy {
+      position: relative !important;
+      margin-bottom: 30px !important;
+    }
+
+    .validateMessage {
+      position: absolute;
+      bottom: -100;
+      color: ${({ theme }) => theme.redColor};
+    }
+    .selectPaymentSell {
+      margin-top: -10px;
+      border: none;
+
+      .css-1pahdxg-control {
+        border: 1px solid ${({ theme }) => theme.primary};
+        box-shadow: none;
+      }
+      .css-4ljt47-MenuList {
+        height: 200px;
+        &::-webkit-scrollbar-thumb {
+          background-color: ${({ theme }) => theme.primary};
+          border-radius: 0;
+          scroll-behavior: smooth;
+        }
+      }
+      .selectPaymentContent {
+      }
+      .paymentMethodTag {
+        border-radius: 3px;
+        opacity: 0.9;
+      }
+    }
+
+    .apponAfter {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(10%);
+      transition: all 0.25s linear;
+      margin-right: 10px;
+      color: ${({ theme }) => theme.brightGrayColor};
+
+      .btnChooseAll {
+        margin-right: 15px;
+        border: none;
+        color: ${({ theme }) => theme.primary} !important;
+        background-color: ${({ theme }) => theme.p2pBackground};
+        border-radius: 5px;
+        transition: all 0.25s linear;
+        margin-bottom: 2px;
+
+        &:hover {
+          background-color: ${({ theme }) => theme.brightGrayColor};
+        }
+      }
+    }
+
+    .ant-input-number-handler-wrap {
+      display: none;
+    }
+
+    .bargain {
+      transition: all 0.25s linear;
+      font-size: 14px;
+      width: 100% !important;
+      height: 40px;
+      box-shadow: none;
+      padding: 4px 10px;
+
+      input {
+        padding: 0;
+      }
+      &:hover {
+        border: 1px solid ${({ theme }) => theme.primary};
+      }
+
+      &:focus {
+        border: 1px solid ${({ theme }) => theme.primary};
+        box-shadow: none;
+      }
+    }
+
+    .paymentTitle {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    .ant-select {
+      width: 100% !important;
+
+      .ant-select-selector {
+        border-radius: 5px !important;
+        height: 40px;
+        padding-top: 3px;
+      }
+    }
+
+    .btn-control {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+
+      .btn {
+        height: 40px;
+        font-size: 16px;
+        padding-bottom: 20px;
+      }
+      .btn-cancel {
+        flex: 3;
+        margin-right: 10px;
+        background-color: ${({ theme }) => theme.grayColor};
+        border-color: ${({ theme }) => theme.grayColor};
+        transition: all 0.25s linear;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+
+      .btn-sell {
+        flex: 7;
+        background-color: ${({ theme }) => theme.redColor};
+        border: ${({ theme }) => theme.redColor};
+        transition: all 0.25s linear;
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &:focus {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+  .formOrderBuy {
+    padding-left: 20px;
+    flex: 4;
+
+    .ant-input-number-handler-wrap {
+      display: none;
+    }
 
     .bargain {
       transition: all 0.25s linear;
       font-size: 14px;
       width: 100%;
       height: 40px;
+      box-shadow: none;
+      padding: 4px 10px;
+
+      input {
+        padding: 0;
+      }
 
       &:hover {
         border: 1px solid ${({ theme }) => theme.primary};
@@ -464,67 +859,6 @@ const ColHandleOrder = styled.div`
 
         &:focus {
           box-shadow: none;
-        }
-
-        .loader,
-        .loader:before,
-        .loader:after {
-          background: ${({ theme }) => theme.p2pBackground};
-          -webkit-animation: load1 1s infinite ease-in-out;
-          animation: load1 1s infinite ease-in-out;
-          width: 6px;
-          height: 3px;
-        }
-        .loader {
-          color: ${({ theme }) => theme.p2pBackground};
-          text-indent: -9999em;
-          margin: 0 auto;
-          position: relative;
-          font-size: 11px;
-          -webkit-transform: translateZ(0);
-          -ms-transform: translateZ(0);
-          transform: translateZ(0);
-          -webkit-animation-delay: -0.16s;
-          animation-delay: -0.16s;
-          margin-top: 6px;
-        }
-        .loader:before,
-        .loader:after {
-          position: absolute;
-          top: 0;
-          content: '';
-        }
-        .loader:before {
-          left: -1.5em;
-          -webkit-animation-delay: -0.32s;
-          animation-delay: -0.32s;
-        }
-        .loader:after {
-          left: 1.5em;
-        }
-        @-webkit-keyframes load1 {
-          0%,
-          80%,
-          100% {
-            box-shadow: 0 0;
-            height: 1em;
-          }
-          40% {
-            box-shadow: 0 -1em;
-            height: 2em;
-          }
-        }
-        @keyframes load1 {
-          0%,
-          80%,
-          100% {
-            box-shadow: 0 0;
-            height: 1em;
-          }
-          40% {
-            box-shadow: 0 -1em;
-            height: 2em;
-          }
         }
       }
     }
@@ -582,6 +916,68 @@ const ColHandleOrder = styled.div`
       }
     }
   }
+
+  //loading
+  .loader,
+  .loader:before,
+  .loader:after {
+    background: ${({ theme }) => theme.p2pBackground};
+    -webkit-animation: load1 1s infinite ease-in-out;
+    animation: load1 1s infinite ease-in-out;
+    width: 6px;
+    height: 3px;
+  }
+  .loader {
+    color: ${({ theme }) => theme.p2pBackground};
+    text-indent: -9999em;
+    margin: 0 auto;
+    position: relative;
+    font-size: 11px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+    margin-top: 8px;
+  }
+  .loader:before,
+  .loader:after {
+    position: absolute;
+    top: 0;
+    content: '';
+  }
+  .loader:before {
+    left: -1.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  .loader:after {
+    left: 1.5em;
+  }
+  @-webkit-keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
+    }
+  }
+  @keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
+    }
+  }
 `;
 
 const ColOrderAdvertisers = styled.div`
@@ -617,6 +1013,57 @@ const ColOrderAdvertisers = styled.div`
       margin-left: 10px;
       padding-left: 5px;
       border-left: 1px solid #ccc;
+    }
+  }
+`;
+
+const ModalWarning = styled(Modal)`
+  .modal-content {
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .modal-body {
+    color: ${({ theme }) => theme.p2pText};
+    position: relative;
+
+    .iconClose {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 30px;
+      cursor: pointer;
+      opacity: 0.3;
+    }
+    .border {
+      margin-bottom: 20px;
+      margin-top: 10px;
+      display: inline-block;
+      border-radius: 50%;
+      padding: 5px;
+    }
+    .wariningIcon {
+      color: ${({ theme }) => theme.primary};
+      font-size: 70px;
+      padding: 0;
+      position: relative;
+    }
+    .moneyTrans {
+      width: 100%;
+      background-color: ${({ theme }) => theme.primary};
+      border: none;
+      transition: all 0.25s linear;
+      margin-top: 10px;
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 `;

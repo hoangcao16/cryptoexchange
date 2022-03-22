@@ -37,6 +37,7 @@ import { StyledToastContainer } from './style';
 import { DepositPage } from './pages/DepositPage/Loadable';
 import { WithdrawPage } from './pages/WithdrawPage/Loadable';
 import { OrderDetailPage } from './pages/OrderDetailPage';
+import { OrderAllPage } from './pages/OrderAllPage';
 
 export function App() {
   const dispatch = useDispatch();
@@ -145,6 +146,14 @@ export function App() {
             element={
               <PrivateRoute>
                 <OrderDetailPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/order/all"
+            element={
+              <PrivateRoute>
+                <OrderAllPage />
               </PrivateRoute>
             }
           />

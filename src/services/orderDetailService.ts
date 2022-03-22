@@ -30,7 +30,7 @@ export const tabOrderDetailService = {
   getListAppealReason() {
     return apiClient.request({
       method: 'GET',
-      url: 'admin-api/api/v1/appealReason',
+      url: 'p2p-api/api/v1/appeal',
     });
   },
 };

@@ -1,4 +1,4 @@
-import { Checkbox, Col, Input, Row, Select } from 'antd';
+import { Col, Input, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -138,10 +138,7 @@ function P2PFilter() {
           </SelectStyled>
         </Col>
 
-        <Col lg={7}>
-          <div className="title"></div>
-          <Checkbox>Only show merchant ads</Checkbox>
-        </Col>
+        <Col lg={7} />
 
         <Col lg={4}>
           <SelectRefreshStyled loading={true} placeholder="Refesh">

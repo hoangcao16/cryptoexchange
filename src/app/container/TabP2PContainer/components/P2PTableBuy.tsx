@@ -18,7 +18,6 @@ function P2PTableBuy() {
   const [listP2POrders, setListP2POrders] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [openOrders, setOpenOrders] = useState<any>([]);
-  const [listTimeLimit, setListTimeLimit] = useState<any>([]);
   const dispatch = useDispatch();
   const findTokens = useTabP2PSlice().actions;
   const findFiats = useTabP2PSlice().actions;
@@ -31,28 +30,16 @@ function P2PTableBuy() {
     getListOrderBy,
     getListPayments,
     getListOrder,
-    getListTimeLimit,
   } = tabP2PService;
 
   const columns: ColumnsType<any> = [
     {
       title: 'Advertisers',
       key: 'Advertisers',
-      dataIndex: 'accountEmail',
+      dataIndex: 'account',
       width: 400,
       render: (text: any, record: any, index: any) => {
         if (!openOrders.includes(index)) {
-          let orders = 0;
-          let numberOrderDone = 0;
-          listP2POrders.forEach(order => {
-            if (order.accountEmail === text && order.orderType === 0) {
-              orders += 1;
-              if (order.status === 'DONE') {
-                numberOrderDone += 1;
-              }
-            }
-          });
-
           return (
             <ColAdvertisers>
               <div className="row1">
@@ -67,17 +54,14 @@ function P2PTableBuy() {
 
               <div className="row2">
                 {''}
-                <span>{orders} Orders</span>
+                <span>{text.orderIn30Day} Orders</span>
                 <span className="numberOrderComplete">
-                  {((numberOrderDone / orders) * 100).toFixed(2)} % completed
+                  {text.rateComplete.toFixed(2)} % completed
                 </span>
               </div>
             </ColAdvertisers>
           );
         } else {
-          let timeLimit = listTimeLimit.find(
-            time => time.id === record.paymentTimeId,
-          )?.timeLimit;
           return (
             <HandleOrder
               listP2POrders={listP2POrders}
@@ -85,8 +69,9 @@ function P2PTableBuy() {
               record={record}
               index={index}
               hanldeCloseOrder={hanldeCloseOrder}
-              timeLimit={timeLimit}
+              timeLimit={record?.paymentTime?.timeLimit}
               available={record.amount - record.executed}
+              type="Buy"
             />
           );
         }
@@ -249,6 +234,7 @@ function P2PTableBuy() {
       .then((res: any) => {
         if (res.data.rc === 0) {
           setListP2POrdersBuy(res.data.rows);
+          console.log(res.data.rows);
           setLoading(false);
         } else {
           setLoading(false);
@@ -307,18 +293,6 @@ function P2PTableBuy() {
       .catch(res => console.log(res));
   };
 
-  const findAllPaymentTime = async () => {
-    getListTimeLimit()
-      .then(res => {
-        if (res.data.rc === 0) {
-          setListTimeLimit(res.data.rows);
-        } else {
-          console.log(res.data.rd);
-        }
-      })
-      .catch(res => console.log(res));
-  };
-
   useEffect(() => {
     Promise.all([
       findAllFiat(),
@@ -326,7 +300,6 @@ function P2PTableBuy() {
       findAllPayment(),
       findAllOrdersBuy(),
       findAllOrders(),
-      findAllPaymentTime(),
     ]).then(() => findAllOrdersBuy());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

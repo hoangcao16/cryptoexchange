@@ -48,5 +48,6 @@ declare module 'styled-components' {
     p2pText?: string;
     p2pTextLight?: string;
     p2pGrayLight?: string;
+    blackColor?: string;
   }
 }

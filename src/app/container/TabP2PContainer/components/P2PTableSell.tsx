@@ -9,11 +9,13 @@ import { useSelector } from 'react-redux';
 import { TabP2PState } from '../slice/type';
 import { selectTabP2P } from '../slice/selectors';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import HandleOrder from './HandleOrder';
 
 function P2PTableSell() {
   const [listP2POrdersSell, setListP2POrdersSell] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [listP2POrders, setListP2POrders] = useState<any>([]);
+  const [openOrders, setOpenOrders] = useState<any>([]);
 
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
   const { getListOrderBy, getListOrder } = tabP2PService;
@@ -22,42 +24,49 @@ function P2PTableSell() {
     {
       title: 'Advertisers',
       key: 'Advertisers',
-      dataIndex: 'accountEmail',
+      dataIndex: 'account',
       width: 400,
-      render: (text: any, record: any) => {
-        let orders = 0;
-        let numberOrderDone = 0;
-        listP2POrders.forEach(order => {
-          if (order.accountEmail === text && order.orderType === 1) {
-            orders += 1;
-            if (order.status === 'DONE') {
-              numberOrderDone += 1;
-            }
-          }
-        });
-
-        return (
-          <ColAdvertisers>
-            <div className="row1">
-              <div className="firstCharacter">
-                {record.account.email.charAt(0).toUpperCase()}
+      render: (text: any, record: any, index: any) => {
+        if (!openOrders.includes(index)) {
+          return (
+            <ColAdvertisers>
+              <div className="row1">
+                <div className="firstCharacter">
+                  {text.email.charAt(0).toUpperCase()}
+                </div>
+                <div className="advertisers">{text.email}</div>
+                <div className="checked">
+                  {<BsFillCheckCircleFill color="#10afff" />}
+                </div>
               </div>
-              <div className="advertisers">{record.account.email}</div>
-              <div className="checked">
-                {<BsFillCheckCircleFill color="#10afff" />}
-              </div>
-            </div>
 
-            <div className="row2">
-              {''}
-              <span>{orders} Orders</span>
-              <span className="numberOrderComplete">
-                {((numberOrderDone / orders) * 100).toFixed(2)} % completed
-              </span>
-            </div>
-          </ColAdvertisers>
-        );
+              <div className="row2">
+                {''}
+                <span>{text.orderIn30Day} Orders</span>
+                <span className="numberOrderComplete">
+                  {text.rateComplete.toFixed(2)} % completed
+                </span>
+              </div>
+            </ColAdvertisers>
+          );
+        } else {
+          return (
+            <HandleOrder
+              listP2POrders={listP2POrders}
+              text={text}
+              record={record}
+              index={index}
+              hanldeCloseOrder={hanldeCloseOrder}
+              timeLimit={record?.paymentTime?.timeLimit}
+              available={record.amount - record.executed}
+              type="Sell"
+            />
+          );
+        }
       },
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 5 : 1,
+      }),
     },
     {
       title: 'Price',
@@ -71,6 +80,9 @@ function P2PTableSell() {
           </ColPrice>
         );
       },
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 0 : 1,
+      }),
     },
     {
       title: 'Limit/Available',
@@ -100,13 +112,16 @@ function P2PTableSell() {
           </div>
         </ColLimitAvailable>
       ),
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 0 : 1,
+      }),
     },
     {
       title: 'Payments',
       key: 'Payments',
       dataIndex: 'payments',
 
-      render: (text: any, record: any) => (
+      render: (text: any) => (
         <ColPayment>
           {text?.length === 0 ? (
             <h6>Unknow payment!</h6>
@@ -130,6 +145,9 @@ function P2PTableSell() {
           )}
         </ColPayment>
       ),
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 0 : 1,
+      }),
     },
     {
       title: (
@@ -140,11 +158,26 @@ function P2PTableSell() {
       ),
       key: 'trade',
       width: 200,
-      render: (_, record) => {
-        return <ButtonSell>Sell {record.token.assetName}</ButtonSell>;
+      render: (_, record, index) => {
+        return (
+          <ButtonSell
+            onClick={() => {
+              setOpenOrders([...openOrders, index]);
+            }}
+          >
+            Sell {record.token.assetName}
+          </ButtonSell>
+        );
       },
+      onCell: (_, index) => ({
+        colSpan: openOrders.includes(index) ? 0 : 1,
+      }),
     },
   ];
+
+  const hanldeCloseOrder = async value => {
+    setOpenOrders(value);
+  };
 
   const findAllOrdersSell = () => {
     setLoading(true);

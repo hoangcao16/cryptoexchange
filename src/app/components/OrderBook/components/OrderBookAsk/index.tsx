@@ -80,9 +80,13 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
                 className="d-flex justify-content-between table-item"
               >
                 <Price>{numeral(item.price).format('0,0.000')}</Price>
-                <Amount>{numeral(item.quantity).format('0,0.00000')}</Amount>
+                <Amount>
+                  {numeral(Math.abs(item.quantity)).format('0,0.00000')}
+                </Amount>
                 <Total>
-                  {numeral(item.price * item.quantity).format('0,0.00000')}
+                  {numeral(Math.abs(item.price * item.quantity)).format(
+                    '0,0.00000',
+                  )}
                 </Total>
               </div>
             );
