@@ -163,9 +163,9 @@ const HandleOrder = (props: any) => {
         <ColOrderAdvertisers>
           <div className="row1">
             <div className="firstCharacter">
-              {record.accountEmail.charAt(0).toUpperCase()}
+              {record.account.email.charAt(0).toUpperCase()}
             </div>
-            <div className="advertisers">{record.accountEmail}</div>
+            <div className="advertisers">{record.account.email}</div>
           </div>
 
           <div className="row2">

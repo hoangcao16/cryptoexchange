@@ -29,7 +29,7 @@ const WithdrawSection = () => {
   const [isCoinModalVisible, setIsCoinModalVisible] = useState(false);
   const [receiveAmount, setReceiveAmount] = useState(0);
   const wallet_type = 1;
-  const { currency, wallettype } = useParams();
+  const { currency } = useParams();
   const dispatch = useDispatch();
   const [isNetworkFeeModalVisible, setIsNetworkFeeModalVisible] =
     useState(false);

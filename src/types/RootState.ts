@@ -19,7 +19,7 @@ import { TabP2PState } from 'app/container/TabP2PContainer/slice/type';
 import { DepositCryptoState } from 'app/container/DepositContainer/components/DepositSection/slice/types';
 import { WithdrawCryptoState } from 'app/container/WithdrawContainer/components/WithdrawSection/slice/types';
 import { PostAdP2PState } from 'app/container/PostAdP2PContainer/slice/types';
-
+import { ChatboxState } from 'app/components/ChatBox/slice/types';
 import { CurrentPairState } from 'app/components/ContentHeader/slice/types';
 
 /* 
@@ -46,6 +46,7 @@ export interface RootState {
   depositCrypto: DepositCryptoState;
   withdrawCrypto: WithdrawCryptoState;
   tabP2P: TabP2PState;
+  chatbox: ChatboxState;
 
   postAdP2P: PostAdP2PState;
 
