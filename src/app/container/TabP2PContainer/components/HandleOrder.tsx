@@ -14,6 +14,8 @@ import { tabP2PService } from 'services/tabP2PServices';
 import { SpotWalletServices } from 'services/spotWalletService';
 import { GrFormClose } from 'react-icons/gr';
 import { RiErrorWarningFill } from 'react-icons/ri';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
@@ -33,10 +35,11 @@ const HandleOrder = (props: any) => {
   const [sellerPayments, setSellerPayments] = useState([]);
   const [walletUser, setWalletUser] = useState(0);
   const [showModalWarning, setShowModalWarning] = useState(false);
-
-  const [loading, setLoading] = useState(false);
-  const { createTrade } = tabOrderDetailService;
   const [paymentSeller, setPaymentSeller] = useState<any>();
+  const [webSocket, setWebSocket]: any = useState();
+  const [loading, setLoading] = useState(false);
+
+  const { createTrade } = tabOrderDetailService;
   const {
     listP2POrders,
     text,
@@ -256,6 +259,44 @@ const HandleOrder = (props: any) => {
   };
 
   useEffect(() => {
+    var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
+      connectionTimeout: 5000,
+    });
+    setWebSocket(socket);
+    socket.onopen = () => {
+      console.log(`Websocket connected`);
+      // if (
+      //   changeFormatPair !== '' &&
+      //   changeFormatPair !== undefined &&
+      //   changeFormatPair !== null
+      // ) {
+      //   socket.send(
+      //     JSON.stringify({
+      //       method: 'SUBSCRIBE',
+      //       pair: changeFormatPair,
+      //     }),
+      //   );
+      // }
+      // setInterval(
+      //   () =>
+      //     socket.send(
+      //       JSON.stringify({
+      //         method: 'GET_PROPERTY',
+      //         id: Math.random(),
+      //       }),
+      //     ),
+      //   5000,
+      // );
+    };
+    socket.onclose = () => {
+      console.log('WebSocket Closed!');
+    };
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  useEffect(() => {
     if (type === 'Sell') {
       findAllUserPayments();
       findWalletUser();
@@ -269,16 +310,16 @@ const HandleOrder = (props: any) => {
         <ColOrderAdvertisers>
           <div className="row1">
             <div className="firstCharacter">
-              {record.accountEmail.charAt(0).toUpperCase()}
+              {record.account.email.charAt(0).toUpperCase()}
             </div>
-            <div className="advertisers">{record.accountEmail}</div>
+            <div className="advertisers">{record.account.email}</div>
           </div>
 
           <div className="row2">
             {''}
-            <span>{orders} Orders</span>
+            <span>{record.account.orderIn30Day} Orders</span>
             <span className="numberOrderComplete">
-              {((numberOrderDone / orders) * 100).toFixed(2)} % completed
+              {record.account.rateComplete.toFixed(2)} % completed
             </span>
           </div>
         </ColOrderAdvertisers>

@@ -72,7 +72,7 @@ function TabOrderDetailContainer() {
 export default TabOrderDetailContainer;
 
 export const Wrapper = styled.div`
-  background: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.p2pBackground};
   color: ${({ theme }) => theme.body};
 
   min-height: 100vh;

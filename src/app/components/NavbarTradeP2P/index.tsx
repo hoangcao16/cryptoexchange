@@ -1,5 +1,5 @@
 import { Button, Popover } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
@@ -14,6 +14,7 @@ import {
   AiOutlineProfile,
 } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import { tabP2PService } from 'services/tabP2PServices';
 
 interface Props {
   defaultActiveKey: string;
@@ -22,6 +23,7 @@ interface Props {
 function NavbarTradeP2P(props: Props) {
   const navigate = useNavigate();
   const { defaultActiveKey } = props;
+  const { getListOrder } = tabP2PService;
 
   const handleChangeTabs = (key: any) => {
     if (key === 'p2p') {
@@ -41,16 +43,24 @@ function NavbarTradeP2P(props: Props) {
     }
   };
 
+  const findAllOrder = () => {
+    getListOrder().then(res => console.log(res));
+  };
+
+  useEffect(() => {
+    findAllOrder();
+  }, []);
+
   const ContentOrders = (
     <ContentOrdersStyled>
       <div className="orderTitle">
         <div className="orderTitle__text">Processing</div>
         <Button type="link" className="orderTitle__link">
-          All Orders
+          <Link to="/order/all">All Orders</Link>
         </Button>
       </div>
 
-      <div className="orderContent">content</div>
+      <div className="orderContent">123</div>
     </ContentOrdersStyled>
   );
 

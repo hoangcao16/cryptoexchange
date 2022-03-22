@@ -90,7 +90,7 @@ function StepTypeAndPrice() {
   };
 
   const handleChangePrice = (value: any) => {
-    if (value === null) {
+    if (!value) {
       setPrice(0);
       return;
     }

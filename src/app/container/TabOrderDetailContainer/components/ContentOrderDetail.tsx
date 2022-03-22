@@ -175,7 +175,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
           setCurrentFirstSteps(-1);
       }
     }
-  }, [TabOrderDetailState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [TabOrderDetailState.buyerStatus, TabOrderDetailState.sellerStatus]);
 
   return (
     <Wrapper>
@@ -425,7 +426,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
             <p>{123}</p>
           </Panel>
         </Collapse>
-        ,
       </div>
       <ModalCancel
         aria-labelledby="contained-modal-title-vcenter"

@@ -24,27 +24,17 @@ function P2PTableSell() {
     {
       title: 'Advertisers',
       key: 'Advertisers',
-      dataIndex: 'accountEmail',
+      dataIndex: 'account',
       width: 400,
       render: (text: any, record: any, index: any) => {
-        let orders = 0;
-        let numberOrderDone = 0;
-        listP2POrders.forEach(order => {
-          if (order.accountEmail === text && order.orderType === 1) {
-            orders += 1;
-            if (order.status === 'DONE') {
-              numberOrderDone += 1;
-            }
-          }
-        });
         if (!openOrders.includes(index)) {
           return (
             <ColAdvertisers>
               <div className="row1">
                 <div className="firstCharacter">
-                  {record.accountEmail.charAt(0).toUpperCase()}
+                  {text.email.charAt(0).toUpperCase()}
                 </div>
-                <div className="advertisers">{record.accountEmail}</div>
+                <div className="advertisers">{text.email}</div>
                 <div className="checked">
                   {<BsFillCheckCircleFill color="#10afff" />}
                 </div>
@@ -52,9 +42,9 @@ function P2PTableSell() {
 
               <div className="row2">
                 {''}
-                <span>{orders} Orders</span>
+                <span>{text.orderIn30Day} Orders</span>
                 <span className="numberOrderComplete">
-                  {((numberOrderDone / orders) * 100).toFixed(2)} % completed
+                  {text.rateComplete.toFixed(2)} % completed
                 </span>
               </div>
             </ColAdvertisers>
