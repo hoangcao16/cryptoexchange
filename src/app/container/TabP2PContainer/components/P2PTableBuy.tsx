@@ -234,7 +234,6 @@ function P2PTableBuy() {
       .then((res: any) => {
         if (res.data.rc === 0) {
           setListP2POrdersBuy(res.data.rows);
-          console.log(res.data.rows);
           setLoading(false);
         } else {
           setLoading(false);

@@ -1,5 +1,5 @@
-import { Button, Popover } from 'antd';
-import React, { useEffect } from 'react';
+import { Button, List, message, Popover } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
@@ -12,9 +12,14 @@ import {
   AiOutlineMonitor,
   AiOutlinePlusCircle,
   AiOutlineProfile,
+  AiOutlineLoading3Quarters,
+  AiOutlineClockCircle,
 } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
-import { tabP2PService } from 'services/tabP2PServices';
+import { OrderAllServices } from 'services/tabOrderAllServices';
+import openNotification from '../NotificationAntd';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 interface Props {
   defaultActiveKey: string;
@@ -23,7 +28,10 @@ interface Props {
 function NavbarTradeP2P(props: Props) {
   const navigate = useNavigate();
   const { defaultActiveKey } = props;
-  const { getListOrder } = tabP2PService;
+  const { getTradeByStatus } = OrderAllServices;
+  const [listTradeProcess, setListTradeProcess] = useState<any>([]);
+  const [loadingNotifi, setLoadingNotify] = useState(false);
+  const [webSocket, setWebSocket]: any = useState();
 
   const handleChangeTabs = (key: any) => {
     if (key === 'p2p') {
@@ -43,12 +51,48 @@ function NavbarTradeP2P(props: Props) {
     }
   };
 
-  const findAllOrder = () => {
-    getListOrder().then(res => console.log(res));
+  const findAllOrderProcessing = () => {
+    setLoadingNotify(true);
+    getTradeByStatus('PROCESSING')
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListTradeProcess(res.data.rows.reverse());
+          setLoadingNotify(false);
+        } else {
+          console.log(res.data.rd);
+        }
+      })
+      .catch(() => {
+        setLoadingNotify(false);
+        openNotification('Error', 'Something went wrong!');
+      });
   };
 
   useEffect(() => {
-    findAllOrder();
+    var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
+      connectionTimeout: 5000,
+    });
+
+    setWebSocket(socket);
+    socket.onopen = () => {
+      console.log(`Websocket connected`);
+    };
+
+    socket.onmessage = (message: any) => {
+      console.log('message: ', message);
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket Closed!');
+    };
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    findAllOrderProcessing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const ContentOrders = (
@@ -60,7 +104,76 @@ function NavbarTradeP2P(props: Props) {
         </Button>
       </div>
 
-      <div className="orderContent">123</div>
+      <div className="orderContent">
+        <List
+          size="small"
+          dataSource={listTradeProcess}
+          loading={{
+            spinning: loadingNotifi,
+            indicator: <AiOutlineLoading3Quarters className="loadingIcon" />,
+          }}
+          renderItem={(item: any) => {
+            let d = new Date(item?.createTime);
+            return (
+              <Link to={`/order/orderDetail/${item.id}`}>
+                <div className="notificationItem">
+                  <p className="">
+                    <span>
+                      <span className="actionOrder">
+                        {item?.order?.orderType === 1 ? (
+                          <b data-color="green">Sell </b>
+                        ) : (
+                          <b data-color="red">Buy </b>
+                        )}
+                      </span>
+                      <span className="crypto">
+                        {item?.order?.token?.assetName}
+                      </span>
+                    </span>
+                    <span className="status">Pendding</span>
+                  </p>
+                  <p>
+                    <span>
+                      Price
+                      <span className="price">
+                        {' '}
+                        {item?.price} {item?.order?.fiat?.name}
+                      </span>
+                    </span>
+                    <span className="createTradeTime">
+                      {d.getDate()}/{d.getMonth() + 1}/{d.getFullYear()} -{' '}
+                      {d.getHours()}:{d.getMinutes()}:{d.getSeconds()}
+                    </span>
+                  </p>
+                  <p>
+                    <span>
+                      Crypto amount{' '}
+                      <b className="amount">
+                        {item.amount} {item?.order?.token?.assetName}
+                      </b>
+                    </span>
+                    <span className="total">
+                      {item.total} {item?.order?.token?.assetName}
+                    </span>
+                  </p>
+                  <p>
+                    <span className="partner">
+                      <span className="avatar">
+                        {item?.partner?.email?.charAt(0).toUpperCase()}
+                      </span>
+                      {item?.partner?.email}
+                    </span>
+                    <span className="timeCountdown">
+                      <AiOutlineClockCircle className="clockIcon" />
+                      15:00
+                    </span>
+                  </p>
+                </div>
+              </Link>
+            );
+          }}
+        ></List>
+      </div>
     </ContentOrdersStyled>
   );
 
@@ -236,6 +349,105 @@ const ContentOrdersStyled = styled.div`
     }
 
     border-bottom: 1px solid ${({ theme }) => theme.p2pBorder};
+  }
+
+  .orderContent {
+    max-height: 50vh;
+    overflow: scroll;
+
+    @keyframes spining {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    .loadingIcon {
+      -webkit-animation: spining 1.1s infinite linear;
+      animation: spining 1.1s infinite linear;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.primary};
+      border-radius: 0;
+    }
+
+    a {
+      text-decoration: none;
+      color: ${({ theme }) => theme.p2pText};
+    }
+
+    .notificationItem {
+      border-bottom: 1px solid ${({ theme }) => theme.whiteSmokeColor} !important;
+      padding: 10px 0;
+      cursor: pointer;
+
+      .actionOrder {
+        font-size: 16px;
+      }
+
+      .crypto {
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .status {
+        color: ${({ theme }) => theme.primary};
+      }
+
+      .price {
+        font-weight: bold;
+      }
+
+      .createTradeTime {
+        color: ${({ theme }) => theme.grayColor};
+      }
+      p {
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+        padding: 5px 0;
+      }
+
+      b[data-color='green'] {
+        color: ${({ theme }) => theme.greenColor};
+      }
+
+      b[data-color='red'] {
+        color: ${({ theme }) => theme.redColor};
+      }
+
+      .amount,
+      .total {
+        font-weight: bold;
+      }
+      .timeCountdown {
+        color: ${({ theme }) => theme.primary};
+        font-weight: bold;
+      }
+
+      .partner {
+        .avatar {
+          font-weight: bold;
+          background-color: ${({ theme }) => theme.primary};
+          padding: 3px 7px;
+          margin-right: 5px;
+          border-radius: 50%;
+          color: ${({ theme }) => theme.whiteSmokeColor};
+        }
+      }
+
+      .timeCountdown {
+        .clockIcon {
+          font-size: 16px;
+          margin-right: 5px;
+          transform: translateY(-2px);
+        }
+      }
+    }
   }
 `;
 

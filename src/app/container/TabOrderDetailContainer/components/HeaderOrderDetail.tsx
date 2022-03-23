@@ -39,68 +39,65 @@ const HeaderOrderDetail = ({ trade, reload }) => {
       })
       .catch(res => console.log(res));
   };
-  console.log(trade);
   useEffect(() => {
-    if (TabOrderDetailState?.tradeType === 'Buy') {
-      switch (TabOrderDetailState?.buyerStatus) {
-        case 'NOT_PAID':
-          setTitle(
-            `Buy ${trade?.order?.token?.assetName} from ${trade?.sellEmail}`,
-          );
-          setSubTitle(
-            'The order is created, please wait for system confirmation.Order will be automatically canceled by the system if timed out.',
-          );
-          break;
-
-        case 'PAID':
-          setTitle(
-            `Buy ${trade?.order?.token?.assetName} from ${trade?.sellEmail}`,
-          );
-          setSubTitle("Pending seller's release crypto");
-          break;
-
-        case 'COMPLETE':
+    switch (TabOrderDetailState.tradeStatus) {
+      case 'PROCESSING':
+        if (TabOrderDetailState?.tradeType === 'Buy') {
+          if (TabOrderDetailState.buyerStatus === 'NOT_PAID') {
+            setTitle(
+              `Buy ${trade?.order?.token?.assetName} from ${trade?.partner?.email}`,
+            );
+            setSubTitle(
+              'The order is created, please wait for system confirmation.',
+            );
+          }
+          if (TabOrderDetailState.buyerStatus === 'PAID') {
+            setTitle(
+              `Buy ${trade?.order?.token?.assetName} from ${trade?.partner?.email}`,
+            );
+            setSubTitle("Pending seller's release crypto");
+          }
+        } else {
+          if (TabOrderDetailState.buyerStatus === 'NOT_PAID') {
+            setTitle(
+              `Sell ${trade?.order?.token?.assetName} to ${trade?.partner?.email}`,
+            );
+            setSubTitle("Pending buyer's payment. Time remaining");
+          }
+          if (TabOrderDetailState.buyerStatus === 'PAID') {
+            setTitle(
+              `Sell ${trade?.order?.token?.assetName} to ${trade?.partner?.email}`,
+            );
+            setSubTitle(
+              'Please confirm that you have received payment from buyer',
+            );
+          }
+        }
+        break;
+      case 'DONE':
+        if (TabOrderDetailState?.tradeType === 'Buy') {
           setTitle('Order completed');
           setSubTitle(
             `Successfully bought ${trade?.amount} ${trade?.order?.token?.assetName}`,
           );
-          break;
-
-        case 'CANCEL':
-          setTitle('Canceled this order');
-          setSubTitle('You canceled this order');
-          break;
-
-        default:
-          setTitle('');
-          setSubTitle('');
-      }
-    } else {
-      switch (TabOrderDetailState?.sellerStatus) {
-        case 'HOLD':
-          setTitle(
-            `Sell ${trade?.order?.token?.assetName} to ${trade?.buyEmail}`,
-          );
-          setSubTitle("Pending buyer's payment. Time remaining");
-          break;
-        case 'RELEASE':
-          setTitle(
-            `Sell ${trade?.order?.token?.assetName} to ${trade?.buyEmail}`,
-          );
-          setSubTitle(
-            'Please confirm that you have received payment from the buyer',
-          );
-          break;
-        case 'COMPLETE':
+        } else {
           setTitle('Order completed');
           setSubTitle(
             `Successfully sold ${trade?.amount} ${trade?.order?.token?.assetName}`,
           );
-          break;
-        default:
-          setTitle('');
-          setSubTitle('');
-      }
+        }
+        break;
+      case 'CANCEL':
+        if (TabOrderDetailState?.tradeType === 'Buy') {
+          setTitle('Cancelled this order');
+          setSubTitle('You cancelled this order');
+        } else {
+          setTitle('This order has been cancelled');
+          setSubTitle('Buyer cancelled this order');
+        }
+        break;
+      default:
+        break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [TabOrderDetailState]);
