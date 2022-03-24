@@ -21,6 +21,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [visibleModalCancel, setVisibleModalCancel] = useState(false);
   const [visibleModalVerification, setVisibleModalVerification] =
     useState(false);
+  const [loadingBtnSubmit, setLoadingBtnSubmit] = useState(false);
   const [listAppeal, setListAppeal] = useState([]);
   const [inputAnother, setInputAnother] = useState(false);
   const [visibleBtnConfirmPayment, setVisibleBtnConfirmPayment] =
@@ -37,7 +38,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
     useSelector(selectTabOrderDetail);
   const tradaType = TabOrderDetailState.tradeType;
 
-  const { updateTradeById, getListAppealReason, getQRCode } =
+  const { updateTradeById, getListAppealReason, getQRCode, verifyDigitCode } =
     tabOrderDetailService;
   const dispatch = useDispatch();
   const setBuyerStatus = useTabOrderDetailSlice().actions;
@@ -167,6 +168,12 @@ const ContentOrderDetail = ({ trade, reload }) => {
     const re = /^[0-9\b]+$/;
     if (e.target.value === '' || re.test(e.target.value)) {
       setQrCode(e.target.value);
+
+      if (e.target.value.length === 6) {
+        handleSecurityCode({
+          code: e.target.value,
+        });
+      }
     }
   };
 
@@ -177,6 +184,14 @@ const ContentOrderDetail = ({ trade, reload }) => {
         console.log(res.data);
       }
     });
+  };
+
+  const handleSecurityCode = qrCode => {
+    setLoadingBtnSubmit(true);
+    console.log(qrCode);
+    setTimeout(() => {
+      setLoadingBtnSubmit(false);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -422,13 +437,17 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
             {tradaType === 'Buy' && (
               <div>
-                <Button
-                  className="btnTransferred"
-                  type="primary"
-                  onClick={() => handelTransfer()}
-                >
-                  Transferred, notify the seller
-                </Button>
+                {TabOrderDetailState.buyerStatus === 'PAID' ? (
+                  <Button type="primary">Appeal</Button>
+                ) : (
+                  <Button
+                    className="btnTransferred"
+                    type="primary"
+                    onClick={() => handelTransfer()}
+                  >
+                    Transferred, notify the seller
+                  </Button>
+                )}
                 <Button
                   className="btnCancelOrder"
                   onClick={() => setVisibleModalCancel(true)}
@@ -651,8 +670,18 @@ const ContentOrderDetail = ({ trade, reload }) => {
           <p className="linkSecurityUnavailable">
             Security verification unavailable ?
           </p>
-          <Button htmlType="submit" type="primary" className="btnSubmit">
-            Submit
+          <Button
+            htmlType="submit"
+            type="primary"
+            className="btnSubmit"
+            onClick={() =>
+              handleSecurityCode({
+                code: qrCode,
+              })
+            }
+            disabled={loadingBtnSubmit}
+          >
+            {loadingBtnSubmit ? <div className="loader"></div> : 'Submit'}
           </Button>
         </Modal.Body>
       </ModalVerification>
@@ -1039,6 +1068,68 @@ const ModalVerification = styled(Modal)`
       margin-top: 20px;
       height: 40px;
       font-weight: bold;
+    }
+  }
+
+  //loading
+  .loader,
+  .loader:before,
+  .loader:after {
+    background: ${({ theme }) => theme.p2pBackground};
+    -webkit-animation: load1 1s infinite ease-in-out;
+    animation: load1 1s infinite ease-in-out;
+    width: 6px;
+    height: 3px;
+  }
+  .loader {
+    color: ${({ theme }) => theme.p2pBackground};
+    text-indent: -9999em;
+    margin: 0 auto;
+    position: relative;
+    font-size: 9px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+    margin-top: 8px;
+  }
+  .loader:before,
+  .loader:after {
+    position: absolute;
+    top: 0;
+    content: '';
+  }
+  .loader:before {
+    left: -1.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  .loader:after {
+    left: 1.5em;
+  }
+  @-webkit-keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
+    }
+  }
+  @keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
     }
   }
 `;

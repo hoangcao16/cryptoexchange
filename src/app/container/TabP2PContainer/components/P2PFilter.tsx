@@ -17,7 +17,7 @@ function P2PFilter() {
   const [listFiat, setListFiat] = useState<any>([]);
   const [listPayments, setListPayments] = useState<any>([]);
 
-  const { getListFiat, getListPayments } = tabP2PService;
+  const { getListFiat, getListPayments, getListToken } = tabP2PService;
   if (TabP2PState.searchParam.fiat === '') {
     dispatch(actions.fiatTabP2P('USD'));
   }

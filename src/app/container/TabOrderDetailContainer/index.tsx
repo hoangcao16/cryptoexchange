@@ -10,7 +10,8 @@ import { tabOrderDetailService } from 'services/orderDetailService';
 import { useDispatch } from 'react-redux';
 import { useTabOrderDetailSlice } from './slice';
 import ReconnectingWebSocket from 'reconnecting-websocket';
-const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
+// const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
+const baseURLWs = 'ws://172.29.16.1:10004/ws';
 
 function TabOrderDetailContainer() {
   const tradeId = Number(useParams()?.id);
@@ -56,6 +57,11 @@ function TabOrderDetailContainer() {
   useEffect(() => {
     getTrade();
   }, []);
+
+  useEffect(() => {
+    getTrade();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tradeId]);
 
   useEffect(() => {
     var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {

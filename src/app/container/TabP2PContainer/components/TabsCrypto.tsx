@@ -1,6 +1,8 @@
+import openNotification from 'app/components/NotificationAntd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
+import { tabP2PService } from 'services/tabP2PServices';
 import styled from 'styled-components';
 import { useTabP2PSlice } from '../slice';
 
@@ -17,10 +19,12 @@ function TabsCrypto() {
   const [searchParams] = useSearchParams();
   const { actions } = useTabP2PSlice();
   const dispatch = useDispatch();
+  const [listCrypto, setListCrypto] = useState<any>([]);
+  const { getListToken } = tabP2PService;
 
   const P2PSearchParams = Object.fromEntries(searchParams);
   const [currentCrypto, setCurrentCrypto] = useState(
-    P2PSearchParams.crypto ? P2PSearchParams.crypto : Cryptos[0].name,
+    P2PSearchParams.crypto ? P2PSearchParams.crypto : listCrypto[0]?.assetName,
   );
 
   const onClickButton = (name: string) => {
@@ -31,22 +35,39 @@ function TabsCrypto() {
     dispatch(actions.cryptoTabP2P(name));
   };
 
+  const getListCrypto = () => {
+    getListToken()
+      .then(res => {
+        if (res.data.rc === 0) {
+          setListCrypto(res.data.rows);
+        } else openNotification('Error', res.data.rd);
+      })
+
+      .catch(() => openNotification('Error', 'Something went wrong!'));
+  };
+
   useEffect(() => {
     setCurrentCrypto(P2PSearchParams.crypto);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
+  useEffect(() => {
+    getListCrypto();
+  }, []);
+
   return (
     <Wrapper>
-      {Cryptos.map((c, i) => (
+      {listCrypto.map((c, i) => (
         <TabsCryptoButton
-          className={currentCrypto === c.name ? 'TabsCryptoButton-active' : ''}
+          className={
+            currentCrypto === c.assetName ? 'TabsCryptoButton-active' : ''
+          }
           key={i}
           onClick={() => {
-            onClickButton(c.name);
+            onClickButton(c.assetName);
           }}
         >
-          {c.name}
+          {c.assetName}
         </TabsCryptoButton>
       ))}
     </Wrapper>

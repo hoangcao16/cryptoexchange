@@ -40,4 +40,12 @@ export const tabOrderDetailService = {
       url: 'p2p-api/api/v1/code/generate-google-authenticator-qr-code',
     });
   },
+
+  verifyDigitCode(params) {
+    return apiClient.request({
+      method: 'POST',
+      url: 'p2p-api/api/v1/code/validate/key',
+      data: params,
+    });
+  },
 };
