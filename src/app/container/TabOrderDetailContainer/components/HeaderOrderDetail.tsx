@@ -21,23 +21,26 @@ const HeaderOrderDetail = ({ trade, reload }) => {
   const buyerStatus = TabOrderDetailState.buyerStatus;
   const sellerStatus = TabOrderDetailState.sellerStatus;
   const tradeType = TabOrderDetailState.tradeType;
+  console.log(trade);
 
   const finishedCountDown = () => {
-    updateTradeById({
-      id: trade.id,
-      status: 'CANCEL',
-      paymentId: -1,
-    })
-      .then(res => {
-        if (res.data.rc === 0) {
-          openNotification('Error', 'Canceled this order due to time limit!');
-          localStorage.setItem('timeLimit', JSON.stringify(null));
-          reload();
-        } else {
-          openNotification('Error', res.data.rd);
-        }
+    if (TabOrderDetailState.tradeType === 'Buy') {
+      updateTradeById({
+        id: trade.id,
+        status: 'CANCEL',
+        paymentId: -1,
       })
-      .catch(res => console.log(res));
+        .then(res => {
+          if (res.data.rc === 0) {
+            openNotification('Error', 'Canceled this order due to time limit!');
+            localStorage.setItem('timeLimit', JSON.stringify(null));
+            reload();
+          } else {
+            openNotification('Error', res.data.rd);
+          }
+        })
+        .catch(res => console.log(res));
+    }
   };
   useEffect(() => {
     switch (TabOrderDetailState.tradeStatus) {

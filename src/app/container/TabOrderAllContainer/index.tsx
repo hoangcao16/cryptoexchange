@@ -208,7 +208,7 @@ const Wrapper = styled.div`
         color: ${({ theme }) => theme.grayColor};
       }
       .active {
-        color: ${({ theme }) => theme.blackColor};
+        color: ${({ theme }) => theme.p2pText};
         border-bottom: 3px solid ${({ theme }) => theme.primary};
       }
     }

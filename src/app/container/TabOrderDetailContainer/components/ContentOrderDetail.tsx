@@ -14,23 +14,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectTabOrderDetail } from '../slice/selectors';
 import { useTabOrderDetailSlice } from '../slice';
 import ChatBox from 'app/components/ChatBox';
-import { payments } from 'app/container/PostAdP2PContainer/data';
+import QRCode from 'react-qr-code';
 
 const ContentOrderDetail = ({ trade, reload }) => {
-  const [visiableNote, setVisiableNote] = useState(true);
-  const [visiableModalCancel, setVisiableModalCancel] = useState(false);
+  const [visibleNote, setVisibleNote] = useState(true);
+  const [visibleModalCancel, setVisibleModalCancel] = useState(false);
+  const [visibleModalVerification, setVisibleModalVerification] =
+    useState(false);
   const [listAppeal, setListAppeal] = useState([]);
   const [inputAnother, setInputAnother] = useState(false);
+  const [visibleBtnConfirmPayment, setVisibleBtnConfirmPayment] =
+    useState(true);
+
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [currentFirstSteps, setCurrentFirstSteps] = useState<number>(0);
-  const [visiableModalConfirmPayment, setVisiableModalConfirmPayment] =
+  const [qrCode, setQrCode] = useState('');
+  const [qr, setQR] = useState('');
+  const [visibleModalConfirmPayment, setVisibleModalConfirmPayment] =
     useState(false);
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
   const tradaType = TabOrderDetailState.tradeType;
 
-  const { updateTradeById, getListAppealReason } = tabOrderDetailService;
+  const { updateTradeById, getListAppealReason, getQRCode } =
+    tabOrderDetailService;
   const dispatch = useDispatch();
   const setBuyerStatus = useTabOrderDetailSlice().actions;
   const setSellerStatus = useTabOrderDetailSlice().actions;
@@ -92,7 +100,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
   };
 
   const handelConfirmTransfer = () => {
-    setVisiableModalConfirmPayment(true);
+    setVisibleModalConfirmPayment(true);
     // updateTradeById({
     //   id: trade?.id,
     //   paymentId: -1,
@@ -108,7 +116,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
     //   .catch(() => openNotification('Error', 'Some thing went wrong!'));
   };
 
-  const handelConfirmPayment = () => {};
+  const handelConfirmPayment = () => {
+    setVisibleModalVerification(true);
+  };
 
   const handleCopy = value => {
     navigator.clipboard.writeText(value);
@@ -147,24 +157,39 @@ const ContentOrderDetail = ({ trade, reload }) => {
     });
   };
 
+  const handleCheckedConfirmPayment = value => {
+    if (value) {
+      setVisibleBtnConfirmPayment(false);
+    } else setVisibleBtnConfirmPayment(true);
+  };
+
+  const handleChangQRCode = e => {
+    const re = /^[0-9\b]+$/;
+    if (e.target.value === '' || re.test(e.target.value)) {
+      setQrCode(e.target.value);
+    }
+  };
+
+  const getCodeQRSecurity = () => {
+    getQRCode().then(res => {
+      if (res.status === 200) {
+        setQR(res.data);
+        console.log(res.data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (visibleModalVerification) {
+      getCodeQRSecurity();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleModalVerification]);
+
   useEffect(() => {
     findAllAppealReason();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    // switch (trade?.buyerStatus) {
-    //   case 'NOT_PAID':
-    //     setCurrentFirstSteps(0);
-    //     break;
-    //   case 'PAID':
-    //     setCurrentFirstSteps(1);
-    //     break;
-    //   default:
-    //     setCurrentFirstSteps(-1);
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trade?.buyerStatus]);
 
   // eslint-disable-next-line prettier/prettier
   useEffect(() => {
@@ -210,7 +235,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [TabOrderDetailState]);
-  console.log(trade);
   return (
     <Wrapper>
       <div className="mainContent">
@@ -231,7 +255,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
                     <Step key={index} description={step.title} />
                   ))}
               </Steps>
-              {visiableNote && tradaType === 'Buy' && (
+              {visibleNote && tradaType === 'Buy' && (
                 <div className="note">
                   <span>
                     <span>
@@ -247,7 +271,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
                   <span
                     className="closeNote"
                     onClick={() => {
-                      setVisiableNote(false);
+                      setVisibleNote(false);
                     }}
                   >
                     X
@@ -407,7 +431,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 </Button>
                 <Button
                   className="btnCancelOrder"
-                  onClick={() => setVisiableModalCancel(true)}
+                  onClick={() => setVisibleModalCancel(true)}
                 >
                   Cancel order
                 </Button>
@@ -527,8 +551,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
       <ModalCancel
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        onHide={() => setVisiableModalCancel(false)}
-        show={visiableModalCancel}
+        onHide={() => setVisibleModalCancel(false)}
+        show={visibleModalCancel}
       >
         <Modal.Body>
           <div className="tips">
@@ -560,9 +584,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
             {inputAnother && <Input />}
           </div>
           <div className="btnModal">
-            <Button onClick={() => setVisiableModalCancel(false)}>
-              Cancel
-            </Button>
+            <Button onClick={() => setVisibleModalCancel(false)}>Cancel</Button>
             <Button type="primary" onClick={() => handleCancelOrder()}>
               Confirm
             </Button>
@@ -572,8 +594,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
       <ModalConfirmPayment
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        onHide={() => setVisiableModalConfirmPayment(false)}
-        show={visiableModalConfirmPayment}
+        onHide={() => setVisibleModalConfirmPayment(false)}
+        show={visibleModalConfirmPayment}
       >
         <Modal.Body>
           <RiErrorWarningFill className="warningIcon" />
@@ -583,20 +605,57 @@ const ContentOrderDetail = ({ trade, reload }) => {
             ACCOUNT to confirm that the money has arrived in the "Available
             Balance"
           </p>
-          <Checkbox>
+          <Checkbox
+            onChange={e => handleCheckedConfirmPayment(e.target.checked)}
+          >
             I confirm that the payment is successful received with correct
             amount and sender information
           </Checkbox>
           <div className="btnModal">
-            <Button onClick={() => setVisiableModalConfirmPayment(false)}>
+            <Button onClick={() => setVisibleModalConfirmPayment(false)}>
               Cancel
             </Button>
-            <Button type="primary" onClick={() => handelConfirmPayment()}>
+            <Button
+              type="primary"
+              disabled={visibleBtnConfirmPayment}
+              onClick={() => handelConfirmPayment()}
+            >
               Confirm
             </Button>
           </div>
         </Modal.Body>
       </ModalConfirmPayment>
+      <ModalVerification
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        onHide={() => setVisibleModalVerification(false)}
+        show={visibleModalVerification}
+      >
+        <Modal.Header closeButton>
+          <h5>Security verification</h5>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            To secure your account, please complete the following verification.
+          </p>
+          <p>
+            You can also use{' '}
+            <b>
+              <u>Pow/Google Authenticator</u>
+            </b>
+          </p>
+          <p className="labelQRcode">Your QR code here</p>
+          <QRCode value={qr} height="300" width="300" className="qrCode" />
+          <Input value={qrCode} maxLength={6} onChange={handleChangQRCode} />
+          <span>Enter the 6 digit code</span>
+          <p className="linkSecurityUnavailable">
+            Security verification unavailable ?
+          </p>
+          <Button htmlType="submit" type="primary" className="btnSubmit">
+            Submit
+          </Button>
+        </Modal.Body>
+      </ModalVerification>
     </Wrapper>
   );
 };
@@ -880,6 +939,10 @@ const ModalCancel = styled(Modal)`
 `;
 
 const ModalConfirmPayment = styled(Modal)`
+  .modal-content {
+    width: 90%;
+    margin: 0 auto;
+  }
   text-align: center;
   .modal-body {
     padding: 20px 20px;
@@ -911,5 +974,71 @@ const ModalConfirmPayment = styled(Modal)`
 
   .ant-btn {
     margin: 0 10px;
+  }
+`;
+
+const ModalVerification = styled(Modal)`
+  margin: 0 auto;
+  color: ${({ theme }) => theme.p2pText};
+
+  .modal-header {
+    border: none;
+    h5 {
+      margin: 0;
+    }
+    .btn-close {
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .modal-body {
+    padding-top: 5px;
+    p {
+      margin: 2px 0;
+    }
+
+    .labelQRcode {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .qrCode {
+      display: block;
+      margin: 0 auto;
+      border: 1px solid ${({ theme }) => theme.whiteSmokeColor};
+      border-radius: 5px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+    }
+
+    .ant-input {
+      width: 100%;
+      height: 50px;
+      font-size: 30px;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    .ant-row {
+      margin-bottom: 0;
+    }
+
+    .linkSecurityUnavailable {
+      font-weight: bold;
+      color: ${({ theme }) => theme.primary};
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .btnSubmit {
+      width: 100%;
+      margin-top: 20px;
+      height: 40px;
+      font-weight: bold;
+    }
   }
 `;
