@@ -218,7 +218,6 @@ const HandleOrder = (props: any) => {
     getUserPayments().then(res => {
       if (res.data.rc === 0) {
         setSellerPayments(res.data.rows);
-        console.log(222, res.data.rows);
         setPaymentSeller({
           key: res.data.rows[0]?.id,
           value: res.data.rows[0]?.id,

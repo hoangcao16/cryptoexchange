@@ -41,11 +41,14 @@ export const tabOrderDetailService = {
     });
   },
 
-  verifyDigitCode(params) {
+  verifyDigitCode(params: any) {
     return apiClient.request({
-      method: 'POST',
+      method: 'GET',
       url: 'p2p-api/api/v1/code/validate/key',
-      data: params,
+      params: {
+        code: params.code,
+        tradeId: params.tradeId,
+      },
     });
   },
 };

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectTabOrderDetail } from '../slice/selectors';
 import { TabOrderDetailState } from '../slice/types';
 import { useEffect, useState } from 'react';
+import { BsFillCheckCircleFill } from 'react-icons/bs';
 
 const HeaderOrderDetail = ({ trade, reload }) => {
   const { updateTradeById } = tabOrderDetailService;
@@ -21,7 +22,6 @@ const HeaderOrderDetail = ({ trade, reload }) => {
   const buyerStatus = TabOrderDetailState.buyerStatus;
   const sellerStatus = TabOrderDetailState.sellerStatus;
   const tradeType = TabOrderDetailState.tradeType;
-  console.log(trade);
 
   const finishedCountDown = () => {
     if (TabOrderDetailState.tradeType === 'Buy') {
@@ -108,7 +108,9 @@ const HeaderOrderDetail = ({ trade, reload }) => {
     <Wrapper>
       <div className="container">
         <div className="sellInfo">
-          <h4>{title}</h4>
+          <h4>
+            {title} <BsFillCheckCircleFill className="successIcon" />
+          </h4>
           <div className="countdown">
             <span>{subTitle}</span>
             {buyerStatus === 'NOT_PAID' && (
@@ -151,7 +153,10 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.p2pGrayLight};
   padding-top: 20px;
   padding-bottom: 10px;
-
+  .successIcon {
+    color: ${({ theme }) => theme.greenColor};
+    margin-left: 10px;
+  }
   .container {
     display: flex;
     align-items: center;

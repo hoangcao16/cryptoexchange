@@ -1,5 +1,14 @@
 import styled from 'styled-components';
-import { Steps, Button, Radio, Tooltip, Input, Tag, Checkbox } from 'antd';
+import {
+  Steps,
+  Button,
+  Radio,
+  Tooltip,
+  Input,
+  Tag,
+  Checkbox,
+  message,
+} from 'antd';
 import { Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
@@ -15,6 +24,8 @@ import { selectTabOrderDetail } from '../slice/selectors';
 import { useTabOrderDetailSlice } from '../slice';
 import ChatBox from 'app/components/ChatBox';
 import QRCode from 'react-qr-code';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const ContentOrderDetail = ({ trade, reload }) => {
   const [visibleNote, setVisibleNote] = useState(true);
@@ -33,6 +44,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [qr, setQR] = useState('');
   const [visibleModalConfirmPayment, setVisibleModalConfirmPayment] =
     useState(false);
+  const [webSocket, setWebSocket]: any = useState();
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
@@ -102,19 +114,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
   const handelConfirmTransfer = () => {
     setVisibleModalConfirmPayment(true);
-    // updateTradeById({
-    //   id: trade?.id,
-    //   paymentId: -1,
-    //   status: 'CONFIRMED',
-    // })
-    //   .then(res => {
-    //     if (res.data.rc === 0) {
-    //       openNotification('Success', 'Sended crypto to the buyer!');
-    //       dispatch(setBuyerStatus.setTradeStatus('DONE'));
-    //       reload();
-    //     } else openNotification('Error', res.data.rd);
-    //   })
-    //   .catch(() => openNotification('Error', 'Some thing went wrong!'));
   };
 
   const handelConfirmPayment = () => {
@@ -181,18 +180,76 @@ const ContentOrderDetail = ({ trade, reload }) => {
     getQRCode().then(res => {
       if (res.status === 200) {
         setQR(res.data);
-        console.log(res.data);
       }
     });
   };
 
   const handleSecurityCode = qrCode => {
     setLoadingBtnSubmit(true);
-    console.log(qrCode);
-    setTimeout(() => {
-      setLoadingBtnSubmit(false);
-    }, 2000);
+    if (trade?.tradeId) {
+      verifyDigitCode({
+        ...qrCode,
+        tradeId: trade?.tradeId,
+      }).then(res => {
+        if (res.status === 200 && res.data) {
+          updateTradeById({
+            id: trade?.id,
+            paymentId: -1,
+            status: 'CONFIRMED',
+          })
+            .then(res => {
+              if (res.data.rc === 0) {
+                openNotification('Success', 'Completed order!');
+                dispatch(setBuyerStatus.setTradeStatus('DONE'));
+                reload();
+              } else openNotification('Error', res.data.rd);
+            })
+            .catch(() => openNotification('Error', 'Some thing went wrong!'));
+        } else {
+          openNotification('Error', 'Digital Code invalid!');
+        }
+
+        setLoadingBtnSubmit(false);
+      });
+    }
   };
+
+  useEffect(() => {
+    if (trade?.tradeId) {
+      var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
+        connectionTimeout: 5000,
+      });
+      setWebSocket(socket);
+
+      socket.onopen = () => {
+        console.log(`Websocket connected`);
+
+        socket.send(
+          JSON.stringify({
+            type: 'SUBSCRIBE',
+            tradeId: trade?.tradeId,
+          }),
+        );
+
+        setInterval(
+          () => socket.send(JSON.stringify('Keep socket connection')),
+          5000,
+        );
+      };
+
+      socket.onmessage = message => {
+        const res = JSON.parse(message.data);
+        if ([1, 2, 3, 4].includes(res?.key)) {
+          reload();
+        }
+      };
+
+      socket.onclose = () => {
+        console.log('WebSocket Closed!');
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (visibleModalVerification) {
@@ -467,9 +524,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
                   >
                     Payment received
                   </Button>
-                  <Button className="btnCancelOrder" disabled>
-                    Transaction issue, Appeal after(15:00)
-                  </Button>
+                  <Button className="btnCancelOrder">Transaction issue</Button>
                 </div>
               )}
           </div>
