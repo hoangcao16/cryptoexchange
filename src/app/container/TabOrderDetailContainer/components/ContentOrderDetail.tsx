@@ -240,7 +240,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
       socket.onmessage = message => {
         const res = JSON.parse(message.data);
         if ([1, 2, 3, 4].includes(res?.key)) {
-          reload();
+          setTimeout(() => {
+            reload();
+          }, 1000);
         }
       };
 
