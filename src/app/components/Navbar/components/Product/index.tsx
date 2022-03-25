@@ -107,8 +107,8 @@ const ProductNav = () => {
     {
       id: 13,
       icon: SiBinance,
-      name: t('POW-live'),
-      description: t('POW-live-sub'),
+      name: t('ByteBuffer-live'),
+      description: t('ByteBuffer-live-sub'),
     },
   ];
 

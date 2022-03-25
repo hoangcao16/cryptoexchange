@@ -28,7 +28,7 @@ const DerivativesNav = () => {
     // {
     //   id: 1,
     //   icon: GrOverview,
-    //   name: t('POW-futures-overview'),
+    //   name: t('ByteBuffer-futures-overview'),
     //   description: t('view-our-full-range'),
     // },
     {

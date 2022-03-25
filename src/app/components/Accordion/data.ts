@@ -16,21 +16,21 @@ const data = [
     id: 3,
     href: '#',
     title:
-      'POW Has Completed the bZx Protocol Token (BZRX) Token Swap & Redenomination to OokiDAO Token (OOKI)',
+      'Byte Buffer Has Completed the bZx Protocol Token (BZRX) Token Swap & Redenomination to OokiDAO Token (OOKI)',
     notification: '(12-24)',
   },
   {
     id: 4,
     href: '#',
     title:
-      'POW Adds BNX, KEEP, KLAY, MINA, TRIBE on Cross Margin and FLUX, PEOPLE, REQ, SUN, VOXEL on Isolated Margin',
+      'Byte Buffer Adds BNX, KEEP, KLAY, MINA, TRIBE on Cross Margin and FLUX, PEOPLE, REQ, SUN, VOXEL on Isolated Margin',
     notification: '(12-24)',
   },
   {
     id: 5,
     href: '#',
     title:
-      'Christmas Battle: Refer, Exchange, and Win $60,000 Worth of POW Fan Tokens',
+      'Christmas Battle: Refer, Exchange, and Win $60,000 Worth of Byte Buffer Fan Tokens',
     notification: '(12-24)',
   },
   {
@@ -49,13 +49,13 @@ const data = [
     id: 8,
     href: '#',
     title:
-      'POW Concludes 6 Promos: DAR Trading Competition, Learn & Trade RAMP, Deposit and Trade FIS, Recurring Thank You, 12.12 Flash Airdrop, Cyber Monday with Capitual',
+      'Byte Buffer Concludes 6 Promos: DAR Trading Competition, Learn & Trade RAMP, Deposit and Trade FIS, Recurring Thank You, 12.12 Flash Airdrop, Cyber Monday with Capitual',
     notification: '(12-24)',
   },
   {
     id: 9,
     href: '#',
-    title: 'POW Loans Adds Collateral Assets CHR & LUNA',
+    title: 'Byte Buffer Loans Adds Collateral Assets CHR & LUNA',
     notification: '(12-24)',
   },
 ];
