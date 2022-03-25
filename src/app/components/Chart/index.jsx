@@ -149,6 +149,7 @@ const Chart = props => {
         // 'right_bar_stays_on_scroll',
         'context_menus',
         'go_to_date',
+        'use_localstorage_for_settings',
         // 'compare_symbol',
         // 'border_around_the_chart',
         // 'timezone_menu',
@@ -183,7 +184,7 @@ const Chart = props => {
         'edit_buttons_in_legend', //todo: przetestowac
         'remove_library_container_border',
         'dont_show_boolean_study_arguments',
-        'use_localstorage_for_settings',
+        // 'use_localstorage_for_settings',
         'save_chart_properties_to_local_storage',
         'side_toolbar_in_fullscreen_mode',
         'hide_last_na_study_output',
@@ -203,8 +204,8 @@ const Chart = props => {
       overrides: {
         'symbolWatermarkProperties.color': 'rgba(0,0,0, 0)',
         'paneProperties.background': '#1e2329',
-        'paneProperties.vertGridProperties.color': '#344568',
-        'paneProperties.horzGridProperties.color': '#344568',
+        'paneProperties.vertGridProperties.color': '#2c2c31',
+        'paneProperties.horzGridProperties.color': '#2c2c31',
         'paneProperties.crossHairProperties.color': '#58637a',
         'paneProperties.crossHairProperties.style': 2,
         'mainSeriesProperties.style': 1,
