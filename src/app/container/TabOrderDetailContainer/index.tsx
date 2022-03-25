@@ -51,10 +51,6 @@ function TabOrderDetailContainer() {
 
   useEffect(() => {
     getTrade();
-  }, []);
-
-  useEffect(() => {
-    getTrade();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tradeId]);
 

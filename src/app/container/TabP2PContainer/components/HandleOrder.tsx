@@ -339,7 +339,6 @@ const HandleOrder = (props: any) => {
             </p>
           </div>
         </div>
-        ,
       </div>
       {type === 'Buy' && (
         <div className="formOrderBuy">
