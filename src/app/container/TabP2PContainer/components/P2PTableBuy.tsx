@@ -222,24 +222,26 @@ function P2PTableBuy() {
       paymentId = listPaymet.find(x => x.name === payment).id;
     }
 
-    getListOrderBy({
-      fiat: fiatId,
-      paymentMethod: paymentId || -1,
-      tokenId: cryptoId,
-      orderType: 1,
-      amount: amount,
-    })
-      .then((res: any) => {
-        if (res.data.rc === 0) {
-          setListP2POrdersBuy(res.data.rows);
-          setLoading(false);
-        } else {
-          setLoading(false);
-        }
+    setTimeout(() => {
+      getListOrderBy({
+        fiat: fiatId,
+        paymentMethod: paymentId || -1,
+        tokenId: cryptoId,
+        orderType: 1,
+        amount: amount,
       })
-      .catch(res => {
-        setLoading(false);
-      });
+        .then((res: any) => {
+          if (res.data.rc === 0) {
+            setListP2POrdersBuy(res.data.rows);
+            setLoading(false);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch(res => {
+          setLoading(false);
+        });
+    }, 100);
   };
 
   const findAllOrders = async () => {
@@ -295,7 +297,6 @@ function P2PTableBuy() {
       findAllFiat(),
       findAllToken(),
       findAllPayment(),
-      findAllOrdersBuy(),
       findAllOrders(),
     ]).then(() => findAllOrdersBuy());
     // eslint-disable-next-line react-hooks/exhaustive-deps

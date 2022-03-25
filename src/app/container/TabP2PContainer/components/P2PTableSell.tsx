@@ -239,10 +239,12 @@ function P2PTableSell() {
 
   useEffect(() => {
     findAllOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     findAllOrdersSell();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [TabP2PState]);
 
   return (

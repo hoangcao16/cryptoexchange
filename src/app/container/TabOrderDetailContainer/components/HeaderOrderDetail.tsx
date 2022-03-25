@@ -109,7 +109,10 @@ const HeaderOrderDetail = ({ trade, reload }) => {
       <div className="container">
         <div className="sellInfo">
           <h4>
-            {title} <BsFillCheckCircleFill className="successIcon" />
+            {title}{' '}
+            {TabOrderDetailState.tradeStatus === 'DONE' && (
+              <BsFillCheckCircleFill className="successIcon" />
+            )}
           </h4>
           <div className="countdown">
             <span>{subTitle}</span>

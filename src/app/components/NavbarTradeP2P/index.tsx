@@ -105,10 +105,10 @@ function NavbarTradeP2P(props: Props) {
                   <p className="">
                     <span>
                       <span className="actionOrder">
-                        {item?.order?.orderType === 1 ? (
-                          <b data-color="green">Sell </b>
+                        {item?.partner?.email !== item?.buyEmail ? (
+                          <b data-color="green">Buy </b>
                         ) : (
-                          <b data-color="red">Buy </b>
+                          <b data-color="red">Sell </b>
                         )}
                       </span>
                       <span className="crypto">

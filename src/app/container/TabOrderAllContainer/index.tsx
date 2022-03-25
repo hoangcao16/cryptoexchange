@@ -47,11 +47,6 @@ const TabOrderAllContainer = () => {
   };
 
   useEffect(() => {
-    getListOrderUserProcessing();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     if (activeTab === 1) {
       getListOrderUserProcessing();
     } else {
@@ -59,8 +54,6 @@ const TabOrderAllContainer = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
-
-  console.log(listTrades.length);
 
   return (
     <Wrapper>
@@ -110,7 +103,7 @@ const TabOrderAllContainer = () => {
                   <Row className="item">
                     <div className="titleItem">
                       <div>
-                        {item?.order?.orderType === 1 ? (
+                        {item?.partner?.email === item?.sellEmail ? (
                           <span data-color="red">Sell</span>
                         ) : (
                           <span data-color="green">Buy</span>
