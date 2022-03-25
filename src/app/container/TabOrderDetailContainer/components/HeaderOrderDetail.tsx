@@ -23,25 +23,6 @@ const HeaderOrderDetail = ({ trade, reload }) => {
   const sellerStatus = TabOrderDetailState.sellerStatus;
   const tradeType = TabOrderDetailState.tradeType;
 
-  const finishedCountDown = () => {
-    if (TabOrderDetailState.tradeType === 'Buy') {
-      updateTradeById({
-        id: trade.id,
-        status: 'CANCEL',
-        paymentId: -1,
-      })
-        .then(res => {
-          if (res.data.rc === 0) {
-            openNotification('Error', 'Canceled this order due to time limit!');
-            localStorage.setItem('timeLimit', JSON.stringify(null));
-            reload();
-          } else {
-            openNotification('Error', res.data.rd);
-          }
-        })
-        .catch(res => console.log(res));
-    }
-  };
   useEffect(() => {
     switch (TabOrderDetailState.tradeStatus) {
       case 'PROCESSING':
@@ -116,17 +97,17 @@ const HeaderOrderDetail = ({ trade, reload }) => {
           </h4>
           <div className="countdown">
             <span>{subTitle}</span>
-            {buyerStatus === 'NOT_PAID' && (
-              <Countdown
-                onFinish={() => finishedCountDown()}
-                value={
-                  Date.now() +
-                  trade?.order?.paymentTime?.timeLimit * 60000 -
-                  (date1 - date.getTime())
-                }
-                className="countdownTimer"
-              ></Countdown>
-            )}
+            {TabOrderDetailState.buyerStatus === 'NOT_PAID' &&
+              TabOrderDetailState.tradeStatus === 'PROCESSING' && (
+                <Countdown
+                  value={
+                    Date.now() +
+                    trade?.order?.paymentTime?.timeLimit * 60000 -
+                    (date1 - date.getTime())
+                  }
+                  className="countdownTimer"
+                ></Countdown>
+              )}
 
             <span className="bg"></span>
           </div>
