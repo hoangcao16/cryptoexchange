@@ -38,6 +38,7 @@ import { DepositPage } from './pages/DepositPage/Loadable';
 import { WithdrawPage } from './pages/WithdrawPage/Loadable';
 import { OrderDetailPage } from './pages/OrderDetailPage';
 import { OrderAllPage } from './pages/OrderAllPage';
+import { P2PUserCenterPage } from './pages/P2PUserCenterPage/Loadable';
 
 export function App() {
   const dispatch = useDispatch();
@@ -154,6 +155,14 @@ export function App() {
             element={
               <PrivateRoute>
                 <OrderAllPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/p2pUserCenter"
+            element={
+              <PrivateRoute>
+                <P2PUserCenterPage />
               </PrivateRoute>
             }
           />

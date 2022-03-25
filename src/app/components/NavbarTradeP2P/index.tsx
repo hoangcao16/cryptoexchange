@@ -165,7 +165,7 @@ function NavbarTradeP2P(props: Props) {
   const ContentMore = (
     <ContentMoreStyled>
       <ul>
-        <Link to="#">
+        <Link to="/p2pUserCenter">
           <li>
             <AiOutlineMonitor className="moreIcon" /> Payment Methods
           </li>
