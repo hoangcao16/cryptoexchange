@@ -24,8 +24,8 @@ const FinanceNav = () => {
     {
       id: 1,
       icon: BiCreditCardAlt,
-      name: t('POW-visa-card'),
-      description: t('POW-visa-card-sub'),
+      name: t('ByteBuffer-visa-card'),
+      description: t('ByteBuffer-visa-card-sub'),
     },
     {
       id: 2,
@@ -36,8 +36,8 @@ const FinanceNav = () => {
     {
       id: 3,
       icon: BiCreditCardFront,
-      name: t('POW-pay'),
-      description: t('POW-pay-sub'),
+      name: t('ByteBuffer-pay'),
+      description: t('ByteBuffer-pay-sub'),
     },
   ];
 

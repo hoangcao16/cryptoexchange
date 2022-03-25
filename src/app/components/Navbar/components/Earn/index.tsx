@@ -28,8 +28,8 @@ const EarnNav = () => {
     {
       id: 1,
       icon: MdOutlineSavings,
-      name: t('POW-earn'),
-      description: t('POW-earn-sub'),
+      name: t('ByteBuffer-earn'),
+      description: t('ByteBuffer-earn-sub'),
     },
     {
       id: 2,
@@ -76,8 +76,8 @@ const EarnNav = () => {
     {
       id: 9,
       icon: GiDigDug,
-      name: t('POW-pool'),
-      description: t('POW-pool-sub'),
+      name: t('ByteBuffer-pool'),
+      description: t('ByteBuffer-pool-sub'),
     },
   ];
   return (

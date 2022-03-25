@@ -259,13 +259,15 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 <div className="note">
                   <span>
                     <span>
-                      You need to leave the POW website to make a payment. In
-                      the meantime, POW will keep the crypto in custody.
+                      You need to leave the Byte Buffer website to make a
+                      payment. In the meantime, Byte Buffer will keep the crypto
+                      in custody.
                     </span>
                     <br />
                     <span>
-                      Upon successful payment tothe seller, go back to the POW
-                      website and click the "Transferred, notify seller" button.
+                      Upon successful payment tothe seller, go back to the Byte
+                      Buffer website and click the "Transferred, notify seller"
+                      button.
                     </span>
                   </span>
                   <span
@@ -641,7 +643,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
           <p>
             You can also use{' '}
             <b>
-              <u>Pow/Google Authenticator</u>
+              <u>ByteBuffer/Google Authenticator</u>
             </b>
           </p>
           <p className="labelQRcode">Your QR code here</p>

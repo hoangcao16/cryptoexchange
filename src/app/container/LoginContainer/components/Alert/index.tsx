@@ -8,7 +8,7 @@ const Alert = () => {
       <IconSvg name="lock" className="icon" />
       <div className="title">{t('url-verification')}:</div>
       <div className="linkUrl">
-        <span className="linkUrl-special">https://</span>accounts.POW.com
+        <span className="linkUrl-special">https://</span>accounts.ByteBuffer.com
       </div>
     </Container>
   );

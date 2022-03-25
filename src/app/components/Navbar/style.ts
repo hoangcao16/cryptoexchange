@@ -35,8 +35,8 @@ export const StyledNavBrand = styled(Navbar.Brand)`
   }
   .logo {
     margin-left: 12px;
-    width: 120px;
-    height: 34px;
+    /* width: 120px;
+    height: 34px; */
     width: 100%;
     height: 100%;
     padding-bottom: 4px;

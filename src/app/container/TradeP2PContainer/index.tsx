@@ -25,7 +25,7 @@ function TradeP2PContainer() {
     <Wrapper>
       <NavMenu />
       <div className="header">
-        <h1>POW P2P: Buy/Sell Your Crypto Locally</h1>
+        <h1>ByteBuffer P2P: Buy/Sell Your Crypto Locally</h1>
         <p className="header--des">
           Peer-to-peer exchange (or P2P exchange) is a marketplace where people
           can trade crypto directly with each other on their own terms, in
