@@ -70,7 +70,7 @@ function P2PTableBuy() {
               index={index}
               hanldeCloseOrder={hanldeCloseOrder}
               timeLimit={record?.paymentTime?.timeLimit}
-              available={record.amount - record.executed}
+              available={record.available}
               type="Buy"
             />
           );
@@ -112,18 +112,16 @@ function P2PTableBuy() {
               <span>Available</span>
             </div>
             <div className="col2">
-              {record.amount - record.executed}{' '}
-              <span>{TabP2PState.searchParam.crypto}</span>
+              {record?.available} <span>{TabP2PState.searchParam?.crypto}</span>
             </div>
           </div>
           <div className="rowLimitAvailable">
             <div className="col1">Limit</div>
             <div className="col2">
-              {record.fiat.symbol} {record.orderLowerBound} <span> - </span>
+              {record?.fiat?.symbol} {record?.orderLowerBound} <span> - </span>
             </div>
             <div className="col3">
-              {record.fiat.symbol}{' '}
-              {record.price * (record.amount - record.executed)}
+              {record?.fiat?.symbol} {record?.price * record?.available}
             </div>
           </div>
         </ColLimitAvailable>

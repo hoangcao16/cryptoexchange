@@ -14,6 +14,7 @@ import { tabP2PService } from 'services/tabP2PServices';
 import { SpotWalletServices } from 'services/spotWalletService';
 import { GrFormClose } from 'react-icons/gr';
 import { RiErrorWarningFill } from 'react-icons/ri';
+import { BiPlus } from 'react-icons/bi';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
@@ -41,13 +42,13 @@ const HandleOrder = (props: any) => {
 
   const options = sellerPayments.map((payment: any) => {
     return {
-      key: payment.id,
-      value: payment.id,
+      key: payment?.id,
+      value: payment?.id,
       label: (
         <div className="selectPaymentContent">
           <Tag
             className="paymentMethodTag"
-            color={payment.paymentMethod.colorCode}
+            color={payment?.paymentMethod.colorCode}
           >
             {payment?.paymentMethod.name}
           </Tag>
@@ -88,7 +89,6 @@ const HandleOrder = (props: any) => {
     }
   };
 
-  console.log(record);
   const handleBuy = () => {
     if (receiveBuy && pricePayBuy) {
       setLoading(true);
@@ -219,13 +219,13 @@ const HandleOrder = (props: any) => {
       if (res.data.rc === 0) {
         setSellerPayments(res.data.rows);
         setPaymentSeller({
-          key: res.data.rows[0].id,
-          value: res.data.rows[0].id,
+          key: res.data.rows[0]?.id,
+          value: res.data.rows[0]?.id,
           label: (
             <div className="selectPaymentContent">
               <Tag
                 className="paymentMethodTag"
-                color={res.data.rows[0].paymentMethod.colorCode}
+                color={res.data.rows[0]?.paymentMethod.colorCode}
               >
                 {res.data.rows[0]?.paymentMethod.name}
               </Tag>
@@ -245,7 +245,6 @@ const HandleOrder = (props: any) => {
           setWalletUser(
             res.data.rows?.find(coin => coin?.tokenId === tokenId).total,
           );
-          console.log(record);
         }
       })
       .catch(res => console.log(res));
@@ -287,8 +286,7 @@ const HandleOrder = (props: any) => {
             </Descriptions.Item>
             <Descriptions.Item span={1} label="Available">
               <span className="orderDescriptionSpan">
-                {record.amount - record.executed}{' '}
-                <span>{TabP2PState.searchParam.crypto}</span>
+                {record.available} <span>{TabP2PState.searchParam.crypto}</span>
               </span>
             </Descriptions.Item>
           </Descriptions>
@@ -490,12 +488,19 @@ const HandleOrder = (props: any) => {
             </div>
           </div>
           <p className="paymentTitle">Payments method</p>
-          <Select
-            className="selectPaymentSell basic-single"
-            options={options}
-            value={paymentSeller}
-            onChange={changePaymentSeller}
-          />
+          {sellerPayments?.length !== 0 ? (
+            <Select
+              className="selectPaymentSell basic-single"
+              options={options}
+              value={paymentSeller}
+              onChange={changePaymentSeller}
+            />
+          ) : (
+            <Button className="btnAddPaymentMethod">
+              <BiPlus className="plusIcon" />
+              <span>Add payment method</span>
+            </Button>
+          )}
           <div className="btn-control">
             <Button
               className="btn btn-secondary btn-lg btn-cancel"
@@ -751,6 +756,29 @@ const ColHandleOrder = styled.div`
         &:focus {
           box-shadow: none;
         }
+      }
+    }
+
+    .btnAddPaymentMethod {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background-color: ${({ theme }) => theme.whiteSmokeColor};
+      border-color: ${({ theme }) => theme.brightGrayColor};
+      color: ${({ theme }) => theme.primary};
+      font-weight: bold;
+      &:focus {
+        box-shadow: none;
+      }
+
+      &:hover {
+        border-color: ${({ theme }) => theme.primary};
+      }
+
+      .plusIcon {
+        font-size: 25px;
+        margin-right: 5px;
       }
     }
   }

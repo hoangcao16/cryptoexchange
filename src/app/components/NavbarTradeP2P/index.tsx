@@ -18,8 +18,9 @@ import {
 import { Link } from 'react-router-dom';
 import { OrderAllServices } from 'services/tabOrderAllServices';
 import openNotification from '../NotificationAntd';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
+import { useSelector } from 'react-redux';
+import { selectTabOrderDetail } from 'app/container/TabOrderDetailContainer/slice/selectors';
+import { TabOrderDetailState } from 'app/container/TabOrderDetailContainer/slice/types';
 
 interface Props {
   defaultActiveKey: string;
@@ -31,14 +32,15 @@ function NavbarTradeP2P(props: Props) {
   const { getTradeByStatus } = OrderAllServices;
   const [listTradeProcess, setListTradeProcess] = useState<any>([]);
   const [loadingNotifi, setLoadingNotify] = useState(false);
-  const [webSocket, setWebSocket]: any = useState();
+  const TabOrderDetailState: TabOrderDetailState =
+    useSelector(selectTabOrderDetail);
 
   const handleChangeTabs = (key: any) => {
     if (key === 'p2p') {
       navigate({
         pathname: '/trade-p2p/p2p/',
         search: `?${createSearchParams({
-          action: 'sell',
+          action: 'buy',
           crypto: '',
           fiat: '',
           payment: '',
@@ -69,26 +71,9 @@ function NavbarTradeP2P(props: Props) {
   };
 
   useEffect(() => {
-    var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
-      connectionTimeout: 5000,
-    });
-
-    setWebSocket(socket);
-    socket.onopen = () => {
-      console.log(`Websocket connected`);
-    };
-
-    socket.onmessage = (message: any) => {
-      console.log('message: ', message);
-    };
-
-    socket.onclose = () => {
-      console.log('WebSocket Closed!');
-    };
-    return () => {
-      socket.close();
-    };
-  }, []);
+    findAllOrderProcessing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [TabOrderDetailState.tradeStatus]);
 
   useEffect(() => {
     findAllOrderProcessing();

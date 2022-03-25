@@ -38,7 +38,7 @@ function HandleP2PTradeUrl() {
   useEffect(() => {
     const param = {
       action: P2PSearchParams.action || 'buy',
-      crypto: P2PSearchParams.crypto || 'USDT',
+      crypto: P2PSearchParams.crypto || 'BNB',
       fiat: P2PSearchParams.fiat || '',
       payment: P2PSearchParams.payment || '',
     };

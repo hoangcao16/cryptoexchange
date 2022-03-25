@@ -46,7 +46,7 @@ export const tabP2PService = {
   getListToken() {
     return apiClient.request({
       method: 'GET',
-      url: `admin-api/token`,
+      url: `p2p-api/api/v1/token`,
     });
   },
 
@@ -67,7 +67,7 @@ export const tabP2PService = {
   getListTimeLimit() {
     return apiClient.request({
       method: 'GET',
-      url: 'admin-api/api/v1/p2PPaymentTime',
+      url: 'p2p-api/api/v1/P2PPaymentTime',
     });
   },
 

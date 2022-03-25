@@ -1,5 +1,14 @@
 import styled from 'styled-components';
-import { Steps, Button, Radio, Tooltip, Input, Tag, Checkbox } from 'antd';
+import {
+  Steps,
+  Button,
+  Radio,
+  Tooltip,
+  Input,
+  Tag,
+  Checkbox,
+  message,
+} from 'antd';
 import { Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
@@ -15,12 +24,15 @@ import { selectTabOrderDetail } from '../slice/selectors';
 import { useTabOrderDetailSlice } from '../slice';
 import ChatBox from 'app/components/ChatBox';
 import QRCode from 'react-qr-code';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const ContentOrderDetail = ({ trade, reload }) => {
   const [visibleNote, setVisibleNote] = useState(true);
   const [visibleModalCancel, setVisibleModalCancel] = useState(false);
   const [visibleModalVerification, setVisibleModalVerification] =
     useState(false);
+  const [loadingBtnSubmit, setLoadingBtnSubmit] = useState(false);
   const [listAppeal, setListAppeal] = useState([]);
   const [inputAnother, setInputAnother] = useState(false);
   const [visibleBtnConfirmPayment, setVisibleBtnConfirmPayment] =
@@ -32,12 +44,13 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [qr, setQR] = useState('');
   const [visibleModalConfirmPayment, setVisibleModalConfirmPayment] =
     useState(false);
+  const [webSocket, setWebSocket]: any = useState();
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
   const tradaType = TabOrderDetailState.tradeType;
 
-  const { updateTradeById, getListAppealReason, getQRCode } =
+  const { updateTradeById, getListAppealReason, getQRCode, verifyDigitCode } =
     tabOrderDetailService;
   const dispatch = useDispatch();
   const setBuyerStatus = useTabOrderDetailSlice().actions;
@@ -101,19 +114,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
   const handelConfirmTransfer = () => {
     setVisibleModalConfirmPayment(true);
-    // updateTradeById({
-    //   id: trade?.id,
-    //   paymentId: -1,
-    //   status: 'CONFIRMED',
-    // })
-    //   .then(res => {
-    //     if (res.data.rc === 0) {
-    //       openNotification('Success', 'Sended crypto to the buyer!');
-    //       dispatch(setBuyerStatus.setTradeStatus('DONE'));
-    //       reload();
-    //     } else openNotification('Error', res.data.rd);
-    //   })
-    //   .catch(() => openNotification('Error', 'Some thing went wrong!'));
   };
 
   const handelConfirmPayment = () => {
@@ -167,6 +167,12 @@ const ContentOrderDetail = ({ trade, reload }) => {
     const re = /^[0-9\b]+$/;
     if (e.target.value === '' || re.test(e.target.value)) {
       setQrCode(e.target.value);
+
+      if (e.target.value.length === 6) {
+        handleSecurityCode({
+          code: e.target.value,
+        });
+      }
     }
   };
 
@@ -174,10 +180,76 @@ const ContentOrderDetail = ({ trade, reload }) => {
     getQRCode().then(res => {
       if (res.status === 200) {
         setQR(res.data);
-        console.log(res.data);
       }
     });
   };
+
+  const handleSecurityCode = qrCode => {
+    setLoadingBtnSubmit(true);
+    if (trade?.tradeId) {
+      verifyDigitCode({
+        ...qrCode,
+        tradeId: trade?.tradeId,
+      }).then(res => {
+        if (res.status === 200 && res.data) {
+          updateTradeById({
+            id: trade?.id,
+            paymentId: -1,
+            status: 'CONFIRMED',
+          })
+            .then(res => {
+              if (res.data.rc === 0) {
+                openNotification('Success', 'Completed order!');
+                dispatch(setBuyerStatus.setTradeStatus('DONE'));
+                reload();
+              } else openNotification('Error', res.data.rd);
+            })
+            .catch(() => openNotification('Error', 'Some thing went wrong!'));
+        } else {
+          openNotification('Error', 'Digital Code invalid!');
+        }
+
+        setLoadingBtnSubmit(false);
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (trade?.tradeId) {
+      var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
+        connectionTimeout: 5000,
+      });
+      setWebSocket(socket);
+
+      socket.onopen = () => {
+        console.log(`Websocket connected`);
+
+        socket.send(
+          JSON.stringify({
+            type: 'SUBSCRIBE',
+            tradeId: trade?.tradeId,
+          }),
+        );
+
+        setInterval(
+          () => socket.send(JSON.stringify('Keep socket connection')),
+          5000,
+        );
+      };
+
+      socket.onmessage = message => {
+        const res = JSON.parse(message.data);
+        if ([1, 2, 3, 4].includes(res?.key)) {
+          reload();
+        }
+      };
+
+      socket.onclose = () => {
+        console.log('WebSocket Closed!');
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (visibleModalVerification) {
@@ -422,13 +494,17 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
             {tradaType === 'Buy' && (
               <div>
-                <Button
-                  className="btnTransferred"
-                  type="primary"
-                  onClick={() => handelTransfer()}
-                >
-                  Transferred, notify the seller
-                </Button>
+                {TabOrderDetailState.buyerStatus === 'PAID' ? (
+                  <Button type="primary">Appeal</Button>
+                ) : (
+                  <Button
+                    className="btnTransferred"
+                    type="primary"
+                    onClick={() => handelTransfer()}
+                  >
+                    Transferred, notify the seller
+                  </Button>
+                )}
                 <Button
                   className="btnCancelOrder"
                   onClick={() => setVisibleModalCancel(true)}
@@ -448,9 +524,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
                   >
                     Payment received
                   </Button>
-                  <Button className="btnCancelOrder" disabled>
-                    Transaction issue, Appeal after(15:00)
-                  </Button>
+                  <Button className="btnCancelOrder">Transaction issue</Button>
                 </div>
               )}
           </div>
@@ -651,8 +725,18 @@ const ContentOrderDetail = ({ trade, reload }) => {
           <p className="linkSecurityUnavailable">
             Security verification unavailable ?
           </p>
-          <Button htmlType="submit" type="primary" className="btnSubmit">
-            Submit
+          <Button
+            htmlType="submit"
+            type="primary"
+            className="btnSubmit"
+            onClick={() =>
+              handleSecurityCode({
+                code: qrCode,
+              })
+            }
+            disabled={loadingBtnSubmit}
+          >
+            {loadingBtnSubmit ? <div className="loader"></div> : 'Submit'}
           </Button>
         </Modal.Body>
       </ModalVerification>
@@ -1039,6 +1123,68 @@ const ModalVerification = styled(Modal)`
       margin-top: 20px;
       height: 40px;
       font-weight: bold;
+    }
+  }
+
+  //loading
+  .loader,
+  .loader:before,
+  .loader:after {
+    background: ${({ theme }) => theme.p2pBackground};
+    -webkit-animation: load1 1s infinite ease-in-out;
+    animation: load1 1s infinite ease-in-out;
+    width: 6px;
+    height: 3px;
+  }
+  .loader {
+    color: ${({ theme }) => theme.p2pBackground};
+    text-indent: -9999em;
+    margin: 0 auto;
+    position: relative;
+    font-size: 9px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+    margin-top: 8px;
+  }
+  .loader:before,
+  .loader:after {
+    position: absolute;
+    top: 0;
+    content: '';
+  }
+  .loader:before {
+    left: -1.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  .loader:after {
+    left: 1.5em;
+  }
+  @-webkit-keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
+    }
+  }
+  @keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
     }
   }
 `;
