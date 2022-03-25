@@ -19,7 +19,7 @@ export const postAdP2PServices = {
   getAllPaymentP2PService() {
     return apiClient.request({
       method: 'GET',
-      url: '/p2p-api/api/v1/p2pPayment',
+      url: '/p2p-api/api/v1/p2pPayment/p2PPaymentByEmail',
     });
   },
 
