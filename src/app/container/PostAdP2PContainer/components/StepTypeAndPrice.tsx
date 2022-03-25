@@ -62,7 +62,7 @@ function StepTypeAndPrice() {
   };
 
   const displayWarningPriceFixed = (): null | string => {
-    if (!fiatName) {
+    if (!fiatName || marketPrice === 0) {
       return null;
     }
 
