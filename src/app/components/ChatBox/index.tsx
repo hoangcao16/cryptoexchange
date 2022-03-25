@@ -36,22 +36,22 @@ const Chatpage = ({ email, data }) => {
     });
   }
   useEffect(() => {
-    const data = {
-      email: email,
-      page: ChatState?.pageIndex,
-      size: ChatState?.pageSize,
-      ts: ChatState?.ts,
-    };
-    dispatch(actions.setTs(data.ts));
-    dispatch(actions.getMessageRequest(data));
-  }, [ChatState.pageIndex]);
+    if (email !== undefined && email?.trim() !== '') {
+      const data = {
+        email: email,
+        page: ChatState?.pageIndex,
+        size: ChatState?.pageSize,
+        ts: ChatState?.ts,
+      };
+      dispatch(actions.setTs(data.ts));
+      dispatch(actions.getMessageRequest(data));
+    }
+  }, [email, ChatState.pageIndex]);
   useEffect(() => {
     if (listMess.length >= ChatState.totalMessage) {
       setHasMore(false);
-      console.log('1');
     } else {
       setHasMore(true);
-      console.log('2');
     }
   }, [ChatState.totalMessage, listMess]);
   useEffect(() => {
@@ -82,11 +82,17 @@ const Chatpage = ({ email, data }) => {
       };
       Websocket.onmessage = (message: any) => {
         const Message = JSON.parse(message.data);
-        console.log(Message);
-        setListMess(prev => [Message, ...prev]);
+        if (
+          Message.user_id === data?.buyEmail ||
+          Message.user_id === data?.sellEmail
+        ) {
+          setListMess(prev => [Message, ...prev]);
+        }
       };
       return () => {
         Websocket.close();
+        setListMess([]);
+        dispatch(actions.getMessageSuccess([]));
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -356,24 +362,26 @@ const Chatpage = ({ email, data }) => {
                       ) : (
                         <div className="mine">
                           <div className="msg">
-                            {item?.msg && (
-                              <div className="text">
-                                <span>{item.msg}</span>
-                              </div>
-                            )}
-                            <div className="img-wrapper">
-                              {item?.img?.length > 0 &&
-                                item?.img?.map((image, index) => {
-                                  return (
+                            <div>
+                              {item?.msg && (
+                                <div className="text">
+                                  <span>{item.msg}</span>
+                                </div>
+                              )}
+                            </div>
+                            {item?.img?.length > 0 &&
+                              item?.img?.map((image, index) => {
+                                return (
+                                  <div className="img-wrapper">
                                     <Image
                                       src={image}
                                       alt=""
                                       className="image"
                                       key={index}
                                     />
-                                  );
-                                })}
-                            </div>
+                                  </div>
+                                );
+                              })}
                             <div className="time">
                               {moment(item?.ts).format('HH:mm DD/MM/YYYY')}
                             </div>
