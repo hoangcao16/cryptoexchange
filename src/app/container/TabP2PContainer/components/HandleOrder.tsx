@@ -146,6 +146,7 @@ const HandleOrder = (props: any) => {
         tokenId: record.tokenId,
         total: Number(receivePriceSell),
       };
+      console.log(222, newValue);
       createTrade(newValue)
         .then(res => {
           if (res.data.rc === 0) {

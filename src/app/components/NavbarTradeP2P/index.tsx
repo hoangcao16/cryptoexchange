@@ -165,7 +165,7 @@ function NavbarTradeP2P(props: Props) {
   const ContentMore = (
     <ContentMoreStyled>
       <ul>
-        <Link to="/p2pUserCenter">
+        <Link to="/p2pUserCenter#tabPaymentMethod">
           <li>
             <AiOutlineMonitor className="moreIcon" /> Payment Methods
           </li>
@@ -236,7 +236,7 @@ function NavbarTradeP2P(props: Props) {
                 className="btnOption"
                 icon={<AiOutlineFileText className="btnOption__icon" />}
               >
-                Orders
+                <Link to="/order/all">Orders</Link>
               </Button>
             </Popover>
 
@@ -245,7 +245,7 @@ function NavbarTradeP2P(props: Props) {
               className="btnOption"
               icon={<AiOutlineTeam className="btnOption__icon" />}
             >
-              P2P User Center
+              <Link to="/p2pUserCenter">P2P User Center</Link>
             </Button>
 
             <Popover content={ContentMore} placement="bottomRight">
@@ -312,6 +312,11 @@ const NavbarTradeP2PStyled = styled.div`
 
         &:hover {
           opacity: 0.5;
+        }
+
+        a {
+          color: ${({ theme }) => theme.text};
+          text-decoration: none;
         }
       }
     }

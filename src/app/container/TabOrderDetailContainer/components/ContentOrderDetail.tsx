@@ -38,6 +38,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [visibleBtnConfirmPayment, setVisibleBtnConfirmPayment] =
     useState(true);
 
+  const [paymentSeller, setPaymentSeller] = useState<any>([]);
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [currentFirstSteps, setCurrentFirstSteps] = useState<number>(0);
   const [qrCode, setQrCode] = useState('');
@@ -50,8 +51,13 @@ const ContentOrderDetail = ({ trade, reload }) => {
     useSelector(selectTabOrderDetail);
   const tradaType = TabOrderDetailState.tradeType;
 
-  const { updateTradeById, getListAppealReason, getQRCode, verifyDigitCode } =
-    tabOrderDetailService;
+  const {
+    updateTradeById,
+    getListAppealReason,
+    getQRCode,
+    verifyDigitCode,
+    getPayment,
+  } = tabOrderDetailService;
   const dispatch = useDispatch();
   const setBuyerStatus = useTabOrderDetailSlice().actions;
   const setSellerStatus = useTabOrderDetailSlice().actions;
@@ -154,6 +160,14 @@ const ContentOrderDetail = ({ trade, reload }) => {
       if (res.data.rc === 0) {
         setListAppeal(res.data.rows);
       } else openNotification('Error', res.data.rd);
+    });
+  };
+
+  const findPaymentByPaymentId = () => {
+    getPayment().then(res => {
+      if (res.data.rc === 0) {
+        setPaymentSeller(res.data.rows);
+      } else console.log(res.data.rd);
     });
   };
 
@@ -262,6 +276,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
   useEffect(() => {
     findAllAppealReason();
+    findPaymentByPaymentId();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -393,95 +408,191 @@ const ContentOrderDetail = ({ trade, reload }) => {
                         defaultActiveKey={trade?.paymentId}
                         onChange={handleChangeTabPayment}
                       >
-                        {trade?.order?.payments?.map(payment => {
-                          return (
-                            <TabPane
-                              key={payment?.id}
-                              tab={
-                                <div>
-                                  <span
-                                    className="tabIcon"
-                                    style={{
-                                      color: payment?.paymentMethod?.colorCode,
-                                    }}
+                        {TabOrderDetailState.tradeType === 'Buy'
+                          ? trade?.order?.payments?.map(payment => {
+                              return (
+                                <TabPane
+                                  key={payment?.id}
+                                  tab={
+                                    <div>
+                                      <span
+                                        className="tabIcon"
+                                        style={{
+                                          color:
+                                            payment?.paymentMethod?.colorCode,
+                                        }}
+                                      >
+                                        |{' '}
+                                      </span>{' '}
+                                      {payment?.paymentMethod?.name}
+                                    </div>
+                                  }
+                                >
+                                  <p className="paymentTitle">Name</p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.fullName}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.fullName)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">
+                                    Bank account number
+                                  </p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.accountNumber}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.accountNumber)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">Bank name</p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.bankName}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.bankName)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">
+                                    Account opening branch
+                                  </p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.bankBranch}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.bankBranch)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                </TabPane>
+                              );
+                            })
+                          : paymentSeller
+                              .filter(x => {
+                                return x.id === trade?.paymentId;
+                              })
+                              .map(payment => {
+                                return (
+                                  <TabPane
+                                    key={payment?.id}
+                                    tab={
+                                      <div>
+                                        <span
+                                          className="tabIcon"
+                                          style={{
+                                            color:
+                                              payment?.paymentMethod?.colorCode,
+                                          }}
+                                        >
+                                          |{' '}
+                                        </span>{' '}
+                                        {payment?.paymentMethod?.name}
+                                      </div>
+                                    }
                                   >
-                                    |{' '}
-                                  </span>{' '}
-                                  {payment?.paymentMethod?.name}
-                                </div>
-                              }
-                            >
-                              <p className="paymentTitle">Name</p>
-                              <span className="paymentDesc">
-                                <span>{payment?.fullName}</span>
-                                <Tooltip
-                                  title="Copied"
-                                  trigger="click"
-                                  placement="right"
-                                >
-                                  <FaCopy
-                                    className="copyIcon"
-                                    onClick={() =>
-                                      handleCopy(payment?.fullName)
-                                    }
-                                  />
-                                </Tooltip>
-                              </span>
-                              <p className="paymentTitle">
-                                Bank account number
-                              </p>
-                              <span className="paymentDesc">
-                                <span>{payment?.accountNumber}</span>
-                                <Tooltip
-                                  title="Copied"
-                                  trigger="click"
-                                  placement="right"
-                                >
-                                  <FaCopy
-                                    className="copyIcon"
-                                    onClick={() =>
-                                      handleCopy(payment?.accountNumber)
-                                    }
-                                  />
-                                </Tooltip>
-                              </span>
-                              <p className="paymentTitle">Bank name</p>
-                              <span className="paymentDesc">
-                                <span>{payment?.bankName}</span>
-                                <Tooltip
-                                  title="Copied"
-                                  trigger="click"
-                                  placement="right"
-                                >
-                                  <FaCopy
-                                    className="copyIcon"
-                                    onClick={() =>
-                                      handleCopy(payment?.bankName)
-                                    }
-                                  />
-                                </Tooltip>
-                              </span>
-                              <p className="paymentTitle">
-                                Account opening branch
-                              </p>
-                              <span className="paymentDesc">
-                                <span>{payment?.bankBranch}</span>
-                                <Tooltip
-                                  title="Copied"
-                                  trigger="click"
-                                  placement="right"
-                                >
-                                  <FaCopy
-                                    className="copyIcon"
-                                    onClick={() =>
-                                      handleCopy(payment?.bankBranch)
-                                    }
-                                  />
-                                </Tooltip>
-                              </span>
-                            </TabPane>
-                          );
-                        })}
+                                    <p className="paymentTitle">Name</p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.fullName}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.fullName)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">
+                                      Bank account number
+                                    </p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.accountNumber}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.accountNumber)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">Bank name</p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.bankName}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.bankName)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">
+                                      Account opening branch
+                                    </p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.bankBranch}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.bankBranch)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                  </TabPane>
+                                );
+                              })}
                       </Tabs>
                     </div>
                   }

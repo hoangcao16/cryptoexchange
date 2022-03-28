@@ -8,6 +8,7 @@ import { DataPostAdP2PState, PostAdP2PState } from '../slice/types';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { usePostAdP2PSlice } from '../slice';
+import openNotification from 'app/components/NotificationAntd';
 
 interface Props {
   visible: boolean;
@@ -74,15 +75,10 @@ function ModalConfirmPostAd(props: Props) {
     postAdP2PServices
       .postCreateOrderAdP2PService(param)
       .then(res => {
-        console.log(
-          '💙TuanHQ💖 ~> postAdP2PServices.postCreateOrderAdP2PService ~> res',
-          res,
-        );
-
         if (res.data.rc === 0) {
-          navigate('/trade-p2p/p2p/?action=buy&crypto=USDT&fiat=&payment=');
+          navigate('/trade-p2p/p2p/?action=buy&crypto=BNB&fiat=USD&payment=');
           dispatch(actions.setCurrentStep(1));
-        }
+        } else openNotification('Error', res.data.rd);
       })
       .catch(err => {
         console.error(err);
