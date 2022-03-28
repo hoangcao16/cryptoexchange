@@ -4,12 +4,13 @@ import { BiPlus } from 'react-icons/bi';
 import styled from 'styled-components';
 import { tabP2PUserCenterServices } from 'services/tabP2PUserCenterServices';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const ContentP2PUserCenter = () => {
   const { TabPane } = Tabs;
   const { getUserPaymentByToken, getAllPaymentMethod } =
     tabP2PUserCenterServices;
-  const [showModalAddPM, setShowModalAddPM] = useState(true);
+  const [showModalAddPM, setShowModalAddPM] = useState(false);
   const [listPaymentMethod, setListPaymentMethod] = useState<any>([]);
 
   const [listUserPayments, setListUserPayments] = useState<any>([]);
@@ -38,9 +39,8 @@ const ContentP2PUserCenter = () => {
 
   useEffect(() => {
     findAllUserPayments();
-    if (showModalAddPM) {
-      findAllPM();
-    }
+    findAllPM();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -51,6 +51,7 @@ const ContentP2PUserCenter = () => {
             tab="P2P Payment Method"
             key="1"
             className="tabPaymentMethod"
+            id="tabPaymentMethod"
           >
             <h6 className="title">P2P Payment Methods</h6>
             <div className="desc">
@@ -61,7 +62,7 @@ const ContentP2PUserCenter = () => {
                 consistent with your verified name on Binance. You can add up to
                 20 payment methods.
               </p>
-              <Button>
+              <Button onClick={() => setShowModalAddPM(true)}>
                 <BiPlus className="plusIcon" /> Add a payment method
               </Button>
             </div>
@@ -123,27 +124,50 @@ const ContentP2PUserCenter = () => {
               )}
             ></List>
           </TabPane>
-          <TabPane tab="Feedback" key="2">
-            Feedback
+          <TabPane tab="Feedback" key="2" className="tabPaymentMethod">
+            <h6 className="title">Feedback</h6>
+            <h3>0.00%</h3>
+            <p>0 reviews</p>
+            <Tabs defaultActiveKey="1" className="tabReviews">
+              <TabPane tab="All" key="1">
+                <List dataSource={[]} />
+              </TabPane>
+              <TabPane tab="Positive" key="2">
+                <List dataSource={[]} />
+              </TabPane>
+              <TabPane tab="Nagative" key="3">
+                <List dataSource={[]} />
+              </TabPane>
+            </Tabs>
           </TabPane>
         </Tabs>
-        <ModalAddPayemnt centered>
+        <ModalAddPayemnt
+          centered
+          show={showModalAddPM}
+          onHide={() => setShowModalAddPM(false)}
+        >
           <Modal.Header closeButton>Select payment method</Modal.Header>
           <Modal.Body>
             <h6>Recommand payment method</h6>
             <Tag className="rcmTag">
-              <img src={listPaymentMethod[2]?.icon} alt="#" />{' '}
-              {listPaymentMethod[2]?.name}
+              <Link to={`/payment/add/${listPaymentMethod[2]?.name}`}>
+                <img src={listPaymentMethod[2]?.icon} alt="#" />{' '}
+                {listPaymentMethod[2]?.name}
+              </Link>
             </Tag>
 
             <h6>All payment method</h6>
             <div className="allMT">
               {listPaymentMethod?.map((pm: any, index: any) => (
-                <div className="pmTagContain" key={index}>
+                <Link
+                  to={`/payment/add/${pm.name}`}
+                  className="pmTagContain"
+                  key={index}
+                >
                   <Tag>
                     <img src={pm?.icon} alt="#" /> {pm.name}
                   </Tag>
-                </div>
+                </Link>
               ))}
             </div>
           </Modal.Body>
@@ -224,7 +248,7 @@ const Wrapper = styled.div`
         transition: all 0.25s linear;
 
         &:hover {
-          box-shadow: 0px 2px 5px 3px ${({ theme }) => theme.brightGrayColor};
+          box-shadow: 0px 2px 5px 2px ${({ theme }) => theme.brightGrayColor};
         }
 
         .headerItem {
@@ -261,6 +285,21 @@ const Wrapper = styled.div`
         }
       }
     }
+
+    .tabReviews {
+      .ant-tabs-nav {
+        padding: 0 !important;
+      }
+
+      .ant-tabs-nav-wrap {
+        background-color: ${({ theme }) => theme.whiteSmokeColor};
+        padding: 0 20px;
+      }
+      .ant-tabs-tab-btn {
+        font-size: 14px;
+        font-weight: 400;
+      }
+    }
   }
 `;
 
@@ -281,6 +320,14 @@ const ModalAddPayemnt = styled(Modal)`
   .modal-body {
     padding: 20px;
 
+    a {
+      text-decoration: none;
+    }
+
+    h6 {
+      margin: 0;
+    }
+
     .allMT {
       display: flex;
       flex-wrap: wrap;
@@ -293,7 +340,7 @@ const ModalAddPayemnt = styled(Modal)`
     }
 
     .rcmTag {
-      margin-bottom: 20px;
+      margin: 20px 0 30px;
     }
 
     .ant-tag {

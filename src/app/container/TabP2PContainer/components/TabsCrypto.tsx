@@ -6,15 +6,6 @@ import { tabP2PService } from 'services/tabP2PServices';
 import styled from 'styled-components';
 import { useTabP2PSlice } from '../slice';
 
-const Cryptos = [
-  { name: 'USDT' },
-  { name: 'BTNC' },
-  { name: 'SOL' },
-  { name: 'BNB' },
-  { name: 'ETH' },
-  { name: 'BAKE' },
-];
-
 function TabsCrypto() {
   const [searchParams] = useSearchParams();
   const { actions } = useTabP2PSlice();
@@ -57,19 +48,21 @@ function TabsCrypto() {
 
   return (
     <Wrapper>
-      {listCrypto.map((c, i) => (
-        <TabsCryptoButton
-          className={
-            currentCrypto === c.assetName ? 'TabsCryptoButton-active' : ''
-          }
-          key={i}
-          onClick={() => {
-            onClickButton(c.assetName);
-          }}
-        >
-          {c.assetName}
-        </TabsCryptoButton>
-      ))}
+      {listCrypto
+        .filter(c => c.allowBuySell === 1)
+        .map((c, i) => (
+          <TabsCryptoButton
+            className={
+              currentCrypto === c.assetName ? 'TabsCryptoButton-active' : ''
+            }
+            key={i}
+            onClick={() => {
+              onClickButton(c.assetName);
+            }}
+          >
+            {c.assetName}
+          </TabsCryptoButton>
+        ))}
     </Wrapper>
   );
 }
