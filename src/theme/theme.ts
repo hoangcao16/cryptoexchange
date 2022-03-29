@@ -49,4 +49,6 @@ export const darkTheme: DefaultTheme = {
   p2pText: '#161a1e',
   p2pTextLight: '#ffffff',
   p2pGrayLight: '#f5f5f5',
+  titleTableBackground: '#FAFAFA',
+  primaryBlur: 'rgba(16,175,255, 0.3)',
 };

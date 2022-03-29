@@ -15,9 +15,11 @@ import { SpotWalletServices } from 'services/spotWalletService';
 import { GrFormClose } from 'react-icons/gr';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { BiPlus } from 'react-icons/bi';
+import { payments } from 'app/container/PostAdP2PContainer/data';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
+
   const navigate = useNavigate();
   const { getUserPayments } = tabP2PService;
   const { getAllSpotWallet } = SpotWalletServices;
@@ -39,11 +41,10 @@ const HandleOrder = (props: any) => {
 
   const { createTrade } = tabOrderDetailService;
   const { record, index, hanldeCloseOrder, timeLimit, available, type } = props;
-
   const options = sellerPayments.map((payment: any) => {
     return {
       key: payment?.id,
-      value: payment?.id,
+      value: payment,
       label: (
         <div className="selectPaymentContent">
           <Tag
@@ -94,13 +95,12 @@ const HandleOrder = (props: any) => {
       setLoading(true);
       let newValue = {
         amount: Number(receiveBuy),
-        fiatId: record.fiatId,
         orderId: record.id,
         paymentId: record.payments[0]?.id,
         price: record.price,
-        tokenId: record.tokenId,
         total: Number(pricePayBuy),
       };
+      console.log(newValue);
       createTrade(newValue)
         .then(res => {
           if (res.data.rc === 0) {
@@ -133,15 +133,18 @@ const HandleOrder = (props: any) => {
     if (
       cryptoSell &&
       receivePriceSell &&
-      paymentSeller.value &&
-      walletUser >= record.orderLowerBound / record.price
+      paymentSeller.value?.id &&
+      walletUser >= record.orderLowerBound / record.price &&
+      record?.payments
+        ?.map(payment => payment?.paymentMethod?.id)
+        .includes(paymentSeller?.value?.paymentMethod?.id)
     ) {
       setLoading(true);
       let newValue = {
         amount: Number(cryptoSell),
         fiatId: record.fiatId,
         orderId: record.id,
-        paymentId: paymentSeller.value,
+        paymentId: paymentSeller.value?.id,
         price: record.price,
         tokenId: record.tokenId,
         total: Number(receivePriceSell),
@@ -151,6 +154,7 @@ const HandleOrder = (props: any) => {
         .then(res => {
           if (res.data.rc === 0) {
             openNotification('Success', 'Created your order');
+
             setTimeout(() => {
               setLoading(false);
               localStorage.setItem('timeLimit', JSON.stringify(null));
@@ -165,6 +169,15 @@ const HandleOrder = (props: any) => {
           console.log(res);
           setLoading(false);
         });
+    } else if (
+      !record?.payments
+        ?.map(payment => payment?.paymentMethod?.id)
+        .includes(paymentSeller?.value?.paymentMethod?.id)
+    ) {
+      openNotification(
+        'Error',
+        "Your payment method does not match the buyer's. Please create a new payment method or change an existing payment method!",
+      );
     } else if (walletUser > available) {
       setCryptoSell(available);
       setReceivePriceSell(available * record.price);
@@ -189,6 +202,7 @@ const HandleOrder = (props: any) => {
   };
 
   const changePaymentSeller = value => {
+    console.log(value);
     setPaymentSeller(value);
   };
 
@@ -221,7 +235,7 @@ const HandleOrder = (props: any) => {
         setSellerPayments(res.data.rows);
         setPaymentSeller({
           key: res.data.rows[0]?.id,
-          value: res.data.rows[0]?.id,
+          value: res.data.rows[0],
           label: (
             <div className="selectPaymentContent">
               <Tag

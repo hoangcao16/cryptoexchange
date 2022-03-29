@@ -87,7 +87,8 @@ function P2PTableBuy() {
       title: 'Price',
       key: 'Price',
       dataIndex: 'price',
-
+      defaultSortOrder: 'ascend',
+      sorter: (a, b) => a.price - b.price,
       width: 200,
       render: (text: any, record: any) => {
         return (
@@ -325,6 +326,15 @@ function P2PTableBuy() {
 export default P2PTableBuy;
 
 const Wrapper = styled.div`
+  .ant-table {
+    &-column-sort {
+      background-color: ${({ theme }) => theme.p2pBackground};
+    }
+
+    &-cell.ant-table-column-sort.ant-table-column-has-sorters {
+      background-color: ${({ theme }) => theme.titleTableBackground};
+    }
+  }
   @keyframes spining {
     0% {
       -webkit-transform: rotate(0deg);
