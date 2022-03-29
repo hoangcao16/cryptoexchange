@@ -62,7 +62,10 @@ const ContentP2PUserCenter = () => {
                 consistent with your verified name on Binance. You can add up to
                 20 payment methods.
               </p>
-              <Button onClick={() => setShowModalAddPM(true)}>
+              <Button
+                className="btnAddPM"
+                onClick={() => setShowModalAddPM(true)}
+              >
                 <BiPlus className="plusIcon" /> Add a payment method
               </Button>
             </div>
@@ -150,7 +153,7 @@ const ContentP2PUserCenter = () => {
           <Modal.Body>
             <h6>Recommand payment method</h6>
             <Tag className="rcmTag">
-              <Link to={`/payment/add/${listPaymentMethod[2]?.name}`}>
+              <Link to={`/payment/Add/${listPaymentMethod[2]?.name}`}>
                 <img src={listPaymentMethod[2]?.icon} alt="#" />{' '}
                 {listPaymentMethod[2]?.name}
               </Link>
@@ -160,7 +163,7 @@ const ContentP2PUserCenter = () => {
             <div className="allMT">
               {listPaymentMethod?.map((pm: any, index: any) => (
                 <Link
-                  to={`/payment/add/${pm.name}`}
+                  to={`/payment/Add/${pm.name}`}
                   className="pmTagContain"
                   key={index}
                 >
@@ -209,9 +212,11 @@ const Wrapper = styled.div`
 
       button {
         margin-left: 100px;
-        height: 50px;
-        width: 500px;
-        background-color: ${({ theme }) => theme.brightGrayColor};
+        height: 45px;
+        width: 40%;
+        background-color: ${({ theme }) => theme.whiteSmokeColor};
+        color: ${({ theme }) => theme.brightBlackColor};
+        font-size: 15px;
         border: none;
         transition: all 0.25s linear;
 

@@ -39,7 +39,7 @@ export const tabP2PService = {
   getListPayments() {
     return apiClient.request({
       method: 'GET',
-      url: `admin-api/payment-method`,
+      url: `p2p-api/api/v1/p2p-payment-method`,
     });
   },
 

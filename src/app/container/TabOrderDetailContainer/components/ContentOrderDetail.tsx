@@ -1,14 +1,5 @@
 import styled from 'styled-components';
-import {
-  Steps,
-  Button,
-  Radio,
-  Tooltip,
-  Input,
-  Tag,
-  Checkbox,
-  message,
-} from 'antd';
+import { Steps, Button, Radio, Tooltip, Input, Tag, Checkbox } from 'antd';
 import { Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
@@ -56,7 +47,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
     getListAppealReason,
     getQRCode,
     verifyDigitCode,
-    getPayment,
+    getPaymentById,
   } = tabOrderDetailService;
   const dispatch = useDispatch();
   const setBuyerStatus = useTabOrderDetailSlice().actions;
@@ -111,8 +102,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
       .then(res => {
         if (res.data.rc === 0) {
           openNotification('Success', 'Notified to the seller!');
-          dispatch(setBuyerStatus.setBuyerStatus('PAID'));
-          reload();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         } else openNotification('Error', res.data.rd);
       })
       .catch(() => openNotification('Error', 'Some thing went wrong!'));
@@ -145,9 +135,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
       .then(res => {
         if (res.data.rc === 0) {
           openNotification('Success', 'Canceled this order!');
+          setVisibleModalCancel(false);
           localStorage.setItem('timeLimit', JSON.stringify(null));
           dispatch(setBuyerStatus.setSellerStatus('CANCEL'));
-          reload();
         } else {
           openNotification('Error', res.data.rd);
         }
@@ -160,14 +150,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
       if (res.data.rc === 0) {
         setListAppeal(res.data.rows);
       } else openNotification('Error', res.data.rd);
-    });
-  };
-
-  const findPaymentByPaymentId = () => {
-    getPayment().then(res => {
-      if (res.data.rc === 0) {
-        setPaymentSeller(res.data.rows);
-      } else console.log(res.data.rd);
     });
   };
 
@@ -215,7 +197,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
               if (res.data.rc === 0) {
                 openNotification('Success', 'Completed order!');
                 dispatch(setBuyerStatus.setTradeStatus('DONE'));
-                reload();
+                setVisibleModalVerification(false);
+                setVisibleModalConfirmPayment(false);
               } else openNotification('Error', res.data.rd);
             })
             .catch(() => openNotification('Error', 'Some thing went wrong!'));
@@ -228,13 +211,25 @@ const ContentOrderDetail = ({ trade, reload }) => {
     }
   };
 
-  useEffect(() => {
-    if (trade?.tradeId) {
-      var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
-        connectionTimeout: 5000,
-      });
-      setWebSocket(socket);
+  const findPaymentById = () => {
+    if (trade?.paymentId) {
+      getPaymentById(trade?.paymentId)
+        .then(res => {
+          if (res.data.rc === 0) {
+            setPaymentSeller([res.data.item]);
+          } else console.log(res.data.rd);
+        })
+        .catch(res => console.log(res));
+    }
+  };
 
+  useEffect(() => {
+    var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
+      connectionTimeout: 5000,
+    });
+    setWebSocket(socket);
+
+    if (trade?.tradeId) {
       socket.onopen = () => {
         console.log(`Websocket connected`);
 
@@ -254,9 +249,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
       socket.onmessage = message => {
         const res = JSON.parse(message.data);
         if ([1, 2, 3, 4].includes(res?.key)) {
-          setTimeout(() => {
-            reload();
-          }, 1000);
+          reload();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       };
 
@@ -265,6 +259,10 @@ const ContentOrderDetail = ({ trade, reload }) => {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    return () => {
+      socket.close();
+    };
   }, []);
 
   useEffect(() => {
@@ -276,7 +274,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
   useEffect(() => {
     findAllAppealReason();
-    findPaymentByPaymentId();
+    findPaymentById();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -408,7 +406,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
                         defaultActiveKey={trade?.paymentId}
                         onChange={handleChangeTabPayment}
                       >
-                        {TabOrderDetailState.tradeType === 'Buy'
+                        {trade?.order?.orderType === 1
                           ? trade?.order?.payments?.map(payment => {
                               return (
                                 <TabPane
