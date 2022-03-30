@@ -1,4 +1,5 @@
 import { Container, Tabs, StyledDropdown, Tooltip } from './style';
+import { TabAnt } from './style';
 import IconSvg from 'app/assets/img/icon';
 import { SplitButton, Dropdown } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
@@ -13,8 +14,10 @@ import { selectGetBalancePair } from './slice/selectors';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'app/components/common/common';
+import { darkTheme } from 'theme/theme';
 
 const OrderForm = () => {
+  const { TabPane } = TabAnt;
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const [title, setTitle] = useState('Stop-limit');
@@ -27,6 +30,16 @@ const OrderForm = () => {
   const { actions } = useGetBalancePairSlice();
   let { pair } = useParams();
   const wallet = 'SPOT';
+
+  const [activeKeyTabBuySell, setActiveKeyTabBuySell] = useState(
+    darkTheme?.greenColor,
+  );
+
+  const [innerWidth, setInnerWidth] = useState(0);
+
+  const handleChangeTabBuySell = value => {
+    setActiveKeyTabBuySell(value);
+  };
 
   useEffect(() => {
     setTitle(t('stop-limit'));
@@ -54,8 +67,25 @@ const OrderForm = () => {
       dispatch(actions.getBalancePairSpotRequest(pairId));
     }
   }, [actions, dispatch, pairId, reGetBalancePair]);
+
+  useEffect(() => {
+    window.onresize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+  }, []);
+
   return (
     <Container>
+      <TabAnt
+        defaultActiveKey={activeKeyTabBuySell}
+        className="toggleBuySell"
+        onChange={handleChangeTabBuySell}
+        data-display={innerWidth < 1200 ? 'none' : 'block'}
+      >
+        <TabPane tab="Buy" key={darkTheme?.greenColor}></TabPane>
+        <TabPane tab="Sell" key={darkTheme?.redColor}></TabPane>
+      </TabAnt>
+
       <div className="d-flex">
         <Tabs>
           <div
@@ -99,6 +129,7 @@ const OrderForm = () => {
               </Dropdown.Item>
             </SplitButton>
           </StyledDropdown>
+
           <Tooltip className="d-flex align-items-center">
             <IconSvg name="information" className="information-icon" />
             <div className="tooltiptext">

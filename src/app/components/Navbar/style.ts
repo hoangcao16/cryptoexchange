@@ -149,6 +149,7 @@ export const NavbarToggle = styled(Navbar.Toggle)`
 export const NavbarOffcanvas = styled(Navbar.Offcanvas)`
   background-color: ${({ theme }) => theme.background};
   background-color: ${({ theme }) => theme.background} !important;
+  max-width: 90vw;
 
   .offcanvas-header {
     position: relative;
