@@ -76,7 +76,7 @@ function ModalConfirmPostAd(props: Props) {
       .postCreateOrderAdP2PService(param)
       .then(res => {
         if (res.data.rc === 0) {
-          navigate('/trade-p2p/p2p/?action=buy&crypto=BNB&fiat=USD&payment=');
+          navigate('/trade-p2p/p2p/?action=buy&crypto=&fiat=USD&payment=');
           dispatch(actions.setCurrentStep(1));
         } else openNotification('Error', res.data.rd);
       })

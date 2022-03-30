@@ -27,7 +27,7 @@ async function getAllSymbols() {
   let allSymbols = [];
 
   for (const exchange of configurationData.exchanges) {
-    if (data.Response === 'Success') {
+    if (data?.Response === 'Success') {
       const pairs = data.Data[exchange.value].pairs;
       if (pairs !== undefined && pairs !== null) {
         for (const leftPairPart of Object.keys(pairs)) {

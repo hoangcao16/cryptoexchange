@@ -35,6 +35,9 @@ const Chatpage = ({ email, data }) => {
       reader.onerror = error => reject(error);
     });
   }
+  // useEffect(() => {
+  //   dispatch(actions.setTs(new Date().getTime()));
+  // }, [data]);
   useEffect(() => {
     if (email !== undefined && email?.trim() !== '') {
       const data = {
@@ -43,10 +46,12 @@ const Chatpage = ({ email, data }) => {
         size: ChatState?.pageSize,
         ts: ChatState?.ts,
       };
-      dispatch(actions.setTs(data.ts));
       dispatch(actions.getMessageRequest(data));
     }
-  }, [email, ChatState.pageIndex]);
+    return () => {
+      dispatch(actions.setTs(new Date().getTime()));
+    };
+  }, [email, ChatState.pageIndex, data]);
   useEffect(() => {
     if (listMess.length >= ChatState.totalMessage) {
       setHasMore(false);

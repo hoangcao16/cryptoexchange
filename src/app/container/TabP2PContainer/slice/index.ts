@@ -7,7 +7,7 @@ export const initialState: TabP2PState = {
   data: {},
   searchParam: {
     action: 'buy',
-    crypto: '',
+    crypto: 'BTC',
     fiat: '',
     payment: 'All payments',
   },

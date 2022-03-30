@@ -35,6 +35,10 @@ export const GlobalStyles = createGlobalStyle`
   .ant-tooltip {
     max-width: 290px;
   }
+
+  .fade.modal-backdrop.show{
+    opacity: 0;
+  }
   .container {  
     @media (min-width: 1200px) {
       max-width: 1190px;
@@ -42,6 +46,12 @@ export const GlobalStyles = createGlobalStyle`
     @media (min-width: 1400px) {
       max-width: 1320px;
     }
+    @media (max-width: 1199px){
+      max-width: 98%;
+    }
+    /* @media (max-width: 1999px) {
+      max-width: 98%;
+    } */
     /* @media screen and (min-width: 1700px) {
       max-width: 1680px;
     } */

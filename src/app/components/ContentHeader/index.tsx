@@ -15,6 +15,7 @@ import { useCurrentPairSlice } from './slice';
 import { selectCurrentPair } from './slice/selectors';
 import numeral from 'numeral';
 import { isEmpty } from 'app/components/common/common';
+import { Col, Row } from 'react-bootstrap';
 
 const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
   let { pair } = useParams();
@@ -79,26 +80,40 @@ const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
     <Container>
       <Div>
         <Content>
-          <ContentLeft>
-            <div className="contentLeft-coin">
-              <div className="coin">{changeFormatPair}</div>
-              <div className="InformationCoin">
-                <IconSvg name="openIcon" />
-                <a href="/#">Bitcoin</a>
-              </div>
-            </div>
-          </ContentLeft>
-          <div className="nowPrice d-flex flex-column">
-            <div
-              className="showPrice"
-              data-type={
-                isPriceUp === 0 ? 'normal' : isPriceUp === 1 ? 'up' : 'down'
-              }
-            >
-              {numeral(price).format('0,0.00')}
-            </div>
-            <div className="subPrice">${numeral(price).format('0,0.00')}</div>
-          </div>
+          <Col xxl={3} xl={3}>
+            <Row>
+              <ContentLeft xxl={7} lg={3} xl={7} md={3} sm={3} xs={6}>
+                <div className="contentLeft-coin">
+                  <div className="coin">{changeFormatPair}</div>
+                  <div className="InformationCoin">
+                    <IconSvg name="openIcon" />
+                    <a href="/#">Bitcoin</a>
+                  </div>
+                </div>
+              </ContentLeft>
+              <Col
+                xxl={5}
+                lg={3}
+                xl={5}
+                md={3}
+                sm={3}
+                xs={6}
+                className="nowPrice d-flex flex-column"
+              >
+                <div
+                  className="showPrice"
+                  data-type={
+                    isPriceUp === 0 ? 'normal' : isPriceUp === 1 ? 'up' : 'down'
+                  }
+                >
+                  {numeral(price).format('0,0.00')}
+                </div>
+                <div className="subPrice">
+                  ${numeral(price).format('0,0.00')}
+                </div>
+              </Col>
+            </Row>
+          </Col>
           <ContentRight>
             <div className="contentRightContainer d-flex">
               <div className="ticketList d-flex">

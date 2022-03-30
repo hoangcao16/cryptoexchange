@@ -37,6 +37,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [visibleModalConfirmPayment, setVisibleModalConfirmPayment] =
     useState(false);
   const [webSocket, setWebSocket]: any = useState();
+  const [reCallMessage, setReCallMessage]: any = useState(false);
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
@@ -250,6 +251,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
         const res = JSON.parse(message.data);
         if ([1, 2, 3, 4].includes(res?.key)) {
           reload();
+          setReCallMessage(!reCallMessage);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       };

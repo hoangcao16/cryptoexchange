@@ -1,3 +1,4 @@
+import { Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';
 export const Container = styled.div`
   padding: 10px 0;
@@ -21,8 +22,7 @@ export const Div = styled.div`
   flex-wrap: wrap;
   display: flex;
 `;
-export const Content = styled.div`
-  display: flex;
+export const Content = styled(Row)`
   box-sizing: border-box;
   margin: 0px;
   flex: 1 1 0%;
@@ -37,6 +37,13 @@ export const Content = styled.div`
   }
   .subPrice {
     color: ${({ theme }) => theme.text};
+  }
+
+  .nowPrice {
+    padding: 0;
+    margin: 0;
+    padding-top: 3px;
+    padding-left: 25px;
   }
 `;
 export const SpotTutorial = styled.div`
@@ -58,13 +65,14 @@ export const SpotTutorial = styled.div`
     height: 1em;
   }
 `;
-export const ContentLeft = styled.div`
+export const ContentLeft = styled(Col)`
   display: flex;
-  margin-right: 24px;
-  margin-left: 4px;
   height: 48px;
   border-right: ${({ theme }) => theme.borderBlack};
-  padding-right: 16px;
+  padding: 0px;
+  margin: 0px;
+  padding-right: 10px;
+
   .contentLeft-coin {
     display: flex;
     flex-direction: column;
@@ -95,8 +103,13 @@ export const ContentLeft = styled.div`
     }
   }
 `;
-export const ContentRight = styled.div`
+export const ContentRight = styled(Col)`
   display: flex;
+  .ticketList {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .contentRightContainer {
     flex-flow: row nowrap;
     box-sizing: border-box;

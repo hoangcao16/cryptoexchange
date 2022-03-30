@@ -30,6 +30,14 @@ export const StyledNavDropdown = styled(NavDropdown)`
       }
     }
   }
+
+  @media only screen and (max-width: 1296px) {
+    margin: 0 0px;
+  }
+
+  @media only screen and (max-width: 1199px) {
+    display: none;
+  }
 `;
 export const DropdownHeader = styled.div`
   margin: 0 0 0 16px;

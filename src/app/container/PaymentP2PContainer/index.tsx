@@ -27,12 +27,32 @@ const PaymentP2PContainer = () => {
         accountNumber: value?.accountNumber,
         bankName: value?.bankName,
         fullName: value?.fullName,
-        note: value?.note || 'string',
-        bankBranch: 'string',
-        email: 'string',
-        mobilePhone: 'string',
+        note: value?.note || 'Unknow!',
+        bankBranch: 'Unknow!',
+        email: 'Unknow!',
+        mobilePhone: 'Unknow!',
         paymentMethodId: paymentMethod?.id,
-        recommendedTransferRemarks: 'string',
+        recommendedTransferRemarks: 'Unknow!',
+      })
+        .then(res => {
+          if (res.data.rc === 0) {
+            openNotification('Success', 'Added new payment method');
+          } else {
+            openNotification('Error', res.data.rd);
+          }
+        })
+        .catch(() => openNotification('Error', 'Something went wrong!'));
+    } else {
+      addPayment({
+        accountNumber: 'Unknow!',
+        bankName: 'Unknow!',
+        fullName: value?.fullName,
+        note: value?.note || 'Unknow!',
+        bankBranch: 'Unknow!',
+        email: value?.email,
+        mobilePhone: value?.mobilePhone,
+        paymentMethodId: paymentMethod?.id,
+        recommendedTransferRemarks: 'Unknow!',
       })
         .then(res => {
           if (res.data.rc === 0) {
@@ -92,43 +112,80 @@ const PaymentP2PContainer = () => {
                 <Input placeholder="Please enter your name" />
               </Form.Item>
 
-              <Form.Item
-                label="Bank account number"
-                labelAlign="left"
-                name="accountNumber"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter your bank account number',
-                  },
-                ]}
-                requiredMark={'optional'}
-              >
-                <Input placeholder="Please enter your bank account number" />
-              </Form.Item>
+              {params?.pm === 'Internet Banking' ? (
+                <>
+                  <Form.Item
+                    label="Bank account number"
+                    labelAlign="left"
+                    name="accountNumber"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your bank account number',
+                      },
+                    ]}
+                    requiredMark={'optional'}
+                  >
+                    <Input placeholder="Please enter your bank account number" />
+                  </Form.Item>
 
-              <Form.Item
-                label="Bank name"
-                labelAlign="left"
-                name="bankName"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Enter the name of your bank',
-                  },
-                ]}
-                requiredMark={'optional'}
-              >
-                <Input placeholder="Enter the name of your bank" />
-              </Form.Item>
+                  <Form.Item
+                    label="Bank name"
+                    labelAlign="left"
+                    name="bankName"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Enter the name of your bank',
+                      },
+                    ]}
+                    requiredMark={'optional'}
+                  >
+                    <Input placeholder="Enter the name of your bank" />
+                  </Form.Item>
 
-              <Form.Item
-                label="Account opening branch (Optional)"
-                labelAlign="left"
-                name="note"
-              >
-                <Input placeholder="Enter your bank infomation" />
-              </Form.Item>
+                  <Form.Item
+                    label="Account opening branch (Optional)"
+                    labelAlign="left"
+                    name="note"
+                  >
+                    <Input placeholder="Enter your bank infomation" />
+                  </Form.Item>
+                </>
+              ) : (
+                <>
+                  <Form.Item
+                    label="Phone number"
+                    labelAlign="left"
+                    name="mobilePhone"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your phone number',
+                      },
+                    ]}
+                    requiredMark={'optional'}
+                  >
+                    <Input placeholder="Please enter your phone number" />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Email"
+                    labelAlign="left"
+                    name="email"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter your email',
+                      },
+                    ]}
+                    requiredMark={'optional'}
+                  >
+                    <Input placeholder="Please enter your email" />
+                  </Form.Item>
+                </>
+              )}
+
               <div className="warning">
                 <p className="warning__title">
                   <RiErrorWarningFill className="warning__icon" />
