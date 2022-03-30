@@ -3,6 +3,12 @@ import { NavDropdown } from 'react-bootstrap';
 
 export const StyledNavDropdown = styled(NavDropdown)`
   margin: 0 8px;
+  @media only screen and (max-width: 1296px) {
+    margin: 0 0px;
+  }
+  @media only screen and (max-width: 1199px) {
+    display: none;
+  }
   &:hover {
     .dropdown-toggle:hover {
       color: ${({ theme }) => theme.primary};

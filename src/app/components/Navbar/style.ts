@@ -5,8 +5,21 @@ import { Link } from 'react-router-dom';
 export const StyledNavBar = styled(Navbar)`
   background-color: ${({ theme }) => theme.body} !important;
   padding: 0px !important;
+
+  @media only screen and (max-width: 1199px) {
+    .linkDownload,
+    .border,
+    .cryptoUsd,
+    .question,
+    .setting {
+      display: none;
+    }
+  }
 `;
 export const StyledNavLink = styled(Nav.Link)`
+  @media only screen and (max-width: 1199px) {
+    display: none;
+  }
   margin: 0 4px;
 `;
 export const AuthGroup = styled.div`
@@ -125,9 +138,126 @@ export const StyledNav = styled(Nav)`
   }
 `;
 export const NavbarToggle = styled(Navbar.Toggle)`
-  font-size: 12px;
+  font-size: 16px;
   border: none;
+  margin-right: 0 !important;
+
+  &:focus {
+    box-shadow: none;
+  }
 `;
 export const NavbarOffcanvas = styled(Navbar.Offcanvas)`
   background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.background} !important;
+
+  .offcanvas-header {
+    position: relative;
+    display: block;
+    .ant-typography {
+      color: ${({ theme }) => theme.p2pTextLight};
+    }
+
+    .titleHeader {
+      width: 100%;
+    }
+
+    .userDesc {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: ${({ theme }) => theme.darkPinkColor};
+
+      .verify {
+        color: ${({ theme }) => theme.greenColor};
+        margin-left: auto;
+        background-color: ${({ theme }) => theme.greenColorBlur};
+        padding: 2px 10px;
+        border-radius: 10px;
+      }
+    }
+
+    .btn-close {
+      z-index: 10;
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 12px 10px;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .offcanvas-body {
+    padding: 0 0 16px 0;
+    margin-top: 40px;
+
+    .-title-content {
+      margin-left: 9px;
+    }
+
+    .ant-menu {
+      background-color: transparent;
+
+      &-submenu-title {
+        font-size: 18px;
+        color: ${({ theme }) => theme.whiteSmokeColor};
+        height: 60px;
+        transition: all 0.25s linear;
+
+        a {
+          text-decoration: none;
+          transition: all 0.25s linear;
+        }
+
+        &:hover {
+          color: ${({ theme }) => theme.primary};
+          background-color: ${({ theme }) => theme.brightBlackColor};
+          a {
+            color: ${({ theme }) => theme.primary};
+          }
+          .-item-icon {
+            color: ${({ theme }) => theme.primary};
+          }
+        }
+      }
+
+      .ant-menu-item {
+        font-size: 18px;
+        color: ${({ theme }) => theme.whiteSmokeColor};
+        margin: 0;
+        height: 60px;
+        a {
+          text-decoration: none;
+          transition: all 0.25s linear;
+          color: ${({ theme }) => theme.whiteSmokeColor};
+        }
+
+        transition: all 0.25s linear;
+
+        &:hover {
+          color: ${({ theme }) => theme.primary} !important;
+          background-color: ${({ theme }) => theme.brightBlackColor};
+          .ant-menu-item-icon {
+            color: ${({ theme }) => theme.primary};
+          }
+          a {
+            color: ${({ theme }) => theme.primary};
+          }
+        }
+        &-selected {
+          background-color: transparent;
+        }
+      }
+
+      .-item-icon,
+      .ant-menu-item-icon {
+        transition: all 0.25s linear;
+        font-size: 23px;
+        color: ${({ theme }) => theme.whiteSmokeColor};
+      }
+    }
+  }
 `;

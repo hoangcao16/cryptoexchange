@@ -50,5 +50,6 @@ declare module 'styled-components' {
     p2pGrayLight?: string;
     titleTableBackground?: string;
     primaryBlur?: string;
+    greenColorBlur?: string;
   }
 }

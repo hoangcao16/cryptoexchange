@@ -32,88 +32,92 @@ const HeaderP2PUserCenter = () => {
 
   return (
     <Wrapper className="container">
-      <div className="header">
-        <div className="userInfo">
-          <div className="userName">
-            <Title level={5}>
-              <span className="avatar">{user.name?.charAt(0)}</span>
-              <span>
-                {user.name} <FiEdit className="editIcon" />
-              </span>
-              <Tag color={darkTheme.primary}>
-                {user.verified ? 'Verified User' : 'Not Verifited User'}
-              </Tag>
-            </Title>
-            <div className="checkedUser">
-              <span>
-                Email{' '}
-                {user.allowReceiveEmail ? (
-                  <AiFillCheckCircle className="checkedIcon" />
-                ) : (
-                  <AiFillCloseCircle className="notCheckedIcon" />
-                )}
-              </span>
-              <span>
-                SMS{' '}
-                {user.allowReceiveSms ? (
-                  <AiFillCheckCircle className="checkedIcon" />
-                ) : (
-                  <AiFillCloseCircle className="notCheckedIcon" />
-                )}
-              </span>
-              <span>
-                KYC{' '}
-                {user.allowReceiveKyc ? (
-                  <AiFillCheckCircle className="checkedIcon" />
-                ) : (
-                  <AiFillCloseCircle className="notCheckedIcon" />
-                )}
-              </span>
-            </div>
-          </div>
-          <div className="p2pEstimatedValue">
-            <span>
-              P2P Estimated Value ({user.p2pEstimatedValue?.token}){' '}
-              {showP2pEstimatedValue ? (
-                <AiOutlineEye
-                  className="eyeIcon"
-                  onClick={() => setShowP2pEstimatedValue(false)}
-                />
-              ) : (
-                <AiOutlineEyeInvisible
-                  className="eyeIcon"
-                  onClick={() => setShowP2pEstimatedValue(true)}
-                />
-              )}
-            </span>
-            <p>
-              <span className="cryptoNumber">
-                {showP2pEstimatedValue
-                  ? user.p2pEstimatedValue?.value?.toFixed(8)
-                  : '*********  '}
-              </span>
-              <span>
-                {showP2pEstimatedValue && (
-                  <span> {user.p2pEstimatedValue?.token} ≈ </span>
-                )}
+      <Row className="header">
+        <Col xxl={10} xl={10} md={9} sm={12}>
+          <Row className="userInfo">
+            <Col className="userName" xxl={8} md={6} sm={12}>
+              <Title level={5}>
+                <span className="avatar">{user.name?.charAt(0)}</span>
                 <span>
-                  {showP2pEstimatedValue
-                    ? (
-                        user.p2pEstimatedValue?.value *
-                        user.p2pEstimatedValue?.price
-                      ).toFixed(8)
-                    : '*********'}
+                  {user.name} <FiEdit className="editIcon" />
                 </span>
-
-                {showP2pEstimatedValue && (
-                  <span>{' ' + user.p2pEstimatedValue.fiat}</span>
+                <Tag color={darkTheme.primary}>
+                  {user.verified ? 'Verified User' : 'Not Verifited User'}
+                </Tag>
+              </Title>
+              <div className="checkedUser">
+                <span>
+                  Email{' '}
+                  {user.allowReceiveEmail ? (
+                    <AiFillCheckCircle className="checkedIcon" />
+                  ) : (
+                    <AiFillCloseCircle className="notCheckedIcon" />
+                  )}
+                </span>
+                <span>
+                  SMS{' '}
+                  {user.allowReceiveSms ? (
+                    <AiFillCheckCircle className="checkedIcon" />
+                  ) : (
+                    <AiFillCloseCircle className="notCheckedIcon" />
+                  )}
+                </span>
+                <span>
+                  KYC{' '}
+                  {user.allowReceiveKyc ? (
+                    <AiFillCheckCircle className="checkedIcon" />
+                  ) : (
+                    <AiFillCloseCircle className="notCheckedIcon" />
+                  )}
+                </span>
+              </div>
+            </Col>
+            <Col className="p2pEstimatedValue" xxl={4} md={6} sm={12}>
+              <span>
+                P2P Estimated Value ({user.p2pEstimatedValue?.token}){' '}
+                {showP2pEstimatedValue ? (
+                  <AiOutlineEye
+                    className="eyeIcon"
+                    onClick={() => setShowP2pEstimatedValue(false)}
+                  />
+                ) : (
+                  <AiOutlineEyeInvisible
+                    className="eyeIcon"
+                    onClick={() => setShowP2pEstimatedValue(true)}
+                  />
                 )}
               </span>
-            </p>
-          </div>
-        </div>
-        <Button className="btnMerchant">Become merchant</Button>
-      </div>
+              <p>
+                <span className="cryptoNumber">
+                  {showP2pEstimatedValue
+                    ? user.p2pEstimatedValue?.value?.toFixed(8)
+                    : '*********  '}
+                </span>
+                <span>
+                  {showP2pEstimatedValue && (
+                    <span> {user.p2pEstimatedValue?.token} ≈ </span>
+                  )}
+                  <span>
+                    {showP2pEstimatedValue
+                      ? (
+                          user.p2pEstimatedValue?.value *
+                          user.p2pEstimatedValue?.price
+                        ).toFixed(8)
+                      : '*********'}
+                  </span>
+
+                  {showP2pEstimatedValue && (
+                    <span>{' ' + user.p2pEstimatedValue.fiat}</span>
+                  )}
+                </span>
+              </p>
+            </Col>
+          </Row>
+        </Col>
+        <Col xxl={2} xl={2} md={3} sm={12}>
+          <Button className="btnMerchant">Become merchant</Button>
+        </Col>
+      </Row>
       <Row className="content">
         <Col xxl={3} lg={4} md={6} sm={12}>
           <p className="title">30d Trades</p>
@@ -196,17 +200,10 @@ const Wrapper = styled.div`
   padding: 30px 10px;
 
   .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
     border-bottom: 2px solid ${({ theme }) => theme.whiteSmokeColor};
     padding-bottom: 20px;
 
     .userInfo {
-      display: flex;
-      width: 80%;
-      justify-content: space-between;
-
       .userName {
         .avatar {
           background-color: ${({ theme }) => theme.primary};
@@ -239,6 +236,7 @@ const Wrapper = styled.div`
       }
       .p2pEstimatedValue {
         color: ${({ theme }) => theme.darkGrayColor};
+        text-align: right;
 
         .cryptoNumber {
           font-weight: bold;
@@ -252,6 +250,12 @@ const Wrapper = styled.div`
           font-size: 18px;
           cursor: pointer;
         }
+
+        @media only screen and (max-width: 767px) {
+          text-align: left;
+          margin-left: 29px;
+          margin-top: 20px;
+        }
       }
     }
 
@@ -260,7 +264,7 @@ const Wrapper = styled.div`
       border: none;
       transition: all 0.25s linear;
       font-size: 14px;
-      width: 180px;
+      width: 100%;
       height: 40px;
 
       &:focus {

@@ -212,15 +212,15 @@ function P2PTableBuy() {
     let cryptoId = 0;
 
     if (listToken.length !== 0 && crypto) {
-      cryptoId = listToken.find(token => token.assetName === crypto).id;
+      cryptoId = listToken.find(token => token.assetName === crypto)?.id;
     }
 
     if (listFiat.length !== 0 && fiat) {
-      fiatId = listFiat.find(x => x.name === fiat).id;
+      fiatId = listFiat.find(x => x.name === fiat)?.id;
     }
 
     if (listPaymet.length !== 0 && payment !== 'All payments' && payment) {
-      paymentId = listPaymet.find(x => x.name === payment).id;
+      paymentId = listPaymet.find(x => x.name === payment)?.id;
     }
 
     setTimeout(() => {

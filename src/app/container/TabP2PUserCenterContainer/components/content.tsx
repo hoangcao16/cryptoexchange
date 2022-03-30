@@ -1,5 +1,5 @@
 import { List, Tabs, Tag } from 'antd';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { BiPlus } from 'react-icons/bi';
 import styled from 'styled-components';
 import { tabP2PUserCenterServices } from 'services/tabP2PUserCenterServices';
@@ -54,21 +54,26 @@ const ContentP2PUserCenter = () => {
             id="tabPaymentMethod"
           >
             <h6 className="title">P2P Payment Methods</h6>
-            <div className="desc">
-              <p>
-                P2P payment methods: When you sell cryptocurrencies, the payment
-                method added will be displayed to buyer as options to accept
-                payment, please ensure that the account owner’s name is
-                consistent with your verified name on Binance. You can add up to
-                20 payment methods.
-              </p>
-              <Button
-                className="btnAddPM"
-                onClick={() => setShowModalAddPM(true)}
-              >
-                <BiPlus className="plusIcon" /> Add a payment method
-              </Button>
-            </div>
+            <Row className="desc">
+              <Col xxl={9} md={7} sm={12}>
+                <p>
+                  P2P payment methods: When you sell cryptocurrencies, the
+                  payment method added will be displayed to buyer as options to
+                  accept payment, please ensure that the account owner’s name is
+                  consistent with your verified name on Binance. You can add up
+                  to 20 payment methods.
+                </p>
+              </Col>
+
+              <Col xxl={3} md={5} sm={12}>
+                <Button
+                  className="btnAddPM"
+                  onClick={() => setShowModalAddPM(true)}
+                >
+                  <BiPlus className="plusIcon" /> Add a payment method
+                </Button>
+              </Col>
+            </Row>
 
             <List
               className="listUserPayment"
@@ -93,36 +98,36 @@ const ContentP2PUserCenter = () => {
                     </div>
                   </div>
 
-                  <div className="contentItem">
-                    {item?.paymentMethod?.id === 4 ? (
+                  <Row className="contentItem">
+                    {item?.paymentMethod?.name === 'Internet Banking' ? (
                       <>
-                        <p className="infoPM">
+                        <Col className="infoPM" xxl={3} md={6}>
                           Name: <p className="PMdesc">{item?.fullName}</p>
-                        </p>
-                        <p className="infoPM">
+                        </Col>
+                        <Col className="infoPM" xxl={3} md={6}>
                           Bank account number:{' '}
                           <p className="PMdesc">{item?.accountNumber}</p>
-                        </p>
-                        <p className="infoPM">
+                        </Col>
+                        <Col className="infoPM" xxl={3} md={6}>
                           Bank name: <p className="PMdesc">{item?.bankName}</p>
-                        </p>
-                        <p className="infoPM">
+                        </Col>
+                        <Col className="infoPM" xxl={3} md={6}>
                           Account opening branch:{' '}
                           <p className="PMdesc">{item?.bankBranch}</p>
-                        </p>
+                        </Col>
                       </>
                     ) : (
                       <>
-                        <p className="infoPM">
+                        <Col className="infoPM">
                           Name: <p className="PMdesc">{item?.fullName}</p>
-                        </p>
-                        <p className="infoPM">
+                        </Col>
+                        <Col className="infoPM">
                           Mobile phone:{' '}
                           <p className="PMdesc">{item?.mobilePhone}</p>
-                        </p>
+                        </Col>
                       </>
                     )}
-                  </div>
+                  </Row>
                 </List.Item>
               )}
             ></List>
@@ -153,9 +158,24 @@ const ContentP2PUserCenter = () => {
           <Modal.Body>
             <h6>Recommand payment method</h6>
             <Tag className="rcmTag">
-              <Link to={`/payment/Add/${listPaymentMethod[2]?.name}`}>
-                <img src={listPaymentMethod[2]?.icon} alt="#" />{' '}
-                {listPaymentMethod[2]?.name}
+              <Link
+                to={`/payment/Add/${
+                  listPaymentMethod?.find(pm => pm.name === 'Internet Banking')
+                    ?.name
+                }`}
+              >
+                <img
+                  src={
+                    listPaymentMethod?.find(
+                      pm => pm.name === 'Internet Banking',
+                    )?.icon
+                  }
+                  alt="#"
+                />{' '}
+                {
+                  listPaymentMethod?.find(pm => pm.name === 'Internet Banking')
+                    ?.name
+                }
               </Link>
             </Tag>
 
@@ -211,9 +231,10 @@ const Wrapper = styled.div`
       align-items: flex-start;
 
       button {
-        margin-left: 100px;
+        /* margin-left: 100px; */
         height: 45px;
-        width: 40%;
+        width: 100%;
+        align-items: right;
         background-color: ${({ theme }) => theme.whiteSmokeColor};
         color: ${({ theme }) => theme.brightBlackColor};
         font-size: 15px;
@@ -268,10 +289,8 @@ const Wrapper = styled.div`
         .contentItem {
           padding: 25px 20px 15px;
           width: 100%;
-          display: flex;
 
           .infoPM {
-            width: 25%;
             margin-bottom: 0;
             color: ${({ theme }) => theme.brightGrayColor};
 
@@ -310,6 +329,7 @@ const Wrapper = styled.div`
 
 const ModalAddPayemnt = styled(Modal)`
   color: ${({ theme }) => theme.p2pText};
+  max-width: 90vw;
 
   .modal-header {
     font-weight: bold;

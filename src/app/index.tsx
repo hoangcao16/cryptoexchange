@@ -45,7 +45,7 @@ export function App() {
   const dispatch = useDispatch();
   const { actions: toastActions } = useToastSlice();
   const { actions: actionsAllPair } = useGetallpairSlice();
-  const basePair = 'ROB_USDT';
+  const basePair = 'B2_USDT';
   const dataToast: any = useSelector(selectToast);
   const { i18n } = useTranslation();
   const { theme } = useThemeContext();
