@@ -2,12 +2,9 @@ import { Menu, Typography } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { useState } from 'react';
 import { Offcanvas } from 'react-bootstrap';
-import { AiFillProfile } from 'react-icons/ai';
 import { BiLogOut } from 'react-icons/bi';
 import { BsFillBookmarkPlusFill, BsPersonCircle } from 'react-icons/bs';
 import { FaWallet } from 'react-icons/fa';
-import { GrClose } from 'react-icons/gr';
-import { MdDashboard, MdOutlineSpaceDashboard } from 'react-icons/md';
 import { RiProfileLine, RiVipDiamondFill } from 'react-icons/ri';
 import { SiSpringsecurity } from 'react-icons/si';
 import { Link } from 'react-router-dom';
@@ -25,7 +22,7 @@ const NavbarUser = () => {
 
   const userId = localStorage.getItem('userId');
 
-  const { Text, Title } = Typography;
+  const { Title } = Typography;
 
   return (
     <Wrapper>

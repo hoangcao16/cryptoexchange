@@ -6,7 +6,7 @@ export const StyledNavBar = styled(Navbar)`
   background-color: ${({ theme }) => theme.body} !important;
   padding: 0px !important;
   .linkDownload {
-    margin-right: 10px;
+    /* margin-right: 10px; */
   }
   @media only screen and (max-width: 1199px) {
     .linkDownload,
@@ -137,6 +137,12 @@ export const StyledNav = styled(Nav)`
     width: 1px;
     height: 13px;
     background-color: ${({ theme }) => theme.darkGrayColor};
+  }
+
+  @media only screen and (max-width: 1199px) {
+    .wrapperAuth {
+      display: none;
+    }
   }
 `;
 export const NavbarToggle = styled(Navbar.Toggle)`
