@@ -100,7 +100,7 @@ const Wrapper = styled.div`
 
 const OffCanvasUser = styled(Offcanvas)`
   background-color: ${({ theme }) => theme.background} !important;
-
+  max-width: 90vw;
   .offcanvas-header {
     position: relative;
     display: block;

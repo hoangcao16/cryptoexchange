@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Tabs as TabAntd } from 'antd';
 export const Container = styled.div`
   padding: 12px 16px 16px;
 `;
@@ -127,5 +128,73 @@ export const Tooltip = styled.div`
     &:hover {
       color: ${({ theme }) => theme.text};
     }
+  }
+`;
+
+export const TabAnt = styled(TabAntd)`
+  .ant-tabs-nav-wrap {
+    &::before {
+      display: none;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+  .ant-tabs-nav-operations {
+    display: none;
+  }
+
+  margin: 10px 0;
+  /* display: none; */
+  color: ${({ theme }) => theme.whiteSmokeColor};
+  background-color: ${({ theme }) => theme.brightBlackColor};
+  border-radius: 5px;
+  overflow: hidden;
+  .ant-tabs-nav-list {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+  .ant-tabs-content-holder {
+    display: none;
+  }
+
+  .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+    display: none;
+  }
+
+  .ant-tabs-tab {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    color: ${({ theme }) => theme.p2pTextLight};
+  }
+
+  .ant-tabs-nav-operations {
+    display: none !important;
+  }
+  .ant-tabs-tab-active {
+    background-color: ${({ defaultActiveKey }) => defaultActiveKey};
+    div {
+      color: ${({ theme }) => theme.p2pTextLight} !important;
+    }
+  }
+  .ant-tabs-nav {
+    width: 100%;
+    margin: 0;
+
+    &::before {
+      display: none;
+    }
+  }
+  display: none;
+  @media only screen and (max-width: 1199px) {
+    display: block;
+  }
+
+  @media only screen and (max-width: 991px) {
+    display: none;
   }
 `;

@@ -80,9 +80,9 @@ const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
     <Container>
       <Div>
         <Content>
-          <Col xxl={3} xl={3}>
+          <Col xxl={3} xl={3} lg={3} md={4}>
             <Row>
-              <ContentLeft xxl={7} lg={3} xl={7} md={3} sm={3} xs={6}>
+              <ContentLeft xxl={7} lg={6} xl={7} md={6} sm={3} xs={6}>
                 <div className="contentLeft-coin">
                   <div className="coin">{changeFormatPair}</div>
                   <div className="InformationCoin">
@@ -93,9 +93,9 @@ const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
               </ContentLeft>
               <Col
                 xxl={5}
-                lg={3}
+                lg={6}
                 xl={5}
-                md={3}
+                md={6}
                 sm={3}
                 xs={6}
                 className="nowPrice d-flex flex-column"

@@ -23,9 +23,18 @@ export const Div = styled.div`
   display: flex;
 `;
 export const Content = styled(Row)`
+  width: 80%;
   box-sizing: border-box;
   margin: 0px;
+  height: 100%;
   flex: 1 1 0%;
+
+  .wrapperLeft {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .showPrice {
     color: ${({ theme }) => theme.text};
     &[data-type='up'] {
@@ -40,10 +49,18 @@ export const Content = styled(Row)`
   }
 
   .nowPrice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
     padding: 0;
     margin: 0;
-    padding-top: 3px;
-    padding-left: 25px;
+  }
+
+  @media only screen and (max-width: 991px) {
+    .wrapperLeft {
+      justify-content: flex-start;
+    }
   }
 `;
 export const SpotTutorial = styled.div`
@@ -64,10 +81,16 @@ export const SpotTutorial = styled.div`
     width: 1em;
     height: 1em;
   }
+
+  @media only screen and (max-width: 576px) {
+    display: none;
+  }
 `;
 export const ContentLeft = styled(Col)`
   display: flex;
   height: 48px;
+  align-items: center;
+  justify-content: center;
   border-right: ${({ theme }) => theme.borderBlack};
   padding: 0px;
   margin: 0px;
@@ -105,18 +128,21 @@ export const ContentLeft = styled(Col)`
 `;
 export const ContentRight = styled(Col)`
   display: flex;
+  margin-left: 10px;
   .ticketList {
+    width: 100%;
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
   }
 
   .contentRightContainer {
+    width: 100%;
     flex-flow: row nowrap;
     box-sizing: border-box;
     -webkit-box-align: center;
     align-items: center;
     position: relative;
-    margin-left: 32px;
     margin-right: 8px;
     font-size: 12px;
     overflow: hidden;
@@ -140,5 +166,15 @@ export const ContentRight = styled(Col)`
         }
       }
     }
+  }
+
+  @media only screen and (max-width: 991px) {
+    .ticketItem {
+      margin-bottom: 10px;
+      text-align: left;
+    }
+  }
+  @media only screen and (max-width: 767px) {
+    margin-top: 20px;
   }
 `;

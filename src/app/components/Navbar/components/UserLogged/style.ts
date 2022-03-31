@@ -21,6 +21,7 @@ export const StyledNavDropdown = styled(NavDropdown)`
   }
   .dropdown-menu {
     background-color: ${({ theme }) => theme.background};
+    width: 200px;
     .dropdown-item {
       white-space: unset;
       /* padding: 16px; */
@@ -28,10 +29,34 @@ export const StyledNavDropdown = styled(NavDropdown)`
       border-radius: 8px;
       display: flex;
       align-items: center;
+      padding: 15px;
       &:hover {
         background-color: ${({ theme }) => theme.backgroundDropdown};
         .arrow-right {
           display: inline-block;
+        }
+        button {
+          color: ${({ theme }) => theme.primary};
+        }
+      }
+
+      button {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        border: none;
+        text-align: left;
+        font-size: 16px;
+
+        &:focus {
+          box-shadow: none;
+        }
+
+        svg {
+          font-size: 18px;
+          margin-right: 5px;
+          transform: translateY(-1px);
         }
       }
     }

@@ -22,7 +22,7 @@ export const StyledNavDropdown = styled(NavDropdown)`
   }
   .dropdown-menu {
     background-color: ${({ theme }) => theme.background};
-    min-width: 360px;
+    min-width: 380px;
     .dropdown-item {
       white-space: unset;
       padding: 16px;

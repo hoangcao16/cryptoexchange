@@ -41,6 +41,7 @@ input[type='number'] {
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 
 /* Track */
@@ -53,7 +54,9 @@ input[type='number'] {
   background: #555;
   border-radius: 8px;
 }
-
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #888;

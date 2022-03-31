@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 export const ColLeft = styled.div`
-  flex: 1 1 0%;
-  padding-right: 32px;
   .balance {
     box-sizing: border-box;
     margin: 0px 0px 8px 0px;
@@ -30,7 +28,6 @@ export const ColLeft = styled.div`
   }
 `;
 export const ColRight = styled.div`
-  flex: 1 1 0%;
   .balance {
     box-sizing: border-box;
     margin: 0px 0px 8px 0px;
@@ -98,6 +95,58 @@ export const Button = styled.button`
     &:hover {
       box-shadow: none;
       background-color: ${({ theme }) => theme.middleWashedRose};
+    }
+  }
+`;
+
+export const Wrapper = styled.div`
+  width: 100%;
+  flex-wrap: nowrap;
+  .second-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    & > div {
+      display: inline-block;
+      width: 50%;
+      padding: 0 5px;
+    }
+  }
+
+  .first-content {
+    display: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  @media only screen and (min-width: 1199px) {
+    .first-content {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 1199px) {
+    .first-content {
+      display: block;
+    }
+    .second-content {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 991px) {
+    .first-content {
+      display: none;
+    }
+    .second-content {
+      display: block;
+      flex-direction: row;
+      padding: 0 5px;
+
+      & > div {
+        display: inline-block;
+        width: 50%;
+      }
     }
   }
 `;

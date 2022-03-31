@@ -1,12 +1,29 @@
 import styled from 'styled-components';
 import { Alert } from 'react-bootstrap';
+import { Typography } from 'antd';
 
-export const StyledAlert = styled(Alert)`
+export const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.earthBrownColor};
+  padding: 5px 40px 5px 15px;
+  text-align: justify;
+  position: relative;
+
+  .btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 12px;
+    margin-right: 10px;
+    color: ${({ theme }) => theme.whiteSmokeColor};
+  }
+
+  @media only screen and (max-width: 575px) {
+    display: none;
+  }
+`;
+
+export const StyledAlert = styled(Typography.Text)`
   color: ${({ theme }) => theme.text};
-  padding: 0 28px;
-  line-height: 36px;
-  height: 36px;
   border: none;
   margin-bottom: 0;
   svg {
@@ -18,17 +35,6 @@ export const StyledAlert = styled(Alert)`
     fill: ${({ theme }) => theme.primary};
     width: 1em;
     height: 1em;
-  }
-  .btn-close {
-    padding: 11px 28px;
-    outline: none;
-    color: ${({ theme }) => theme.text};
-    &:hover {
-      color: ${({ theme }) => theme.text};
-    }
-    &:focus {
-      box-shadow: none;
-    }
   }
 `;
 export const StyledAlertLink = styled(Alert.Link)`

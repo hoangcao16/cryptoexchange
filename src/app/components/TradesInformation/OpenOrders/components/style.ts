@@ -74,6 +74,10 @@ export const Div = styled.div`
   .ant-table-cell-scrollbar {
     box-shadow: none;
   }
+
+  .ant-table-row-scrollbar {
+    box-shadow: none;
+  }
 `;
 export const StyledButton = styled.button`
   background-color: transparent;

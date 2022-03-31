@@ -119,27 +119,54 @@ const HomeContentContainer = () => {
   return (
     <Container>
       <StyledRow>
-        <Col md={9}>
+        <Col md={12} lg={12} xxl={9} xl={9}>
           <StyledRow>
             <ContentHeader
               tradeInforSocket={tradeInfor}
               tradeVolumeInforSocket={tradeVolumeInfor}
             />
           </StyledRow>
-          <StyledRow>
-            <StyledCol md={4} className="orderbook-section">
+          <StyledRow className="content-left">
+            <StyledCol
+              xxl={4}
+              xl={4}
+              lg={12}
+              md={12}
+              className="orderbook-section"
+            >
               <OrderBook
                 dataOrderbookSocket={dataOrder}
                 dataMarketSocket={dataMarketSocket}
               />
+              <div className="market">
+                <Market
+                  dataSocket={dataMarketSocket}
+                  dataApi={dataAllPair}
+                  socket={webSocket}
+                />
+                <Trades dataSocket={dataTradesSocket} dataApi={dataAllTrades} />
+                <MarketActivities />
+              </div>
             </StyledCol>
-            <StyledCol md={8} className="d-flex flex-column">
-              <Chart />
-              <OrderFormContainer />
+            <StyledCol
+              xxl={8}
+              xl={8}
+              lg={12}
+              md={12}
+              className="d-flex flex-column"
+            >
+              <Row>
+                <Col xxl={12} xl={12} lg={8}>
+                  <Chart />
+                </Col>
+                <Col xxl={12} xl={12} lg={4}>
+                  <OrderFormContainer />
+                </Col>
+              </Row>
             </StyledCol>
           </StyledRow>
         </Col>
-        <StyledCol md={3} className="right-menu">
+        <StyledCol xxl={3} lg={6} xl={3} className="right-menu">
           <Market
             dataSocket={dataMarketSocket}
             dataApi={dataAllPair}
@@ -155,6 +182,7 @@ const HomeContentContainer = () => {
 export default HomeContentContainer;
 const StyledRow = styled(Row)`
   padding: 0;
+
   .orderbook-section,
   .right-menu {
     border: ${({ theme }) => theme.borderGray};
@@ -164,6 +192,53 @@ const StyledRow = styled(Row)`
   .right-menu {
     display: flex;
     flex-direction: column;
+  }
+
+  @media only screen and (max-width: 1199px) {
+    .content-left {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .right-menu {
+      display: none;
+    }
+    .orderbook-section {
+      display: flex;
+      justify-content: space-between;
+
+      & > div {
+        width: 50%;
+      }
+      .market {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    #orderbook {
+      width: 50%;
+    }
+  }
+
+  @media only screen and (min-width: 1200px) {
+    .market {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 650px) {
+    .orderbook-section {
+      flex-direction: column;
+      & > div {
+        width: 100%;
+      }
+
+      .market {
+        width: 100%;
+      }
+    }
   }
 `;
 const StyledCol = styled(Col)`

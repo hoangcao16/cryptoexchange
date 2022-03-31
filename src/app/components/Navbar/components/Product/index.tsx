@@ -16,11 +16,11 @@ import { MdOutlineManageSearch } from 'react-icons/md';
 import { GiNestedHearts } from 'react-icons/gi';
 import { WiCloudy } from 'react-icons/wi';
 import { ImLab } from 'react-icons/im';
-import { GrLaunch } from 'react-icons/gr';
 import { FiCreditCard } from 'react-icons/fi';
 import { BsShield } from 'react-icons/bs';
 import { SiBinance } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
+import { IoRocketOutline } from 'react-icons/io5';
 
 const ProductNav = () => {
   const { t } = useTranslation();
@@ -82,7 +82,7 @@ const ProductNav = () => {
     },
     {
       id: 9,
-      icon: GrLaunch,
+      icon: IoRocketOutline,
       name: t('launchpad'),
       description: t('launchpad-sub'),
     },
