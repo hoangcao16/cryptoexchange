@@ -8,7 +8,7 @@ import {
 } from './style';
 import { useTranslation } from 'react-i18next';
 import { SiConvertio } from 'react-icons/si';
-import { AiOutlineLayout } from 'react-icons/ai';
+import { AiOutlineArrowUp, AiOutlineLayout } from 'react-icons/ai';
 import { RiLayoutGridLine } from 'react-icons/ri';
 import { GrUpgrade } from 'react-icons/gr';
 import { BsPeople } from 'react-icons/bs';
@@ -46,7 +46,7 @@ const TradeNav = () => {
     },
     {
       id: 4,
-      icon: GrUpgrade,
+      icon: AiOutlineArrowUp,
       name: t('margin'),
       description: t('increase-your-profits'),
     },

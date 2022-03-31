@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 export const StyledNavBar = styled(Navbar)`
   background-color: ${({ theme }) => theme.body} !important;
   padding: 0px !important;
-
+  .linkDownload {
+    margin-right: 10px;
+  }
   @media only screen and (max-width: 1199px) {
     .linkDownload,
     .border,

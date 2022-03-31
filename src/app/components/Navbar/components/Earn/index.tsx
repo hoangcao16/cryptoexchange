@@ -8,12 +8,12 @@ import {
 } from './style';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineSavings } from 'react-icons/md';
-import { GrLaunch } from 'react-icons/gr';
 import { RiCopperCoinLine } from 'react-icons/ri';
 import { RiCoinsLine } from 'react-icons/ri';
 import { MdOutlineAutorenew } from 'react-icons/md';
 import { GiDigDug } from 'react-icons/gi';
 import { RiCoinLine } from 'react-icons/ri';
+import { IoRocketOutline } from 'react-icons/io5';
 
 const EarnNav = () => {
   const { t } = useTranslation();
@@ -33,7 +33,7 @@ const EarnNav = () => {
     },
     {
       id: 2,
-      icon: GrLaunch,
+      icon: IoRocketOutline,
       name: t('launchpad'),
       description: t('launchpad-sub'),
     },

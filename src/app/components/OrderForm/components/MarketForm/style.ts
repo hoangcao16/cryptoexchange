@@ -57,4 +57,65 @@ export const ColRight = styled.div`
       height: 16px;
     }
   }
+
+  div[data-type='normal'] {
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+`;
+
+export const Wrapper = styled.div`
+  width: 100%;
+  flex-wrap: nowrap;
+  .second-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    & > div {
+      display: inline-block;
+      width: 50%;
+      padding: 0 5px;
+    }
+  }
+
+  .first-content {
+    display: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  @media only screen and (min-width: 1199px) {
+    .first-content {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 1199px) {
+    .first-content {
+      display: block;
+      & > div {
+        padding-right: 0;
+      }
+    }
+    .second-content {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 991px) {
+    .first-content {
+      display: none;
+    }
+    .second-content {
+      display: block;
+      flex-direction: row;
+      padding: 0 5px;
+
+      & > div {
+        display: inline-block;
+        width: 50%;
+        padding: 0 5px;
+      }
+    }
+  }
 `;

@@ -16,12 +16,14 @@ export const Wrapper = styled.div`
     margin-right: 10px;
     color: ${({ theme }) => theme.whiteSmokeColor};
   }
+
+  @media only screen and (max-width: 575px) {
+    display: none;
+  }
 `;
 
 export const StyledAlert = styled(Typography.Text)`
   color: ${({ theme }) => theme.text};
-  line-height: 36px;
-  height: 36px;
   border: none;
   margin-bottom: 0;
   svg {

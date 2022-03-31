@@ -81,6 +81,10 @@ export const SpotTutorial = styled.div`
     width: 1em;
     height: 1em;
   }
+
+  @media only screen and (max-width: 576px) {
+    display: none;
+  }
 `;
 export const ContentLeft = styled(Col)`
   display: flex;
@@ -165,11 +169,12 @@ export const ContentRight = styled(Col)`
   }
 
   @media only screen and (max-width: 991px) {
-    margin-top: 20px;
-
     .ticketItem {
       margin-bottom: 10px;
-      text-align: center;
+      text-align: left;
     }
+  }
+  @media only screen and (max-width: 767px) {
+    margin-top: 20px;
   }
 `;

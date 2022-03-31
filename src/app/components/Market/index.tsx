@@ -72,10 +72,10 @@ const Market = ({ dataSocket, dataApi, socket }) => {
           onClick={() => setActive('Favor')}
         />
         <span
-          className={active === 'BUSD' ? 'slickItem-active' : ''}
-          onClick={() => setActive('BUSD')}
+          className={active === 'B2' ? 'slickItem-active' : ''}
+          onClick={() => setActive('B2')}
         >
-          BUSD
+          B2
         </span>
         <span
           className={active === 'USDT' ? 'slickItem-active' : ''}

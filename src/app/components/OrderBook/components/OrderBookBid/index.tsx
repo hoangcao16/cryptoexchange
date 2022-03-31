@@ -19,7 +19,6 @@ const OrderBookBid = ({
   const { t } = useTranslation();
   const [dataView, setDataView]: any[] = useState([]);
   const [lastestPrice, setLastestPrice] = useState('');
-  const [mockUSD, setMockUSD] = useState(0);
   const pairData: any = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
@@ -28,11 +27,6 @@ const OrderBookBid = ({
   const changeFormatPair = `${pair?.substring(0, findIndex)}/${pair?.substring(
     findIndex + 1,
   )}`;
-  useEffect(() => {
-    setInterval(() => {
-      setMockUSD(Math.random() * (5000 - 50 + 1) + 50);
-    }, 1000);
-  }, []);
   useEffect(() => {
     if (!isEmpty(dataMarketSocket)) {
       if (dataMarketSocket.symbol === changeFormatPair) {
@@ -123,7 +117,9 @@ const OrderBookBid = ({
               <BsArrowDown />
             ) : null}
           </div>
-          <div className="markPrice">${numeral(mockUSD).format('0,0.0')}</div>
+          <div className="markPrice">
+            ${numeral(lastestPrice).format('0,0.0')}
+          </div>
         </div>
         <a href="/#" className="readmore">
           {t('more')}

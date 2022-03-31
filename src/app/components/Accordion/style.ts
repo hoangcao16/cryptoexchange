@@ -61,6 +61,12 @@ export const Content = styled.div`
       flex-shrink: 0;
     }
   }
+
+  @media only screen and (max-width: 911px) {
+    .content-item {
+      flex-basis: 100%;
+    }
+  }
 `;
 
 export const StyledArrow = styled.div<{ Show: boolean }>`
@@ -76,6 +82,7 @@ export const StyledArrow = styled.div<{ Show: boolean }>`
   transition: all 0.3s ease 0s;
   cursor: pointer;
   transform: ${props => (props.Show ? 'rotate(270deg)' : 'rotate(90deg)')};
+  margin-right: 15px;
   svg {
     box-sizing: border-box;
     margin: 0px;

@@ -158,7 +158,7 @@ const OrderHistoryList = ({ dataSource }: any) => {
         columns={columns}
         rowKey="order_id"
         pagination={false}
-        scroll={{ scrollToFirstRowOnChange: false, y: 260 }}
+        scroll={{ scrollToFirstRowOnChange: false, y: 260, x: 900 }}
         className="table"
       />
     </Div>

@@ -35,8 +35,6 @@ const OrderForm = () => {
     darkTheme?.greenColor,
   );
 
-  const [innerWidth, setInnerWidth] = useState(0);
-
   const handleChangeTabBuySell = value => {
     setActiveKeyTabBuySell(value);
   };
@@ -68,21 +66,16 @@ const OrderForm = () => {
     }
   }, [actions, dispatch, pairId, reGetBalancePair]);
 
-  useEffect(() => {
-    window.onresize = () => {
-      setInnerWidth(window.innerWidth);
-    };
-  }, []);
-
   return (
     <Container>
       <TabAnt
         defaultActiveKey={activeKeyTabBuySell}
         className="toggleBuySell"
         onChange={handleChangeTabBuySell}
-        data-display={innerWidth < 1200 ? 'none' : 'block'}
       >
-        <TabPane tab="Buy" key={darkTheme?.greenColor}></TabPane>
+        <TabPane tab="Buy" key={darkTheme?.greenColor}>
+          1111
+        </TabPane>
         <TabPane tab="Sell" key={darkTheme?.redColor}></TabPane>
       </TabAnt>
 
@@ -149,11 +142,24 @@ const OrderForm = () => {
       </div>
       <div className="d-flex">
         {tabActive === 1 ? (
-          <LimitForm wallet={wallet} />
+          <LimitForm
+            wallet={wallet}
+            active={
+              activeKeyTabBuySell === darkTheme?.greenColor ? 'Buy' : 'Sell'
+            }
+          />
         ) : tabActive === 2 ? (
-          <MarketForm />
+          <MarketForm
+            active={
+              activeKeyTabBuySell === darkTheme?.greenColor ? 'Buy' : 'Sell'
+            }
+          />
         ) : tabActive === 3 ? (
-          <StopLimitForm />
+          <StopLimitForm
+            active={
+              activeKeyTabBuySell === darkTheme?.greenColor ? 'Buy' : 'Sell'
+            }
+          />
         ) : (
           <OcoForm />
         )}

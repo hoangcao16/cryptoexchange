@@ -127,13 +127,34 @@ const HomeContentContainer = () => {
             />
           </StyledRow>
           <StyledRow className="content-left">
-            <StyledCol xxl={4} xl={4} lg={6} className="orderbook-section">
+            <StyledCol
+              xxl={4}
+              xl={4}
+              lg={12}
+              md={12}
+              className="orderbook-section"
+            >
               <OrderBook
                 dataOrderbookSocket={dataOrder}
                 dataMarketSocket={dataMarketSocket}
               />
+              <div className="market">
+                <Market
+                  dataSocket={dataMarketSocket}
+                  dataApi={dataAllPair}
+                  socket={webSocket}
+                />
+                <Trades dataSocket={dataTradesSocket} dataApi={dataAllTrades} />
+                <MarketActivities />
+              </div>
             </StyledCol>
-            <StyledCol xxl={8} xl={8} lg={12} className="d-flex flex-column">
+            <StyledCol
+              xxl={8}
+              xl={8}
+              lg={12}
+              md={12}
+              className="d-flex flex-column"
+            >
               <Row>
                 <Col xxl={12} xl={12} lg={8}>
                   <Chart />
@@ -161,6 +182,7 @@ const HomeContentContainer = () => {
 export default HomeContentContainer;
 const StyledRow = styled(Row)`
   padding: 0;
+
   .orderbook-section,
   .right-menu {
     border: ${({ theme }) => theme.borderGray};
@@ -176,6 +198,46 @@ const StyledRow = styled(Row)`
     .content-left {
       display: flex;
       flex-direction: column-reverse;
+    }
+
+    .right-menu {
+      display: none;
+    }
+    .orderbook-section {
+      display: flex;
+      justify-content: space-between;
+
+      & > div {
+        width: 50%;
+      }
+      .market {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    #orderbook {
+      width: 50%;
+    }
+  }
+
+  @media only screen and (min-width: 1200px) {
+    .market {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 650px) {
+    .orderbook-section {
+      flex-direction: column;
+      & > div {
+        width: 100%;
+      }
+
+      .market {
+        width: 100%;
+      }
     }
   }
 `;

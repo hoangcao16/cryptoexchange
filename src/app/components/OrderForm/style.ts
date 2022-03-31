@@ -189,4 +189,12 @@ export const TabAnt = styled(TabAntd)`
       display: none;
     }
   }
+  display: none;
+  @media only screen and (max-width: 1199px) {
+    display: block;
+  }
+
+  @media only screen and (max-width: 991px) {
+    display: none;
+  }
 `;
