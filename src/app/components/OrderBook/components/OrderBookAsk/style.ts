@@ -2,12 +2,11 @@ import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
 
 export const Wrapper = styled.div`
-  overflow-x: unset;
   position: relative;
   .cover {
     position: absolute;
     width: 100%;
-    bottom: calc(4% + 16px);
+    bottom: calc(4%);
     left: 0;
     background-color: ${({ theme }) => theme.brightGrayColorBlur};
     z-index: -1;
@@ -16,9 +15,8 @@ export const Wrapper = styled.div`
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #ccc;
+    background-color: ${({ theme }) => theme.grayColor};
     transform: translate(100%, -50%);
-    width: 50%;
     padding: 10px;
     border-radius: 5px;
     margin-left: 10px;
@@ -26,6 +24,17 @@ export const Wrapper = styled.div`
 
     p {
       margin-bottom: 0;
+    }
+
+    &::before {
+      position: absolute;
+      content: '';
+      left: 0;
+      top: 50%;
+      height: 10px;
+      width: 10px;
+      background-color: inherit;
+      transform: translate(-50%, -51%) rotate(45deg);
     }
   }
 `;

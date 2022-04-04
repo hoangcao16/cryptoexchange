@@ -9,13 +9,15 @@ import { darkTheme } from 'theme/theme';
 
 const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
   const [dataView, setDataView]: any[] = useState([]);
-  const [coverHeight, setCoverHeight] = useState(60);
+  const [coverHeight, setCoverHeight] = useState(0);
   // const { reselectPair } = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
 
   const handleMove = index => {
-    // setCoverHeight(93 - 93 * (index / 19));
+    if (miniTable) {
+      setCoverHeight(96 - 96 * (index / 19));
+    }
   };
 
   useEffect(() => {
@@ -74,10 +76,10 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
     dispatch(actions.selectPrice(price));
   };
   return (
-    <Wrapper style={{ height: '98%' }}>
+    <Wrapper style={{ height: '98%', zIndex: 5 }}>
       <Table
         data-type={miniTable ? 'mini' : 'normal'}
-        // onMouseOut={() => setCoverHeight(0)}
+        onMouseOut={() => setCoverHeight(0)}
       >
         {dataView !== undefined &&
           dataView !== null &&
@@ -112,8 +114,7 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
       >
         <div
           className="info"
-          // style={{ display: coverHeight === 0 ? 'none' : 'block' }}
-          style={{ display: 'block' }}
+          style={{ display: coverHeight === 0 ? 'none' : 'block' }}
         >
           <p>Average price: $100</p>
           <p>SUM B2: </p>

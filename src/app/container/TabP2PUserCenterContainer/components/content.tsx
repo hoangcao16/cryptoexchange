@@ -329,8 +329,16 @@ const Wrapper = styled.div`
 
 const ModalAddPayemnt = styled(Modal)`
   color: ${({ theme }) => theme.p2pText};
-  max-width: 90vw;
 
+  .modal-dialog {
+    max-width: 100vw !important;
+  }
+  .modal-content {
+    width: 400px;
+    max-width: 96%;
+    display: block;
+    margin: 0 auto;
+  }
   .modal-header {
     font-weight: bold;
     .btn-close {

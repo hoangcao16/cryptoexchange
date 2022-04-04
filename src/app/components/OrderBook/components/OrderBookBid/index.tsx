@@ -129,25 +129,27 @@ const OrderBookBid = ({
         <Table data-type={miniTable ? 'mini' : 'normal'}>
           {dataView !== undefined &&
             dataView !== null &&
-            dataView?.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className="d-flex table-item"
-                  onClick={() => selectPrice(item.price)}
-                >
-                  <Price>{numeral(item.price).format('0,0.000')}</Price>
-                  <Amount>
-                    {numeral(Math.abs(item.quantity)).format('0,0.00000')}
-                  </Amount>
-                  <Total>
-                    {numeral(Math.abs(item.price * item.quantity)).format(
-                      '0,0.00000',
-                    )}
-                  </Total>
-                </div>
-              );
-            })}
+            dataView
+              ?.slice(miniTable && 0, miniTable ? 16 : 0)
+              ?.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="d-flex table-item"
+                    onClick={() => selectPrice(item.price)}
+                  >
+                    <Price>{numeral(item.price).format('0,0.000')}</Price>
+                    <Amount>
+                      {numeral(Math.abs(item.quantity)).format('0,0.00000')}
+                    </Amount>
+                    <Total>
+                      {numeral(Math.abs(item.price * item.quantity)).format(
+                        '0,0.00000',
+                      )}
+                    </Total>
+                  </div>
+                );
+              })}
         </Table>
       </div>
     </>

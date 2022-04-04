@@ -136,11 +136,13 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
         <>
           <OrderBookTHeader />
           <StyledRow>
-            <OrderBookAsk
-              dataApi={dataOrderbook?.data?.data?.asks}
-              dataSocket={dataSocketAsks}
-              miniTable
-            />
+            <div>
+              <OrderBookAsk
+                dataApi={dataOrderbook?.data?.data?.asks}
+                dataSocket={dataSocketAsks}
+                miniTable
+              />
+            </div>
           </StyledRow>
           <StyledRow>
             <OrderBookBid

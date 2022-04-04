@@ -77,25 +77,25 @@ const HomeContentContainer = () => {
     socket.onclose = () => {
       console.log('WebSocket Closed!');
     };
-    socket.onmessage = (message: any) => {
-      const Message = JSON.parse(message?.data);
-      if (
-        Message.Key === 'Robinhood::RecentTrade' &&
-        Message.Value.marker_id !== Message.Value.taker_id
-      ) {
-        setDataTradesSocket(Message.Value);
-      } else if (Message.Key === 'RobinhoodPair') {
-        setDataMarketSocket(Message.Value);
-      } else if (Message.Key === 'PowExchange::OrderBookChange') {
-        setDataOrder(Message.Value);
-      } else if (Message.Key === 'Robinhood::OrderFilled') {
-        dispatch(actionsWebsocket.updateOrderFilled(Message.Value));
-      } else if (Message.Key === 'PowExchange::TradeInfo') {
-        setTradeInfor(Message.Value);
-      } else if (Message.Key === 'PowExchange::TradeVolumeInfo') {
-        setTradeVolumeInfor(Message.Value);
-      }
-    };
+    // socket.onmessage = (message: any) => {
+    //   const Message = JSON.parse(message?.data);
+    //   if (
+    //     Message.Key === 'Robinhood::RecentTrade' &&
+    //     Message.Value.marker_id !== Message.Value.taker_id
+    //   ) {
+    //     setDataTradesSocket(Message.Value);
+    //   } else if (Message.Key === 'RobinhoodPair') {
+    //     setDataMarketSocket(Message.Value);
+    //   } else if (Message.Key === 'PowExchange::OrderBookChange') {
+    //     setDataOrder(Message.Value);
+    //   } else if (Message.Key === 'Robinhood::OrderFilled') {
+    //     dispatch(actionsWebsocket.updateOrderFilled(Message.Value));
+    //   } else if (Message.Key === 'PowExchange::TradeInfo') {
+    //     setTradeInfor(Message.Value);
+    //   } else if (Message.Key === 'PowExchange::TradeVolumeInfo') {
+    //     setTradeVolumeInfor(Message.Value);
+    //   }
+    // };
     return () => {
       socket.close();
     };

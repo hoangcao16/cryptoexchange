@@ -4,15 +4,15 @@ import { Dropdown } from 'react-bootstrap';
 export const Container = styled.div`
   border: none;
   height: 839px;
-  overflow-y: hidden;
-  overflow-x: visible;
+  overflow-y: visible;
+  padding-top: 16px;
 `;
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
-  padding: 16px 16px 0 16px;
+  padding: 0 16px 0 16px;
   button {
     background: transparent !important;
     margin: 0 4px 0 0;

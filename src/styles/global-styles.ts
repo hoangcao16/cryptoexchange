@@ -37,7 +37,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   .fade.modal-backdrop.show{
-    opacity: 0;
+    opacity: 0.5;
   }
   .container {  
     @media (min-width: 1200px) {

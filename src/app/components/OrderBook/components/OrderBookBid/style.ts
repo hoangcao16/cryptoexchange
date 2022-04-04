@@ -60,6 +60,9 @@ export const Table = styled.div`
     height: 20px;
   }
   &[data-type='mini'] {
+    padding: 0 16px;
+    overflow-y: hidden;
+    overflow-x: visible;
     /* overflow: hidden; */
   }
 `;
