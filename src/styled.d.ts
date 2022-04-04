@@ -51,5 +51,6 @@ declare module 'styled-components' {
     titleTableBackground?: string;
     primaryBlur?: string;
     greenColorBlur?: string;
+    brightGrayColorBlur?: string;
   }
 }

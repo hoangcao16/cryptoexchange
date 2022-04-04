@@ -8,7 +8,7 @@ export const StyledNavBar = styled(Navbar)`
   .linkDownload {
     /* margin-right: 10px; */
   }
-  @media only screen and (max-width: 1199px) {
+  @media only screen and (max-width: 1226px) {
     .linkDownload,
     .border,
     .cryptoUsd,
@@ -19,7 +19,7 @@ export const StyledNavBar = styled(Navbar)`
   }
 `;
 export const StyledNavLink = styled(Nav.Link)`
-  @media only screen and (max-width: 1199px) {
+  @media only screen and (max-width: 1226px) {
     display: none;
   }
   margin: 0 4px;
@@ -139,7 +139,7 @@ export const StyledNav = styled(Nav)`
     background-color: ${({ theme }) => theme.darkGrayColor};
   }
 
-  @media only screen and (max-width: 1199px) {
+  @media only screen and (max-width: 1226px) {
     .wrapperAuth {
       display: none;
     }
@@ -153,10 +153,15 @@ export const NavbarToggle = styled(Navbar.Toggle)`
   &:focus {
     box-shadow: none;
   }
+
+  display: none;
+
+  @media only screen and (max-width: 1226px) {
+    display: block !important;
+  }
 `;
 export const NavbarOffcanvas = styled(Navbar.Offcanvas)`
   background-color: ${({ theme }) => theme.background};
-  background-color: ${({ theme }) => theme.background} !important;
   max-width: 90vw;
 
   .offcanvas-header {

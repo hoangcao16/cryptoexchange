@@ -3,15 +3,16 @@ import { Dropdown } from 'react-bootstrap';
 
 export const Container = styled.div`
   border: none;
-  padding: 16px;
   height: 839px;
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: visible;
 `;
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  padding: 16px 16px 0 16px;
   button {
     background: transparent !important;
     margin: 0 4px 0 0;

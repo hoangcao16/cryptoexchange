@@ -31,11 +31,11 @@ export const StyledNavDropdown = styled(NavDropdown)`
     }
   }
 
-  @media only screen and (max-width: 1296px) {
+  @media only screen and (max-width: 1314px) {
     margin: 0 0px;
   }
 
-  @media only screen and (max-width: 1199px) {
+  @media only screen and (max-width: 1226px) {
     display: none;
   }
 `;

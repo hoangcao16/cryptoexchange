@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react';
-import { Price, Amount, Total, Table } from './style';
+import { Price, Amount, Total, Table, Wrapper } from './style';
 import numeral from 'numeral';
 import { useDispatch } from 'react-redux';
 import { useOrderbookSlice } from '../../slice';
 import { isEmpty } from 'app/components/common/common';
+import { darkTheme } from 'theme/theme';
 // import { selectGetallpair } from 'app/components/Market/slice/selectors';
 
 const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
   const [dataView, setDataView]: any[] = useState([]);
+  const [coverHeight, setCoverHeight] = useState(60);
   // const { reselectPair } = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
+
+  const handleMove = index => {
+    // setCoverHeight(93 - 93 * (index / 19));
+  };
 
   useEffect(() => {
     if (dataApi?.length > 0 && isEmpty(dataSocket)) {
@@ -68,8 +74,11 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
     dispatch(actions.selectPrice(price));
   };
   return (
-    <div style={{ height: '98%', overflowY: 'auto' }}>
-      <Table data-type={miniTable ? 'mini' : 'normal'}>
+    <Wrapper style={{ height: '98%' }}>
+      <Table
+        data-type={miniTable ? 'mini' : 'normal'}
+        // onMouseOut={() => setCoverHeight(0)}
+      >
         {dataView !== undefined &&
           dataView !== null &&
           dataView?.slice(miniTable ? -19 : 0).map((item, index) => {
@@ -78,6 +87,7 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
                 onClick={() => selectPrice(item.price)}
                 key={index}
                 className="d-flex justify-content-between table-item"
+                onMouseOver={() => handleMove(index)}
               >
                 <Price>{numeral(item.price).format('0,0.000')}</Price>
                 <Amount>
@@ -92,7 +102,25 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
             );
           })}
       </Table>
-    </div>
+      <div
+        className="cover"
+        style={{
+          height: ` ${coverHeight}% `,
+          borderTop:
+            coverHeight === 0 ? 0 : `1px dashed ${darkTheme.brightGrayColor}`,
+        }}
+      >
+        <div
+          className="info"
+          // style={{ display: coverHeight === 0 ? 'none' : 'block' }}
+          style={{ display: 'block' }}
+        >
+          <p>Average price: $100</p>
+          <p>SUM B2: </p>
+          <p>SUM USDT: </p>
+        </div>
+      </div>
+    </Wrapper>
   );
 };
 export default OrderBookAsk;

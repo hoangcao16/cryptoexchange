@@ -6,6 +6,8 @@ export const OrderBookBidHeader = styled.div`
   justify-content: space-between;
   padding-top: 4px;
   padding-bottom: 4px;
+  overflow-y: hidden;
+
   .contractPrice {
     font-size: 20px;
     display: flex;
@@ -58,6 +60,6 @@ export const Table = styled.div`
     height: 20px;
   }
   &[data-type='mini'] {
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 `;
