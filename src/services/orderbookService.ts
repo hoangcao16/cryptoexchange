@@ -1,10 +1,10 @@
 import apiClient from 'services/apiService';
 
 export const OrderbookServices = {
-  Orderbook(pair) {
+  Orderbook({ pair, limit }) {
     return apiClient.request({
       method: 'GET',
-      url: `/matching-engine/api/v1/orderbook/depth?pair=${pair}`,
+      url: `/api-svc/order/orderbook?pair=${pair}&limit=${limit}`,
     });
   },
 };
