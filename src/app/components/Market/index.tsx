@@ -27,24 +27,24 @@ const Market = ({ dataSocket, dataApi, socket }) => {
   let { pair } = useParams();
 
   useEffect(() => {
-    if (dataApi.data.rows && isEmpty(dataSocket)) {
+    if (dataApi.data.rows) {
       setAllPair(dataApi.data.rows);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataApi.data.rows]);
   useEffect(() => {
-    if (!isEmpty(dataSocket)) {
+    if (!isEmpty(dataSocket) && dataSocket.Key === 'RobinhoodPair') {
       if (allPair.length === 0) {
-        setAllPair([dataSocket]);
+        setAllPair([dataSocket.Value]);
       } else {
         const index = allPair?.findIndex((item: any) => {
-          return item.symbol === dataSocket?.symbol;
+          return item.symbol === dataSocket.Value?.symbol;
         });
         if (index !== -1 && allPair !== undefined) {
           const copyData = [...JSON.parse(JSON.stringify(allPair))];
-          copyData[index].latestPrice = dataSocket?.latestPrice;
-          copyData[index].changes = dataSocket?.change24h;
-          copyData[index].volume = dataSocket?.volume24h;
+          copyData[index].latestPrice = dataSocket.Value?.latestPrice;
+          copyData[index].changes = dataSocket.Value?.change24h;
+          copyData[index].volume = dataSocket.Value?.volume24h;
           setAllPair(copyData);
         }
       }

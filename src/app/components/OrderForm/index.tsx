@@ -13,7 +13,7 @@ import { selectGetallpair } from 'app/components/Market/slice/selectors';
 import { selectGetBalancePair } from './slice/selectors';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { isEmpty } from 'app/components/common/common';
+import { isEmpty, getToken } from 'app/components/common/common';
 import { darkTheme } from 'theme/theme';
 
 const OrderForm = () => {
@@ -61,7 +61,7 @@ const OrderForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pairData]);
   useEffect(() => {
-    if (pairId !== '') {
+    if (pairId !== '' && getToken()) {
       dispatch(actions.getBalancePairSpotRequest(pairId));
     }
   }, [actions, dispatch, pairId, reGetBalancePair]);

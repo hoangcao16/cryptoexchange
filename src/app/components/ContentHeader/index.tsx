@@ -17,7 +17,7 @@ import numeral from 'numeral';
 import { isEmpty } from 'app/components/common/common';
 import { Col, Row } from 'react-bootstrap';
 
-const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
+const ContentHeader = ({ socketMess }) => {
   let { pair } = useParams();
   const findIndex: any = pair?.indexOf('_');
   const changeFormatPair: any = `${pair?.substring(
@@ -64,18 +64,20 @@ const ContentHeader = ({ tradeInforSocket, tradeVolumeInforSocket }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataCurrentPair.data]);
   useEffect(() => {
-    if (!isEmpty(tradeInforSocket)) {
-      setPrice(tradeInforSocket.price);
-      setChangePrice24h(tradeInforSocket.change_price_24h);
-      setChangePercent24h(tradeInforSocket.change_percent_24h);
-      setHigh24h(tradeInforSocket.high_24h);
-      setLow24h(tradeInforSocket.low_24h);
+    if (!isEmpty(socketMess) && socketMess.Key === 'PowExchange::TradeInfo') {
+      setPrice(socketMess.Value.price);
+      setChangePrice24h(socketMess.Value.change_price_24h);
+      setChangePercent24h(socketMess.Value.change_percent_24h);
+      setHigh24h(socketMess.Value.high_24h);
+      setLow24h(socketMess.Value.low_24h);
+    } else if (
+      !isEmpty(socketMess) &&
+      socketMess.Key === 'PowExchange::TradeVolumeInfo'
+    ) {
+      setVolumeBase24h(socketMess.Value.volume_base_24h);
+      setVolumeQuote24h(socketMess.Value.volume_quote_24h);
     }
-    if (!isEmpty(tradeVolumeInforSocket)) {
-      setVolumeBase24h(tradeVolumeInforSocket.volume_base_24h);
-      setVolumeQuote24h(tradeVolumeInforSocket.volume_quote_24h);
-    }
-  }, [tradeInforSocket, tradeVolumeInforSocket]);
+  }, [socketMess]);
   return (
     <Container>
       <Div>

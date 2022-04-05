@@ -11,59 +11,78 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
   // const { reselectPair } = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
-
   useEffect(() => {
-    if (dataApi?.length > 0 && isEmpty(dataSocket)) {
+    if (dataApi?.length > 0) {
       setDataView(dataApi);
-    } else {
-      if (!isEmpty(dataSocket)) {
-        if (dataView === null || dataView === undefined) {
-          setDataView([
-            {
-              price: dataSocket?.price,
-              quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
-            },
-          ]);
-        } else if (dataView !== undefined && dataView !== null) {
-          const index = dataView.findIndex((item: any) => {
-            return item.price === dataSocket?.price;
-          });
-          if (index === -1) {
-            const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
-            dataCopy.push({
-              price: dataSocket.price,
-              quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
-            });
-            dataCopy.sort(function (a, b) {
-              return b.price - a.price;
-            });
-            setDataView(dataCopy);
-          } else if (index !== -1) {
-            const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
-            const sumQuantity = Number(
-              (
-                Number(dataCopy[index].quantity) +
-                Number(dataSocket.delta * dataSocket.sign)
-              ).toPrecision(5),
-            );
-            if (sumQuantity > 0) {
-              dataCopy[index].quantity = sumQuantity;
-              setDataView(dataCopy);
-            } else if (sumQuantity === 0 || sumQuantity < 0) {
-              dataCopy.splice(index, 1);
-              setDataView(dataCopy);
-            }
-          }
-        }
-      }
     }
-
     return () => {
       setDataView([]);
     };
+  }, [dataApi]);
+  useEffect(() => {
+    if (
+      !isEmpty(dataSocket) &&
+      dataSocket.Key === 'PowExchange::OrderBookChange' &&
+      dataSocket.Value.side === 'sell'
+    ) {
+      if (dataView === null || dataView === undefined) {
+        setDataView([
+          {
+            price: dataSocket?.Value?.price,
+            quantity:
+              Number(dataSocket?.Value?.delta) *
+              Number(dataSocket?.Value?.sign),
+          },
+        ]);
+      } else if (dataView !== undefined && dataView !== null) {
+        const index = dataView.findIndex((item: any) => {
+          return item.price === dataSocket?.Value?.price;
+        });
+        if (index === -1) {
+          const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
+          dataCopy.push({
+            price: dataSocket?.Value.price,
+            quantity:
+              Number(dataSocket?.Value?.delta) *
+              Number(dataSocket?.Value?.sign),
+          });
+          dataCopy.sort(function (a, b) {
+            return b.price - a.price;
+          });
+          setDataView(dataCopy);
+        } else if (index !== -1) {
+          const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
+          const sumQuantity = Number(
+            (
+              Number(dataCopy[index].quantity) +
+              Number(dataSocket?.Value.delta * dataSocket?.Value.sign)
+            ).toPrecision(5),
+          );
+          if (sumQuantity > 0) {
+            dataCopy[index].quantity = sumQuantity;
+            setDataView(dataCopy);
+          } else if (sumQuantity === 0 || sumQuantity < 0) {
+            dataCopy.splice(index, 1);
+            setDataView(dataCopy);
+          }
+        }
+      }
+    } else if (
+      !isEmpty(dataSocket) &&
+      dataSocket.Key === 'PowExchange::OrderBookChange' &&
+      Array.isArray(dataSocket.Value.asks)
+    ) {
+      setDataView(dataSocket.Value.asks);
+    } else if (
+      !isEmpty(dataSocket) &&
+      dataSocket.Key === 'PowExchange::OrderBookChange' &&
+      dataSocket.Value.asks === undefined &&
+      dataSocket.Value.side === undefined
+    ) {
+      setDataView([]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataApi, dataSocket]);
-
+  }, [dataSocket]);
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));
   };

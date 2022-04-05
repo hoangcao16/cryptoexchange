@@ -3,9 +3,12 @@ import { orderbookActions as actions } from '.';
 import { OrderbookServices } from 'services/orderbookService';
 
 function* handleGetOrderbook(action) {
-  const pair = action.payload;
+  const { pair, limit } = action.payload;
   try {
-    const response = yield call(OrderbookServices.Orderbook, pair);
+    const response = yield call(OrderbookServices.Orderbook, {
+      pair,
+      limit: limit,
+    });
     if (response.data.rc === 0) {
       yield put(actions.getOrderbookSuccess(response.data));
     }

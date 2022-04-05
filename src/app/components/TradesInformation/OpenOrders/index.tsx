@@ -31,11 +31,13 @@ const Orders = () => {
   const [dataOpenOrders, setDataOpenOrders] = useState<stateProps[]>([]);
 
   useEffect(() => {
-    const param = {
-      pageIndex: dataOrders?.pageIndex,
-      pageSize: dataOrders?.pageSize,
-    };
-    dispatch(actions.getopenOrderRequest(param));
+    if (getToken()) {
+      const param = {
+        pageIndex: dataOrders?.pageIndex,
+        pageSize: dataOrders?.pageSize,
+      };
+      dispatch(actions.getopenOrderRequest(param));
+    }
   }, [dataOrders?.pageSize]);
   useEffect(() => {
     if (dataOrders?.data?.list?.length > 0) {

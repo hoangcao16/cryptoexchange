@@ -66,7 +66,7 @@ export default {
     symbolType,
     onResultReadyCallback,
   ) => {
-    console.log('[searchSymbols]: Method call');
+    // console.log('[searchSymbols]: Method call');
     const symbols = await getAllSymbols();
     const newSymbols = symbols.filter(symbol => {
       const isExchangeValid = exchange === '' || symbol.exchange === exchange;
@@ -82,13 +82,13 @@ export default {
     onSymbolResolvedCallback,
     onResolveErrorCallback,
   ) => {
-    console.log('[resolveSymbol]: Method call', symbolName);
+    // console.log('[resolveSymbol]: Method call', symbolName);
     const symbols = await getAllSymbols();
     const symbolItem = symbols.find(
       ({ full_name }) => full_name === symbolName,
     );
     if (!symbolItem) {
-      console.log('[resolveSymbol]: Cannot resolve symbol', symbolName);
+      // console.log('[resolveSymbol]: Cannot resolve symbol', symbolName);
       onResolveErrorCallback('cannot resolve symbol');
       return;
     }
@@ -113,7 +113,7 @@ export default {
       data_status: 'streaming',
     };
 
-    console.log('[resolveSymbol]: Symbol resolved', symbolName);
+    // console.log('[resolveSymbol]: Symbol resolved', symbolName);
     onSymbolResolvedCallback(symbolInfo);
   },
   getBars: async (
@@ -132,19 +132,19 @@ export default {
     // } = periodParams
     // const from = 1638344956
     // const to = 1640850556
-    console.log(
-      '[getBars]: Method call',
-      symbolInfo,
-      'RESOLUTION: ',
-      resolution,
-      'FROM: ',
-      from,
-      'TO: ',
-      to,
-      onHistoryCallback,
-      onErrorCallback,
-      firstDataRequest,
-    );
+    // console.log(
+    //   '[getBars]: Method call',
+    //   symbolInfo,
+    //   'RESOLUTION: ',
+    //   resolution,
+    //   'FROM: ',
+    //   from,
+    //   'TO: ',
+    //   to,
+    //   onHistoryCallback,
+    //   onErrorCallback,
+    //   firstDataRequest,
+    // );
     const parsedSymbol = parseFullSymbol(symbolInfo.full_name);
     const urlParameters = {
       e: parsedSymbol.exchange,
@@ -158,7 +158,7 @@ export default {
       .map(name => `${name}=${encodeURIComponent(urlParameters[name])}`)
       .join('&');
     try {
-      console.log('tuanpa:url:', `/trade-his/candle?${query}`);
+      // console.log('tuanpa:url:', `/trade-his/candle?${query}`);
       const data = await makeApiRequest(`/trade-his/candle?${query}`);
       if (
         (data.Response && data.Response === 'Error') ||
@@ -190,13 +190,13 @@ export default {
           ...bars[bars.length - 1],
         });
       }
-      console.log('bars:', bars);
-      console.log(`[getBars]: returned ${bars.length} bar(s)`);
+      // console.log('bars:', bars);
+      // console.log(`[getBars]: returned ${bars.length} bar(s)`);
       onHistoryCallback(bars, {
         noData: false,
       });
     } catch (error) {
-      console.log('[getBars]: Get error', error);
+      // console.log('[getBars]: Get error', error);
       onErrorCallback(error);
     }
   },
@@ -208,10 +208,10 @@ export default {
     subscribeUID,
     onResetCacheNeededCallback,
   ) => {
-    console.log(
-      '[subscribeBars]: Method call with subscribeUID:',
-      subscribeUID,
-    );
+    // console.log(
+    //   '[subscribeBars]: Method call with subscribeUID:',
+    //   subscribeUID,
+    // );
     subscribeOnStream(
       symbolInfo,
       resolution,
@@ -222,25 +222,10 @@ export default {
     );
   },
   unsubscribeBars: subscriberUID => {
-    console.log(
-      '[unsubscribeBars]: Method call with subscriberUID:',
-      subscriberUID,
-    );
+    // console.log(
+    //   '[unsubscribeBars]: Method call with subscriberUID:',
+    //   subscriberUID,
+    // );
     unsubscribeFromStream(subscriberUID);
-  },
-  //
-  getMarks: (symbolInfo, startDate, endDate, onDataCallback, resolution) => {
-    //optional
-    console.log('=====getMarks running');
-  },
-  getTimeScaleMarks: (
-    symbolInfo,
-    startDate,
-    endDate,
-    onDataCallback,
-    resolution,
-  ) => {
-    //optional
-    console.log('=====getTimeScaleMarks running');
   },
 };
