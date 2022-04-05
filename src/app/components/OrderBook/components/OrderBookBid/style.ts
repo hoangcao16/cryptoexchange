@@ -4,8 +4,7 @@ export const OrderBookBidHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding: 4px 16px;
   overflow-y: hidden;
 
   .contractPrice {
@@ -61,8 +60,9 @@ export const Table = styled.div`
   }
   &[data-type='mini'] {
     padding: 0 16px;
-    overflow-y: hidden;
-    overflow-x: visible;
-    /* overflow: hidden; */
+    /* overflow-y: hidden;
+    overflow-x: visible; */
   }
 `;
+
+export const Wrapper = styled.div``;

@@ -1,43 +1,7 @@
 import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
 
-export const Wrapper = styled.div`
-  position: relative;
-  .cover {
-    position: absolute;
-    width: 100%;
-    bottom: calc(4%);
-    left: 0;
-    background-color: ${({ theme }) => theme.brightGrayColorBlur};
-    z-index: -1;
-  }
-  .info {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: ${({ theme }) => theme.grayColor};
-    transform: translate(100%, -50%);
-    padding: 10px;
-    border-radius: 5px;
-    margin-left: 10px;
-    z-index: 999;
-
-    p {
-      margin-bottom: 0;
-    }
-
-    &::before {
-      position: absolute;
-      content: '';
-      left: 0;
-      top: 50%;
-      height: 10px;
-      width: 10px;
-      background-color: inherit;
-      transform: translate(-50%, -51%) rotate(45deg);
-    }
-  }
-`;
+export const Wrapper = styled.div``;
 
 export const Price = styled(Col)`
   color: ${({ theme }) => theme.darkPinkColor};
@@ -62,12 +26,55 @@ export const Total = styled(Col)`
 export const Table = styled.div`
   overflow-y: scroll;
   height: 96%;
-  padding: 0 16px 16px 16px;
+  max-height: 96%;
+  padding: 0;
+  overflow: visible scroll;
+
   .table-item {
     height: 20px;
+    padding: 0 16px;
+    position: relative;
+
+    .info {
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(calc(100% + 5px), calc(-50% - 1px));
+      background-color: ${({ theme }) => theme.grayColor};
+      padding: 5px 20px;
+      border-radius: 5px;
+      width: auto;
+      min-width: 200px;
+      p {
+        margin: 5px 0;
+        display: flex;
+        justify-content: space-between;
+
+        .label {
+          margin-right: 15px;
+        }
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        height: 7px;
+        width: 7px;
+
+        background-color: inherit;
+        top: 50%;
+        left: 0;
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+    }
+    &:hover {
+      border-top: 1px dashed ${({ theme }) => theme.grayColor};
+    }
   }
+
   &[data-type='mini'] {
-    overflow: hidden;
+    padding-bottom: 16px;
+    overflow: visible;
     /* display: flex; */
     /* flex-direction: column; */
     /* flex-direction: column-reverse; */

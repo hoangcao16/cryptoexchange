@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Price, Amount, Total, OrderBookBidHeader, Table } from './style';
+import {
+  Price,
+  Amount,
+  Total,
+  OrderBookBidHeader,
+  Table,
+  Wrapper,
+} from './style';
 import numeral from 'numeral';
 import { BsArrowUp, BsArrowDown } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
@@ -9,6 +16,7 @@ import { useDispatch } from 'react-redux';
 import { useOrderbookSlice } from '../../slice';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { darkTheme } from 'theme/theme';
 
 const OrderBookBid = ({
   dataApi,
@@ -27,6 +35,7 @@ const OrderBookBid = ({
   const changeFormatPair = `${pair?.substring(0, findIndex)}/${pair?.substring(
     findIndex + 1,
   )}`;
+
   useEffect(() => {
     if (!isEmpty(dataMarketSocket)) {
       if (dataMarketSocket.symbol === changeFormatPair) {
@@ -96,8 +105,12 @@ const OrderBookBid = ({
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));
   };
+  const handleMove = index => {
+    if (miniTable) {
+    }
+  };
   return (
-    <>
+    <Wrapper>
       <OrderBookBidHeader>
         <div className="d-flex align-items-center">
           <div
@@ -125,18 +138,19 @@ const OrderBookBid = ({
           {t('more')}
         </a>
       </OrderBookBidHeader>
-      <div style={{ height: '92%', overflowY: 'auto' }}>
+      <div style={{ height: '92%', zIndex: 5 }} className="wrapper-table">
         <Table data-type={miniTable ? 'mini' : 'normal'}>
           {dataView !== undefined &&
             dataView !== null &&
             dataView
-              ?.slice(miniTable && 0, miniTable ? 16 : 0)
+              ?.slice(miniTable && 0, miniTable ? 15 : 0)
               ?.map((item, index) => {
                 return (
                   <div
                     key={index}
                     className="d-flex table-item"
                     onClick={() => selectPrice(item.price)}
+                    onMouseOver={() => handleMove(index)}
                   >
                     <Price>{numeral(item.price).format('0,0.000')}</Price>
                     <Amount>
@@ -152,7 +166,7 @@ const OrderBookBid = ({
               })}
         </Table>
       </div>
-    </>
+    </Wrapper>
   );
 };
 export default OrderBookBid;

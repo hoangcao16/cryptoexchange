@@ -77,7 +77,7 @@ export default NavbarUser;
 
 const Wrapper = styled.div`
   display: none;
-  @media only screen and (max-width: 1226px) {
+  @media only screen and (max-width: 1231px) {
     display: block;
   }
   .iconUser {

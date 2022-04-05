@@ -4,8 +4,9 @@ import { Dropdown } from 'react-bootstrap';
 export const Container = styled.div`
   border: none;
   height: 839px;
-  overflow-y: visible;
+  overflow-x: visible;
   padding-top: 16px;
+  padding-bottom: 16px;
 `;
 export const Header = styled.div`
   display: flex;

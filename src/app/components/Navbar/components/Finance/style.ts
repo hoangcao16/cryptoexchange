@@ -4,10 +4,10 @@ import { NavDropdown } from 'react-bootstrap';
 export const StyledNavDropdown = styled(NavDropdown)`
   margin: 0 8px;
 
-  @media only screen and (max-width: 1314px) {
+  @media only screen and (max-width: 1331px) {
     margin: 0 0px;
   }
-  @media only screen and (max-width: 1226px) {
+  @media only screen and (max-width: 1231px) {
     display: none;
   }
   &:hover {
