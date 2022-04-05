@@ -21,17 +21,15 @@ import { selectOrderbook } from './slice/selectors';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
+const OrderBook = ({ socketMess }) => {
   const [Layout, setLayout] = useState(1);
   const [show, setShow] = useState(false);
-  const [dataSocketBids, setDataSocketBids]: any = useState({});
-  const [dataSocketAsks, setDataSocketAsks]: any = useState({});
   const dispatch = useDispatch();
   let { pair } = useParams();
   const { t } = useTranslation();
   const { actions } = useOrderbookSlice();
   const dataOrderbook: any = useSelector(selectOrderbook);
-
+  const limit = 100;
   const showDropdown = e => {
     setShow(!show);
   };
@@ -50,21 +48,15 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
     const findIndex: any = pair?.indexOf('_');
     if (pair !== '') {
       dispatch(
-        actions.getOrderbookRequest(
-          `${pair?.substring(0, findIndex)}/${pair?.substring(findIndex + 1)}`,
-        ),
+        actions.getOrderbookRequest({
+          pair: `${pair?.substring(0, findIndex)}/${pair?.substring(
+            findIndex + 1,
+          )}`,
+          limit: limit,
+        }),
       );
-      setDataSocketBids({});
-      setDataSocketAsks({});
     }
   }, [actions, dispatch, pair, Layout]);
-  useEffect(() => {
-    if (dataOrderbookSocket.side === 'buy') {
-      setDataSocketBids(dataOrderbookSocket);
-    } else {
-      setDataSocketAsks(dataOrderbookSocket);
-    }
-  }, [dataOrderbookSocket]);
   return (
     <Container>
       <Header>
@@ -138,15 +130,14 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
           <StyledRow>
             <OrderBookAsk
               dataApi={dataOrderbook?.data?.data?.asks}
-              dataSocket={dataSocketAsks}
+              dataSocket={socketMess}
               miniTable
             />
           </StyledRow>
           <StyledRow>
             <OrderBookBid
               dataApi={dataOrderbook?.data?.data?.bids}
-              dataSocket={dataSocketBids}
-              dataMarketSocket={dataMarketSocket}
+              dataSocket={socketMess}
               miniTable
             />
           </StyledRow>
@@ -156,8 +147,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
           <OrderBookTHeader />
           <OrderBookBid
             dataApi={dataOrderbook?.data?.data?.bids}
-            dataSocket={dataSocketBids}
-            dataMarketSocket={dataMarketSocket}
+            dataSocket={socketMess}
             miniTable={false}
           />
         </>
@@ -166,7 +156,7 @@ const OrderBook = ({ dataOrderbookSocket, dataMarketSocket }) => {
           <OrderBookTHeader />
           <OrderBookAsk
             dataApi={dataOrderbook?.data?.data?.asks}
-            dataSocket={dataSocketAsks}
+            dataSocket={socketMess}
             miniTable={false}
           />
         </div>

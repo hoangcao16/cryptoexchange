@@ -17,14 +17,20 @@ const MarketTrades = ({ dataSocket, dataApi }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reselectPair]);
-
   useEffect(() => {
-    if (!isEmpty(dataSocket)) {
-      setDataView((prevState: any) => [dataSocket, ...prevState]);
-    } else if (!isEmpty(dataApi.data)) {
+    if (!isEmpty(dataApi.data)) {
       setDataView(dataApi.data.data.list);
     }
-  }, [dataSocket, dataApi]);
+  }, [dataApi]);
+  useEffect(() => {
+    if (
+      !isEmpty(dataSocket) &&
+      dataSocket.Key === 'Robinhood::RecentTrade' &&
+      dataSocket.Value.marker_id !== dataSocket.Value.taker_id
+    ) {
+      setDataView((prevState: any) => [dataSocket.Value, ...prevState]);
+    }
+  }, [dataSocket]);
   return (
     <Table>
       {dataView !== undefined &&

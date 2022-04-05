@@ -21,13 +21,10 @@ const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 // const socket = new WebSocket(`${baseURL}/ws`);
 const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
-  const [dataTradesSocket, setDataTradesSocket]: any = useState({});
   const [dataOrder, setDataOrder]: any = useState({});
-  const [tradeInfor, setTradeInfor]: any = useState({});
-  const [tradeVolumeInfor, setTradeVolumeInfor]: any = useState({});
   const [webSocket, setWebSocket]: any = useState();
   const dispatch = useDispatch();
-
+  const [socketMess, setSocketMess]: any = useState({});
   const { actions: actionsTrades } = useTradesSlice();
   const { actions: actionsWebsocket } = useWebsocketSlice();
   const dataAllPair = useSelector(selectGetallpair);
@@ -79,21 +76,9 @@ const HomeContentContainer = () => {
     };
     socket.onmessage = (message: any) => {
       const Message = JSON.parse(message?.data);
-      if (
-        Message.Key === 'Robinhood::RecentTrade' &&
-        Message.Value.marker_id !== Message.Value.taker_id
-      ) {
-        setDataTradesSocket(Message.Value);
-      } else if (Message.Key === 'RobinhoodPair') {
-        setDataMarketSocket(Message.Value);
-      } else if (Message.Key === 'PowExchange::OrderBookChange') {
-        setDataOrder(Message.Value);
-      } else if (Message.Key === 'Robinhood::OrderFilled') {
+      setSocketMess(Message);
+      if (Message.Key === 'Robinhood::OrderFilled') {
         dispatch(actionsWebsocket.updateOrderFilled(Message.Value));
-      } else if (Message.Key === 'PowExchange::TradeInfo') {
-        setTradeInfor(Message.Value);
-      } else if (Message.Key === 'PowExchange::TradeVolumeInfo') {
-        setTradeVolumeInfor(Message.Value);
       }
     };
     return () => {
@@ -101,7 +86,6 @@ const HomeContentContainer = () => {
     };
   }, []);
   useEffect(() => {
-    setDataTradesSocket({});
     setDataOrder({});
     setDataMarketSocket({});
   }, [dataAllPair?.reselectPair]);
@@ -121,10 +105,7 @@ const HomeContentContainer = () => {
       <StyledRow>
         <Col md={12} lg={12} xxl={9} xl={9}>
           <StyledRow>
-            <ContentHeader
-              tradeInforSocket={tradeInfor}
-              tradeVolumeInforSocket={tradeVolumeInfor}
-            />
+            <ContentHeader socketMess={socketMess} />
           </StyledRow>
           <StyledRow className="content-left">
             <StyledCol
@@ -134,17 +115,14 @@ const HomeContentContainer = () => {
               md={12}
               className="orderbook-section"
             >
-              <OrderBook
-                dataOrderbookSocket={dataOrder}
-                dataMarketSocket={dataMarketSocket}
-              />
+              <OrderBook socketMess={socketMess} />
               <div className="market">
                 <Market
-                  dataSocket={dataMarketSocket}
+                  dataSocket={socketMess}
                   dataApi={dataAllPair}
                   socket={webSocket}
                 />
-                <Trades dataSocket={dataTradesSocket} dataApi={dataAllTrades} />
+                <Trades dataSocket={socketMess} dataApi={dataAllTrades} />
                 <MarketActivities />
               </div>
             </StyledCol>
@@ -168,11 +146,11 @@ const HomeContentContainer = () => {
         </Col>
         <StyledCol xxl={3} lg={6} xl={3} className="right-menu">
           <Market
-            dataSocket={dataMarketSocket}
+            dataSocket={socketMess}
             dataApi={dataAllPair}
             socket={webSocket}
           />
-          <Trades dataSocket={dataTradesSocket} dataApi={dataAllTrades} />
+          <Trades dataSocket={socketMess} dataApi={dataAllTrades} />
           <MarketActivities />
         </StyledCol>
       </StyledRow>

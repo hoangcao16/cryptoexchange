@@ -57,7 +57,7 @@ const Chart = props => {
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     initTradingView();
-  }, [changeFormatPair, reselect]);
+  }, [changeFormatPair]);
   const initTradingView = () => {
     const widgetOptions = {
       fullscreen: false,
@@ -308,41 +308,10 @@ const Chart = props => {
 
     tvWidget.onChartReady(() => {
       console.log('mounted:onChartReady');
-      const button = tvWidget
-        .createButton()
-        .attr('title', 'Click to show a notification popup')
-        .addClass('apply-common-tooltip')
-        .on('click', () =>
-          widget.showNoticeDialog({
-            title: 'Notification',
-            body: 'TradingView Charting Library API works correctly',
-            callback: () => {
-              // eslint-disable-next-line no-console
-              console.log('Noticed!');
-            },
-          }),
-        );
-      // button[0].innerHTML = 'Check API';
-      button[0].style = 'display:none';
     });
   };
   return (
     <Container>
-      {/* <div className="timeframe-filter">
-        <span className="timeframe-filter--title">Time :</span>
-        {timeFrame.map((item, index) => (
-          <Span
-            key={index}
-            className={selectedTime === item.value && 'active'}
-            onClick={() => {
-              setSelectedTime(item.value);
-              setReselect(!reselect);
-            }}
-          >
-            {item.title}
-          </Span>
-        ))}
-      </div> */}
       <div id={tv_chart_container} className="chart"></div>
     </Container>
   );

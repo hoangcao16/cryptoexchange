@@ -10,12 +10,7 @@ import { useOrderbookSlice } from '../../slice';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const OrderBookBid = ({
-  dataApi,
-  dataSocket,
-  dataMarketSocket,
-  miniTable,
-}: any) => {
+const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
   const { t } = useTranslation();
   const [dataView, setDataView]: any[] = useState([]);
   const [lastestPrice, setLastestPrice] = useState('');
@@ -28,71 +23,95 @@ const OrderBookBid = ({
     findIndex + 1,
   )}`;
   useEffect(() => {
-    if (!isEmpty(dataMarketSocket)) {
-      if (dataMarketSocket.symbol === changeFormatPair) {
-        setLastestPrice(dataMarketSocket?.latestPrice);
-      }
-    } else {
-      const index: any = pairData?.data?.rows?.findIndex((item: any) => {
-        return item?.symbol === changeFormatPair;
-      });
-      if (index !== -1 && index !== undefined) {
-        setLastestPrice(pairData?.data?.rows[index]?.latestPrice);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataMarketSocket, pairData?.data, pair]);
-  useEffect(() => {
-    if (dataApi?.length > 0 && isEmpty(dataSocket)) {
-      setDataView(dataApi);
-    } else {
-      if (!isEmpty(dataSocket)) {
-        if (dataView === null || dataView === undefined) {
-          setDataView([
-            {
-              price: dataSocket?.price,
-              quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
-            },
-          ]);
-        } else if (dataView !== undefined && dataView !== null) {
-          const index = dataView.findIndex((item: any) => {
-            return item.price === dataSocket?.price;
-          });
-          if (index === -1) {
-            const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
-            dataCopy.push({
-              price: dataSocket.price,
-              quantity: Number(dataSocket?.delta) * Number(dataSocket?.sign),
-            });
-            dataCopy.sort(function (a, b) {
-              return b.price - a.price;
-            });
-            setDataView(dataCopy);
-          } else if (index !== -1) {
-            const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
-            const sumQuantity = Number(
-              (
-                Number(dataCopy[index].quantity) +
-                Number(dataSocket.delta * dataSocket.sign)
-              ).toPrecision(5),
-            );
-            if (sumQuantity > 0) {
-              dataCopy[index].quantity = sumQuantity;
-              setDataView(dataCopy);
-            } else if (sumQuantity === 0 || sumQuantity < 0) {
-              dataCopy.splice(index, 1);
-              setDataView(dataCopy);
-            }
-          }
-        }
-      }
+    const index: any = pairData?.data?.rows?.findIndex((item: any) => {
+      return item?.symbol === changeFormatPair;
+    });
+    if (index !== -1 && index !== undefined) {
+      setLastestPrice(pairData?.data?.rows[index]?.latestPrice);
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pairData?.data, pair]);
+  useEffect(() => {
+    if (dataApi?.length > 0) {
+      setDataView(dataApi);
+    }
     return () => {
       setDataView([]);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataApi, dataSocket]);
+  }, [dataApi]);
+  useEffect(() => {
+    if (
+      !isEmpty(dataSocket) &&
+      dataSocket.Key === 'PowExchange::OrderBookChange' &&
+      dataSocket.Value.side === 'buy'
+    ) {
+      if (dataView === null || dataView === undefined) {
+        setDataView([
+          {
+            price: dataSocket?.Value?.price,
+            quantity:
+              Number(dataSocket?.Value?.delta) *
+              Number(dataSocket?.Value?.sign),
+          },
+        ]);
+      } else if (dataView !== undefined && dataView !== null) {
+        const index = dataView.findIndex((item: any) => {
+          return item.price === dataSocket?.Value?.price;
+        });
+        if (index === -1) {
+          const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
+          dataCopy.push({
+            price: dataSocket?.Value.price,
+            quantity:
+              Number(dataSocket?.Value?.delta) *
+              Number(dataSocket?.Value?.sign),
+          });
+          dataCopy.sort(function (a, b) {
+            return b.price - a.price;
+          });
+          setDataView(dataCopy);
+        } else if (index !== -1) {
+          const dataCopy = [...JSON.parse(JSON.stringify(dataView))];
+          const sumQuantity = Number(
+            (
+              Number(dataCopy[index].quantity) +
+              Number(dataSocket?.Value.delta * dataSocket?.Value.sign)
+            ).toPrecision(5),
+          );
+          if (sumQuantity > 0) {
+            dataCopy[index].quantity = sumQuantity;
+            setDataView(dataCopy);
+          } else if (sumQuantity === 0 || sumQuantity < 0) {
+            dataCopy.splice(index, 1);
+            setDataView(dataCopy);
+          }
+        }
+      }
+    } else if (
+      !isEmpty(dataSocket) &&
+      dataSocket.Key === 'PowExchange::OrderBookChange' &&
+      Array.isArray(dataSocket.Value.bids)
+    ) {
+      setDataView(dataSocket.Value.bids);
+    } else if (
+      !isEmpty(dataSocket) &&
+      dataSocket.Key === 'PowExchange::OrderBookChange' &&
+      dataSocket.Value.bids === undefined &&
+      dataSocket.Value.side === undefined
+    ) {
+      setDataView([]);
+    }
+    if (!isEmpty(dataSocket) && dataSocket.Key === 'RobinhoodPair') {
+      if (!isEmpty(dataSocket.Value)) {
+        if (dataSocket.Value.symbol === changeFormatPair) {
+          setLastestPrice(dataSocket.Value?.latestPrice);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataSocket]);
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));
   };
@@ -102,20 +121,20 @@ const OrderBookBid = ({
         <div className="d-flex align-items-center">
           <div
             className="contractPrice"
-            data-type={
-              dataMarketSocket?.isPriceUp
-                ? 'up'
-                : dataMarketSocket?.isPriceUp === false
-                ? 'down'
-                : ''
-            }
+            // data-type={
+            //   dataMarketSocket?.isPriceUp
+            //     ? 'up'
+            //     : dataMarketSocket?.isPriceUp === false
+            //     ? 'down'
+            //     : ''
+            // }
           >
             {numeral(lastestPrice).format('0,0.000')}
-            {dataMarketSocket?.isPriceUp ? (
+            {/* {dataMarketSocket?.isPriceUp ? (
               <BsArrowUp />
             ) : dataMarketSocket?.isPriceUp === false ? (
               <BsArrowDown />
-            ) : null}
+            ) : null} */}
           </div>
           <div className="markPrice">
             ${numeral(lastestPrice).format('0,0.0')}
