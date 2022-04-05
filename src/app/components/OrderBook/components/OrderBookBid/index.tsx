@@ -22,10 +22,18 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
   const { t } = useTranslation();
   const [dataView, setDataView]: any[] = useState([]);
   const [lastestPrice, setLastestPrice] = useState('');
+  const [currentHover, setCurrentHover] = useState(0);
+  const [avgPrice, setAvgPrice] = useState(0);
+  const [sum1, setSum1] = useState(0);
+  const [sum2, setSum2] = useState(0);
+  const [coverHeight, setCoverHeight] = useState(0);
+
   const pairData: any = useSelector(selectGetallpair);
   const dispatch = useDispatch();
   const { actions } = useOrderbookSlice();
   let { pair } = useParams();
+  const currentPair = pair?.split('_');
+
   const findIndex: any = pair?.indexOf('_');
   const changeFormatPair = `${pair?.substring(0, findIndex)}/${pair?.substring(
     findIndex + 1,
@@ -124,9 +132,46 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));
   };
-  const handleMove = index => {
+  const handleMove = (e, index) => {
+    setCurrentHover(index + 1);
+    let totalSum1 = 0;
+    let totalPrice = 0;
+
     if (miniTable) {
+      setCoverHeight(index * 20);
+      let numberOrder = dataView
+        ?.slice(0, 16)
+        ?.filter((item, i) => i <= index)?.length;
+      dataView
+        ?.slice(0, 16)
+        ?.filter((item, i) => i <= index)
+        ?.forEach(item => {
+          totalSum1 += Number(item?.quantity);
+          totalPrice += Number(item?.price);
+        });
+      if (numberOrder && totalSum1 && totalPrice) {
+        setSum1(totalSum1 / numberOrder);
+        setAvgPrice(totalPrice / numberOrder);
+        setSum2((totalSum1 * totalPrice) / numberOrder);
+      }
+    } else {
+      setCoverHeight(e?.target?.offsetTop - e.target?.parentElement?.scrollTop);
+      let numberOrder = dataView?.filter((item, i) => i <= index)?.length;
+      dataView
+        ?.filter((item, i) => i <= index)
+        ?.forEach(item => {
+          totalSum1 += Number(item?.quantity);
+          totalPrice += Number(item?.price);
+        });
+      if (numberOrder && totalSum1 && totalPrice) {
+        setSum1(totalSum1 / numberOrder);
+        setAvgPrice(totalPrice / numberOrder);
+        setSum2((totalSum1 * totalPrice) / numberOrder);
+      }
     }
+  };
+  const HandleOut = index => {
+    setCurrentHover(0);
   };
   return (
     <Wrapper>
@@ -157,34 +202,99 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
           {t('more')}
         </a>
       </OrderBookBidHeader>
-      {/* <div style={{ height: '92%', zIndex: 5 }} className="wrapper-table"> */}
-      <Table data-type={miniTable ? 'mini' : 'normal'}>
+      <Table
+        data-type={miniTable ? 'mini' : 'normal'}
+        style={{ zIndex: 5, overflowY: 'scroll' }}
+      >
         {dataView !== undefined &&
           dataView !== null &&
-          dataView
-            ?.slice(miniTable && 0, miniTable ? 15 : 0)
-            ?.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className="d-flex table-item"
-                  onClick={() => selectPrice(item.price)}
-                  onMouseOver={() => handleMove(index)}
-                >
-                  <Price>{numeral(item.price).format('0,0.000')}</Price>
-                  <Amount>
-                    {numeral(Math.abs(item.quantity)).format('0,0.00000')}
-                  </Amount>
-                  <Total>
-                    {numeral(Math.abs(item.price * item.quantity)).format(
-                      '0,0.00000',
-                    )}
-                  </Total>
-                </div>
-              );
-            })}
+          miniTable &&
+          dataView?.slice(0, 16)?.map((item, index) => {
+            return (
+              <div
+                key={index}
+                className="d-flex table-item"
+                onClick={() => selectPrice(item.price)}
+                onMouseOver={e => handleMove(e, index)}
+                onMouseOut={e => HandleOut(index)}
+                style={{
+                  backgroundColor:
+                    index <= currentHover - 1 && currentHover !== 0
+                      ? darkTheme.brightGrayColorBlur
+                      : 'inherit',
+                }}
+              >
+                <Price>{numeral(item.price).format('0,0.000')}</Price>
+                <Amount>
+                  {numeral(Math.abs(item.quantity)).format('0,0.00000')}
+                </Amount>
+                <Total>
+                  {numeral(Math.abs(item.price * item.quantity)).format(
+                    '0,0.00000',
+                  )}
+                </Total>
+              </div>
+            );
+          })}
+
+        {dataView !== undefined &&
+          dataView !== null &&
+          !miniTable &&
+          dataView?.map((item, index) => {
+            return (
+              <div
+                key={index}
+                className="d-flex table-item"
+                onClick={() => selectPrice(item.price)}
+                onMouseOver={e => handleMove(e, index)}
+                onMouseOut={e => HandleOut(index)}
+                style={{
+                  backgroundColor:
+                    index <= currentHover - 1 && currentHover !== 0
+                      ? darkTheme.brightGrayColorBlur
+                      : 'inherit',
+                }}
+              >
+                <Price>{numeral(item.price).format('0,0.000')}</Price>
+                <Amount>
+                  {numeral(Math.abs(item.quantity)).format('0,0.00000')}
+                </Amount>
+                <Total>
+                  {numeral(Math.abs(item.price * item.quantity)).format(
+                    '0,0.00000',
+                  )}
+                </Total>
+              </div>
+            );
+          })}
       </Table>
-      {/* </div> */}
+      <div
+        className="info"
+        style={{
+          display: currentHover ? 'block' : 'none',
+          top: `calc(${coverHeight}px + 1px)`,
+          transform: miniTable
+            ? `translate(calc(100% + 5px), 10px)`
+            : `translate(calc(100% + 5px), calc(-50% + 19px))`,
+        }}
+      >
+        <p>
+          <span className="label">Avg. price :</span>
+          <span> ≈ {Math.abs(avgPrice).toFixed(5)}</span>
+        </p>
+        <p>
+          <span className="label">
+            Sum {currentPair ? currentPair[0] : ''} :
+          </span>
+          <span> {Math.abs(sum1).toFixed(5)}</span>
+        </p>
+        <p>
+          <span className="label">
+            Sum {currentPair ? currentPair[1] : ''} :
+          </span>
+          <span> {Math.abs(sum2).toFixed(5)}</span>
+        </p>
+      </div>
     </Wrapper>
   );
 };

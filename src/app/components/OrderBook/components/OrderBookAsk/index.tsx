@@ -19,14 +19,15 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
   const [avgPrice, setAvgPrice] = useState(0);
   const [sum1, setSum1] = useState(0);
   const [sum2, setSum2] = useState(0);
+  const [coverHeight, setCoverHeight] = useState(0);
 
-  const handleMove = index => {
+  const handleMove = (e, index) => {
     setCurrentHover(index + 1);
     let totalSum1 = 0;
-    let totalSum2 = 0;
     let totalPrice = 0;
 
     if (miniTable) {
+      setCoverHeight(index * 20);
       let numberOrder = dataView
         ?.slice(-19)
         ?.filter((item, i) => i >= index)?.length;
@@ -43,6 +44,7 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
         setSum2((totalSum1 * totalPrice) / numberOrder);
       }
     } else {
+      setCoverHeight(e?.target?.offsetTop - e.target?.parentElement?.scrollTop);
       let numberOrder = dataView?.filter((item, i) => i >= index)?.length;
       dataView
         ?.filter((item, i) => i >= index)
@@ -148,7 +150,7 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
                 onClick={() => selectPrice(item.price)}
                 key={index}
                 className="d-flex justify-content-between table-item"
-                onMouseOver={e => handleMove(index)}
+                onMouseOver={e => handleMove(e, index)}
                 onMouseOut={e => HandleOut(index)}
                 style={{
                   backgroundColor:
@@ -166,29 +168,30 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
                     '0,0.00000',
                   )}
                 </Total>
-                <div
-                  className="info"
-                  style={{
-                    display: currentHover - 1 === index ? 'block' : 'none',
-                  }}
-                >
-                  <p>
-                    <span className="label">Avg. price :</span>
-                    <span> ≈ {avgPrice.toFixed(5)}</span>
-                  </p>
-                  <p>
-                    <span className="label">Sum {pair ? pair[0] : ''} :</span>
-                    <span> {sum1.toFixed(5)}</span>
-                  </p>
-                  <p>
-                    <span className="label">Sum {pair ? pair[1] : ''} :</span>
-                    <span> {sum2.toFixed(5)}</span>
-                  </p>
-                </div>
               </div>
             );
           })}
       </Table>
+      <div
+        className="info"
+        style={{
+          display: currentHover ? 'block' : 'none',
+          top: `calc(${coverHeight}px + 1px)`,
+        }}
+      >
+        <p>
+          <span className="label">Avg. price :</span>
+          <span> ≈ {Math.abs(avgPrice).toFixed(5)}</span>
+        </p>
+        <p>
+          <span className="label">Sum {pair ? pair[0] : ''} :</span>
+          <span> {Math.abs(sum1).toFixed(5)}</span>
+        </p>
+        <p>
+          <span className="label">Sum {pair ? pair[1] : ''} :</span>
+          <span> {Math.abs(sum2).toFixed(5)}</span>
+        </p>
+      </div>
     </Wrapper>
   );
 };

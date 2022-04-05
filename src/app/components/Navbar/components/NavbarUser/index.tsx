@@ -8,12 +8,19 @@ import { FaWallet } from 'react-icons/fa';
 import { RiProfileLine, RiVipDiamondFill } from 'react-icons/ri';
 import { SiSpringsecurity } from 'react-icons/si';
 import { Link } from 'react-router-dom';
+import { authService } from 'services/authService';
 import styled from 'styled-components';
 
 const NavbarUser = () => {
   const [showCanvas, setShowCanvas] = useState(false);
   const handleClose = () => {
     setShowCanvas(false);
+  };
+
+  const logout = () => {
+    authService.removeAccessToken();
+    authService.removeUserId();
+    window.location.href = '/';
   };
 
   const handleClickUser = () => {
@@ -63,7 +70,7 @@ const NavbarUser = () => {
             <Menu.Item key="5" icon={<SiSpringsecurity />}>
               <Link to="#">Security</Link>
             </Menu.Item>
-            <Menu.Item key="6" icon={<BiLogOut />}>
+            <Menu.Item key="6" icon={<BiLogOut />} onClick={logout}>
               <Link to="#">Logout</Link>
             </Menu.Item>
           </Menu>
