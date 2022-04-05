@@ -112,14 +112,14 @@ const NavMenu = () => {
           >
             <Offcanvas.Header closeButton>
               {!getToken() && (
-                <AuthGroup>
+                <div className="btnGroupLogRegis">
                   <Link to="/login" className="linktoLogin-button">
                     {t('log-in')}
                   </Link>
                   <RegisterButton to="/register">
                     {t('register')}
                   </RegisterButton>
-                </AuthGroup>
+                </div>
               )}
             </Offcanvas.Header>
             <Offcanvas.Body>

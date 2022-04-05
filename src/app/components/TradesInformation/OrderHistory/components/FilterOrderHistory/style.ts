@@ -10,6 +10,17 @@ export const Container = styled.div`
   align-items: center;
   -webkit-box-pack: justify;
   justify-content: space-between;
+  height: auto;
+  .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  @media only screen and (max-width: 700px) {
+    .filterDay {
+      width: 100%;
+    }
+  }
 `;
 export const SelectButton = styled.div`
   box-sizing: border-box;
@@ -39,6 +50,10 @@ export const SelectButton = styled.div`
   }
 `;
 export const TimeRangeGroup = styled.div`
+  @media only screen and (max-width: 700px) {
+    margin-left: 10px;
+  }
+
   display: flex;
   align-items: center;
   margin: 0 0 0 16px;
@@ -107,7 +122,6 @@ export const ResetButton = styled.button`
   }
 `;
 export const SearchButton = styled.button`
-  margin: 0px 0px 0px 16px;
   appearance: none;
   user-select: none;
   cursor: pointer;

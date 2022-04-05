@@ -165,6 +165,21 @@ export const NavbarOffcanvas = styled(Navbar.Offcanvas)`
   max-width: 90vw;
 
   .offcanvas-header {
+    .btnGroupLogRegis {
+      display: flex;
+      flex-direction: column;
+      margin-top: 30px;
+
+      a {
+        width: 100%;
+        text-align: center;
+        padding: 12px 0 !important;
+        font-size: 18px;
+        margin: 5px 0;
+        text-decoration: none;
+        color: ${({ theme }) => theme.p2pTextLight} !important;
+      }
+    }
     position: relative;
     display: block;
     .ant-typography {

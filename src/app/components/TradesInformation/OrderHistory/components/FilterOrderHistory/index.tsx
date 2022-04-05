@@ -101,8 +101,8 @@ const FilterOrderHistory = () => {
   }, [actions, dispatch, dataOrderHistory?.pageSize]);
   return (
     <Container>
-      <div className="d-flex align-items-center">
-        <div className="d-flex align-items-center">
+      <div className="wrapper">
+        <div className="d-flex align-items-center filterDay">
           <SelectButton
             data-type={time === 1 ? 'active' : 'normal'}
             onClick={select1Day}
@@ -135,13 +135,14 @@ const FilterOrderHistory = () => {
             placeholder={['YYYY-MM-DD', 'YYYY-MM-DD']}
             onChange={onChangeTimeRange}
           />
-          <SearchButton onClick={handleSearch}>{t('search')}</SearchButton>
         </TimeRangeGroup>
-        <ResetButton data-bn-type="button" onClick={handleReset}>
-          {t('reset')}
-        </ResetButton>
+        <div className="btnGroup">
+          <SearchButton onClick={handleSearch}>{t('search')}</SearchButton>
+          <ResetButton data-bn-type="button" onClick={handleReset}>
+            {t('reset')}
+          </ResetButton>
+        </div>
       </div>
-      <div></div>
     </Container>
   );
 };

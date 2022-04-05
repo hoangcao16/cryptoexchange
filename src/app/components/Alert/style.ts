@@ -10,10 +10,9 @@ export const Wrapper = styled.div`
 
   .btn-close {
     position: absolute;
-    top: 0;
+    top: 50;
     right: 0;
-    margin-top: 12px;
-    margin-right: 10px;
+    margin-right: 13px;
     color: ${({ theme }) => theme.whiteSmokeColor};
   }
 

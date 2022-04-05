@@ -3,8 +3,11 @@ import styled from 'styled-components';
 export const Container = styled.div`
   padding: 10px 0;
   border: ${({ theme }) => theme.borderGray};
-  border-top: none;
-  border-right: none;
+
+  @media only screen and (min-width: 576px) {
+    border-top: none;
+    border-right: none;
+  }
 `;
 export const Div = styled.div`
   box-sizing: border-box;
