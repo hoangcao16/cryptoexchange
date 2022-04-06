@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Container, ChatHeader, ChatMessage, ChatFooter } from './style';
-import { useEffect, useState, useRef, Fragment } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import { Upload, Image, Avatar, Modal } from 'antd';
 import { IoMdSend, IoMdAttach } from 'react-icons/io';
@@ -251,7 +251,7 @@ const Chatpage = ({ email, data }) => {
       // console.log('server res: ', res);
     } catch (err) {
       // console.log('Eroor: ', err);
-      const error = new Error('Some error');
+      // const error = new Error('Some error');
       onError({ err });
     }
   };

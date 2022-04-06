@@ -1,24 +1,21 @@
-import { Button, Form, Input, InputNumber, Radio, Skeleton } from 'antd';
-import { A } from 'app/container/OrderFormContainer/style';
+import { Button, Input, InputNumber, Radio, Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
   AiOutlineInfoCircle,
   AiOutlineMinus,
   AiOutlinePlus,
 } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { postAdP2PServices } from 'services/postAdP2PService';
 import styled from 'styled-components';
 import { usePostAdP2PSlice } from '../slice';
-import { selectPostAdP2P } from '../slice/selectors';
-import { DataPostAdP2PState, PostAdP2PState } from '../slice/types';
+import { DataPostAdP2PState } from '../slice/types';
 import { RadioStyled } from '../style';
 import SwitchStep from './SwitchStep';
 
 function StepTypeAndPrice() {
   const { actions } = usePostAdP2PSlice();
   const dispatch = useDispatch();
-  const PostAdP2PState: PostAdP2PState = useSelector(selectPostAdP2P);
 
   const [active, setActive] = useState<0 | 1>(1); // 0 : buy, 1 : sell
 

@@ -1,7 +1,5 @@
 import Countdown from 'antd/lib/statistic/Countdown';
 import styled from 'styled-components';
-import { tabOrderDetailService } from 'services/orderDetailService';
-import openNotification from 'app/components/NotificationAntd';
 import { useSelector } from 'react-redux';
 import { selectTabOrderDetail } from '../slice/selectors';
 import { TabOrderDetailState } from '../slice/types';
@@ -9,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 
 const HeaderOrderDetail = ({ trade, reload }) => {
-  const { updateTradeById } = tabOrderDetailService;
   const [title, setTitle] = useState('');
   const [subTitle, setSubTitle] = useState('');
 
@@ -17,11 +14,6 @@ const HeaderOrderDetail = ({ trade, reload }) => {
   const date1 = Date.now();
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
-
-  const tradeStatus = TabOrderDetailState.tradeStatus;
-  const buyerStatus = TabOrderDetailState.buyerStatus;
-  const sellerStatus = TabOrderDetailState.sellerStatus;
-  const tradeType = TabOrderDetailState.tradeType;
 
   useEffect(() => {
     switch (TabOrderDetailState.tradeStatus) {

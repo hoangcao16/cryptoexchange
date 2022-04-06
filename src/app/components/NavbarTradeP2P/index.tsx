@@ -1,4 +1,4 @@
-import { Button, List, message, Popover } from 'antd';
+import { Button, List, Popover } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -21,6 +21,7 @@ import openNotification from '../NotificationAntd';
 import { useSelector } from 'react-redux';
 import { selectTabOrderDetail } from 'app/container/TabOrderDetailContainer/slice/selectors';
 import { TabOrderDetailState } from 'app/container/TabOrderDetailContainer/slice/types';
+import Countdown from 'antd/lib/statistic/Countdown';
 
 interface Props {
   defaultActiveKey: string;
@@ -59,6 +60,7 @@ function NavbarTradeP2P(props: Props) {
       .then(res => {
         if (res.data.rc === 0) {
           setListTradeProcess(res.data.rows.reverse());
+          console.log(res.data.rows);
           setLoadingNotify(false);
         } else {
           console.log(res.data.rd);
@@ -99,6 +101,7 @@ function NavbarTradeP2P(props: Props) {
           }}
           renderItem={(item: any) => {
             let d = new Date(item?.createTime);
+            const date1 = Date.now();
             return (
               <Link to={`/order/orderDetail/${item.id}`}>
                 <div className="notificationItem">
@@ -115,7 +118,11 @@ function NavbarTradeP2P(props: Props) {
                         {item?.order?.token?.assetName}
                       </span>
                     </span>
-                    <span className="status">Pendding</span>
+                    <span className="status">
+                      {item?.buyerStatus === 'NOT_PAID' &&
+                        'Pending payment ...'}
+                      {item?.buyerStatus === 'PAID' && 'Checking payment ...'}
+                    </span>
                   </p>
                   <p>
                     <span>
@@ -138,7 +145,7 @@ function NavbarTradeP2P(props: Props) {
                       </b>
                     </span>
                     <span className="total">
-                      {item.total} {item?.order?.token?.assetName}
+                      {item.total} {item?.order?.fiat?.name}
                     </span>
                   </p>
                   <p>
@@ -149,8 +156,15 @@ function NavbarTradeP2P(props: Props) {
                       {item?.partner?.email}
                     </span>
                     <span className="timeCountdown">
-                      <AiOutlineClockCircle className="clockIcon" />
-                      15:00
+                      {item?.buyerStatus === 'NOT_PAID' && (
+                        <Countdown
+                          value={
+                            Date.now() +
+                            item?.order?.paymentTime?.timeLimit * 60000 -
+                            (date1 - d.getTime())
+                          }
+                        ></Countdown>
+                      )}
                     </span>
                   </p>
                 </div>
@@ -415,6 +429,11 @@ const ContentOrdersStyled = styled.div`
         font-weight: bold;
       }
       .timeCountdown {
+        .ant-statistic-content-value {
+          font-size: 14px !important;
+          transform: translateY(-14px);
+          color: ${({ theme }) => theme.primary};
+        }
         color: ${({ theme }) => theme.primary};
         font-weight: bold;
       }
@@ -433,7 +452,6 @@ const ContentOrdersStyled = styled.div`
       .timeCountdown {
         .clockIcon {
           font-size: 16px;
-          margin-right: 5px;
           transform: translateY(-2px);
         }
       }

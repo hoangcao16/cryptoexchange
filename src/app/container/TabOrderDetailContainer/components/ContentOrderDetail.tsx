@@ -16,6 +16,7 @@ import { useTabOrderDetailSlice } from '../slice';
 import ChatBox from 'app/components/ChatBox';
 import QRCode from 'react-qr-code';
 import ReconnectingWebSocket from 'reconnecting-websocket';
+import Countdown from 'antd/lib/statistic/Countdown';
 const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const ContentOrderDetail = ({ trade, reload }) => {
@@ -28,6 +29,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [inputAnother, setInputAnother] = useState(false);
   const [visibleBtnConfirmPayment, setVisibleBtnConfirmPayment] =
     useState(true);
+  const [disableAppeal, setDisableAppeal] = useState(true);
 
   const [paymentSeller, setPaymentSeller] = useState<any>([]);
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -36,7 +38,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [qr, setQR] = useState('');
   const [visibleModalConfirmPayment, setVisibleModalConfirmPayment] =
     useState(false);
-  const [webSocket, setWebSocket]: any = useState();
   const [reCallMessage, setReCallMessage]: any = useState(false);
 
   const TabOrderDetailState: TabOrderDetailState =
@@ -52,12 +53,15 @@ const ContentOrderDetail = ({ trade, reload }) => {
   } = tabOrderDetailService;
   const dispatch = useDispatch();
   const setBuyerStatus = useTabOrderDetailSlice().actions;
-  const setSellerStatus = useTabOrderDetailSlice().actions;
 
   const { Panel } = Collapse;
   const { Step } = Steps;
   const { TabPane } = Tabs;
 
+  const date = new Date(trade?.updateTime);
+  const date1 = Date.now();
+  console.log(333, date);
+  console.log(555, date1.getTime());
   const stepBuy = [
     {
       title: 'Transfer money to the seller',
@@ -212,6 +216,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
     }
   };
 
+  console.log(444, Date.now() + 15 * 60000 - (Date.now() - date.getTime()));
+
   const findPaymentById = () => {
     if (trade?.paymentId) {
       getPaymentById(trade?.paymentId)
@@ -228,7 +234,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
     var socket = new ReconnectingWebSocket(`${baseURLWs}/ws`, [], {
       connectionTimeout: 5000,
     });
-    setWebSocket(socket);
 
     if (trade?.tradeId) {
       socket.onopen = () => {
@@ -265,6 +270,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
     return () => {
       socket.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -610,7 +616,16 @@ const ContentOrderDetail = ({ trade, reload }) => {
             {tradaType === 'Buy' && (
               <div>
                 {TabOrderDetailState.buyerStatus === 'PAID' ? (
-                  <Button type="primary">Appeal</Button>
+                  <Button type="primary" disabled={disableAppeal}>
+                    {disableAppeal && (
+                      <Countdown
+                        value={
+                          Date.now() + 15 * 60000 - (date1 - date.getTime())
+                        }
+                      ></Countdown>
+                    )}
+                    Appeal
+                  </Button>
                 ) : (
                   <Button
                     className="btnTransferred"

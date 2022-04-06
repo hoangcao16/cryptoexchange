@@ -8,7 +8,6 @@ import {
   Wrapper,
 } from './style';
 import numeral from 'numeral';
-import { BsArrowUp, BsArrowDown } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import { selectGetallpair } from 'app/components/Market/slice/selectors';
 import { isEmpty } from 'app/components/common/common';
@@ -168,6 +167,7 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
         setSum2((totalSum1 * totalPrice) / numberOrder);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataSocket]);
   const handleMove = (e, index) => {
     setCurrentHover(index + 1);

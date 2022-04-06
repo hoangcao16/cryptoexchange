@@ -1,4 +1,4 @@
-import { Descriptions, Table, Tag } from 'antd';
+import { Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import React, { useEffect, useState } from 'react';
@@ -158,7 +158,7 @@ function P2PTableBuy() {
                       </span>
                     </Tag>
                   );
-                }
+                } else return null;
               })
             )}
           </ColPayment>
@@ -351,55 +351,6 @@ const Wrapper = styled.div`
   .loadingIcon {
     -webkit-animation: spining 1.1s infinite linear;
     animation: spining 1.1s infinite linear;
-  }
-`;
-
-const ColHandleOrder = styled.div`
-  display: flex;
-  .orderInfo {
-    flex: 6;
-    border-right: 1px solid #ccc;
-  }
-  .formOrder {
-    padding-left: 20px;
-    flex: 4;
-  }
-`;
-
-const ColOrderAdvertisers = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-
-  .row1 {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-
-    .firstCharacter {
-      text-align: center;
-      font-size: 12px;
-      color: ${({ theme }) => theme.text};
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      border-radius: 10px;
-      background-color: ${({ theme }) => theme.primary};
-    }
-
-    .advertisers {
-      margin: 0px 8px;
-    }
-  }
-  .row2 {
-    margin-left: 28px;
-    font-size: 12px;
-    color: ${({ theme }) => theme.primary};
-    .numberOrderComplete {
-      margin-left: 10px;
-      padding-left: 5px;
-      border-left: 1px solid #ccc;
-    }
   }
 `;
 

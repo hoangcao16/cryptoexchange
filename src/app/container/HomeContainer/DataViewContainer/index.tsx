@@ -21,8 +21,8 @@ const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 // const socket = new WebSocket(`${baseURL}/ws`);
 const HomeContentContainer = () => {
-  const [dataMarketSocket, setDataMarketSocket]: any = useState({});
-  const [dataOrder, setDataOrder]: any = useState({});
+  // const [dataMarketSocket, setDataMarketSocket]: any = useState({});
+  // const [dataOrder, setDataOrder]: any = useState({});
   const [webSocket, setWebSocket]: any = useState();
   const [windowWidth, setWindowWidth] = useState(0);
   const dispatch = useDispatch();
@@ -42,12 +42,6 @@ const HomeContentContainer = () => {
     setWindowWidth(window.innerWidth);
   }, [window.innerWidth]);
 
-  useEffect(() => {
-    console.log('mount');
-    return () => {
-      console.log('unmount');
-    };
-  }, []);
   useEffect(() => {
     var socket = new ReconnectingWebSocket(`${baseURL}/ws`, [], {
       connectionTimeout: 5000,
@@ -92,10 +86,10 @@ const HomeContentContainer = () => {
       socket.close();
     };
   }, []);
-  useEffect(() => {
-    setDataOrder({});
-    setDataMarketSocket({});
-  }, [dataAllPair?.reselectPair]);
+  // useEffect(() => {
+  // setDataOrder({});
+  // setDataMarketSocket({});
+  // }, [dataAllPair?.reselectPair]);
 
   useEffect(() => {
     const findIndex: any = pair?.indexOf('_');
@@ -142,7 +136,11 @@ const HomeContentContainer = () => {
                 className="d-flex flex-column"
               >
                 <Row
-                  style={{ maxWidth: 'calc(100vw - 5px)', margin: '0 auto' }}
+                  style={{
+                    maxWidth: 'calc(100vw - 5px)',
+                    margin: '0 auto',
+                    width: '100%',
+                  }}
                 >
                   <Col xxl={12} xl={12} lg={8}>
                     <Chart />

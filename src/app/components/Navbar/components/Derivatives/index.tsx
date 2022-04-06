@@ -7,7 +7,6 @@ import {
   DropdownItemTitle,
 } from './style';
 import { useTranslation } from 'react-i18next';
-import { GrOverview } from 'react-icons/gr';
 import { BsFilePersonFill } from 'react-icons/bs';
 import { RiMoneyDollarBoxLine } from 'react-icons/ri';
 import { BsCoin } from 'react-icons/bs';

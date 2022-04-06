@@ -140,7 +140,7 @@ function P2PTableSell() {
                     </span>
                   </Tag>
                 );
-              }
+              } else return null;
             })
           )}
         </ColPayment>

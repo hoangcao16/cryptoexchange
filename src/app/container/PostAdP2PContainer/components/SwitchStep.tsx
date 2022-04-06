@@ -1,12 +1,11 @@
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import React from 'react';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
-import { postAdP2PServices } from 'services/postAdP2PService';
 import styled from 'styled-components';
 import { usePostAdP2PSlice } from '../slice';
 import { selectPostAdP2P } from '../slice/selectors';
-import { DataPostAdP2PState, PostAdP2PState } from '../slice/types';
+import { PostAdP2PState } from '../slice/types';
 
 interface Props {
   next: () => void;

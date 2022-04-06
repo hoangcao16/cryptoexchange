@@ -11,18 +11,15 @@ import { useNavigate } from 'react-router-dom';
 import openNotification from 'app/components/NotificationAntd';
 import { darkTheme } from 'theme/theme';
 import { tabP2PService } from 'services/tabP2PServices';
-import { SpotWalletServices } from 'services/spotWalletService';
 import { GrFormClose } from 'react-icons/gr';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { BiPlus } from 'react-icons/bi';
-import { payments } from 'app/container/PostAdP2PContainer/data';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
 
   const navigate = useNavigate();
-  const { getUserPayments } = tabP2PService;
-  const { getAllSpotWallet } = SpotWalletServices;
+  const { getUserPayments, getUserWallet } = tabP2PService;
 
   //BUY
   const [validateStateBuy, setValidateStateBuy] = useState(false);
@@ -252,8 +249,8 @@ const HandleOrder = (props: any) => {
     });
   };
 
-  const findWalletUser = () => {
-    getAllSpotWallet()
+  const findWalletP2P = () => {
+    getUserWallet()
       .then(res => {
         if (res.data.rc === 0) {
           let tokenId = record.token?.id;
@@ -268,7 +265,7 @@ const HandleOrder = (props: any) => {
   useEffect(() => {
     if (type === 'Sell') {
       findAllUserPayments();
-      findWalletUser();
+      findWalletP2P();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

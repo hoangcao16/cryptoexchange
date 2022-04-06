@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { SiConvertio } from 'react-icons/si';
 import { AiOutlineArrowUp, AiOutlineLayout } from 'react-icons/ai';
 import { RiLayoutGridLine } from 'react-icons/ri';
-import { GrUpgrade } from 'react-icons/gr';
 import { BsPeople } from 'react-icons/bs';
 import { AiOutlineLineChart } from 'react-icons/ai';
 import { AiOutlineSwap } from 'react-icons/ai';
