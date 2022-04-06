@@ -46,7 +46,7 @@ const NavbarUser = () => {
           </Title>
           <div className="userDesc">
             <span>
-              <RiVipDiamondFill /> Regular user
+              <RiVipDiamondFill className="dinamoIcon" /> Regular user
             </span>
             <span className="verify">Verified</span>
           </div>
@@ -133,6 +133,12 @@ const OffCanvasUser = styled(Offcanvas)`
         padding: 2px 10px;
         border-top-left-radius: 10px;
         border-bottom-left-radius: 10px;
+      }
+
+      .dinamoIcon {
+        font-size: 16px;
+        transform: translateY(-2px);
+        margin-right: 3px;
       }
     }
 

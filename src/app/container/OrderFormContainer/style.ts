@@ -25,7 +25,7 @@ export const Header = styled.div`
     width: 120px;
   }
   .active {
-    border-top: 2px solid color: ${({ theme }) => theme.primary};
+    border-top: 2px solid ${({ theme }) => theme.primary};
     border-right: 1px solid ${({ theme }) => theme.backgroundDropdown};
     border-bottom: 1px solid transparent;
     color: ${({ theme }) => theme.matteWhiteColor};
@@ -53,7 +53,7 @@ export const A = styled.a`
     height: 16px;
     margin-left: 4px;
     padding: 0px 4px;
-    color: color: ${({ theme }) => theme.primary};
+    color: ${({ theme }) => theme.primary};
     font-size: 12px;
     border-radius: 2px;
     background-color: rgb(60, 46, 16);

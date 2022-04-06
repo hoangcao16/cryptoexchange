@@ -20,48 +20,22 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
   const [sum1, setSum1] = useState(0);
   const [sum2, setSum2] = useState(0);
   const [coverHeight, setCoverHeight] = useState(0);
+  const [idHover, setIdHover] = useState(0);
 
   const handleMove = (e, index) => {
     setCurrentHover(index + 1);
-    let totalSum1 = 0;
-    let totalPrice = 0;
+    setIdHover(index);
 
     if (miniTable) {
       setCoverHeight(index * 20);
-      let numberOrder = dataView
-        ?.slice(-19)
-        ?.filter((item, i) => i >= index)?.length;
-      dataView
-        ?.slice(-19)
-        ?.filter((item, i) => i >= index)
-        ?.forEach(item => {
-          totalSum1 += Number(item?.quantity);
-          totalPrice += Number(item?.price);
-        });
-      if (numberOrder && totalSum1 && totalPrice) {
-        setSum1(totalSum1 / numberOrder);
-        setAvgPrice(totalPrice / numberOrder);
-        setSum2((totalSum1 * totalPrice) / numberOrder);
-      }
     } else {
       setCoverHeight(e?.target?.offsetTop - e.target?.parentElement?.scrollTop);
-      let numberOrder = dataView?.filter((item, i) => i >= index)?.length;
-      dataView
-        ?.filter((item, i) => i >= index)
-        ?.forEach(item => {
-          totalSum1 += Number(item?.quantity);
-          totalPrice += Number(item?.price);
-        });
-      if (numberOrder && totalSum1 && totalPrice) {
-        setSum1(totalSum1 / numberOrder);
-        setAvgPrice(totalPrice / numberOrder);
-        setSum2((totalSum1 * totalPrice) / numberOrder);
-      }
     }
   };
 
   const HandleOut = index => {
     setCurrentHover(0);
+    setIdHover(0);
   };
 
   useEffect(() => {
@@ -72,6 +46,43 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
       setDataView([]);
     };
   }, [dataApi]);
+
+  useEffect(() => {
+    let totalSum1 = 0;
+    let totalPrice = 0;
+
+    if (miniTable) {
+      let numberOrder = dataView
+        ?.slice(-19)
+        ?.filter((item, i) => i >= idHover)?.length;
+      dataView
+        ?.slice(-19)
+        ?.filter((item, i) => i >= idHover)
+        ?.forEach(item => {
+          totalSum1 += Number(item?.quantity);
+          totalPrice += Number(item?.price);
+        });
+      if (numberOrder && totalSum1 && totalPrice) {
+        setSum1(totalSum1 / numberOrder);
+        setAvgPrice(totalPrice / numberOrder);
+        setSum2((totalSum1 * totalPrice) / numberOrder);
+      }
+    } else {
+      let numberOrder = dataView?.filter((item, i) => i >= idHover)?.length;
+      dataView
+        ?.filter((item, i) => i >= idHover)
+        ?.forEach(item => {
+          totalSum1 += Number(item?.quantity);
+          totalPrice += Number(item?.price);
+        });
+      if (numberOrder && totalSum1 && totalPrice) {
+        setSum1(totalSum1 / numberOrder);
+        setAvgPrice(totalPrice / numberOrder);
+        setSum2((totalSum1 * totalPrice) / numberOrder);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataSocket]);
   useEffect(() => {
     if (
       !isEmpty(dataSocket) &&

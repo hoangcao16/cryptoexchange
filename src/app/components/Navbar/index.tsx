@@ -134,12 +134,8 @@ const NavMenu = () => {
                   <Menu.Item key="3" icon={<SiConvertio />} disabled>
                     <Link to="#">Convert</Link>
                   </Menu.Item>
-                  <Menu.Item
-                    key="4"
-                    icon={<MdOutlineSpaceDashboard />}
-                    disabled
-                  >
-                    <Link to="#">Classic</Link>
+                  <Menu.Item key="4" icon={<MdOutlineSpaceDashboard />}>
+                    <Link to="/">Classic</Link>
                   </Menu.Item>
                   <Menu.Item key="5" icon={<BsArrowUpCircle />} disabled>
                     <Link to="#">Advanced</Link>

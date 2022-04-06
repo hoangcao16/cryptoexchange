@@ -27,6 +27,7 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
   const [sum1, setSum1] = useState(0);
   const [sum2, setSum2] = useState(0);
   const [coverHeight, setCoverHeight] = useState(0);
+  const [idHover, setIdHover] = useState(0);
 
   const pairData: any = useSelector(selectGetallpair);
   const dispatch = useDispatch();
@@ -132,8 +133,45 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
   const selectPrice = (price: number) => {
     dispatch(actions.selectPrice(price));
   };
+
+  useEffect(() => {
+    let totalSum1 = 0;
+    let totalPrice = 0;
+
+    if (miniTable) {
+      let numberOrder = dataView
+        ?.slice(0, 16)
+        ?.filter((item, i) => i <= idHover)?.length;
+      dataView
+        ?.slice(0, 16)
+        ?.filter((item, i) => i <= idHover)
+        ?.forEach(item => {
+          totalSum1 += Number(item?.quantity);
+          totalPrice += Number(item?.price);
+        });
+      if (numberOrder && totalSum1 && totalPrice) {
+        setSum1(totalSum1 / numberOrder);
+        setAvgPrice(totalPrice / numberOrder);
+        setSum2((totalSum1 * totalPrice) / numberOrder);
+      }
+    } else {
+      let numberOrder = dataView?.filter((item, i) => i <= idHover)?.length;
+      dataView
+        ?.filter((item, i) => i <= idHover)
+        ?.forEach(item => {
+          totalSum1 += Number(item?.quantity);
+          totalPrice += Number(item?.price);
+        });
+      if (numberOrder && totalSum1 && totalPrice) {
+        setSum1(totalSum1 / numberOrder);
+        setAvgPrice(totalPrice / numberOrder);
+        setSum2((totalSum1 * totalPrice) / numberOrder);
+      }
+    }
+  }, [dataSocket]);
   const handleMove = (e, index) => {
     setCurrentHover(index + 1);
+    setIdHover(index);
     let totalSum1 = 0;
     let totalPrice = 0;
 
@@ -172,6 +210,7 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
   };
   const HandleOut = index => {
     setCurrentHover(0);
+    setIdHover(0);
   };
   return (
     <Wrapper>

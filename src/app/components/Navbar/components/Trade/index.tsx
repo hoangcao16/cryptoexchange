@@ -37,6 +37,7 @@ const TradeNav = () => {
       icon: AiOutlineLayout,
       name: t('classic'),
       description: t('classic-sub'),
+      url: '/',
     },
     {
       id: 3,

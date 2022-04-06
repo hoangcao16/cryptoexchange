@@ -70,8 +70,12 @@ export const Table = styled.div`
     }
   }
   &[data-type='mini'] {
-    padding-bottom: 16px;
+    /* padding-bottom: 16px; */
     overflow: visible;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
     /* overflow-y: hidden;
     overflow-x: visible; */
   }
