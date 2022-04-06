@@ -45,7 +45,7 @@ const HeaderP2PUserCenter = () => {
                   {user.verified ? 'Verified User' : 'Not Verifited User'}
                 </Tag>
               </Title>
-              <div className="checkedUser">
+              {/* <div className="checkedUser">
                 <span>
                   Email{' '}
                   {user.allowReceiveEmail ? (
@@ -70,9 +70,9 @@ const HeaderP2PUserCenter = () => {
                     <AiFillCloseCircle className="notCheckedIcon" />
                   )}
                 </span>
-              </div>
+              </div> */}
             </Col>
-            <Col className="p2pEstimatedValue" xxl={4} md={6} sm={12}>
+            {/* <Col className="p2pEstimatedValue" xxl={4} md={6} sm={12}>
               <span>
                 P2P Estimated Value ({user.p2pEstimatedValue?.token}){' '}
                 {showP2pEstimatedValue ? (
@@ -111,7 +111,7 @@ const HeaderP2PUserCenter = () => {
                   )}
                 </span>
               </p>
-            </Col>
+            </Col> */}
           </Row>
         </Col>
         <Col xxl={2} xl={2} md={3} sm={12}>
@@ -119,70 +119,70 @@ const HeaderP2PUserCenter = () => {
         </Col>
       </Row>
       <Row className="content">
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">30d Trades</p>
           <p className="value">
             0 <span className="unit">Time(s)</span>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">30d Completion Rate</p>
           <p className="value">
             0 <span className="unit">%</span>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">Avg. Release Time</p>
           <p className="value">
             0 <span className="unit">Minute(s)</span>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">Avg. Pay Time</p>
           <p className="value">
             0 <span className="unit">Minute(s)</span>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">Positive Feedback</p>
           <p className="value">
             0 <span className="unit">% (0)</span>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">Positive</p>
           <p className="value">0 </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">Negative</p>
           <p className="value">0 </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">Registered</p>
           <p className="value">
             0 <span className="unit">Day(s)</span>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">First Trade</p>
           <p className="value">
             0 <span className="unit">Day(s)</span>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">All Trades</p>
           <p className="value">
             0 <span className="unit">Time(s)</span>
             <p className="subUnit">(Buy 0 | Sell 0)</p>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">Approx. 30d Volume</p>
           <p className="value">
             0 <span className="unit">BTC</span>
           </p>
         </Col>
-        <Col xxl={3} lg={4} md={6} sm={12}>
+        <Col xxl={3} lg={4} md={6} sm={6} xs={12}>
           <p className="title">Approx. Total Volume</p>
           <p className="value">
             0 <span className="unit">BTC</span>

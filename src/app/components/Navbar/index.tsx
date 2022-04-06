@@ -79,12 +79,14 @@ const NavMenu = () => {
         {/* </Navbar.Collapse> */}
         <StyledNav>
           {!getToken() ? (
-            <AuthGroup>
-              <Link to="/login" className="linktoLogin-button">
-                {t('log-in')}
-              </Link>
-              <RegisterButton to="/register">{t('register')}</RegisterButton>
-            </AuthGroup>
+            <div className="wrapperAuth">
+              <AuthGroup>
+                <Link to="/login" className="linktoLogin-button">
+                  {t('log-in')}
+                </Link>
+                <RegisterButton to="/register">{t('register')}</RegisterButton>
+              </AuthGroup>
+            </div>
           ) : (
             <UserLogged />
           )}
@@ -96,7 +98,7 @@ const NavMenu = () => {
           <Nav.Link href="#pricing" className="cryptoUsd">
             USD
           </Nav.Link>
-          <NavbarUser />
+          {getToken() && <NavbarUser />}
           <NavbarToggle
             aria-controls="offcanvasNavbar"
             onClick={handleOpenNavMenu}
@@ -108,7 +110,18 @@ const NavMenu = () => {
             show={showNavMenu}
             onHide={handleCloseNavMenu}
           >
-            <Offcanvas.Header closeButton />
+            <Offcanvas.Header closeButton>
+              {!getToken() && (
+                <div className="btnGroupLogRegis">
+                  <Link to="/login" className="linktoLogin-button">
+                    {t('log-in')}
+                  </Link>
+                  <RegisterButton to="/register">
+                    {t('register')}
+                  </RegisterButton>
+                </div>
+              )}
+            </Offcanvas.Header>
             <Offcanvas.Body>
               <Menu mode="inline" theme="dark">
                 <Menu.Item key="1" icon={<GrBitcoin />} disabled>
@@ -121,12 +134,8 @@ const NavMenu = () => {
                   <Menu.Item key="3" icon={<SiConvertio />} disabled>
                     <Link to="#">Convert</Link>
                   </Menu.Item>
-                  <Menu.Item
-                    key="4"
-                    icon={<MdOutlineSpaceDashboard />}
-                    disabled
-                  >
-                    <Link to="#">Classic</Link>
+                  <Menu.Item key="4" icon={<MdOutlineSpaceDashboard />}>
+                    <Link to="/">Classic</Link>
                   </Menu.Item>
                   <Menu.Item key="5" icon={<BsArrowUpCircle />} disabled>
                     <Link to="#">Advanced</Link>

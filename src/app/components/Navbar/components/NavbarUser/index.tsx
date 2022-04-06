@@ -2,15 +2,13 @@ import { Menu, Typography } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { useState } from 'react';
 import { Offcanvas } from 'react-bootstrap';
-import { AiFillProfile } from 'react-icons/ai';
 import { BiLogOut } from 'react-icons/bi';
 import { BsFillBookmarkPlusFill, BsPersonCircle } from 'react-icons/bs';
 import { FaWallet } from 'react-icons/fa';
-import { GrClose } from 'react-icons/gr';
-import { MdDashboard, MdOutlineSpaceDashboard } from 'react-icons/md';
 import { RiProfileLine, RiVipDiamondFill } from 'react-icons/ri';
 import { SiSpringsecurity } from 'react-icons/si';
 import { Link } from 'react-router-dom';
+import { authService } from 'services/authService';
 import styled from 'styled-components';
 
 const NavbarUser = () => {
@@ -19,13 +17,19 @@ const NavbarUser = () => {
     setShowCanvas(false);
   };
 
+  const logout = () => {
+    authService.removeAccessToken();
+    authService.removeUserId();
+    window.location.href = '/';
+  };
+
   const handleClickUser = () => {
     setShowCanvas(true);
   };
 
   const userId = localStorage.getItem('userId');
 
-  const { Text, Title } = Typography;
+  const { Title } = Typography;
 
   return (
     <Wrapper>
@@ -42,7 +46,7 @@ const NavbarUser = () => {
           </Title>
           <div className="userDesc">
             <span>
-              <RiVipDiamondFill /> Regular user
+              <RiVipDiamondFill className="dinamoIcon" /> Regular user
             </span>
             <span className="verify">Verified</span>
           </div>
@@ -66,7 +70,7 @@ const NavbarUser = () => {
             <Menu.Item key="5" icon={<SiSpringsecurity />}>
               <Link to="#">Security</Link>
             </Menu.Item>
-            <Menu.Item key="6" icon={<BiLogOut />}>
+            <Menu.Item key="6" icon={<BiLogOut />} onClick={logout}>
               <Link to="#">Logout</Link>
             </Menu.Item>
           </Menu>
@@ -80,7 +84,7 @@ export default NavbarUser;
 
 const Wrapper = styled.div`
   display: none;
-  @media only screen and (max-width: 1199px) {
+  @media only screen and (max-width: 1231px) {
     display: block;
   }
   .iconUser {
@@ -129,6 +133,12 @@ const OffCanvasUser = styled(Offcanvas)`
         padding: 2px 10px;
         border-top-left-radius: 10px;
         border-bottom-left-radius: 10px;
+      }
+
+      .dinamoIcon {
+        font-size: 16px;
+        transform: translateY(-2px);
+        margin-right: 3px;
       }
     }
 

@@ -16,6 +16,7 @@ import { useTradesSlice } from 'app/components/Trades/slice';
 import { selectTrades } from 'app/components/Trades/slice/selectors';
 import { useWebsocketSlice } from 'app/container/HomeContainer/slice';
 import { useParams } from 'react-router-dom';
+import { Tabs } from 'antd';
 const baseURL = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 // const socket = new WebSocket(`${baseURL}/ws`);
@@ -23,7 +24,9 @@ const HomeContentContainer = () => {
   const [dataMarketSocket, setDataMarketSocket]: any = useState({});
   const [dataOrder, setDataOrder]: any = useState({});
   const [webSocket, setWebSocket]: any = useState();
+  const [windowWidth, setWindowWidth] = useState(0);
   const dispatch = useDispatch();
+  const { TabPane } = Tabs;
   const [socketMess, setSocketMess]: any = useState({});
   const { actions: actionsTrades } = useTradesSlice();
   const { actions: actionsWebsocket } = useWebsocketSlice();
@@ -34,6 +37,10 @@ const HomeContentContainer = () => {
   const changeFormatPair = `${pair?.substring(0, findIndex)}/${pair?.substring(
     findIndex + 1,
   )}`;
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+  }, [window.innerWidth]);
 
   useEffect(() => {
     console.log('mount');
@@ -102,58 +109,85 @@ const HomeContentContainer = () => {
   }, [pair]);
   return (
     <Container>
-      <StyledRow>
-        <Col md={12} lg={12} xxl={9} xl={9}>
-          <StyledRow>
-            <ContentHeader socketMess={socketMess} />
-          </StyledRow>
-          <StyledRow className="content-left">
-            <StyledCol
-              xxl={4}
-              xl={4}
-              lg={12}
-              md={12}
-              className="orderbook-section"
-            >
+      {windowWidth >= 657 && (
+        <StyledRow>
+          <Col md={12} lg={12} xxl={9} xl={9}>
+            <StyledRow>
+              <ContentHeader socketMess={socketMess} />
+            </StyledRow>
+            <StyledRow className="content-left">
+              <StyledCol
+                xxl={4}
+                xl={4}
+                lg={12}
+                md={12}
+                className="orderbook-section"
+              >
+                <OrderBook socketMess={socketMess} />
+                <div className="market">
+                  <Market
+                    dataSocket={socketMess}
+                    dataApi={dataAllPair}
+                    socket={webSocket}
+                  />
+                  <Trades dataSocket={socketMess} dataApi={dataAllTrades} />
+                  <MarketActivities />
+                </div>
+              </StyledCol>
+              <StyledCol
+                xxl={8}
+                xl={8}
+                lg={12}
+                md={12}
+                className="d-flex flex-column"
+              >
+                <Row
+                  style={{ maxWidth: 'calc(100vw - 5px)', margin: '0 auto' }}
+                >
+                  <Col xxl={12} xl={12} lg={8}>
+                    <Chart />
+                  </Col>
+                  <Col xxl={12} xl={12} lg={4}>
+                    <OrderFormContainer />
+                  </Col>
+                </Row>
+              </StyledCol>
+            </StyledRow>
+          </Col>
+          <StyledCol xxl={3} lg={6} xl={3} className="right-menu">
+            <Market
+              dataSocket={socketMess}
+              dataApi={dataAllPair}
+              socket={webSocket}
+            />
+            <Trades dataSocket={socketMess} dataApi={dataAllTrades} />
+            <MarketActivities />
+          </StyledCol>
+        </StyledRow>
+      )}
+      {windowWidth < 657 && (
+        <ContainerMobile>
+          <ContentHeader socketMess={socketMess} />
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="Chart" key="1">
+              <Chart />
+              <OrderFormContainer />
+            </TabPane>
+            <TabPane tab="Order Book" key="2">
               <OrderBook socketMess={socketMess} />
-              <div className="market">
-                <Market
-                  dataSocket={socketMess}
-                  dataApi={dataAllPair}
-                  socket={webSocket}
-                />
-                <Trades dataSocket={socketMess} dataApi={dataAllTrades} />
-                <MarketActivities />
-              </div>
-            </StyledCol>
-            <StyledCol
-              xxl={8}
-              xl={8}
-              lg={12}
-              md={12}
-              className="d-flex flex-column"
-            >
-              <Row>
-                <Col xxl={12} xl={12} lg={8}>
-                  <Chart />
-                </Col>
-                <Col xxl={12} xl={12} lg={4}>
-                  <OrderFormContainer />
-                </Col>
-              </Row>
-            </StyledCol>
-          </StyledRow>
-        </Col>
-        <StyledCol xxl={3} lg={6} xl={3} className="right-menu">
-          <Market
-            dataSocket={socketMess}
-            dataApi={dataAllPair}
-            socket={webSocket}
-          />
-          <Trades dataSocket={socketMess} dataApi={dataAllTrades} />
-          <MarketActivities />
-        </StyledCol>
-      </StyledRow>
+            </TabPane>
+            <TabPane tab="Market" key="3">
+              <Market
+                dataSocket={socketMess}
+                dataApi={dataAllPair}
+                socket={webSocket}
+              />
+              <Trades dataSocket={socketMess} dataApi={dataAllTrades} />
+              <MarketActivities />
+            </TabPane>
+          </Tabs>
+        </ContainerMobile>
+      )}
     </Container>
   );
 };
@@ -221,4 +255,27 @@ const StyledRow = styled(Row)`
 `;
 const StyledCol = styled(Col)`
   padding: 0;
+`;
+
+const ContainerMobile = styled.div`
+  .ant-tabs {
+    color: ${({ theme }) => theme.p2pTextLight};
+  }
+
+  .ant-tabs-nav {
+    &::before {
+      display: none;
+    }
+
+    margin-bottom: 0;
+    padding-left: 16px;
+    margin-top: 20px;
+  }
+  .ant-tabs-ink-bar {
+    display: none;
+  }
+
+  .ant-tabs-tab-active {
+    font-weight: bold;
+  }
 `;

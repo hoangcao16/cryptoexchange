@@ -9,6 +9,9 @@ export const Container = styled.div`
   -webkit-box-pack: center;
   justify-content: center;
   border-bottom: ${({ theme }) => theme.borderGray};
+  @media only screen and (max-width: 575px) {
+    display: none;
+  }
 `;
 export const Div = styled.div`
   box-sizing: border-box;

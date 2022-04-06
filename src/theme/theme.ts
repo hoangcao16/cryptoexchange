@@ -52,4 +52,5 @@ export const darkTheme: DefaultTheme = {
   titleTableBackground: '#FAFAFA',
   primaryBlur: 'rgba(16,175,255, 0.3)',
   greenColorBlur: 'rgba(14, 203, 129, 0.3)',
+  brightGrayColorBlur: 'rgba(255, 255, 255, 0.3)',
 };
