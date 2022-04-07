@@ -5,13 +5,16 @@ import {
   NormalButton,
   WalletDirect,
   StyledLink,
+  ModalTransfer,
 } from './style';
 import IconSvg from 'app/assets/img/icon';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-
+import { useState } from 'react';
+import FormTransfer from 'app/components/FormTransfer';
 const FiatSpotHeader = () => {
   const { t } = useTranslation();
+  const [showModalTransfer, setShowModalTransfer] = useState(false);
   return (
     <div className="d-flex justify-content-between py-5 align-items-center position-relative">
       <Title>{t('fiat-and-spot')}</Title>
@@ -33,7 +36,10 @@ const FiatSpotHeader = () => {
           >
             <button>{t('pay')}</button>
           </NormalButton>
-          <NormalButton id="spotAccount_top_transfer">
+          <NormalButton
+            id="spotAccount_top_transfer"
+            onClick={() => setShowModalTransfer(true)}
+          >
             <button>{t('transfer')}</button>
           </NormalButton>
           <NormalButton href="#">
@@ -64,6 +70,18 @@ const FiatSpotHeader = () => {
           </WalletDirect>
         </div>
       </GroupButton>
+      <ModalTransfer
+        centered
+        show={showModalTransfer}
+        onHide={() => setShowModalTransfer(false)}
+      >
+        <ModalTransfer.Header closeButton>
+          <span>Transfer</span>
+        </ModalTransfer.Header>
+        <ModalTransfer.Body>
+          <FormTransfer />
+        </ModalTransfer.Body>
+      </ModalTransfer>
     </div>
   );
 };

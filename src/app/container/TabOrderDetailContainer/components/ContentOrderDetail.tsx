@@ -60,8 +60,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
   const date = new Date(trade?.updateTime);
   const date1 = Date.now();
-  console.log(333, date);
-  console.log(555, date1.getTime());
   const stepBuy = [
     {
       title: 'Transfer money to the seller',

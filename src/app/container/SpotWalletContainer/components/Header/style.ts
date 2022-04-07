@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Modal } from 'react-bootstrap';
 export const Title = styled.div`
   margin: 0px;
   min-width: 0px;
@@ -253,6 +254,20 @@ export const StyledLink = styled(Link)`
       fill: ${({ theme }) => theme.background};
       width: 1em;
       height: 1em;
+    }
+  }
+`;
+
+export const ModalTransfer = styled(Modal)`
+  color: ${({ theme }) => theme.p2pText};
+
+  .modal-header {
+    span {
+      font-size: 20px;
+    }
+
+    .btn-close {
+      box-shadow: none;
     }
   }
 `;

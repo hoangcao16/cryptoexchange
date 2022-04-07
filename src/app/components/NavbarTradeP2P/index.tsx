@@ -13,7 +13,6 @@ import {
   AiOutlinePlusCircle,
   AiOutlineProfile,
   AiOutlineLoading3Quarters,
-  AiOutlineClockCircle,
 } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { OrderAllServices } from 'services/tabOrderAllServices';
@@ -179,6 +178,21 @@ function NavbarTradeP2P(props: Props) {
   const ContentMore = (
     <ContentMoreStyled>
       <ul>
+        <Link to="/p2pUserCenter" className="responLink">
+          <li>
+            <AiOutlineTeam className="moreIcon" /> P2P User Center
+          </li>
+        </Link>
+        <Link to="/order/all" className="responLink">
+          <li>
+            <AiOutlineFileText className="moreIcon" /> Order
+          </li>
+        </Link>
+        <Link to="#" className="responLink">
+          <li>
+            <AiOutlinePlayCircle className="moreIcon" /> Video tutorial
+          </li>
+        </Link>
         <Link to="/p2pUserCenter#tabPaymentMethod">
           <li>
             <AiOutlineMonitor className="moreIcon" /> Payment Methods
@@ -266,7 +280,7 @@ function NavbarTradeP2P(props: Props) {
               <Button
                 type="link"
                 className="btnOption"
-                icon={<AiOutlineMore className="btnOption__icon" />}
+                icon={<AiOutlineMore className="btnOption__icon moreIcon" />}
               >
                 More <AiOutlineCaretDown style={{ marginLeft: '8px' }} />
               </Button>
@@ -332,6 +346,18 @@ const NavbarTradeP2PStyled = styled.div`
           color: ${({ theme }) => theme.text};
           text-decoration: none;
         }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 730px) {
+    .trade-tabs__options {
+      & > button:not(:last-child) {
+        display: none;
+      }
+
+      .moreIcon {
+        display: none;
       }
     }
   }
@@ -483,5 +509,14 @@ const ContentMoreStyled = styled.div`
   }
   .moreIcon {
     font-size: 20px;
+  }
+
+  .responLink {
+    display: none;
+  }
+  @media only screen and (max-width: 730px) {
+    .responLink {
+      display: block;
+    }
   }
 `;

@@ -14,4 +14,11 @@ export const tabP2PUserCenterServices = {
       url: 'p2p-api/api/v1/p2p-payment-method',
     });
   },
+
+  deletePaymentMethod(params) {
+    return apiClient.request({
+      method: 'DELETE',
+      url: `p2p-api/api/v1/p2pPayment/${params}`,
+    });
+  },
 };

@@ -220,6 +220,7 @@ const Wrapper = styled.div`
         }
 
         .checkedUser {
+          max-width: 250px;
           transform: translateX(30px);
           color: ${({ theme }) => theme.darkGrayColor};
 
@@ -235,6 +236,7 @@ const Wrapper = styled.div`
         }
       }
       .p2pEstimatedValue {
+        max-width: 80%;
         color: ${({ theme }) => theme.darkGrayColor};
         text-align: right;
 
