@@ -1,4 +1,4 @@
-import { Button, Input, InputNumber, Typography } from 'antd';
+import { Button, InputNumber, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { RiCopperCoinFill, RiMoneyDollarBoxFill } from 'react-icons/ri';
@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { SpotWalletServices } from 'services/spotWalletService';
 import { useLocation } from 'react-router-dom';
 
-const FormTransfer = () => {
+const FormTransfer = ({ finishForm }) => {
   const { Text } = Typography;
   const [validateText, setValidateText] = useState('');
   const [validateAmount, setValidateAmount] = useState('');
@@ -100,7 +100,20 @@ const FormTransfer = () => {
     });
   };
 
-  const handleTransfer = () => {};
+  const findAllP2PWallet = () => {};
+
+  const handleTransfer = () => {
+    if (amount && tokenId) {
+      finishForm(amount, tokenId);
+    } else {
+      if (!amount) {
+        setValidateAmount('Please enter a valid amount');
+      }
+      if (!tokenId) {
+        setValidateText('Please choose a valid coin');
+      }
+    }
+  };
 
   useEffect(() => {
     findAllSpotWallet();
@@ -142,20 +155,20 @@ const FormTransfer = () => {
           ) : (
             <>
               <Select
-                className="fromSelect"
-                classNamePrefix="select"
-                name="color"
-                isSearchable
-                defaultValue={option1[0]}
-                options={option1}
-              />
-              <Select
                 className="toSelect"
                 classNamePrefix="select"
                 name="color"
                 isSearchable
                 defaultValue={option2[0]}
                 options={option2}
+              />
+              <Select
+                className="fromSelect"
+                classNamePrefix="select"
+                name="color"
+                isSearchable
+                defaultValue={option1[0]}
+                options={option1}
               />
             </>
           )}
@@ -187,7 +200,12 @@ const FormTransfer = () => {
       />
       <Text className="validateAmount">{validateAmount}</Text>
 
-      <Button type="primary" className="btnConfirm" onClick={handleTransfer}>
+      <Button
+        type="primary"
+        className="btnConfirm"
+        onClick={handleTransfer}
+        disabled={!amount || !tokenId}
+      >
         Confirm
       </Button>
     </Wrapper>

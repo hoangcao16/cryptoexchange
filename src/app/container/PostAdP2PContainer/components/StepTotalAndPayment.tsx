@@ -281,7 +281,39 @@ function StepTotalAndPayment() {
 
           <AiOutlineMinus className="mt-2" />
 
-          <Form.Item name="orderUpperBound" initialValue={10}>
+          <Form.Item
+            name="orderUpperBound"
+            initialValue={10}
+            rules={[
+              { required: false },
+              ({ getFieldValue, setFields }) => ({
+                validator(_, value) {
+                  if (getFieldValue('orderLowerBound') < value) {
+                    setFields([
+                      {
+                        name: 'orderLowerBound',
+                        errors: undefined,
+                      },
+                    ]);
+                    return Promise.resolve();
+                  }
+
+                  if (getFieldValue('orderLowerBound') < value) {
+                    setFields([
+                      {
+                        name: 'orderLowerBound',
+                        errors: [
+                          'Min order limit should not exceed the max order limit',
+                        ],
+                      },
+                    ]);
+                    return Promise.resolve();
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
             <InputNumber
               className="stepTAP--input stepTAP--input-order"
               addonAfter={<>{PostAdP2PState.data.fiatName}</>}

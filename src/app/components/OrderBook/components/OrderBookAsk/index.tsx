@@ -8,7 +8,7 @@ import { darkTheme } from 'theme/theme';
 import { useParams } from 'react-router-dom';
 // import { selectGetallpair } from 'app/components/Market/slice/selectors';
 
-const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
+const OrderBookAsk = ({ dataSocket, miniTable }) => {
   const params = useParams();
   const pair = params?.pair?.split('_');
   const [dataView, setDataView]: any[] = useState([]);
@@ -38,14 +38,14 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
     setIdHover(0);
   };
 
-  useEffect(() => {
-    if (dataApi?.length > 0) {
-      setDataView(dataApi);
-    }
-    return () => {
-      setDataView([]);
-    };
-  }, [dataApi]);
+  // useEffect(() => {
+  //   if (dataApi?.length > 0) {
+  //     setDataView(dataApi);
+  //   }
+  //   return () => {
+  //     setDataView([]);
+  //   };
+  // }, [dataApi]);
 
   useEffect(() => {
     let totalSum1 = 0;
@@ -63,9 +63,9 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
           totalPrice += Number(item?.price);
         });
       if (numberOrder && totalSum1 && totalPrice) {
-        setSum1(totalSum1 / numberOrder);
+        setSum1(totalSum1);
         setAvgPrice(totalPrice / numberOrder);
-        setSum2((totalSum1 * totalPrice) / numberOrder);
+        setSum2(totalSum1 * totalPrice);
       }
     } else {
       let numberOrder = dataView?.filter((item, i) => i >= idHover)?.length;
@@ -76,9 +76,9 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
           totalPrice += Number(item?.price);
         });
       if (numberOrder && totalSum1 && totalPrice) {
-        setSum1(totalSum1 / numberOrder);
+        setSum1(totalSum1);
         setAvgPrice(totalPrice / numberOrder);
-        setSum2((totalSum1 * totalPrice) / numberOrder);
+        setSum2(totalSum1 * totalPrice);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,14 +137,15 @@ const OrderBookAsk = ({ dataApi, dataSocket, miniTable }) => {
       Array.isArray(dataSocket.Value.asks)
     ) {
       setDataView(dataSocket.Value.asks);
-    } else if (
-      !isEmpty(dataSocket) &&
-      dataSocket.Key === 'PowExchange::OrderBookChange' &&
-      dataSocket.Value.asks === undefined &&
-      dataSocket.Value.side === undefined
-    ) {
-      setDataView([]);
     }
+    //  else if (
+    //   !isEmpty(dataSocket) &&
+    //   dataSocket.Key === 'PowExchange::OrderBookChange' &&
+    //   dataSocket.Value.asks === undefined &&
+    //   dataSocket.Value.side === undefined
+    // ) {
+    //   setDataView([]);
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataSocket]);
   const selectPrice = (price: number) => {

@@ -614,12 +614,17 @@ const ContentOrderDetail = ({ trade, reload }) => {
             {tradaType === 'Buy' && (
               <div>
                 {TabOrderDetailState.buyerStatus === 'PAID' ? (
-                  <Button type="primary" disabled={disableAppeal}>
+                  <Button
+                    type="primary"
+                    disabled={disableAppeal}
+                    className="btnAppeal"
+                  >
                     {disableAppeal && (
                       <Countdown
                         value={
                           Date.now() + 15 * 60000 - (date1 - date.getTime())
                         }
+                        onFinish={() => setDisableAppeal(false)}
                       ></Countdown>
                     )}
                     Appeal

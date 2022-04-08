@@ -17,7 +17,7 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { darkTheme } from 'theme/theme';
 
-const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
+const OrderBookBid = ({ dataSocket, miniTable }: any) => {
   const { t } = useTranslation();
   const [dataView, setDataView]: any[] = useState([]);
   const [lastestPrice, setLastestPrice] = useState('');
@@ -49,15 +49,15 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pairData?.data, pair]);
-  useEffect(() => {
-    if (dataApi?.length > 0) {
-      setDataView(dataApi);
-    }
-    return () => {
-      setDataView([]);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataApi]);
+  // useEffect(() => {
+  //   if (dataApi?.length > 0) {
+  //     setDataView(dataApi);
+  //   }
+  //   return () => {
+  //     setDataView([]);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dataApi]);
   useEffect(() => {
     if (
       !isEmpty(dataSocket) &&
@@ -112,14 +112,15 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
       Array.isArray(dataSocket.Value.bids)
     ) {
       setDataView(dataSocket.Value.bids);
-    } else if (
-      !isEmpty(dataSocket) &&
-      dataSocket.Key === 'PowExchange::OrderBookChange' &&
-      dataSocket.Value.bids === undefined &&
-      dataSocket.Value.side === undefined
-    ) {
-      setDataView([]);
     }
+    // else if (
+    //   !isEmpty(dataSocket) &&
+    //   dataSocket.Key === 'PowExchange::OrderBookChange' &&
+    //   dataSocket.Value.bids === undefined &&
+    //   dataSocket.Value.side === undefined
+    // ) {
+    //   setDataView([]);
+    // }
     if (!isEmpty(dataSocket) && dataSocket.Key === 'RobinhoodPair') {
       if (!isEmpty(dataSocket.Value)) {
         if (dataSocket.Value.symbol === changeFormatPair) {
@@ -149,9 +150,9 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
           totalPrice += Number(item?.price);
         });
       if (numberOrder && totalSum1 && totalPrice) {
-        setSum1(totalSum1 / numberOrder);
+        setSum1(totalSum1);
         setAvgPrice(totalPrice / numberOrder);
-        setSum2((totalSum1 * totalPrice) / numberOrder);
+        setSum2(totalSum1 * totalPrice);
       }
     } else {
       let numberOrder = dataView?.filter((item, i) => i <= idHover)?.length;
@@ -162,9 +163,9 @@ const OrderBookBid = ({ dataApi, dataSocket, miniTable }: any) => {
           totalPrice += Number(item?.price);
         });
       if (numberOrder && totalSum1 && totalPrice) {
-        setSum1(totalSum1 / numberOrder);
+        setSum1(totalSum1);
         setAvgPrice(totalPrice / numberOrder);
-        setSum2((totalSum1 * totalPrice) / numberOrder);
+        setSum2(totalSum1 * totalPrice);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

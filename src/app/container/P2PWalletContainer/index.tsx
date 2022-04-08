@@ -28,15 +28,18 @@ const P2PWalletContainer = () => {
   const { t } = useTranslation();
   const { actions } = useP2PWalletSlice();
   const AllP2PWall: any = useSelector(selectP2PWallet);
-  useEffect(() => {
+  const getWalletP2P = () => {
     dispatch(actions.getP2PWalletRequest());
+  };
+  useEffect(() => {
+    getWalletP2P();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <App>
       <Navbar />
       <Container>
-        <FiatSpotHeader />
+        <FiatSpotHeader reload={getWalletP2P} />
       </Container>
       <Parameter>
         <Container>

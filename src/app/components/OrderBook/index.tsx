@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import OrderBookAsk from './components/OrderBookAsk';
 import OrderBookBid from './components/OrderBookBid';
 import OrderBookTHeader from './components/OrderBookHeader';
@@ -15,21 +15,21 @@ import OrderBookIcon from 'app/assets/img/Orderbook';
 // import Select from 'react-select';
 import { Select } from 'antd';
 import { Dropdown } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { useOrderbookSlice } from './slice';
-import { selectOrderbook } from './slice/selectors';
-import { useParams } from 'react-router-dom';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useOrderbookSlice } from './slice';
+// import { selectOrderbook } from './slice/selectors';
+// import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const OrderBook = ({ socketMess }) => {
   const [Layout, setLayout] = useState(1);
   const [show, setShow] = useState(false);
-  const dispatch = useDispatch();
-  let { pair } = useParams();
+  // const dispatch = useDispatch();
+  // let { pair } = useParams();
   const { t } = useTranslation();
-  const { actions } = useOrderbookSlice();
-  const dataOrderbook: any = useSelector(selectOrderbook);
-  const limit = 100;
+  // const { actions } = useOrderbookSlice();
+  // const dataOrderbook: any = useSelector(selectOrderbook);
+  // const limit = 100;
   const showDropdown = e => {
     setShow(!show);
   };
@@ -44,19 +44,19 @@ const OrderBook = ({ socketMess }) => {
     { value: '5', label: '50' },
     { value: '6', label: '100' },
   ];
-  useEffect(() => {
-    const findIndex: any = pair?.indexOf('_');
-    if (pair !== '') {
-      dispatch(
-        actions.getOrderbookRequest({
-          pair: `${pair?.substring(0, findIndex)}/${pair?.substring(
-            findIndex + 1,
-          )}`,
-          limit: limit,
-        }),
-      );
-    }
-  }, [actions, dispatch, pair, Layout]);
+  // useEffect(() => {
+  //   const findIndex: any = pair?.indexOf('_');
+  //   if (pair !== '') {
+  //     dispatch(
+  //       actions.getOrderbookRequest({
+  //         pair: `${pair?.substring(0, findIndex)}/${pair?.substring(
+  //           findIndex + 1,
+  //         )}`,
+  //         limit: limit,
+  //       }),
+  //     );
+  //   }
+  // }, [actions, dispatch, pair, Layout]);
   return (
     <Container>
       <Header>
@@ -129,14 +129,14 @@ const OrderBook = ({ socketMess }) => {
           <OrderBookTHeader />
           <StyledRow>
             <OrderBookAsk
-              dataApi={dataOrderbook?.data?.data?.asks}
+              // dataApi={dataOrderbook?.data?.data?.asks}
               dataSocket={socketMess}
               miniTable
             />
           </StyledRow>
           <StyledRow>
             <OrderBookBid
-              dataApi={dataOrderbook?.data?.data?.bids}
+              // dataApi={dataOrderbook?.data?.data?.bids}
               dataSocket={socketMess}
               miniTable
             />
@@ -146,7 +146,7 @@ const OrderBook = ({ socketMess }) => {
         <>
           <OrderBookTHeader />
           <OrderBookBid
-            dataApi={dataOrderbook?.data?.data?.bids}
+            // dataApi={dataOrderbook?.data?.data?.bids}
             dataSocket={socketMess}
             miniTable={false}
           />
@@ -155,7 +155,7 @@ const OrderBook = ({ socketMess }) => {
         <div style={{ height: '100%' }}>
           <OrderBookTHeader />
           <OrderBookAsk
-            dataApi={dataOrderbook?.data?.data?.asks}
+            // dataApi={dataOrderbook?.data?.data?.asks}
             dataSocket={socketMess}
             miniTable={false}
           />

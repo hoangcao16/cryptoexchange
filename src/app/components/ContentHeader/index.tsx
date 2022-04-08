@@ -24,6 +24,7 @@ const ContentHeader = ({ socketMess }) => {
     0,
     findIndex,
   )}/${pair?.substring(findIndex + 1)}`;
+  const cryptos = pair?.split('_');
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { actions } = useCurrentPairSlice();
@@ -89,7 +90,9 @@ const ContentHeader = ({ socketMess }) => {
                   <div className="coin">{changeFormatPair}</div>
                   <div className="InformationCoin">
                     <IconSvg name="openIcon" />
-                    <a href="/#">Bitcoin</a>
+                    <a href="/#" className="linkQuote">
+                      {cryptos?.[0]}
+                    </a>
                   </div>
                 </div>
               </ContentLeft>
