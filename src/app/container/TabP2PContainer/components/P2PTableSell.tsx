@@ -107,7 +107,7 @@ function P2PTableSell() {
               {record?.fiat.symbol} {record.orderLowerBound} <span> - </span>
             </div>
             <div className="col3">
-              {record?.fiat.symbol} {record?.price * record.available}
+              {record?.fiat.symbol} {record?.orderUpperBound}
             </div>
           </div>
         </ColLimitAvailable>

@@ -7,4 +7,12 @@ export const P2PWalletServices = {
       url: `/trading-wallet-svc/p2p`,
     });
   },
+
+  transferP2pToSpot(data) {
+    return apiClient.request({
+      method: 'POST',
+      url: '/api-svc/wallet/transfer-p2p-to-spot',
+      data: data,
+    });
+  },
 };

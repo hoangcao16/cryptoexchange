@@ -120,7 +120,7 @@ const HandleOrder = (props: any) => {
   };
 
   const handelChooseAll = () => {
-    setPricePayBuy(record?.price * available);
+    setPricePayBuy(record?.orderUpperBound);
     setReceiveBuy(available);
     setValidateStateBuy(false);
   };
@@ -218,8 +218,8 @@ const HandleOrder = (props: any) => {
 
   const handelChooseAllSeller = () => {
     if (walletUser > available) {
-      setCryptoSell(available);
-      setReceivePriceSell(available * record.price);
+      setCryptoSell(record?.orderUpperBound / record?.price);
+      setReceivePriceSell(record?.orderUpperBound);
     } else setCryptoSell(walletUser);
     if (walletUser < record.orderLowerBound / record.price) {
       setValidateStateSell(true);
@@ -366,7 +366,7 @@ const HandleOrder = (props: any) => {
               className="form-control bargain"
               placeholder={`${record.orderLowerBound.toFixed(
                 2,
-              )} - ${maxPrice.toFixed(2)}`}
+              )} - ${record.orderUpperBound.toFixed(2)}`}
               style={{ borderColor: validateStateBuy ? 'red' : '' }}
             />
             {validateStateBuy && (
@@ -487,9 +487,9 @@ const HandleOrder = (props: any) => {
               autoComplete="off"
               min={0}
               className="form-control bargain"
-              placeholder={`${record.orderLowerBound.toFixed(
+              placeholder={`${record?.orderLowerBound.toFixed(
                 2,
-              )} - ${maxPrice.toFixed(2)}`}
+              )} - ${record?.orderUpperBound.toFixed(2)}`}
               style={{
                 borderColor: validateStateSell ? darkTheme.redColor : '',
               }}

@@ -13,6 +13,7 @@ import { useState } from 'react';
 import openNotification from 'app/components/NotificationAntd';
 import FormTransfer from 'app/components/FormTransfer';
 import FormAuthenticator from 'app/components/FormAuthenticator';
+import { P2PWalletServices } from 'services/p2pWalletService';
 
 const FiatSpotHeader = ({ reload }) => {
   const { t } = useTranslation();
@@ -20,6 +21,7 @@ const FiatSpotHeader = ({ reload }) => {
   const [showModalAuthen, setShowModalAuthen] = useState(false);
   const [amountTransfer, setAmountTransfer] = useState(0);
   const [tokenIdTransfer, setTokenIdTransfer] = useState(0);
+  const { transferP2pToSpot } = P2PWalletServices;
 
   const finishFormTransfer = (amount, tokenId) => {
     setAmountTransfer(amount);
@@ -28,19 +30,19 @@ const FiatSpotHeader = ({ reload }) => {
   };
 
   const finishFormAuthen = () => {
-    // transferMoneyToP2P({
-    //   tokenId: tokenIdTransfer,
-    //   amount: amountTransfer,
-    // })
-    //   .then(res => {
-    //     if (res.data.rc === 0) {
-    //       openNotification('Success', 'Transferred');
-    //       setShowModalAuthen(false);
-    //       setShowModalTransfer(false);
-    //       reload();
-    //     } else openNotification('Error', res.data.rd);
-    //   })
-    //   .catch(() => openNotification('Error', 'Something went wrong!'));
+    transferP2pToSpot({
+      tokenId: tokenIdTransfer,
+      amount: amountTransfer,
+    })
+      .then(res => {
+        if (res.data.rc === 0) {
+          openNotification('Success', 'Transferred');
+          setShowModalAuthen(false);
+          setShowModalTransfer(false);
+          reload();
+        } else openNotification('Error', res.data.rd);
+      })
+      .catch(() => openNotification('Error', 'Something went wrong!'));
   };
   return (
     <div className="d-flex justify-content-between py-5 align-items-center position-relative">

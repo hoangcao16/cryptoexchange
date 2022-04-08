@@ -38,7 +38,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
   const [qr, setQR] = useState('');
   const [visibleModalConfirmPayment, setVisibleModalConfirmPayment] =
     useState(false);
+  const [showModalAppeal, setShowModalAppeal] = useState(false);
   const [reCallMessage, setReCallMessage]: any = useState(false);
+  const [countDowntTimeValue, setCountDownTimeValue] = useState(0);
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
@@ -214,8 +216,6 @@ const ContentOrderDetail = ({ trade, reload }) => {
     }
   };
 
-  console.log(444, Date.now() + 15 * 60000 - (Date.now() - date.getTime()));
-
   const findPaymentById = () => {
     if (trade?.paymentId) {
       getPaymentById(trade?.paymentId)
@@ -226,6 +226,10 @@ const ContentOrderDetail = ({ trade, reload }) => {
         })
         .catch(res => console.log(res));
     }
+  };
+
+  const finishCdAppeal = () => {
+    setDisableAppeal(false);
   };
 
   useEffect(() => {
@@ -610,21 +614,23 @@ const ContentOrderDetail = ({ trade, reload }) => {
                   )}
               </Steps>
             </div>
-
             {tradaType === 'Buy' && (
-              <div>
+              <div className="btnGroup">
                 {TabOrderDetailState.buyerStatus === 'PAID' ? (
                   <Button
                     type="primary"
-                    disabled={disableAppeal}
+                    disabled={
+                      disableAppeal && date1 - date.getTime() < 15 * 60000
+                    }
+                    onClick={() => setShowModalAppeal(true)}
                     className="btnAppeal"
                   >
-                    {disableAppeal && (
+                    {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
                       <Countdown
                         value={
                           Date.now() + 15 * 60000 - (date1 - date.getTime())
                         }
-                        onFinish={() => setDisableAppeal(false)}
+                        onFinish={finishCdAppeal}
                       ></Countdown>
                     )}
                     Appeal
@@ -744,14 +750,54 @@ const ContentOrderDetail = ({ trade, reload }) => {
           defaultActiveKey={['1']}
           expandIcon={() => <HiPlusCircle className="plusIcon" />}
         >
-          <Panel header="This is panel header 1" key="1">
-            <p>{123}</p>
+          <Panel header="How do I make a payment?" key="1">
+            <p>
+              To ensure transactions are secure, some sellers may need you to
+              provide additional information to prove your identity, source of
+              funds, etc. are credible. Please chat or call the seller to obtain
+              the payment method directly.
+            </p>
           </Panel>
-          <Panel header="This is panel header 2" key="2">
-            <p>{123}</p>
+          <Panel header="Is it safe to make payment to the seller？" key="2">
+            <p>
+              The advertiser has frozen the digital assets before publishing the
+              advertisement. During the transaction, the platform will hold
+              custody of the digital assets. You do not need to worry about not
+              receiving the purchased crypto
+            </p>
           </Panel>
-          <Panel header="This is panel header 3" key="3">
-            <p>{123}</p>
+          <Panel
+            header="What should I look out for during the payment transfer?"
+            key="3"
+          >
+            <p>
+              Please ensure that the payee's payment details are consistent with
+              the verified information on the platform. If not, the seller has
+              the right not to release the currency. If you have paid the
+              seller, please do not cancel the transaction. You may return to
+              Binance after payment and click on "Transferred, notify seller".
+            </p>
+          </Panel>
+          <Panel header="What do I do if the payment failed?" key="4">
+            <p>
+              Please contact the seller to confirm whether the seller supports
+              other payment methods.
+            </p>
+          </Panel>
+          <Panel header="What if I do not want to trade anymore?" key="5">
+            <p>
+              You can select "Cancel order" to cancel the order. If you have
+              already make the payment to the seller, please do not cancel the
+              transaction.
+            </p>
+          </Panel>
+          <Panel header="Does the seller charge a transaction fee?" key="6">
+            <p>
+              We recommend that you read the seller's trading terms before
+              placing an order. Please chat with the seller. If you choose not
+              to pay the fee, you can cancel the order and search for another
+              seller.
+            </p>
           </Panel>
         </Collapse>
       </div>
@@ -873,6 +919,16 @@ const ContentOrderDetail = ({ trade, reload }) => {
           </Button>
         </Modal.Body>
       </ModalVerification>
+      <ModalAppeal
+        centered
+        onHide={() => setShowModalAppeal(false)}
+        show={showModalAppeal}
+      >
+        <ModalAppeal.Header closeButton>
+          <span>Appeal</span>
+        </ModalAppeal.Header>
+        <ModalAppeal.Body></ModalAppeal.Body>
+      </ModalAppeal>
     </Wrapper>
   );
 };
@@ -1101,13 +1157,36 @@ const Wrapper = styled.div`
       margin-top: 50px;
     }
   }
+
+  .btnGroup {
+    display: flex;
+  }
+  .btnAppeal {
+    display: flex;
+
+    .ant-statistic {
+      height: 100%;
+
+      &-content {
+        height: 100%;
+      }
+      &-content-value {
+        height: 100%;
+        font-size: 16px;
+        font-weight: bold;
+        color: ${({ theme }) => theme.primary};
+        transform: translateY(-12px);
+        margin-right: 10px;
+      }
+    }
+  }
 `;
 
 const ModalCancel = styled(Modal)`
   color: ${({ theme }) => theme.p2pText};
 
   .tips {
-    background-color: rgba(24, 144, 255, 0.3);
+    background-color: ${({ theme }) => theme.primaryBlur};
     padding: 15px;
     padding-left: 30px;
     border-radius: 5px;
@@ -1321,3 +1400,5 @@ const ModalVerification = styled(Modal)`
     }
   }
 `;
+
+const ModalAppeal = styled(Modal)``;

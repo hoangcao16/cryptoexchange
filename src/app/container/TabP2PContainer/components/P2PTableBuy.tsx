@@ -123,8 +123,7 @@ function P2PTableBuy() {
               <span> - </span>
             </div>
             <div className="col3">
-              {record?.fiat?.symbol}{' '}
-              {(record?.price * record?.available)?.toFixed(2)}
+              {record?.fiat?.symbol} {record?.orderUpperBound?.toFixed(2)}
             </div>
           </div>
         </ColLimitAvailable>

@@ -1,4 +1,4 @@
-import { Button, Input, Spin } from 'antd';
+import { Button, Input, Spin, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { tabOrderDetailService } from 'services/orderDetailService';
@@ -10,6 +10,7 @@ const FormAuthenticator = ({ finishForm }) => {
   const { getValidateKey } = SpotWalletServices;
   const [loadingQRCode, setLoadingQRCode] = useState(false);
   const [loadingBtnSubmit, setLoadingBtnSubmit] = useState(false);
+  const [validateCode, setValidateCode] = useState(false);
 
   const [qr, setQR] = useState('');
   const [qrCode, setQrCode] = useState('');
@@ -18,6 +19,7 @@ const FormAuthenticator = ({ finishForm }) => {
     const re = /^[0-9\b]+$/;
 
     if (e.target.value === '' || re.test(e.target.value)) {
+      setValidateCode(false);
       setQrCode(e.target.value);
       console.log(e.target.value);
       if (e.target.value.length === 6) {
@@ -34,6 +36,8 @@ const FormAuthenticator = ({ finishForm }) => {
       .then(res => {
         if (res?.data) {
           finishForm();
+        } else {
+          setValidateCode(true);
         }
         setLoadingBtnSubmit(false);
       })
@@ -69,7 +73,14 @@ const FormAuthenticator = ({ finishForm }) => {
       )}
 
       <Input value={qrCode} maxLength={6} onChange={handleChangQRCode} />
-      <span>Enter the 6 digit code</span>
+      {validateCode ? (
+        <Typography.Text type="danger">
+          Invalid verification code
+        </Typography.Text>
+      ) : (
+        <span>Enter the 6 digit code</span>
+      )}
+
       <p className="linkSecurityUnavailable">
         Security verification unavailable ?
       </p>
