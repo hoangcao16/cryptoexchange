@@ -23,6 +23,7 @@ const FiatSpotHeader = ({ reload }) => {
   const [amountTransfer, setAmountTransfer] = useState(0);
   const [tokenIdTransfer, setTokenIdTransfer] = useState(0);
   const { transferMoneyToP2P } = SpotWalletServices;
+
   const finishFormTransfer = (amount, tokenId) => {
     setAmountTransfer(amount);
     setShowModalAuthen(true);
