@@ -121,7 +121,7 @@ const HandleOrder = (props: any) => {
 
   const handelChooseAll = () => {
     setPricePayBuy(record?.orderUpperBound);
-    setReceiveBuy(available);
+    setReceiveBuy(record?.orderUpperBound / record?.price);
     setValidateStateBuy(false);
   };
 

@@ -17,6 +17,9 @@ import ChatBox from 'app/components/ChatBox';
 import QRCode from 'react-qr-code';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import Countdown from 'antd/lib/statistic/Countdown';
+import { IoMdChatbubbles } from 'react-icons/io';
+import { BsHeadset } from 'react-icons/bs';
+import FormAppeal from './FormAppeal';
 const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const ContentOrderDetail = ({ trade, reload }) => {
@@ -40,7 +43,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
     useState(false);
   const [showModalAppeal, setShowModalAppeal] = useState(false);
   const [reCallMessage, setReCallMessage]: any = useState(false);
-  const [countDowntTimeValue, setCountDownTimeValue] = useState(0);
+  const [beforeAppeal, setBeforeAppeal] = useState(true);
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
@@ -655,7 +658,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
             {tradaType === 'Sell' &&
               TabOrderDetailState.buyerStatus === 'PAID' && (
-                <div>
+                <div className="btnGroupConfirm">
                   <Button
                     className="btnTransferred"
                     type="primary"
@@ -663,7 +666,23 @@ const ContentOrderDetail = ({ trade, reload }) => {
                   >
                     Payment received
                   </Button>
-                  <Button className="btnCancelOrder">Transaction issue</Button>
+                  <Button
+                    className="btnTransaction"
+                    disabled={
+                      disableAppeal && date1 - date.getTime() < 15 * 60000
+                    }
+                    onClick={() => setShowModalAppeal(true)}
+                  >
+                    {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
+                      <Countdown
+                        value={
+                          Date.now() + 15 * 60000 - (date1 - date.getTime())
+                        }
+                        onFinish={finishCdAppeal}
+                      ></Countdown>
+                    )}
+                    Transaction issue, appeal after
+                  </Button>
                 </div>
               )}
           </div>
@@ -925,9 +944,63 @@ const ContentOrderDetail = ({ trade, reload }) => {
         show={showModalAppeal}
       >
         <ModalAppeal.Header closeButton>
-          <span>Appeal</span>
+          {beforeAppeal ? <span>Tips</span> : <span>Appeal</span>}
         </ModalAppeal.Header>
-        <ModalAppeal.Body></ModalAppeal.Body>
+        <ModalAppeal.Body>
+          {beforeAppeal ? (
+            <div className="beforeAppeal">
+              <h6>Before appeal</h6>
+              <div className="firstContent">
+                <IoMdChatbubbles className="appealIcon" />
+                <span>
+                  You can upload proof of payment and account info in the
+                  chatbox to help both sides to verifi the payment
+                </span>
+              </div>
+              <div className="secondContent">
+                <div className="content">
+                  <BsHeadset className="appealIcon" />
+                  <span>
+                    If you can reach the buyer/seller, or reach an agreement
+                    with the other user, please file an appeal
+                  </span>
+                </div>
+                <div className="btnAppealModal">
+                  <Button type="link" onClick={() => setBeforeAppeal(false)}>
+                    Appeal
+                  </Button>
+                  <Button
+                    type="link"
+                    onClick={() => setShowModalAppeal(false)}
+                    className="btnCancelAppeal"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="appeal">
+              <div className="appealRcm">
+                <p>
+                  1. Reason for appeal and proofs are visible to both parties
+                  and CS. Please avoid including any private or sensitive info
+                </p>
+                <p>
+                  2. Baseless appeal request can result in banning of the
+                  account
+                </p>
+              </div>
+
+              <div className="contentAppeal">
+                <FormAppeal
+                  cancel={() => setShowModalAppeal(false)}
+                  type={TabOrderDetailState.tradeType}
+                />
+              </div>
+            </div>
+          )}
+        </ModalAppeal.Body>
       </ModalAppeal>
     </Wrapper>
   );
@@ -941,7 +1014,6 @@ const Wrapper = styled.div`
   }
   .orderStep {
     padding-top: 30px;
-    /* flex: 7; */
 
     .firstStep {
       padding-bottom: 20px;
@@ -1072,8 +1144,34 @@ const Wrapper = styled.div`
       font-weight: bold;
     }
 
+    .btnGroupConfirm {
+      display: flex;
+    }
+
     .btnTransferred {
       font-weight: bold;
+      margin-right: 20px;
+    }
+
+    .btnTransaction {
+      display: flex;
+      color: ${({ theme }) => theme.primary};
+      font-weight: bold;
+      .ant-statistic {
+        height: 100%;
+
+        &-content {
+          height: 100%;
+        }
+        &-content-value {
+          height: 100%;
+          font-size: 16px;
+          font-weight: bold;
+          color: ${({ theme }) => theme.primary};
+          transform: translateY(-12px);
+          margin-right: 10px;
+        }
+      }
     }
   }
   .chat {
@@ -1401,4 +1499,90 @@ const ModalVerification = styled(Modal)`
   }
 `;
 
-const ModalAppeal = styled(Modal)``;
+const ModalAppeal = styled(Modal)`
+  color: ${({ theme }) => theme.p2pText};
+
+  .modal-header {
+    span {
+      font-size: 20px;
+    }
+
+    .btn-close {
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 0;
+    .appealIcon {
+      font-size: 50px;
+      color: ${({ theme }) => theme.primary};
+    }
+
+    .beforeAppeal {
+      padding: 16px;
+      .firstContent {
+        display: flex;
+        align-items: center;
+        padding: 12px 10px;
+        border: 1px solid ${({ theme }) => theme.brightGrayColor};
+        border-radius: 5px;
+
+        .appealIcon {
+          flex: 1;
+          margin-right: 10px;
+        }
+
+        span {
+          flex: 7;
+        }
+      }
+
+      .secondContent {
+        padding: 12px 10px;
+        border: 1px solid ${({ theme }) => theme.brightGrayColor};
+        border-radius: 5px;
+        margin-top: 20px;
+        .content {
+          display: flex;
+          align-items: center;
+
+          .appealIcon {
+            flex: 1;
+            margin-right: 10px;
+          }
+
+          span {
+            flex: 7;
+          }
+        }
+
+        .btnAppealModal {
+          width: 100%;
+          text-align: right;
+
+          .btnCancelAppeal {
+            color: inherit;
+          }
+        }
+      }
+    }
+
+    .appeal {
+      .appealRcm {
+        padding: 16px 20px 0.1px 20px;
+        background-color: ${({ theme }) => theme.primaryBlur};
+        color: ${({ theme }) => theme.grayColor};
+        p {
+          margin-bottom: 16px;
+        }
+      }
+
+      .contentAppeal {
+        padding: 16px 20px;
+      }
+    }
+  }
+`;

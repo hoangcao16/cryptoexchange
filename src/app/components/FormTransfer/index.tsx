@@ -64,21 +64,6 @@ const FormTransfer = ({ finishForm }) => {
   const findAllSpotWallet = () => {
     getAllSpotWallet().then(res => {
       if (res.data.rc === 0) {
-        console.log({
-          value: res.data.rows[0]?.assetName,
-          label: (
-            <SelectOption>
-              <img
-                src={res.data.rows[0]?.icon}
-                alt={res.data.rows[0]?.assetName}
-                className="imgCoin"
-              />
-
-              <span className="title">{res.data.rows[0]?.assetName}</span>
-            </SelectOption>
-          ),
-          key: res.data.rows[0],
-        });
         setOptionCoins(
           res.data.rows.map(token => ({
             value: token?.assetName,

@@ -44,8 +44,10 @@ export const Container = styled.div`
     font-size: 20px;
     margin: 0 8px;
     color: ${({ theme }) => theme.graySmokeColor};
+    transition: all 0.25s linear;
+
     &:hover {
-      color: ${({ theme }) => theme.body};
+      color: ${({ theme }) => theme.primary};
     }
   }
 `;
@@ -62,6 +64,9 @@ export const ChatHeader = styled.div`
   width: 100%;
   flex-direction: column;
   z-index: 99;
+  .ant-avatar {
+    background-color: ${({ theme }) => theme.primary};
+  }
   .partner-infomation {
     margin: 0px;
     min-width: 0px;
@@ -100,7 +105,7 @@ export const ChatHeader = styled.div`
     }
   }
   .partner-desc {
-    margin: 10px 0px 0px 42px;
+    margin: 10px 0px 0px 50px;
     min-width: 0px;
     display: flex;
     .item {
@@ -267,9 +272,16 @@ export const ChatFooter = styled.div`
           }
           .inputfield {
             flex: 1;
-            border-radius: 4px;
+            border-radius: 5px;
             z-index: 99;
             border: 1px solid ${props => props.theme.slateGrayColor};
+            outline: none;
+            padding: 2px 5px;
+            transition: all 0.25s linear;
+            &:hover,
+            &:focus {
+              border-color: ${({ theme }) => theme.primary};
+            }
           }
           .send-btn {
             border-radius: 8px;
@@ -277,8 +289,9 @@ export const ChatFooter = styled.div`
             svg {
               font-size: 20px;
               color: ${props => props.theme.graySmokeColor};
+              transition: all 0.25s linear;
               &:hover {
-                color: ${props => props.theme.body};
+                color: ${({ theme }) => theme.primary};
               }
             }
           }

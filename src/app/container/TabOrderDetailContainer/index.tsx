@@ -31,6 +31,7 @@ function TabOrderDetailContainer() {
         .then(res => {
           if (res.data.rc === 0) {
             setTradeDetail(res.data.item);
+            console.log(res.data.item);
             dispatch(setBuyerStatus.setBuyerStatus(res.data.item.buyerStatus));
             dispatch(
               setSellerStatus.setSellerStatus(res.data.item.sellerStatus),
