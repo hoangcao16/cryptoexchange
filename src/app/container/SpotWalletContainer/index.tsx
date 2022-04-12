@@ -27,15 +27,19 @@ const SpotWalletContainer = () => {
   const { t } = useTranslation();
   const { actions } = useSpotWalletSlice();
   const AllSpotWall: any = useSelector(selectSpotWallet);
-  useEffect(() => {
+  const getSpotWallet = () => {
     dispatch(actions.getSpotWalletRequest());
+  };
+
+  useEffect(() => {
+    getSpotWallet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <App>
       <Navbar />
       <Container>
-        <FiatSpotHeader />
+        <FiatSpotHeader reload={getSpotWallet} />
       </Container>
       <Parameter>
         <Container>

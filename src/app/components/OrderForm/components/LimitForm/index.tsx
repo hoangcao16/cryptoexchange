@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { selectGetBalancePair } from '../../slice/selectors';
 import { getToken } from 'app/components/common/common';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { Wrapper } from './style';
 
 const LimitForm = ({ wallet, active }: any) => {
@@ -17,13 +16,7 @@ const LimitForm = ({ wallet, active }: any) => {
   const quoteAmount = balancePair?.data?.quote_amount;
   let { pair } = useParams();
   const findIndex: any = pair?.indexOf('_');
-  const [innerWidth, setInnerWidth] = useState(0);
 
-  useEffect(() => {
-    window.onresize = () => {
-      setInnerWidth(window.innerWidth);
-    };
-  }, []);
   return (
     <Wrapper>
       <div className="first-content">

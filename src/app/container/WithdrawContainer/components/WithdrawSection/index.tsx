@@ -114,6 +114,9 @@ const WithdrawSection = () => {
   };
   const handlesetMax = coinBalance => {
     setValue('amount', coinBalance, { shouldValidate: true });
+    setReceiveAmount(
+      parseFloat(coinBalance) - parseFloat(feeTransfer?.estimate_fee),
+    );
   };
   const onSubmit = data => {
     dispatch(
@@ -206,6 +209,10 @@ const WithdrawSection = () => {
                 step={0.00001}
                 {...register('amount', {
                   required: 'Please enter an amount',
+                  max: {
+                    value: coinBalance,
+                    message: `Maximum ${coinBalance}`,
+                  },
                   onChange: value =>
                     setReceiveAmount(
                       parseFloat(value.target.value) -
@@ -256,8 +263,11 @@ const WithdrawSection = () => {
               </div>
               <button
                 className={
-                  receiveAmount > 0 ? 'submit-btn' : 'submit-btn disable'
+                  receiveAmount > 0 && isEmpty(errors)
+                    ? 'submit-btn'
+                    : 'submit-btn disable'
                 }
+                disabled={receiveAmount > 0 && isEmpty(errors) ? false : true}
                 type="button"
                 onClick={() => showSubmitModal()}
               >

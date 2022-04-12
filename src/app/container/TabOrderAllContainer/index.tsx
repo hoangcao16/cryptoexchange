@@ -3,8 +3,7 @@ import NavbarTradeP2P from 'app/components/NavbarTradeP2P';
 import styled from 'styled-components';
 import { List, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import { tabOrderDetailService } from 'services/orderDetailService';
+import { Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FaCopy } from 'react-icons/fa';
 import { OrderAllServices } from 'services/tabOrderAllServices';
@@ -12,7 +11,6 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import openNotification from 'app/components/NotificationAntd';
 const TabOrderAllContainer = () => {
   const [activeTab, setActiveTab] = useState(1);
-  const [dataView, setDataView] = useState<any>([]);
   const [listTrades, setListTrades] = useState<any>([]);
   const [loading, setLoading] = useState(false);
 

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Modal } from 'react-bootstrap';
 export const Title = styled.div`
   margin: 0px;
   min-width: 0px;
@@ -253,6 +254,148 @@ export const StyledLink = styled(Link)`
       fill: ${({ theme }) => theme.background};
       width: 1em;
       height: 1em;
+    }
+  }
+`;
+
+export const ModalTransfer = styled(Modal)`
+  color: ${({ theme }) => theme.p2pText};
+
+  .modal-header {
+    span {
+      font-size: 20px;
+    }
+
+    .btn-close {
+      box-shadow: none;
+    }
+  }
+`;
+export const ModalAuthenticator = styled(Modal)`
+  color: ${({ theme }) => theme.p2pText};
+
+  margin: 0 auto;
+
+  .modal-header {
+    border: none;
+    h5 {
+      margin: 0;
+    }
+    .btn-close {
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .modal-body {
+    padding-top: 5px;
+    p {
+      margin: 2px 0;
+    }
+
+    .labelQRcode {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .qrCode {
+      display: block;
+      margin: 0 auto;
+      border: 1px solid ${({ theme }) => theme.whiteSmokeColor};
+      border-radius: 5px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+    }
+
+    .ant-input {
+      width: 100%;
+      height: 50px;
+      font-size: 30px;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    .ant-row {
+      margin-bottom: 0;
+    }
+
+    .linkSecurityUnavailable {
+      font-weight: bold;
+      color: ${({ theme }) => theme.primary};
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .btnSubmit {
+      width: 100%;
+      margin-top: 20px;
+      height: 40px;
+      font-weight: bold;
+    }
+  }
+
+  //loading
+  .loader,
+  .loader:before,
+  .loader:after {
+    background: ${({ theme }) => theme.p2pBackground};
+    -webkit-animation: load1 1s infinite ease-in-out;
+    animation: load1 1s infinite ease-in-out;
+    width: 6px;
+    height: 3px;
+  }
+  .loader {
+    color: ${({ theme }) => theme.p2pBackground};
+    text-indent: -9999em;
+    margin: 0 auto;
+    position: relative;
+    font-size: 9px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+    margin-top: 8px;
+  }
+  .loader:before,
+  .loader:after {
+    position: absolute;
+    top: 0;
+    content: '';
+  }
+  .loader:before {
+    left: -1.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  .loader:after {
+    left: 1.5em;
+  }
+  @-webkit-keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
+    }
+  }
+  @keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 0.8em;
+    }
+    40% {
+      box-shadow: 0 -1em;
+      height: 1.6em;
     }
   }
 `;

@@ -11,18 +11,15 @@ import { useNavigate } from 'react-router-dom';
 import openNotification from 'app/components/NotificationAntd';
 import { darkTheme } from 'theme/theme';
 import { tabP2PService } from 'services/tabP2PServices';
-import { SpotWalletServices } from 'services/spotWalletService';
 import { GrFormClose } from 'react-icons/gr';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { BiPlus } from 'react-icons/bi';
-import { payments } from 'app/container/PostAdP2PContainer/data';
 
 const HandleOrder = (props: any) => {
   const TabP2PState: TabP2PState = useSelector(selectTabP2P);
 
   const navigate = useNavigate();
-  const { getUserPayments } = tabP2PService;
-  const { getAllSpotWallet } = SpotWalletServices;
+  const { getUserPayments, getUserWallet } = tabP2PService;
 
   //BUY
   const [validateStateBuy, setValidateStateBuy] = useState(false);
@@ -123,7 +120,7 @@ const HandleOrder = (props: any) => {
   };
 
   const handelChooseAll = () => {
-    setPricePayBuy(record?.price * available);
+    setPricePayBuy(record?.orderUpperBound);
     setReceiveBuy(available);
     setValidateStateBuy(false);
   };
@@ -221,8 +218,8 @@ const HandleOrder = (props: any) => {
 
   const handelChooseAllSeller = () => {
     if (walletUser > available) {
-      setCryptoSell(available);
-      setReceivePriceSell(available * record.price);
+      setCryptoSell(record?.orderUpperBound / record?.price);
+      setReceivePriceSell(record?.orderUpperBound);
     } else setCryptoSell(walletUser);
     if (walletUser < record.orderLowerBound / record.price) {
       setValidateStateSell(true);
@@ -252,8 +249,8 @@ const HandleOrder = (props: any) => {
     });
   };
 
-  const findWalletUser = () => {
-    getAllSpotWallet()
+  const findWalletP2P = () => {
+    getUserWallet()
       .then(res => {
         if (res.data.rc === 0) {
           let tokenId = record.token?.id;
@@ -268,7 +265,7 @@ const HandleOrder = (props: any) => {
   useEffect(() => {
     if (type === 'Sell') {
       findAllUserPayments();
-      findWalletUser();
+      findWalletP2P();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -369,7 +366,7 @@ const HandleOrder = (props: any) => {
               className="form-control bargain"
               placeholder={`${record.orderLowerBound.toFixed(
                 2,
-              )} - ${maxPrice.toFixed(2)}`}
+              )} - ${record.orderUpperBound.toFixed(2)}`}
               style={{ borderColor: validateStateBuy ? 'red' : '' }}
             />
             {validateStateBuy && (
@@ -490,9 +487,9 @@ const HandleOrder = (props: any) => {
               autoComplete="off"
               min={0}
               className="form-control bargain"
-              placeholder={`${record.orderLowerBound.toFixed(
+              placeholder={`${record?.orderLowerBound.toFixed(
                 2,
-              )} - ${maxPrice.toFixed(2)}`}
+              )} - ${record?.orderUpperBound.toFixed(2)}`}
               style={{
                 borderColor: validateStateSell ? darkTheme.redColor : '',
               }}

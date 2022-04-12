@@ -32,7 +32,7 @@ import NavbarUser from './components/NavbarUser';
 import { useState } from 'react';
 import { Menu } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import { GrBarChart, GrBitcoin } from 'react-icons/gr';
+import { GrBitcoin } from 'react-icons/gr';
 import { SiConvertio } from 'react-icons/si';
 import { IoBarChartOutline } from 'react-icons/io5';
 import { RiCoinsLine, RiCopperCoinLine } from 'react-icons/ri';

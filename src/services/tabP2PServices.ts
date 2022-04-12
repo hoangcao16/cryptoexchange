@@ -77,4 +77,11 @@ export const tabP2PService = {
       url: 'p2p-api/api/v1/p2pPayment/p2PPaymentByEmail',
     });
   },
+
+  getUserWallet() {
+    return apiClient.request({
+      method: 'GET',
+      url: 'p2p-api/api/v1/walletP2p',
+    });
+  },
 };

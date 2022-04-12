@@ -11,12 +11,14 @@ import { tabPaymentServices } from 'services/tabPaymentServices';
 import openNotification from 'app/components/NotificationAntd';
 import { GrClose } from 'react-icons/gr';
 import { MdError } from 'react-icons/md';
+import { useForm } from 'antd/lib/form/Form';
 const PaymentP2PContainer = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const { addPayment } = tabPaymentServices;
+  const { addPayment, getPaymentById, updatePayment } = tabPaymentServices;
 
   const [paymentMethod, setPaymentMethod] = useState<any>({});
+  const [pmEdit, setPmEdit] = useState<any>();
   const [showModalExit, setShowModalExit] = useState(false);
 
   const { getListPayments } = tabP2PService;
@@ -37,6 +39,7 @@ const PaymentP2PContainer = () => {
         .then(res => {
           if (res.data.rc === 0) {
             openNotification('Success', 'Added new payment method');
+            navigate('/p2pUserCenter');
           } else {
             openNotification('Error', res.data.rd);
           }
@@ -57,6 +60,7 @@ const PaymentP2PContainer = () => {
         .then(res => {
           if (res.data.rc === 0) {
             openNotification('Success', 'Added new payment method');
+            navigate('/p2pUserCenter');
           } else {
             openNotification('Error', res.data.rd);
           }
@@ -65,6 +69,7 @@ const PaymentP2PContainer = () => {
     }
   };
 
+  const [form] = useForm();
   const handleCancel = () => {
     setShowModalExit(true);
   };
@@ -73,15 +78,79 @@ const PaymentP2PContainer = () => {
     getListPayments().then(res => {
       if (res.data.rc === 0) {
         setPaymentMethod(res.data.rows.find(pm => pm.name === params?.pm));
-        console.log(res.data.rows.find(pm => pm.name === params?.pm));
       }
     });
   };
 
+  const getPaymentMethodById = () => {
+    getPaymentById(params?.pm).then(res => {
+      if (res.data.rc === 0) {
+        setPmEdit(res.data.item);
+      }
+    });
+  };
+
+  const handleEdit = value => {
+    if (pmEdit?.paymentMethod?.name === 'Internet Banking') {
+      updatePayment(params?.pm, {
+        accountNumber: value?.accountNumber,
+        bankName: value?.bankName,
+        fullName: value?.fullName,
+        note: value?.note || 'Unknow!',
+        bankBranch: 'Unknow!',
+        email: 'Unknow!',
+        mobilePhone: 'Unknow!',
+        paymentMethodId: pmEdit?.paymentMethod?.id,
+        recommendedTransferRemarks: 'Unknow!',
+      })
+        .then(res => {
+          if (res.data.rc === 0) {
+            openNotification('Success', 'Edited this payment method');
+            navigate('/p2pUserCenter');
+          } else {
+            openNotification('Error', res.data.rd);
+          }
+        })
+        .catch(() => openNotification('Error', 'Something went wrong!'));
+    } else {
+      updatePayment(params?.pm, {
+        accountNumber: 'Unknow!',
+        bankName: 'Unknow!',
+        fullName: value?.fullName,
+        note: value?.note || 'Unknow!',
+        bankBranch: 'Unknow!',
+        email: value?.email,
+        mobilePhone: value?.mobilePhone,
+        paymentMethodId: pmEdit?.paymentMethod?.id,
+        recommendedTransferRemarks: 'Unknow!',
+      })
+        .then(res => {
+          if (res.data.rc === 0) {
+            openNotification('Success', 'Edited this payment method');
+            navigate('/p2pUserCenter');
+          } else {
+            openNotification('Error', res.data.rd);
+          }
+        })
+        .catch(() => openNotification('Error', 'Something went wrong!'));
+    }
+  };
+
   useEffect(() => {
-    getPaymentMethod();
+    if (params?.action === 'Edit') {
+      getPaymentMethodById();
+    } else {
+      getPaymentMethod();
+      getPaymentMethodById();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    form.resetFields();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pmEdit]);
+
   return (
     <Wrapper>
       <NavMenu />
@@ -94,13 +163,22 @@ const PaymentP2PContainer = () => {
       <div className="backgroundContent">
         <Row className="bgFormAddPM">
           <Col className="formAddPM" xxl={4} md={6} sm={10}>
-            <Typography.Title level={4}>{params?.pm}</Typography.Title>
-
-            <Form onFinish={handleAddPM}>
+            {params?.action === 'Edit' ? (
+              <Typography.Title level={4}>
+                {pmEdit?.paymentMethod?.name}
+              </Typography.Title>
+            ) : (
+              <Typography.Title level={4}>{params?.pm}</Typography.Title>
+            )}
+            <Form
+              onFinish={params?.action === 'Add' ? handleAddPM : handleEdit}
+              form={form}
+            >
               <Form.Item
                 label="Name"
                 labelAlign="left"
                 name="fullName"
+                initialValue={params?.action === 'Edit' ? pmEdit?.fullName : ''}
                 rules={[
                   {
                     required: true,
@@ -112,7 +190,7 @@ const PaymentP2PContainer = () => {
                 <Input placeholder="Please enter your name" />
               </Form.Item>
 
-              {params?.pm === 'Internet Banking' ? (
+              {params?.action === 'Add' && params?.pm === 'Internet Banking' && (
                 <>
                   <Form.Item
                     label="Bank account number"
@@ -152,7 +230,54 @@ const PaymentP2PContainer = () => {
                     <Input placeholder="Enter your bank infomation" />
                   </Form.Item>
                 </>
-              ) : (
+              )}
+              {params?.action === 'Edit' &&
+                pmEdit?.paymentMethod?.name === 'Internet Banking' && (
+                  <>
+                    <Form.Item
+                      label="Bank account number"
+                      labelAlign="left"
+                      name="accountNumber"
+                      initialValue={pmEdit?.accountNumber}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please enter your bank account number',
+                        },
+                      ]}
+                      requiredMark={'optional'}
+                    >
+                      <Input placeholder="Please enter your bank account number" />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Bank name"
+                      labelAlign="left"
+                      name="bankName"
+                      initialValue={pmEdit?.bankName}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Enter the name of your bank',
+                        },
+                      ]}
+                      requiredMark={'optional'}
+                    >
+                      <Input placeholder="Enter the name of your bank" />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Account opening branch (Optional)"
+                      labelAlign="left"
+                      name="note"
+                      initialValue={pmEdit?.note}
+                    >
+                      <Input placeholder="Enter your bank infomation" />
+                    </Form.Item>
+                  </>
+                )}
+
+              {params?.action === 'Add' && params?.pm !== 'Internet Banking' && (
                 <>
                   <Form.Item
                     label="Phone number"
@@ -186,6 +311,43 @@ const PaymentP2PContainer = () => {
                 </>
               )}
 
+              {params?.action === 'Edit' &&
+                pmEdit?.paymentMethod?.name !== 'Internet Banking' && (
+                  <>
+                    <Form.Item
+                      label="Phone number"
+                      labelAlign="left"
+                      name="mobilePhone"
+                      initialValue={pmEdit?.mobilePhone}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please enter your phone number',
+                        },
+                      ]}
+                      requiredMark={'optional'}
+                    >
+                      <Input placeholder="Please enter your phone number" />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Email"
+                      labelAlign="left"
+                      initialValue={pmEdit?.email}
+                      name="email"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please enter your email',
+                        },
+                      ]}
+                      requiredMark={'optional'}
+                    >
+                      <Input placeholder="Please enter your email" />
+                    </Form.Item>
+                  </>
+                )}
+
               <div className="warning">
                 <p className="warning__title">
                   <RiErrorWarningFill className="warning__icon" />
@@ -217,7 +379,7 @@ const PaymentP2PContainer = () => {
                   Cancel
                 </Button>
                 <Button type="submit" className="btnAdd">
-                  Add
+                  {params?.action}
                 </Button>
               </div>
             </Form>

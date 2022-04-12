@@ -5,13 +5,47 @@ import {
   NormalButton,
   WalletDirect,
   StyledLink,
+  ModalTransfer,
+  ModalAuthenticator,
 } from './style';
 import IconSvg from 'app/assets/img/icon';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-
-const FiatSpotHeader = () => {
+import { useState } from 'react';
+import FormTransfer from 'app/components/FormTransfer';
+import FormAuthenticator from 'app/components/FormAuthenticator';
+import { SpotWalletServices } from 'services/spotWalletService';
+import openNotification from 'app/components/NotificationAntd';
+const FiatSpotHeader = ({ reload }) => {
   const { t } = useTranslation();
+  const [showModalTransfer, setShowModalTransfer] = useState(false);
+  const [showModalAuthen, setShowModalAuthen] = useState(false);
+  const [amountTransfer, setAmountTransfer] = useState(0);
+  const [tokenIdTransfer, setTokenIdTransfer] = useState(0);
+  const { transferMoneyToP2P } = SpotWalletServices;
+
+  const finishFormTransfer = (amount, tokenId) => {
+    setAmountTransfer(amount);
+    setShowModalAuthen(true);
+    setTokenIdTransfer(tokenId);
+  };
+
+  const finishFormAuthen = () => {
+    transferMoneyToP2P({
+      tokenId: tokenIdTransfer,
+      amount: amountTransfer,
+    })
+      .then(res => {
+        if (res.data.rc === 0) {
+          openNotification('Success', 'Transferred');
+          setShowModalAuthen(false);
+          setShowModalTransfer(false);
+          reload();
+        } else openNotification('Error', res.data.rd);
+      })
+      .catch(() => openNotification('Error', 'Something went wrong!'));
+  };
+
   return (
     <div className="d-flex justify-content-between py-5 align-items-center position-relative">
       <Title>{t('fiat-and-spot')}</Title>
@@ -33,7 +67,10 @@ const FiatSpotHeader = () => {
           >
             <button>{t('pay')}</button>
           </NormalButton>
-          <NormalButton id="spotAccount_top_transfer">
+          <NormalButton
+            id="spotAccount_top_transfer"
+            onClick={() => setShowModalTransfer(true)}
+          >
             <button>{t('transfer')}</button>
           </NormalButton>
           <NormalButton href="#">
@@ -64,6 +101,31 @@ const FiatSpotHeader = () => {
           </WalletDirect>
         </div>
       </GroupButton>
+      <ModalTransfer
+        centered
+        show={showModalTransfer}
+        onHide={() => setShowModalTransfer(false)}
+      >
+        <ModalTransfer.Header closeButton>
+          <span>Transfer</span>
+        </ModalTransfer.Header>
+        <ModalTransfer.Body>
+          <FormTransfer finishForm={finishFormTransfer} />
+        </ModalTransfer.Body>
+      </ModalTransfer>
+
+      <ModalAuthenticator
+        centered
+        show={showModalAuthen}
+        onHide={() => setShowModalAuthen(false)}
+      >
+        <ModalAuthenticator.Header closeButton>
+          Google Authenticator
+        </ModalAuthenticator.Header>
+        <ModalAuthenticator.Body>
+          <FormAuthenticator finishForm={finishFormAuthen} />
+        </ModalAuthenticator.Body>
+      </ModalAuthenticator>
     </div>
   );
 };

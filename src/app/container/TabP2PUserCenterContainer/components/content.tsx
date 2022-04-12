@@ -1,26 +1,30 @@
-import { List, Tabs, Tag } from 'antd';
+import { List, Tabs, Tag, Typography } from 'antd';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { BiPlus } from 'react-icons/bi';
 import styled from 'styled-components';
 import { tabP2PUserCenterServices } from 'services/tabP2PUserCenterServices';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { GrClose } from 'react-icons/gr';
+import { MdError } from 'react-icons/md';
+import openNotification from 'app/components/NotificationAntd';
 
 const ContentP2PUserCenter = () => {
   const { TabPane } = Tabs;
-  const { getUserPaymentByToken, getAllPaymentMethod } =
+  const { getUserPaymentByToken, getAllPaymentMethod, deletePaymentMethod } =
     tabP2PUserCenterServices;
   const [showModalAddPM, setShowModalAddPM] = useState(false);
   const [listPaymentMethod, setListPaymentMethod] = useState<any>([]);
+  const [showModalDelete, setShowModalDelete] = useState(false);
 
   const [listUserPayments, setListUserPayments] = useState<any>([]);
+  const [deleteId, setDeleteId] = useState(0);
 
   const findAllUserPayments = () => {
     getUserPaymentByToken()
       .then(res => {
         if (res.data.rc === 0) {
           setListUserPayments(res.data.rows);
-          console.log(res.data.rows);
         } else console.log(res);
       })
       .catch(res => console.log(res));
@@ -31,10 +35,24 @@ const ContentP2PUserCenter = () => {
       .then(res => {
         if (res.data.rc === 0) {
           setListPaymentMethod(res.data.rows);
-          console.log(res.data.rows);
         } else console.log(res);
       })
       .catch(res => console.log(res));
+  };
+
+  const handelDelete = () => {
+    if (deleteId) {
+      deletePaymentMethod(deleteId)
+        .then(res => {
+          if (res.data.rc === 0) {
+            openNotification('Success', 'Deleted this payment method');
+            findAllUserPayments();
+            setShowModalDelete(false);
+            setDeleteId(0);
+          } else openNotification('Error', res.data.rd);
+        })
+        .catch(() => openNotification('Error', 'Something went wrong!'));
+    }
   };
 
   useEffect(() => {
@@ -93,35 +111,42 @@ const ContentP2PUserCenter = () => {
                       {item?.paymentMethod?.name}
                     </Tag>
                     <div className="action">
-                      <span>Edit</span>
-                      <span>Delete</span>
+                      <Link to={`/payment/Edit/${item?.id}`}>Edit</Link>
+                      <span
+                        onClick={() => {
+                          setShowModalDelete(true);
+                          setDeleteId(item?.id);
+                        }}
+                      >
+                        Delete
+                      </span>
                     </div>
                   </div>
 
                   <Row className="contentItem">
                     {item?.paymentMethod?.name === 'Internet Banking' ? (
                       <>
-                        <Col className="infoPM" xxl={3} md={6}>
+                        <Col className="infoPM" xxl={3} md={6} sm={6} xs={12}>
                           Name: <p className="PMdesc">{item?.fullName}</p>
                         </Col>
-                        <Col className="infoPM" xxl={3} md={6}>
+                        <Col className="infoPM" xxl={3} md={6} sm={6} xs={12}>
                           Bank account number:{' '}
                           <p className="PMdesc">{item?.accountNumber}</p>
                         </Col>
-                        <Col className="infoPM" xxl={3} md={6}>
+                        <Col className="infoPM" xxl={3} md={6} sm={6} xs={12}>
                           Bank name: <p className="PMdesc">{item?.bankName}</p>
                         </Col>
-                        <Col className="infoPM" xxl={3} md={6}>
+                        <Col className="infoPM" xxl={3} md={6} sm={6} xs={12}>
                           Account opening branch:{' '}
-                          <p className="PMdesc">{item?.bankBranch}</p>
+                          <p className="PMdesc">{item?.note}</p>
                         </Col>
                       </>
                     ) : (
                       <>
-                        <Col className="infoPM">
+                        <Col className="infoPM" xxl={3} md={6} sm={6} xs={12}>
                           Name: <p className="PMdesc">{item?.fullName}</p>
                         </Col>
-                        <Col className="infoPM">
+                        <Col className="infoPM" xxl={3} md={6} sm={6} xs={12}>
                           Mobile phone:{' '}
                           <p className="PMdesc">{item?.mobilePhone}</p>
                         </Col>
@@ -196,6 +221,43 @@ const ContentP2PUserCenter = () => {
           </Modal.Body>
         </ModalAddPayemnt>
       </div>
+      <ModalDelete
+        show={showModalDelete}
+        onHide={() => {
+          setShowModalDelete(false);
+          setDeleteId(0);
+        }}
+        centered
+      >
+        <GrClose
+          className="closeIcon"
+          onClick={() => {
+            setShowModalDelete(false);
+            setDeleteId(0);
+          }}
+        />
+        <Modal.Body>
+          <MdError className="warningIcon" />
+          <Typography.Title level={4} className="modelDeleteTitle">
+            Are you sure you want to delete this payment method ?
+          </Typography.Title>
+          <div className="btnModal">
+            <Button
+              variant="light"
+              className="btnCancel"
+              onClick={() => {
+                setShowModalDelete(false);
+                setDeleteId(0);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button className="btnExit" onClick={() => handelDelete()}>
+              Confirm
+            </Button>
+          </div>
+        </Modal.Body>
+      </ModalDelete>
     </Wrapper>
   );
 };
@@ -301,7 +363,10 @@ const Wrapper = styled.div`
         }
         .action {
           font-weight: bold;
-
+          a {
+            color: inherit;
+            text-decoration: none;
+          }
           span {
             margin-left: 20px;
             cursor: pointer;
@@ -392,5 +457,59 @@ const ModalAddPayemnt = styled(Modal)`
         margin-bottom: 1px;
       }
     }
+  }
+`;
+
+const ModalDelete = styled(Modal)`
+  color: ${({ theme }) => theme.p2pText};
+  text-align: center;
+
+  .closeIcon {
+    display: block;
+    margin-left: auto;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+
+  .modelDeleteTitle {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+  }
+  .warningIcon {
+    font-size: 90px;
+    color: ${({ theme }) => theme.primary};
+    border: 1px solid ${({ theme }) => theme.primary};
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+
+  .subTitle {
+    color: ${({ theme }) => theme.brightGrayColor};
+    margin-bottom: 20px;
+  }
+
+  .btnModal {
+    display: flex;
+    justify-content: space-between;
+  }
+  .btn {
+    width: 48%;
+    transition: all 0.25s linear;
+    margin-top: 10px;
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .btnExit {
+    background-color: ${({ theme }) => theme.primary};
+    border: none;
   }
 `;

@@ -99,6 +99,10 @@ export const ContentLeft = styled(Col)`
   margin: 0px;
   padding-right: 10px;
 
+  .linkQuote {
+    text-decoration: none !important;
+    padding-top: 2px;
+  }
   .contentLeft-coin {
     display: flex;
     flex-direction: column;

@@ -44,6 +44,7 @@ function TabsCrypto() {
 
   useEffect(() => {
     getListCrypto();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

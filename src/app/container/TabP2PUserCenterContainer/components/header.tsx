@@ -45,7 +45,7 @@ const HeaderP2PUserCenter = () => {
                   {user.verified ? 'Verified User' : 'Not Verifited User'}
                 </Tag>
               </Title>
-              {/* <div className="checkedUser">
+              <div className="checkedUser">
                 <span>
                   Email{' '}
                   {user.allowReceiveEmail ? (
@@ -70,9 +70,9 @@ const HeaderP2PUserCenter = () => {
                     <AiFillCloseCircle className="notCheckedIcon" />
                   )}
                 </span>
-              </div> */}
+              </div>
             </Col>
-            {/* <Col className="p2pEstimatedValue" xxl={4} md={6} sm={12}>
+            <Col className="p2pEstimatedValue" xxl={4} md={6} sm={12}>
               <span>
                 P2P Estimated Value ({user.p2pEstimatedValue?.token}){' '}
                 {showP2pEstimatedValue ? (
@@ -111,7 +111,7 @@ const HeaderP2PUserCenter = () => {
                   )}
                 </span>
               </p>
-            </Col> */}
+            </Col>
           </Row>
         </Col>
         <Col xxl={2} xl={2} md={3} sm={12}>
@@ -220,6 +220,7 @@ const Wrapper = styled.div`
         }
 
         .checkedUser {
+          max-width: 250px;
           transform: translateX(30px);
           color: ${({ theme }) => theme.darkGrayColor};
 
@@ -235,6 +236,7 @@ const Wrapper = styled.div`
         }
       }
       .p2pEstimatedValue {
+        max-width: 80%;
         color: ${({ theme }) => theme.darkGrayColor};
         text-align: right;
 

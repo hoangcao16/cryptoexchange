@@ -28,7 +28,11 @@ const MarketTrades = ({ dataSocket, dataApi }) => {
       dataSocket.Key === 'Robinhood::RecentTrade' &&
       dataSocket.Value.marker_id !== dataSocket.Value.taker_id
     ) {
-      setDataView((prevState: any) => [dataSocket.Value, ...prevState]);
+      setDataView((prevState: any) => {
+        const newData = [...prevState];
+        newData.splice(-1);
+        return [dataSocket.Value, ...newData];
+      });
     }
   }, [dataSocket]);
   return (
