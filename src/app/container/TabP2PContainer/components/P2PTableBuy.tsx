@@ -317,6 +317,7 @@ function P2PTableBuy() {
           spinning: loading,
           indicator: <AiOutlineLoading3Quarters className="loadingIcon" />,
         }}
+        tableLayout="auto"
         columns={columns}
         dataSource={listP2POrdersBuy}
       />
@@ -334,6 +335,11 @@ const Wrapper = styled.div`
 
     &-cell.ant-table-column-sort.ant-table-column-has-sorters {
       background-color: ${({ theme }) => theme.titleTableBackground};
+
+      &::before {
+        background-color: ${({ theme }) => theme.brightGrayColor} !important;
+        opacity: 0.3;
+      }
     }
   }
   @keyframes spining {
