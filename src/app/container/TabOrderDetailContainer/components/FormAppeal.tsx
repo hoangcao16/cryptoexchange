@@ -1,21 +1,24 @@
-import { Button, Form, Input, Upload } from 'antd';
+import { Button, Form, Input, Typography, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import { tabOrderDetailService } from 'services/orderDetailService';
 import styled from 'styled-components';
 import Select from 'react-select';
 import { BiPlus } from 'react-icons/bi';
+import axios from 'axios';
+import { Modal } from 'react-bootstrap';
 
-const FormAppeal = ({ cancel, type }) => {
-  const [optionsAppeal, setOptionsAppeal] = useState([]);
-
-  const { getListAppealReason } = tabOrderDetailService;
+const FormAppeal = ({ cancel, type, tradeId }) => {
+  const baseUploadURL: any = process.env.REACT_APP_BASE_UPLOAD_URL;
+  const accessToken = localStorage.getItem('access_token');
+  const { getListAppealReason, updateTradeById } = tabOrderDetailService;
   const [form] = Form.useForm();
+
+  const [optionsAppeal, setOptionsAppeal] = useState([]);
   const [fileList, setFileList] = useState([]);
+  const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const [previewVisible, setPreviewVisible] = useState(false);
-
-  const { uploadFile } = tabOrderDetailService;
+  const [validateUpLoadText, setValidateUpLoadText] = useState('');
 
   function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -50,29 +53,55 @@ const FormAppeal = ({ cancel, type }) => {
               })),
           );
         }
-
-        console.log(res.data.rows);
       }
     });
   };
 
-  //upload file
-  const handleChangeSelect = value => {
-    console.log(value);
+  const updateTradeToAppeal = () => {
+    updateTradeById({
+      id: tradeId,
+      status: 'APPEAL',
+    });
   };
 
-  const uploadButton = (
-    <div>
-      <BiPlus />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+  //upload file
 
+  const handleChange = (file: any) => {
+    setFileList(file.fileList);
+    if (file?.fileList?.length === 0) {
+      setValidateUpLoadText('Please select at least one image!');
+    } else setValidateUpLoadText('');
+  };
+  const handleRemove = file => {};
+  const uploadFileCustom = async options => {
+    const { onSuccess, onError, file, onProgress } = options;
+    const fmData = new FormData();
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: `${accessToken}`,
+      },
+      onUploadProgress: event => {
+        const percent = Math.floor((event.loaded / event.total) * 100);
+        // setProgress(percent);
+        if (percent === 100) {
+          // setTimeout(() => setProgress(0), 1000);
+        }
+        onProgress({ percent: (event.loaded / event.total) * 100 });
+      },
+    };
+    fmData.append('files', file);
+    try {
+      const res = await axios.post(baseUploadURL, fmData, config);
+      onSuccess(res.data);
+    } catch (err) {
+      onError({ err });
+    }
+  };
   const handlePreview = async file => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
-
     setPreviewImage(file.url || file.preview);
     setPreviewVisible(true);
     setPreviewTitle(
@@ -80,13 +109,48 @@ const FormAppeal = ({ cancel, type }) => {
     );
   };
 
-  const uploadFileCustom = options => {
-    console.log(options);
+  const propUpload = {
+    action: baseUploadURL,
+    fileList: fileList,
+    showUploadList: true,
+    multiple: true,
+    maxCount: 5,
+    customRequest: uploadFileCustom,
+    openFileDialogOnClick: true,
+    accept: 'image/*',
+    beforeUpload: (file: any) => {
+      const isImage =
+        file.type === 'image/png' ||
+        file.type === 'image/jpeg' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/gif' ||
+        file.type === 'image/ico';
+      if (!isImage) {
+        alert(`${file.name} is not a image file`);
+      }
+      return isImage || Upload.LIST_IGNORE;
+    },
+    onPreview: handlePreview,
+    onChange: handleChange,
+    onRemove: handleRemove,
   };
 
-  const handleChange = ({ fileList }) => {
-    setFileList(fileList);
-    console.log(fileList);
+  const finishFormAppeal = value => {
+    if (fileList?.length) {
+      console.log({
+        description: value?.description,
+        images: fileList?.map((x: any) => x?.response?.url),
+        reasonId: value?.reasonId?.key,
+        tradeId: tradeId,
+      });
+      updateTradeToAppeal();
+    }
+  };
+
+  const clickBtnAppeal = () => {
+    if (!fileList?.length) {
+      setValidateUpLoadText('Please select at least one image!');
+    }
   };
 
   useEffect(() => {
@@ -96,11 +160,12 @@ const FormAppeal = ({ cancel, type }) => {
 
   useEffect(() => {
     form.resetFields();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Wrapper>
-      <Form form={form}>
+      <Form form={form} onFinish={finishFormAppeal}>
         <Form.Item
           name="reasonId"
           label="Reason for Appeal (Mandatory)"
@@ -112,7 +177,6 @@ const FormAppeal = ({ cancel, type }) => {
             className="selectAppeal"
             classNamePrefix="select"
             name="color"
-            onChange={handleChangeSelect}
             options={optionsAppeal}
           />
         </Form.Item>
@@ -127,28 +191,20 @@ const FormAppeal = ({ cancel, type }) => {
         >
           <Input.TextArea />
         </Form.Item>
-        <Form.Item
-          name="images"
-          label="Upload proof (Mandatory)"
-          labelAlign="left"
-          rules={[{ required: true, message: 'Please upload your images!' }]}
-          requiredMark="optional"
-        >
-          <span className="totalSpan">
-            Screenshots or video/audio recordings of payment and communication
-            data should not exceed a total of 5 files with total size of 100 MB.
-          </span>
-          <Upload
-            listType="picture-card"
-            fileList={fileList}
-            onPreview={handlePreview}
-            customRequest={uploadFileCustom}
-            onChange={handleChange}
-            maxCount={5}
-          >
-            {fileList.length >= 8 ? null : uploadButton}
-          </Upload>
-        </Form.Item>
+        <span style={{ display: 'block' }}>Upload proof (Mandatory)</span>
+        <span className="totalSpan">
+          Screenshots of payment and communication data should not exceed a
+          total of 5 files .
+        </span>
+        <Upload {...propUpload} listType="picture-card">
+          {fileList.length < 5 && (
+            <div>
+              <BiPlus />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
+          )}
+        </Upload>
+        <Typography.Text type="danger">{validateUpLoadText}</Typography.Text>
         <Form.Item
           name="phone"
           label="Phone (Mandatory)"
@@ -160,11 +216,21 @@ const FormAppeal = ({ cancel, type }) => {
         </Form.Item>
         <div className="btnGroup">
           <Button onClick={cancel}>Cancel</Button>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" onClick={clickBtnAppeal}>
             Appeal
           </Button>
         </div>
       </Form>
+      <ModalPreview
+        show={previewVisible}
+        onHide={() => setPreviewVisible(false)}
+        centered
+      >
+        <ModalPreview.Header closeButton>{previewTitle}</ModalPreview.Header>
+        <ModalPreview.Body>
+          <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        </ModalPreview.Body>
+      </ModalPreview>
     </Wrapper>
   );
 };
@@ -208,6 +274,13 @@ const Wrapper = styled.div`
         }
         cursor: pointer;
       }
+      .select__option {
+        transition: all 0.25s linear;
+        cursor: pointer;
+        &--is-selected {
+          background-color: ${({ theme }) => theme.primary};
+        }
+      }
     }
 
     .ant-input {
@@ -217,6 +290,24 @@ const Wrapper = styled.div`
       &:hover,
       &:focus {
         border-color: ${({ theme }) => theme.primary} !important;
+      }
+    }
+  }
+`;
+
+const ModalPreview = styled(Modal)`
+  color: ${({ theme }) => theme.p2pText};
+  .modal-content {
+    width: 98%;
+    margin: 0 auto;
+  }
+  .modal-header {
+    padding-bottom: 0;
+    border-bottom: none;
+
+    .btn-close {
+      &:focus {
+        box-shadow: none;
       }
     }
   }

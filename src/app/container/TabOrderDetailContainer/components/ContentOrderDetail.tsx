@@ -20,6 +20,7 @@ import Countdown from 'antd/lib/statistic/Countdown';
 import { IoMdChatbubbles } from 'react-icons/io';
 import { BsHeadset } from 'react-icons/bs';
 import FormAppeal from './FormAppeal';
+import AppealBlock from './Appeal';
 const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const ContentOrderDetail = ({ trade, reload }) => {
@@ -47,7 +48,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
-  const tradaType = TabOrderDetailState.tradeType;
+  const { tradeType, buyerStatus, sellerStatus } = TabOrderDetailState;
 
   const {
     updateTradeById,
@@ -340,47 +341,49 @@ const ContentOrderDetail = ({ trade, reload }) => {
       <div className="mainContent">
         {trade?.status === 'PROCESSING' && (
           <div className="col-8 orderStep">
-            <div className="firstStep">
-              <Steps
-                className="st1Step"
-                size="small"
-                current={currentFirstSteps}
-              >
-                {tradaType === 'Buy' &&
-                  stepBuy.map((step, index) => (
-                    <Step key={index} description={step.title} />
-                  ))}
-                {tradaType === 'Sell' &&
-                  stepSell.map((step, index) => (
-                    <Step key={index} description={step.title} />
-                  ))}
-              </Steps>
-              {visibleNote && tradaType === 'Buy' && (
-                <div className="note">
-                  <span>
+            {buyerStatus !== 'APPEAL' && sellerStatus !== 'APPEAL' && (
+              <div className="firstStep">
+                <Steps
+                  className="st1Step"
+                  size="small"
+                  current={currentFirstSteps}
+                >
+                  {tradeType === 'Buy' &&
+                    stepBuy.map((step, index) => (
+                      <Step key={index} description={step.title} />
+                    ))}
+                  {tradeType === 'Sell' &&
+                    stepSell.map((step, index) => (
+                      <Step key={index} description={step.title} />
+                    ))}
+                </Steps>
+                {visibleNote && tradeType === 'Buy' && (
+                  <div className="note">
                     <span>
-                      You need to leave the Byte Buffer website to make a
-                      payment. In the meantime, Byte Buffer will keep the crypto
-                      in custody.
+                      <span>
+                        You need to leave the Byte Buffer website to make a
+                        payment. In the meantime, Byte Buffer will keep the
+                        crypto in custody.
+                      </span>
+                      <br />
+                      <span>
+                        Upon successful payment tothe seller, go back to the
+                        Byte Buffer website and click the "Transferred, notify
+                        seller" button.
+                      </span>
                     </span>
-                    <br />
-                    <span>
-                      Upon successful payment tothe seller, go back to the Byte
-                      Buffer website and click the "Transferred, notify seller"
-                      button.
+                    <span
+                      className="closeNote"
+                      onClick={() => {
+                        setVisibleNote(false);
+                      }}
+                    >
+                      X
                     </span>
-                  </span>
-                  <span
-                    className="closeNote"
-                    onClick={() => {
-                      setVisibleNote(false);
-                    }}
-                  >
-                    X
-                  </span>
-                </div>
-              )}
-            </div>
+                  </div>
+                )}
+              </div>
+            )}
             <div className="secondStep">
               <Steps progressDot current={2} direction="vertical">
                 <Step
@@ -402,7 +405,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
                       <div className="count">
                         <p>Quantity</p>
                         <h5>
-                          {trade?.amount} {trade?.order?.token?.assetName}
+                          {trade?.amount?.toFixed(5)}{' '}
+                          {trade?.order?.token?.assetName}
                         </h5>
                       </div>
                     </div>
@@ -608,55 +612,62 @@ const ContentOrderDetail = ({ trade, reload }) => {
                     </div>
                   }
                 />
-                {tradaType === 'Buy' && (
-                  <Step title='After transferring the money, click the button "Transferred, notify the seller"' />
-                )}
+                {tradeType === 'Buy' &&
+                  buyerStatus !== 'APPEAL' &&
+                  sellerStatus !== 'APPEAL' && (
+                    <Step title='After transferring the money, click the button "Transferred, notify the seller"' />
+                  )}
                 {TabOrderDetailState.buyerStatus === 'PAID' &&
-                  tradaType === 'Sell' && (
+                  buyerStatus !== 'APPEAL' &&
+                  sellerStatus !== 'APPEAL' &&
+                  tradeType === 'Sell' && (
                     <Step title='After transferring the payment, be sure to click the "Payment received" button.' />
                   )}
               </Steps>
             </div>
-            {tradaType === 'Buy' && (
-              <div className="btnGroup">
-                {TabOrderDetailState.buyerStatus === 'PAID' ? (
+            {tradeType === 'Buy' &&
+              buyerStatus !== 'APPEAL' &&
+              sellerStatus !== 'APPEAL' && (
+                <div className="btnGroup">
+                  {TabOrderDetailState.buyerStatus === 'PAID' ? (
+                    <Button
+                      type="primary"
+                      disabled={
+                        disableAppeal && date1 - date.getTime() < 15 * 60000
+                      }
+                      onClick={() => setShowModalAppeal(true)}
+                      className="btnAppeal"
+                    >
+                      {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
+                        <Countdown
+                          value={
+                            Date.now() + 15 * 60000 - (date1 - date.getTime())
+                          }
+                          onFinish={finishCdAppeal}
+                        ></Countdown>
+                      )}
+                      Appeal
+                    </Button>
+                  ) : (
+                    <Button
+                      className="btnTransferred"
+                      type="primary"
+                      onClick={() => handelTransfer()}
+                    >
+                      Transferred, notify the seller
+                    </Button>
+                  )}
                   <Button
-                    type="primary"
-                    disabled={
-                      disableAppeal && date1 - date.getTime() < 15 * 60000
-                    }
-                    onClick={() => setShowModalAppeal(true)}
-                    className="btnAppeal"
+                    className="btnCancelOrder"
+                    onClick={() => setVisibleModalCancel(true)}
                   >
-                    {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
-                      <Countdown
-                        value={
-                          Date.now() + 15 * 60000 - (date1 - date.getTime())
-                        }
-                        onFinish={finishCdAppeal}
-                      ></Countdown>
-                    )}
-                    Appeal
+                    Cancel order
                   </Button>
-                ) : (
-                  <Button
-                    className="btnTransferred"
-                    type="primary"
-                    onClick={() => handelTransfer()}
-                  >
-                    Transferred, notify the seller
-                  </Button>
-                )}
-                <Button
-                  className="btnCancelOrder"
-                  onClick={() => setVisibleModalCancel(true)}
-                >
-                  Cancel order
-                </Button>
-              </div>
-            )}
-
-            {tradaType === 'Sell' &&
+                </div>
+              )}
+            {tradeType === 'Sell' &&
+              buyerStatus !== 'APPEAL' &&
+              sellerStatus !== 'APPEAL' &&
               TabOrderDetailState.buyerStatus === 'PAID' && (
                 <div className="btnGroupConfirm">
                   <Button
@@ -685,6 +696,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
                   </Button>
                 </div>
               )}
+            {(buyerStatus === 'APPEAL' || sellerStatus === 'APPEAL') && (
+              <AppealBlock cancelOrder={handleCancelOrder} />
+            )}
           </div>
         )}
         {trade?.status === 'CANCEL' && (
@@ -996,6 +1010,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 <FormAppeal
                   cancel={() => setShowModalAppeal(false)}
                   type={TabOrderDetailState.tradeType}
+                  tradeId={trade?.id}
                 />
               </div>
             </div>
@@ -1018,7 +1033,7 @@ const Wrapper = styled.div`
     .firstStep {
       padding-bottom: 20px;
       border-bottom: 2px solid ${({ theme }) => theme.p2pGrayLight};
-
+      margin-bottom: 20px;
       .ant-steps-item-container {
         display: flex;
         flex-direction: column;
@@ -1079,7 +1094,6 @@ const Wrapper = styled.div`
           background-color: ${({ theme }) => theme.primary};
         }
       }
-      padding-top: 20px;
 
       .paymentTab {
         border-radius: 3px;
@@ -1190,7 +1204,6 @@ const Wrapper = styled.div`
     .plusIcon {
       color: ${({ theme }) => theme.primary};
       font-size: 16px;
-      transform: translateY(3px);
     }
 
     .ant-collapse {
