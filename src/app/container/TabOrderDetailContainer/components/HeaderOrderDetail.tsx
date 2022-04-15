@@ -49,6 +49,7 @@ const HeaderOrderDetail = ({ trade, reload }) => {
             );
           }
         }
+
         break;
       case 'DONE':
         if (TabOrderDetailState?.tradeType === 'Buy') {
@@ -71,6 +72,9 @@ const HeaderOrderDetail = ({ trade, reload }) => {
           setTitle('This order has been cancelled');
           setSubTitle('Buyer cancelled this order');
         }
+        break;
+      case 'APPEAL':
+        setTitle('Appeal');
         break;
       default:
         break;

@@ -7,6 +7,7 @@ import { OrderbookState } from './types';
 export const initialState: OrderbookState = {
   data: {},
   selectPrice: 0,
+  openOrder: [],
 };
 
 const slice = createSlice({
@@ -20,6 +21,9 @@ const slice = createSlice({
     getOrderbookFail(state, action: PayloadAction<any>) {},
     selectPrice(state, action: PayloadAction<any>) {
       state.selectPrice = action.payload;
+    },
+    setOpenOrder(state, action: PayloadAction<any>) {
+      state.openOrder = action.payload;
     },
   },
 });

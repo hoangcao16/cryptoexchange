@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Price, Amount, Total, Table, Wrapper } from './style';
 import numeral from 'numeral';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useOrderbookSlice } from '../../slice';
 import { isEmpty } from 'app/components/common/common';
 import { darkTheme } from 'theme/theme';
 import { useParams } from 'react-router-dom';
+import { OrderbookState } from '../../slice/types';
+import { selectOrderbook } from '../../slice/selectors';
+import { Badge } from 'antd';
 // import { selectGetallpair } from 'app/components/Market/slice/selectors';
 
 const OrderBookAsk = ({ dataSocket, miniTable }) => {
@@ -21,6 +24,11 @@ const OrderBookAsk = ({ dataSocket, miniTable }) => {
   const [sum2, setSum2] = useState(0);
   const [coverHeight, setCoverHeight] = useState(0);
   const [idHover, setIdHover] = useState(0);
+
+  const OrderbookState: OrderbookState = useSelector(selectOrderbook);
+  const openOrderSell = OrderbookState?.openOrder
+    ?.filter(order => order?.side === 'SELL')
+    .map(order => order?.price);
 
   const handleMove = (e, index) => {
     setCurrentHover(index + 1);
@@ -171,6 +179,9 @@ const OrderBookAsk = ({ dataSocket, miniTable }) => {
                       : 'inherit',
                 }}
               >
+                {openOrderSell.includes(Number(item?.price)) && (
+                  <Badge status="warning" className="markOpen" />
+                )}
                 <Price>{numeral(item.price).format('0,0.000')}</Price>
                 <Amount>
                   {numeral(Math.abs(item.quantity)).format('0,0.00000')}

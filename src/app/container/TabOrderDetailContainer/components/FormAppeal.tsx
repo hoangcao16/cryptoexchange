@@ -10,7 +10,8 @@ import { Modal } from 'react-bootstrap';
 const FormAppeal = ({ cancel, type, tradeId }) => {
   const baseUploadURL: any = process.env.REACT_APP_BASE_UPLOAD_URL;
   const accessToken = localStorage.getItem('access_token');
-  const { getListAppealReason, updateTradeById } = tabOrderDetailService;
+  const { getListAppealReason, updateTradeById, createAppeal } =
+    tabOrderDetailService;
   const [form] = Form.useForm();
 
   const [optionsAppeal, setOptionsAppeal] = useState([]);
@@ -62,6 +63,10 @@ const FormAppeal = ({ cancel, type, tradeId }) => {
       id: tradeId,
       status: 'APPEAL',
     });
+  };
+
+  const createAppealP2P = data => {
+    createAppeal(data);
   };
 
   //upload file
@@ -143,7 +148,13 @@ const FormAppeal = ({ cancel, type, tradeId }) => {
         reasonId: value?.reasonId?.key,
         tradeId: tradeId,
       });
-      updateTradeToAppeal();
+      createAppealP2P({
+        description: value?.description,
+        images: fileList?.map((x: any) => x?.response?.url),
+        reasonId: value?.reasonId?.key,
+        tradeId: tradeId,
+      });
+      // updateTradeToAppeal();
     }
   };
 

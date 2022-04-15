@@ -48,7 +48,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
-  const { tradeType, buyerStatus, sellerStatus } = TabOrderDetailState;
+  const { tradeType, buyerStatus, sellerStatus, tradeStatus } =
+    TabOrderDetailState;
 
   const {
     updateTradeById,
@@ -260,7 +261,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
       socket.onmessage = message => {
         const res = JSON.parse(message.data);
-        if ([1, 2, 3, 4].includes(res?.key)) {
+        if (res?.key) {
           reload();
           setReCallMessage(!reCallMessage);
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -341,49 +342,47 @@ const ContentOrderDetail = ({ trade, reload }) => {
       <div className="mainContent">
         {trade?.status === 'PROCESSING' && (
           <div className="col-8 orderStep">
-            {buyerStatus !== 'APPEAL' && sellerStatus !== 'APPEAL' && (
-              <div className="firstStep">
-                <Steps
-                  className="st1Step"
-                  size="small"
-                  current={currentFirstSteps}
-                >
-                  {tradeType === 'Buy' &&
-                    stepBuy.map((step, index) => (
-                      <Step key={index} description={step.title} />
-                    ))}
-                  {tradeType === 'Sell' &&
-                    stepSell.map((step, index) => (
-                      <Step key={index} description={step.title} />
-                    ))}
-                </Steps>
-                {visibleNote && tradeType === 'Buy' && (
-                  <div className="note">
+            <div className="firstStep">
+              <Steps
+                className="st1Step"
+                size="small"
+                current={currentFirstSteps}
+              >
+                {tradeType === 'Buy' &&
+                  stepBuy.map((step, index) => (
+                    <Step key={index} description={step.title} />
+                  ))}
+                {tradeType === 'Sell' &&
+                  stepSell.map((step, index) => (
+                    <Step key={index} description={step.title} />
+                  ))}
+              </Steps>
+              {visibleNote && tradeType === 'Buy' && (
+                <div className="note">
+                  <span>
                     <span>
-                      <span>
-                        You need to leave the Byte Buffer website to make a
-                        payment. In the meantime, Byte Buffer will keep the
-                        crypto in custody.
-                      </span>
-                      <br />
-                      <span>
-                        Upon successful payment tothe seller, go back to the
-                        Byte Buffer website and click the "Transferred, notify
-                        seller" button.
-                      </span>
+                      You need to leave the Byte Buffer website to make a
+                      payment. In the meantime, Byte Buffer will keep the crypto
+                      in custody.
                     </span>
-                    <span
-                      className="closeNote"
-                      onClick={() => {
-                        setVisibleNote(false);
-                      }}
-                    >
-                      X
+                    <br />
+                    <span>
+                      Upon successful payment tothe seller, go back to the Byte
+                      Buffer website and click the "Transferred, notify seller"
+                      button.
                     </span>
-                  </div>
-                )}
-              </div>
-            )}
+                  </span>
+                  <span
+                    className="closeNote"
+                    onClick={() => {
+                      setVisibleNote(false);
+                    }}
+                  >
+                    X
+                  </span>
+                </div>
+              )}
+            </div>
             <div className="secondStep">
               <Steps progressDot current={2} direction="vertical">
                 <Step
@@ -612,92 +611,76 @@ const ContentOrderDetail = ({ trade, reload }) => {
                     </div>
                   }
                 />
-                {tradeType === 'Buy' &&
-                  buyerStatus !== 'APPEAL' &&
-                  sellerStatus !== 'APPEAL' && (
-                    <Step title='After transferring the money, click the button "Transferred, notify the seller"' />
-                  )}
+                {tradeType === 'Buy' && (
+                  <Step title='After transferring the money, click the button "Transferred, notify the seller"' />
+                )}
                 {TabOrderDetailState.buyerStatus === 'PAID' &&
-                  buyerStatus !== 'APPEAL' &&
-                  sellerStatus !== 'APPEAL' &&
                   tradeType === 'Sell' && (
                     <Step title='After transferring the payment, be sure to click the "Payment received" button.' />
                   )}
               </Steps>
             </div>
-            {tradeType === 'Buy' &&
-              buyerStatus !== 'APPEAL' &&
-              sellerStatus !== 'APPEAL' && (
-                <div className="btnGroup">
-                  {TabOrderDetailState.buyerStatus === 'PAID' ? (
-                    <Button
-                      type="primary"
-                      disabled={
-                        disableAppeal && date1 - date.getTime() < 15 * 60000
-                      }
-                      onClick={() => setShowModalAppeal(true)}
-                      className="btnAppeal"
-                    >
-                      {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
-                        <Countdown
-                          value={
-                            Date.now() + 15 * 60000 - (date1 - date.getTime())
-                          }
-                          onFinish={finishCdAppeal}
-                        ></Countdown>
-                      )}
-                      Appeal
-                    </Button>
-                  ) : (
-                    <Button
-                      className="btnTransferred"
-                      type="primary"
-                      onClick={() => handelTransfer()}
-                    >
-                      Transferred, notify the seller
-                    </Button>
-                  )}
+            {tradeType === 'Buy' && (
+              <div className="btnGroup">
+                {buyerStatus === 'PAID' ? (
                   <Button
-                    className="btnCancelOrder"
-                    onClick={() => setVisibleModalCancel(true)}
-                  >
-                    Cancel order
-                  </Button>
-                </div>
-              )}
-            {tradeType === 'Sell' &&
-              buyerStatus !== 'APPEAL' &&
-              sellerStatus !== 'APPEAL' &&
-              TabOrderDetailState.buyerStatus === 'PAID' && (
-                <div className="btnGroupConfirm">
-                  <Button
-                    className="btnTransferred"
                     type="primary"
-                    onClick={() => handelConfirmTransfer()}
-                  >
-                    Payment received
-                  </Button>
-                  <Button
-                    className="btnTransaction"
                     disabled={
-                      disableAppeal && date1 - date.getTime() < 15 * 60000
+                      disableAppeal && date1 - date.getTime() < 1 * 60000
                     }
                     onClick={() => setShowModalAppeal(true)}
+                    className="btnAppeal"
                   >
-                    {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
+                    {disableAppeal && date1 - date.getTime() < 1 * 60000 && (
                       <Countdown
                         value={
-                          Date.now() + 15 * 60000 - (date1 - date.getTime())
+                          Date.now() + 1 * 60000 - (date1 - date.getTime())
                         }
                         onFinish={finishCdAppeal}
                       ></Countdown>
                     )}
-                    Transaction issue, appeal after
+                    Appeal
                   </Button>
-                </div>
-              )}
-            {(buyerStatus === 'APPEAL' || sellerStatus === 'APPEAL') && (
-              <AppealBlock cancelOrder={handleCancelOrder} />
+                ) : (
+                  <Button
+                    className="btnTransferred"
+                    type="primary"
+                    onClick={() => handelTransfer()}
+                  >
+                    Transferred, notify the seller
+                  </Button>
+                )}
+                <Button
+                  className="btnCancelOrder"
+                  onClick={() => setVisibleModalCancel(true)}
+                >
+                  Cancel order
+                </Button>
+              </div>
+            )}
+            {tradeType === 'Sell' && buyerStatus === 'PAID' && (
+              <div className="btnGroupConfirm">
+                <Button
+                  className="btnTransferred"
+                  type="primary"
+                  onClick={() => handelConfirmTransfer()}
+                >
+                  Payment received
+                </Button>
+                <Button
+                  className="btnTransaction"
+                  disabled={disableAppeal && date1 - date.getTime() < 1 * 60000}
+                  onClick={() => setShowModalAppeal(true)}
+                >
+                  {disableAppeal && date1 - date.getTime() < 1 * 60000 && (
+                    <Countdown
+                      value={Date.now() + 1 * 60000 - (date1 - date.getTime())}
+                      onFinish={finishCdAppeal}
+                    ></Countdown>
+                  )}
+                  Transaction issue, appeal after
+                </Button>
+              </div>
             )}
           </div>
         )}
@@ -771,6 +754,242 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 })}
             </p>
             <h6 className="haq">Have A Question</h6>
+          </div>
+        )}
+
+        {tradeStatus === 'APPEAL' && (
+          <div className="col-8 orderStep">
+            <div className="secondStep">
+              <Steps progressDot current={2} direction="vertical">
+                <Step
+                  title="Confirm order information"
+                  description={
+                    <div className="descriptionStep1">
+                      <div className="amount">
+                        <p>Amount</p>
+                        <h5>
+                          {trade?.order?.fiat?.symbol} {trade?.total}
+                        </h5>
+                      </div>
+                      <div className="price">
+                        <p>Price</p>
+                        <h5>
+                          {trade?.order?.fiat?.symbol} {trade?.order?.price}
+                        </h5>
+                      </div>
+                      <div className="count">
+                        <p>Quantity</p>
+                        <h5>
+                          {trade?.amount?.toFixed(5)}{' '}
+                          {trade?.order?.token?.assetName}
+                        </h5>
+                      </div>
+                    </div>
+                  }
+                />
+                <Step
+                  title="Transfer funds to the account provided below"
+                  description={
+                    <div>
+                      <Tabs
+                        type="card"
+                        tabPosition="left"
+                        className="paymentTab"
+                        defaultActiveKey={trade?.paymentId}
+                        onChange={handleChangeTabPayment}
+                      >
+                        {trade?.order?.orderType === 1
+                          ? trade?.order?.payments?.map(payment => {
+                              return (
+                                <TabPane
+                                  key={payment?.id}
+                                  tab={
+                                    <div>
+                                      <span
+                                        className="tabIcon"
+                                        style={{
+                                          color:
+                                            payment?.paymentMethod?.colorCode,
+                                        }}
+                                      >
+                                        |{' '}
+                                      </span>{' '}
+                                      {payment?.paymentMethod?.name}
+                                    </div>
+                                  }
+                                >
+                                  <p className="paymentTitle">Name</p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.fullName}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.fullName)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">
+                                    Bank account number
+                                  </p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.accountNumber}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.accountNumber)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">Bank name</p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.bankName}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.bankName)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">
+                                    Account opening branch
+                                  </p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.bankBranch}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.bankBranch)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                </TabPane>
+                              );
+                            })
+                          : paymentSeller
+                              .filter(x => {
+                                return x.id === trade?.paymentId;
+                              })
+                              .map(payment => {
+                                return (
+                                  <TabPane
+                                    key={payment?.id}
+                                    tab={
+                                      <div>
+                                        <span
+                                          className="tabIcon"
+                                          style={{
+                                            color:
+                                              payment?.paymentMethod?.colorCode,
+                                          }}
+                                        >
+                                          |{' '}
+                                        </span>{' '}
+                                        {payment?.paymentMethod?.name}
+                                      </div>
+                                    }
+                                  >
+                                    <p className="paymentTitle">Name</p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.fullName}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.fullName)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">
+                                      Bank account number
+                                    </p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.accountNumber}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.accountNumber)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">Bank name</p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.bankName}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.bankName)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">
+                                      Account opening branch
+                                    </p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.bankBranch}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.bankBranch)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                  </TabPane>
+                                );
+                              })}
+                      </Tabs>
+                    </div>
+                  }
+                />
+              </Steps>
+            </div>
+            <AppealBlock trade={trade} cancelOrder={handleCancelOrder} />
           </div>
         )}
         <div className="chat">
@@ -1010,7 +1229,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 <FormAppeal
                   cancel={() => setShowModalAppeal(false)}
                   type={TabOrderDetailState.tradeType}
-                  tradeId={trade?.id}
+                  tradeId={trade?.tradeId}
                 />
               </div>
             </div>

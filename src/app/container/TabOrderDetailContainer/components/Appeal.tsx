@@ -1,18 +1,47 @@
-import { Button } from 'antd';
+import { Button, Typography } from 'antd';
+import { useEffect, useState } from 'react';
 import { Button as BtnBS } from 'react-bootstrap';
 import { RiEmotionHappyLine, RiEmotionUnhappyLine } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
+import { tabOrderDetailService } from 'services/orderDetailService';
 import styled from 'styled-components';
 import { selectTabOrderDetail } from '../slice/selectors';
 import { TabOrderDetailState } from '../slice/types';
 
-const AppealBlock = ({ cancelOrder }) => {
+const AppealBlock = ({ cancelOrder, trade }) => {
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
   const { buyerStatus, sellerStatus, tradeType } = TabOrderDetailState;
+  const { updateAppealStatus, getAppealByTradeId } = tabOrderDetailService;
+  const [appeal, setAppeal] = useState<any>();
+  const updateAppeal = status => {
+    updateAppealStatus({
+      id: appeal?.id,
+      status: status,
+    });
+  };
+
+  const getAppeal = () => {
+    getAppealByTradeId({ tradeId: trade?.id }).then(res => {
+      if (res.data.rc === 0) {
+        setAppeal(res.data.item);
+      }
+    });
+  };
+
+  const handelPartnerConfirm = () => {
+    console.log(123);
+    updateAppeal('CONSENSUS_REACHED');
+  };
+
+  useEffect(() => {
+    if (trade?.id && trade?.status === 'APPEAL') {
+      getAppeal();
+    }
+  }, []);
   return (
     <Wrapper>
-      {sellerStatus === 'APPEAL' && tradeType === 'Sell' && (
+      {trade?.partner?.email !== appeal?.createBy && (
         <div>
           <h4>Appeal</h4>
           <p>Pending response from respondent.Time remaining: </p>
@@ -33,24 +62,28 @@ const AppealBlock = ({ cancelOrder }) => {
             . Info provided by both users and CS can be found in "Appeal
             progess".
           </p>
-          <Button type="primary">Cancel the appeal</Button>
+          <Button type="primary" onClick={() => updateAppeal('CANCEL')}>
+            Cancel the appeal
+          </Button>
         </div>
       )}
-      {sellerStatus === 'APPEAL' && tradeType === 'Buy' && (
+      {trade?.partner?.email === appeal?.createBy && (
         <div>
           <h4>Appeal</h4>
           <p>Please response to the appeal within: </p>
-          <div className="cancelOrderBlock">
-            <p>
-              The seller filed an appeal claiming that the payment is not
-              recieved in the seller's account. If you have not paid, you can
-              cancel the order. After cancellation, the appeal will end
-              automatically.
-            </p>
-            <Button type="primary" onClick={cancelOrder}>
-              Cancel the order
-            </Button>
-          </div>
+          {tradeType === 'Buy' && (
+            <div className="cancelOrderBlock">
+              <p>
+                The seller filed an appeal claiming that the payment is not
+                recieved in the seller's account. If you have not paid, you can
+                cancel the order. After cancellation, the appeal will end
+                automatically.
+              </p>
+              <Button type="primary" onClick={cancelOrder}>
+                Cancel the order
+              </Button>
+            </div>
+          )}
           <p>
             1. If you have reached an agreement with the other party, please
             click "<b>Consensus reached</b>" and wait for the confirmation. Once
@@ -68,7 +101,7 @@ const AppealBlock = ({ cancelOrder }) => {
             get involved and arbitrate.
           </p>
           <p>
-            To provide mode information, please
+            4. To provide mode information, please{' '}
             <b>
               <u>Provide more info</u>
             </b>
@@ -76,15 +109,22 @@ const AppealBlock = ({ cancelOrder }) => {
             progress".
           </p>
           <h6 className="negotiationSpan">Negotiation result</h6>
-          <div className="negotiation">
-            <BtnBS className="btn-fail">
-              <RiEmotionUnhappyLine className="iconFail" />
-              Negotiation failed
-            </BtnBS>
-            <BtnBS className="btn-success">
-              <RiEmotionHappyLine className="iconSucces" /> Consensus reached
-            </BtnBS>
-          </div>
+          {appeal?.buyerStatus !== 'CONSENSUS_REACHED' &&
+          appeal?.sellerStatus !== 'CONSENSUS_REACHED' ? (
+            <div className="negotiation">
+              <BtnBS className="btn-fail">
+                <RiEmotionUnhappyLine className="iconFail" />
+                Negotiation failed
+              </BtnBS>
+              <BtnBS className="btn-success" onClick={handelPartnerConfirm}>
+                <RiEmotionHappyLine className="iconSucces" /> Consensus reached
+              </BtnBS>
+            </div>
+          ) : (
+            <Typography.Title level={5} className="spanWtP">
+              Waiting for partner...
+            </Typography.Title>
+          )}
         </div>
       )}
     </Wrapper>
@@ -124,6 +164,7 @@ const Wrapper = styled.div`
 
   .negotiationSpan {
     margin-top: 20px;
+    color: ${({ theme }) => theme.darkBrightGrayColor};
   }
 
   .negotiation {
@@ -163,5 +204,9 @@ const Wrapper = styled.div`
         border-color: ${({ theme }) => theme.redColor};
       }
     }
+  }
+
+  .spanWtP {
+    color: ${({ theme }) => theme.primary};
   }
 `;

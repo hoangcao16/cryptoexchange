@@ -73,4 +73,30 @@ export const tabOrderDetailService = {
       data: data,
     });
   },
+
+  updateAppealStatus(params) {
+    return apiClient.request({
+      method: 'POST',
+      url: `p2p-api/api/v1/appeal/${params?.id}`,
+      params: {
+        status: params?.status,
+      },
+    });
+  },
+
+  createAppeal(data) {
+    return apiClient.request({
+      method: 'POST',
+      url: 'p2p-api/api/v1/appeal',
+      data: data,
+    });
+  },
+
+  getAppealByTradeId(params) {
+    return apiClient.request({
+      method: 'GET',
+      url: 'p2p-api/api/v1/appeal/p2PAppealByTrade',
+      params: params,
+    });
+  },
 };
