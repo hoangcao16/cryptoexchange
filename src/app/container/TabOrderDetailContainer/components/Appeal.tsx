@@ -62,9 +62,22 @@ const AppealBlock = ({ cancelOrder, trade }) => {
             . Info provided by both users and CS can be found in "Appeal
             progess".
           </p>
-          <Button type="primary" onClick={() => updateAppeal('CANCEL')}>
-            Cancel the appeal
-          </Button>
+          {appeal?.buyerStatus !== 'CONSENSUS_REACHED' &&
+          appeal?.sellerStatus !== 'CONSENSUS_REACHED' ? (
+            <Button type="primary" onClick={() => updateAppeal('CANCEL')}>
+              Cancel the appeal
+            </Button>
+          ) : (
+            <div className="negotiation">
+              <BtnBS className="btn-fail">
+                <RiEmotionUnhappyLine className="iconFail" />
+                Negotiation failed
+              </BtnBS>
+              <BtnBS className="btn-success" onClick={handelPartnerConfirm}>
+                <RiEmotionHappyLine className="iconSucces" /> Consensus reached
+              </BtnBS>
+            </div>
+          )}
         </div>
       )}
       {trade?.partner?.email === appeal?.createBy && (
