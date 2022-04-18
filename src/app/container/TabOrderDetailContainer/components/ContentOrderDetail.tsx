@@ -1302,6 +1302,10 @@ const Wrapper = styled.div`
     }
 
     .secondStep {
+      .ant-steps-item-content {
+        max-width: 90% !important;
+        width: inherit !important;
+      }
       .ant-steps-icon-dot {
         background-color: ${({ theme }) => theme.p2pBackground};
         border: 1px solid ${({ theme }) => theme.primary};
@@ -1317,6 +1321,17 @@ const Wrapper = styled.div`
         border-radius: 3px;
         transition: all 0.25s linear;
         border: 1px solid ${({ theme }) => theme.brightGrayColor};
+        .ant-tabs-nav {
+          max-width: 40%;
+
+          .ant-tabs-tab-btn {
+            div {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
 
         .paymentTitle {
           color: ${({ theme }) => theme.darkGrayColor};
@@ -1534,6 +1549,17 @@ const Wrapper = styled.div`
       }
     }
 
+    .btnGroupConfirm {
+      flex-direction: column;
+
+      button {
+        margin: 10px 0 !important;
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+      }
+    }
     .descriptionStep1 {
       & > div {
         margin-right: 10px;
@@ -1542,6 +1568,31 @@ const Wrapper = styled.div`
 
     .ant-steps-item-content {
       width: 80% !important;
+    }
+
+    .ant-tabs-nav {
+      .ant-tabs-tab-btn {
+        div {
+          width: 80px;
+        }
+      }
+    }
+
+    .ant-tabs-tabpane {
+      padding-left: 8px !important;
+    }
+
+    .paymentTitle {
+      text-align: left;
+    }
+
+    .btnGroup {
+      flex-direction: column;
+      button {
+        margin: 10px 0 !important;
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 `;
