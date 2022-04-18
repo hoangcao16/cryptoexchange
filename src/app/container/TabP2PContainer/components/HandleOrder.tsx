@@ -1,6 +1,6 @@
 import { Descriptions, InputNumber, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import styled from 'styled-components';
@@ -290,20 +290,23 @@ const HandleOrder = (props: any) => {
           </div>
         </ColOrderAdvertisers>
         <div className="orderDescription">
-          <Descriptions size="small">
-            <Descriptions.Item span={1} label="Price">
-              <span className="orderDescriptionSpan orderPrice">
+          <Row>
+            <Col lg={6} className="colOrderDesc">
+              Price:{' '}
+              <span className="orderPrice">
                 {record?.fiat?.symbol} {record?.price}
               </span>
-            </Descriptions.Item>
-            <Descriptions.Item span={1} label="Available">
+            </Col>
+            <Col lg={6} className="colOrderDesc">
+              Available:{' '}
               <span className="orderDescriptionSpan">
                 {record.available} <span>{TabP2PState.searchParam.crypto}</span>
               </span>
-            </Descriptions.Item>
-          </Descriptions>
-          <Descriptions size="small">
-            <Descriptions.Item span={1} label="Payment time limit">
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={6} className="colOrderDesc">
+              Payment time limit:{' '}
               <span className="orderDescriptionSpan">
                 {timeLimit > 60 ? (
                   <span>
@@ -313,8 +316,9 @@ const HandleOrder = (props: any) => {
                   <span>{timeLimit % 60} minutes</span>
                 )}
               </span>
-            </Descriptions.Item>
-            <Descriptions.Item span={1} label={`${type}er's payment method`}>
+            </Col>
+            <Col lg={6} className="colOrderDesc">
+              {`${type}er's payment method: `}
               <span className="orderDescriptionSpan">
                 <div className="colPayments">
                   {record?.payments?.length === 0 ? (
@@ -339,8 +343,8 @@ const HandleOrder = (props: any) => {
                   )}
                 </div>
               </span>
-            </Descriptions.Item>
-          </Descriptions>
+            </Col>
+          </Row>
           <div className="termsAndCondition">
             <h6>Terms and condition</h6>
             <p>
@@ -559,7 +563,7 @@ const HandleOrder = (props: any) => {
 export default HandleOrder;
 
 const ColHandleOrder = styled.div`
-  height: 350px;
+  min-height: 350px;
   display: flex;
 
   .colPayments {
@@ -587,6 +591,9 @@ const ColHandleOrder = styled.div`
     margin-top: 10px;
     padding-right: 20px;
 
+    .colOrderDesc {
+      margin-bottom: 5px;
+    }
     .paymentTag {
       margin-bottom: 2px;
       padding-right: 15px;
@@ -608,12 +615,12 @@ const ColHandleOrder = styled.div`
     }
 
     .termsAndCondition {
-      margin-top: 40px;
+      margin-top: 20px;
     }
   }
   .orderInfo {
     flex: 6;
-    border-right: 1px solid ${({ theme }) => theme.grayColor};
+    border-right: 1px solid ${({ theme }) => theme.brightGrayColor};
     overflow: scroll;
     ::-webkit-scrollbar {
       height: 100%;
@@ -621,7 +628,7 @@ const ColHandleOrder = styled.div`
 
     ::-webkit-scrollbar-thumb {
       border-radius: 0;
-      background-color: ${({ theme }) => theme.grayColor};
+      background-color: ${({ theme }) => theme.brightGrayColor};
     }
   }
   .formOrderSell {
@@ -734,6 +741,11 @@ const ColHandleOrder = styled.div`
       justify-content: space-between;
       margin-top: 30px;
 
+      button {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
       .btn {
         height: 40px;
         font-size: 16px;
@@ -827,6 +839,11 @@ const ColHandleOrder = styled.div`
       display: flex;
       justify-content: space-between;
       margin-top: 35px;
+
+      button {
+        padding-left: 0;
+        padding-right: 0;
+      }
 
       .btn {
         height: 40px;
@@ -979,6 +996,39 @@ const ColHandleOrder = styled.div`
       height: 1.6em;
     }
   }
+
+  @media only screen and (max-width: 767px) {
+    .formOrderSell {
+      padding-left: 8px;
+    }
+    .formOrderBuy {
+      padding-left: 8px;
+    }
+
+    .orderDescription {
+      padding-right: 8px;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+
+    .orderInfo {
+      height: 1000px;
+      border-right: 0;
+
+      .firstCharacter {
+        display: none;
+      }
+      .advertisers {
+        font-weight: bold;
+      }
+    }
+
+    .orderDescription {
+      margin-left: 8px;
+    }
+  }
 `;
 
 const ColOrderAdvertisers = styled.div`
@@ -1013,7 +1063,17 @@ const ColOrderAdvertisers = styled.div`
     .numberOrderComplete {
       margin-left: 10px;
       padding-left: 5px;
-      border-left: 1px solid #ccc;
+      border-left: 1px solid ${({ theme }) => theme.brightGrayColor};
+    }
+  }
+
+  @media only screen and (max-width: 1024px) {
+    flex-direction: column !important;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .row2 {
+      margin-left: 9px;
     }
   }
 `;

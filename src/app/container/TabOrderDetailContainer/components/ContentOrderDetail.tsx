@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Steps, Button, Radio, Tooltip, Input, Tag, Checkbox } from 'antd';
-import { Modal } from 'react-bootstrap';
+import { Col, Modal, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import { Collapse } from 'antd';
@@ -339,9 +339,9 @@ const ContentOrderDetail = ({ trade, reload }) => {
   }, [TabOrderDetailState]);
   return (
     <Wrapper>
-      <div className="mainContent">
+      <Row className="mainContent">
         {trade?.status === 'PROCESSING' && (
-          <div className="col-8 orderStep">
+          <Col className="orderStep" lg={8}>
             <div className="firstStep">
               <Steps
                 className="st1Step"
@@ -682,10 +682,10 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 </Button>
               </div>
             )}
-          </div>
+          </Col>
         )}
         {trade?.status === 'CANCEL' && (
-          <div className="col-8 cancelOrderContent">
+          <Col className=" cancelOrderContent" lg={8}>
             <h6 className="orderInfoTitle">Order info</h6>
             <div className="descriptionStep1">
               <div className="amount">
@@ -703,7 +703,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
               <div className="count">
                 <p>Quantity</p>
                 <h5>
-                  {trade?.amount} {trade?.order?.token?.assetName}
+                  {trade?.amount?.toFixed(5)} {trade?.order?.token?.assetName}
                 </h5>
               </div>
             </div>
@@ -712,11 +712,11 @@ const ContentOrderDetail = ({ trade, reload }) => {
               Payment method can't be displayed for this order
             </p>
             <h6 className="haq">Have A Question</h6>
-          </div>
+          </Col>
         )}
 
         {trade?.status === 'DONE' && (
-          <div className="col-8 cancelOrderContent">
+          <Col className=" cancelOrderContent" lg={8}>
             <h6 className="orderInfoTitle">Order info</h6>
             <div className="descriptionStep1">
               <div className="amount">
@@ -734,7 +734,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
               <div className="count">
                 <p>Quantity</p>
                 <h5>
-                  {trade?.amount} {trade?.order?.token?.assetName}
+                  {trade?.amount?.toFixed(5)} {trade?.order?.token?.assetName}
                 </h5>
               </div>
             </div>
@@ -754,11 +754,11 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 })}
             </p>
             <h6 className="haq">Have A Question</h6>
-          </div>
+          </Col>
         )}
 
         {tradeStatus === 'APPEAL' && (
-          <div className="col-8 orderStep">
+          <Col className=" orderStep" lg={8}>
             <div className="secondStep">
               <Steps progressDot current={2} direction="vertical">
                 <Step
@@ -990,12 +990,12 @@ const ContentOrderDetail = ({ trade, reload }) => {
               </Steps>
             </div>
             <AppealBlock trade={trade} cancelOrder={handleCancelOrder} />
-          </div>
+          </Col>
         )}
-        <div className="chat">
+        <Col className="chat" lg={4}>
           <ChatBox email={trade?.partner?.email} data={trade} />
-        </div>
-      </div>
+        </Col>
+      </Row>
       <div className="faq">
         <h5 className="faq-title">FAQ</h5>
         <Collapse
@@ -1244,7 +1244,7 @@ export default ContentOrderDetail;
 
 const Wrapper = styled.div`
   .mainContent {
-    display: flex;
+    position: relative;
   }
   .orderStep {
     padding-top: 30px;
@@ -1259,7 +1259,6 @@ const Wrapper = styled.div`
       }
       .ant-steps-item-description {
         margin-top: 10px;
-        width: 120%;
       }
 
       .ant-steps-item-title {
@@ -1408,7 +1407,6 @@ const Wrapper = styled.div`
     }
   }
   .chat {
-    flex: 3;
     margin-top: 30px;
   }
 
@@ -1454,7 +1452,6 @@ const Wrapper = styled.div`
 
   .cancelOrderContent {
     padding-top: 45px;
-    flex: 7;
     border-bottom: 2px solid ${({ theme }) => theme.p2pGrayLight};
     padding-bottom: 40px;
 
@@ -1508,6 +1505,43 @@ const Wrapper = styled.div`
         transform: translateY(-12px);
         margin-right: 10px;
       }
+    }
+  }
+
+  @media only screen and (max-width: 1200px) {
+    .orderStep,
+    .cancelOrderContent {
+      /* width: 100%; */
+    }
+  }
+
+  @media only screen and (max-width: 991px) {
+    .faq {
+      width: 100%;
+    }
+
+    .firstStep {
+      .ant-steps {
+        width: 100% !important;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 575px) {
+    .firstStep {
+      .ant-steps-item-content {
+        transform: translate(30px, -70%);
+      }
+    }
+
+    .descriptionStep1 {
+      & > div {
+        margin-right: 10px;
+      }
+    }
+
+    .ant-steps-item-content {
+      width: 80% !important;
     }
   }
 `;

@@ -4,25 +4,27 @@ export const Container = styled.div`
   margin: 0px 0px 0px 8px;
   min-width: 0px;
   float: right;
-  position: fixed;
+  /* position: fixed; */
   width: 100%;
   height: 100%;
   top: 0px;
   left: 0px;
   box-shadow: none;
-  display: none;
+  height: 88vh;
+
+  display: inline-block;
   @media screen and (min-width: 767px) {
-    position: static;
-    width: 382px;
+    /* position: static; */
+    /* width: 382px; */
     height: 88vh;
     margin-bottom: 80px;
     display: inline-block;
     box-shadow: rgb(0 0 0 / 8%) -2px 2px 4px;
   }
   @media screen and (min-width: 1023px) {
-    position: static;
-    width: 382px;
-    height: 630px;
+    /* position: static; */
+    /* width: 382px; */
+    height: 88vh;
     margin-bottom: 80px;
     box-shadow: none;
   }

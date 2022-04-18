@@ -215,4 +215,28 @@ const Wrapper = styled.div`
       }
     }
   }
+
+  @media only screen and (max-width: 991px) {
+    .container {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .orderInfo {
+        text-align: left;
+        margin-top: 20px;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .countdown {
+      flex-direction: column;
+      align-items: flex-start !important;
+    }
+
+    .countdownTimer {
+      margin-left: 10px !important;
+      margin-top: 10px !important;
+    }
+  }
 `;

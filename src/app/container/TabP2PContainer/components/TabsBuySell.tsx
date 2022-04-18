@@ -59,6 +59,7 @@ function TabsBuySell() {
 export default TabsBuySell;
 
 const Wrapper = styled.div`
+  min-width: 130px;
   .TabP2P-nav-tabs {
     border: 1px solid ${({ theme }) => theme.p2pBorder};
     border-radius: 4px;

@@ -10,6 +10,7 @@ import { TabP2PState } from '../slice/type';
 import { selectTabP2P } from '../slice/selectors';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import HandleOrder from './HandleOrder';
+import { darkTheme } from 'theme/theme';
 
 function P2PTableSell() {
   const [listP2POrdersSell, setListP2POrdersSell] = useState<any>([]);
@@ -25,7 +26,7 @@ function P2PTableSell() {
       title: 'Advertisers',
       key: 'Advertisers',
       dataIndex: 'account',
-      width: 400,
+      width: 350,
       render: (text: any, record: any, index: any) => {
         if (!openOrders.includes(index)) {
           return (
@@ -36,7 +37,7 @@ function P2PTableSell() {
                 </div>
                 <div className="advertisers">{text.email}</div>
                 <div className="checked">
-                  {<BsFillCheckCircleFill color="#10afff" />}
+                  {<BsFillCheckCircleFill color={darkTheme.primary} />}
                 </div>
               </div>
 
@@ -47,6 +48,38 @@ function P2PTableSell() {
                   {text.rateComplete.toFixed(2)} % completed
                 </span>
               </div>
+
+              <ColPayment className="paymentRes">
+                <span className="paymentRes__title">Payments method:</span>
+                {record?.payments?.length === 0 ? (
+                  <h6>Unknow payment!</h6>
+                ) : (
+                  record?.payments?.map((payment, index) => {
+                    if (payment) {
+                      return (
+                        <Tag key={index} className="paymentTag">
+                          <img src={payment.paymentMethod.icon} alt="#" />{' '}
+                          <span
+                            style={{
+                              color: `${payment.paymentMethod.colorCode}`,
+                            }}
+                          >
+                            {payment.paymentMethod.name}
+                          </span>
+                        </Tag>
+                      );
+                    } else return null;
+                  })
+                )}
+              </ColPayment>
+              <ButtonSell
+                className="btnOpenOrder"
+                onClick={() => {
+                  setOpenOrders([...openOrders, index]);
+                }}
+              >
+                <span>Sell {record.token.assetName}</span>
+              </ButtonSell>
             </ColAdvertisers>
           );
         } else {
@@ -78,7 +111,29 @@ function P2PTableSell() {
       render: (text: any, record: any) => {
         return (
           <ColPrice>
-            {record.price} <span> {record.fiat.name}</span>
+            <span className="priceSpan">{record?.price} </span>
+            {record.fiat?.name}
+            <ColLimitAvailable className="avaiRes">
+              <div className="rowLimitAvailable available">
+                <div className="col1">
+                  <span>Avai</span>
+                </div>
+                <div className="col2">
+                  {record?.available?.toFixed(5)}{' '}
+                  <span>{TabP2PState.searchParam?.crypto}</span>
+                </div>
+              </div>
+              <div className="rowLimitAvailable limit">
+                <div className="col1">Limit</div>
+                <div className="col2">
+                  {record?.fiat?.symbol} {record?.orderLowerBound?.toFixed(2)}{' '}
+                  <span> - </span>
+                </div>
+                <div className="col3">
+                  {record?.fiat?.symbol} {record?.orderUpperBound?.toFixed(2)}
+                </div>
+              </div>
+            </ColLimitAvailable>
           </ColPrice>
         );
       },
@@ -98,10 +153,11 @@ function P2PTableSell() {
               <span>Available</span>
             </div>
             <div className="col2">
-              {record?.available} <span>{TabP2PState.searchParam.crypto}</span>
+              {record?.available?.toFixed(5)}{' '}
+              <span>{TabP2PState.searchParam?.crypto}</span>
             </div>
           </div>
-          <div className="rowLimitAvailable">
+          <div className="rowLimitAvailable limit">
             <div className="col1">Limit</div>
             <div className="col2">
               {record?.fiat.symbol} {record.orderLowerBound} <span> - </span>
@@ -115,6 +171,7 @@ function P2PTableSell() {
       onCell: (_, index) => ({
         colSpan: openOrders.includes(index) ? 0 : 1,
       }),
+      responsive: ['md'],
     },
     {
       title: 'Payments',
@@ -148,6 +205,7 @@ function P2PTableSell() {
       onCell: (_, index) => ({
         colSpan: openOrders.includes(index) ? 0 : 1,
       }),
+      responsive: ['lg'],
     },
     {
       title: (
@@ -165,13 +223,15 @@ function P2PTableSell() {
               setOpenOrders([...openOrders, index]);
             }}
           >
-            Sell {record.token.assetName}
+            <span>Buy </span>
+            <span>{record.token.assetName}</span>
           </ButtonSell>
         );
       },
       onCell: (_, index) => ({
         colSpan: openOrders.includes(index) ? 0 : 1,
       }),
+      responsive: ['sm'],
     },
   ];
 
@@ -275,6 +335,17 @@ const Wrapper = styled.div`
     &-cell.ant-table-column-sort.ant-table-column-has-sorters {
       background-color: ${({ theme }) => theme.titleTableBackground};
     }
+    @media only screen and (max-width: 1150px) {
+      .ant-table-cell {
+        padding: 16px 8px;
+      }
+    }
+
+    .ant-table-tbody {
+      .ant-table-cell {
+        vertical-align: top;
+      }
+    }
   }
   @keyframes spining {
     0% {
@@ -328,13 +399,92 @@ const ColAdvertisers = styled.div`
       border-left: 1px solid ${({ theme }) => theme.brightGrayColor};
     }
   }
+
+  .paymentRes {
+    display: none;
+    flex-direction: column;
+    text-align: left;
+    margin-left: 28px;
+    margin-top: 10px;
+    color: ${({ theme }) => theme.grayColor};
+
+    &__title {
+      margin-bottom: 5px;
+      display: block;
+    }
+  }
+
+  .btnOpenOrder {
+    margin-top: 20px;
+    display: none;
+    span {
+      width: 100%;
+      text-align: center !important;
+    }
+  }
+  @media only screen and (max-width: 991px) {
+    .paymentRes {
+      display: block;
+    }
+  }
+
+  @media only screen and (max-width: 425px) {
+    .firstCharacter {
+      display: none;
+    }
+
+    .advertisers {
+      margin-left: 0 !important;
+      font-weight: bold;
+    }
+    .row2 {
+      margin-left: 0;
+    }
+
+    .paymentRes {
+      margin-left: 0;
+    }
+
+    .checked {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 575px) {
+    .btnOpenOrder {
+      display: block;
+    }
+  }
 `;
 
 const ColPrice = styled.div`
-  font-size: 20px;
+  .priceSpan {
+    font-size: 20px;
+  }
 
   span {
     font-size: 12px;
+  }
+
+  .avaiRes {
+    display: none;
+
+    .available {
+      margin-top: 10px;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .avaiRes {
+      display: block;
+    }
+
+    .priceSpan {
+      font-size: 16px;
+      font-weight: bold;
+    }
   }
 `;
 
@@ -354,6 +504,14 @@ const ColLimitAvailable = styled.div`
       margin-left: 2px;
     }
   }
+  @media only screen and (max-width: 1150px) {
+    .limit {
+      .col1 {
+        width: 100%;
+      }
+      flex-wrap: wrap;
+    }
+  }
 `;
 
 const ColPayment = styled.div`
@@ -364,6 +522,7 @@ const ColPayment = styled.div`
     margin-bottom: 2px;
     display: flex;
     align-items: center;
+    display: inline-block;
 
     img {
       width: 25px;
@@ -406,6 +565,20 @@ const ButtonSell = styled(Button)`
   padding: 0px 30px;
   background-color: ${({ theme }) => theme.p2pSell};
   border: none;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 0;
+  text-align: center;
+  span {
+    margin-top: 3px;
+    margin-right: 4px;
+    width: calc(50% - 2px);
+    text-align: right;
+
+    &:last-child {
+      text-align: left;
+    }
+  }
 
   &:hover,
   &:focus,
@@ -419,5 +592,8 @@ const ButtonSell = styled(Button)`
   &:hover,
   &:focus {
     opacity: 0.6;
+  }
+  @media only screen and (max-width: 1150px) {
+    width: 100% !important;
   }
 `;

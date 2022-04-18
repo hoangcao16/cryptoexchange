@@ -52,6 +52,7 @@ export const Wrapper = styled.div`
     color: ${({ theme }) => theme.text};
     h1 {
       color: ${({ theme }) => theme.text};
+      text-align: center;
     }
 
     &--des {
