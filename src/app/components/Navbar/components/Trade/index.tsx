@@ -101,11 +101,12 @@ const TradeNav = () => {
               href={item.url ? item.url : '#action/3.1'}
               key={index}
               disabled={item?.disable}
+              style={{ opacity: item?.disable ? 0.3 : 1 }}
             >
               <item.icon
                 style={{
                   fontSize: '24px',
-                  color: !item?.disable ? '#10afff' : darkTheme.grayColor,
+                  color: !item?.disable ? '#10afff' : darkTheme.darkGrayColor,
                   marginRight: '16px',
                 }}
               />

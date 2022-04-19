@@ -9,6 +9,8 @@ import { FaCopy } from 'react-icons/fa';
 import { OrderAllServices } from 'services/tabOrderAllServices';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import openNotification from 'app/components/NotificationAntd';
+import { BsFillArrowRightSquareFill } from 'react-icons/bs';
+import { darkTheme } from 'theme/theme';
 const TabOrderAllContainer = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [listTrades, setListTrades] = useState<any>([]);
@@ -83,13 +85,24 @@ const TabOrderAllContainer = () => {
             header={
               <div>
                 <Row>
-                  <Col>Type/Coin</Col>
-                  <Col>Fiat amount</Col>
-                  <Col>Price</Col>
-                  <Col>Crypto amount</Col>
-                  <Col>Counterparty</Col>
-                  <Col>Status</Col>
-                  <Col>Operation</Col>
+                  <Col xl={2} md={2}>
+                    Type/Coin
+                  </Col>
+                  <Col xl={2} md={2}>
+                    Fiat amount
+                  </Col>
+                  <Col xl={2} md={2}>
+                    Price
+                  </Col>
+                  <Col xl={2} md={2}>
+                    Crypto amount
+                  </Col>
+                  <Col xl={3} md={2}>
+                    Counterparty
+                  </Col>
+                  <Col xl={1} md={2}>
+                    Status
+                  </Col>
                 </Row>
               </div>
             }
@@ -98,34 +111,40 @@ const TabOrderAllContainer = () => {
               let d = new Date(item.createTime);
               return (
                 <List.Item>
-                  <Row className="item">
-                    <div className="titleItem">
-                      <div>
-                        {item?.partner?.email === item?.sellEmail ? (
-                          <span data-color="red">Sell</span>
-                        ) : (
-                          <span data-color="green">Buy</span>
-                        )}
-                        <span>
-                          {d.getDate()}/{d.getMonth() + 1}/{d.getFullYear()} -{' '}
-                          {d.getHours()}:{d.getMinutes()}:{d.getSeconds()}
-                        </span>
-                      </div>
+                  <div className="titleItem">
+                    <div>
+                      {item?.partner?.email === item?.sellEmail ? (
+                        <span data-color="red">Sell</span>
+                      ) : (
+                        <span data-color="green">Buy</span>
+                      )}
                       <span>
-                        {item.orderNumber}{' '}
-                        <Tooltip
-                          title="Copied"
-                          trigger="click"
-                          placement="right"
-                        >
-                          <FaCopy
-                            className="copyIcon"
-                            onClick={() => handleCopy(item.orderNumber)}
-                          />
-                        </Tooltip>
+                        {d.getDate()}/{d.getMonth() + 1}/{d.getFullYear()} -{' '}
+                        {d.getHours()}:{d.getMinutes()}:{d.getSeconds()}
                       </span>
                     </div>
-                    <Col className="colToken">
+                    <span>
+                      {item.orderNumber}{' '}
+                      <Tooltip title="Copied" trigger="click" placement="right">
+                        <FaCopy
+                          className="copyIcon"
+                          onClick={() => handleCopy(item.orderNumber)}
+                        />
+                      </Tooltip>
+                      <Link to={`/order/orderDetail/${item.id}`}>
+                        <BsFillArrowRightSquareFill
+                          style={{
+                            color: darkTheme.primary,
+                            marginLeft: '20px',
+                            fontSize: '20px',
+                          }}
+                        />
+                      </Link>
+                    </span>
+                  </div>
+                  <Row className="item">
+                    <Col md={2} xl={2} sm={6} xs={12} className="colToken">
+                      <span className="responTitle">Coin: </span>
                       <img
                         className="iconToken"
                         src={item?.order?.token?.icon}
@@ -133,31 +152,36 @@ const TabOrderAllContainer = () => {
                       />
                       <span>{item?.order?.token?.assetName}</span>
                     </Col>
-                    <Col>
+                    <Col md={2} xl={2} sm={6} xs={12}>
+                      <span className="responTitle">Fiat amount: </span>
                       <b>
                         {item?.total.toFixed(2)} {item?.order?.fiat?.name}
                       </b>
                     </Col>
-                    <Col>
+                    <Col md={2} xl={2} sm={6} xs={12}>
+                      <span className="responTitle">Price: </span>
                       <span>
                         {item?.price?.toFixed(2)} {item?.order?.fiat?.name}
                       </span>
                     </Col>
-                    <Col>
+                    <Col md={2} xl={2} sm={6} xs={12}>
+                      <span className="responTitle">Crypto amount: </span>
                       <span>
                         {item?.amount?.toFixed(2)}{' '}
                         {item?.order?.token?.assetName}
                       </span>
                     </Col>
-                    <Col>
+                    <Col md={2} xl={3} sm={6} xs={12}>
+                      <span className="responTitle">Counterparty: </span>
                       <span>{item?.partner?.email}</span>
                     </Col>
-                    <Col>
+                    <Col md={2} xl={1} sm={6} xs={12}>
+                      <span className="responTitle">Status: </span>
                       <b>{item?.status}</b>
                     </Col>
-                    <Col>
-                      <Link to={`/order/orderDetail/${item.id}`}>Contact</Link>
-                    </Col>
+                    {/* <Col md={3} lg={2}>
+                      
+                    </Col> */}
                   </Row>
                 </List.Item>
               );
@@ -214,10 +238,22 @@ const Wrapper = styled.div`
     }
   }
 
+  .responTitle {
+    color: ${({ theme }) => theme.brightGrayColor};
+    display: none;
+  }
+  .item {
+    padding: 0 12px;
+
+    & > div {
+      margin: 10px 0;
+    }
+  }
+
   .ant-list-item {
     width: 100%;
     display: block;
-    padding: 0px 12px;
+    padding: 0;
     transform: translateX(-1px);
     .iconToken {
       width: 30px !important;
@@ -279,5 +315,35 @@ const Wrapper = styled.div`
   .loadingIcon {
     -webkit-animation: spining 1.1s infinite linear;
     animation: spining 1.1s infinite linear;
+  }
+
+  @media only screen and (max-width: 900px) {
+    .ant-list-item {
+      .col {
+        padding: 10px 6px;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .responTitle {
+      display: inline;
+    }
+
+    .ant-list-header {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 575px) {
+    .titleItem {
+      flex-direction: column;
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    .mainContent {
+      padding: 10px;
+    }
   }
 `;

@@ -31,6 +31,40 @@ export const App = styled.div`
       opacity: 1;
     }
   }
+
+  .spaceTotal {
+    display: flex;
+    flex-direction: column;
+
+    .spanTotal {
+      margin-top: 16px;
+    }
+    .avaiOrderRes {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .spanTotal {
+      margin-top: 0;
+    }
+    .avaiOrderRes {
+      display: block !important;
+      opacity: 0.4;
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    .ant-table-cell {
+      padding: 8px;
+    }
+
+    .colCoin {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 `;
 export const Head = styled.div`
   margin: 0px 0px 24px 0px;

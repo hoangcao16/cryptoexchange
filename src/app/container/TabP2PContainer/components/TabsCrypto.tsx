@@ -75,9 +75,9 @@ function TabsCrypto() {
         ))}
       <div className="tabCryptoRes">
         <Select
-          defaultValue="BTC"
           style={{ width: 120 }}
           onChange={handleChangeSelect}
+          value={P2PSearchParams?.crypto}
         >
           {listCrypto
             .filter(c => c.allowBuySell === 1)
@@ -89,30 +89,19 @@ function TabsCrypto() {
                   onClickButton(c.assetName);
                 }}
               >
+                <img
+                  src={c.icon}
+                  alt=""
+                  style={{
+                    height: '15px',
+                    marginRight: '10px',
+                    marginBottom: '2px',
+                  }}
+                />
                 {c.assetName}
               </Option>
             ))}
         </Select>
-        {/* <Form.Select aria-label="Default select example">
-          {listCrypto
-            .filter(c => c.allowBuySell === 1)
-            .map((c, i) => (
-              <option
-                key={i}
-                value={c.assetName}
-                onChange={handleChangeSelect}
-                onClick={() => {
-                  onClickButton(c.assetName);
-                }}
-              >
-                {c.assetName}
-              </option>
-            ))}
-          <option>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </Form.Select> */}
       </div>
     </Wrapper>
   );
@@ -126,6 +115,10 @@ const Wrapper = styled.div`
   .tabCryptoRes {
     display: none;
     margin-top: 13px;
+
+    .ant-select-selector {
+      box-shadow: none !important;
+    }
   }
 
   @media only screen and (max-width: 735px) {

@@ -26,7 +26,7 @@ const ProductNav = () => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = e => {
-    setShow(!show);
+    // setShow(!show);
   };
   const hideDropdown = e => {
     setShow(false);

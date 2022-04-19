@@ -626,15 +626,15 @@ const ContentOrderDetail = ({ trade, reload }) => {
                   <Button
                     type="primary"
                     disabled={
-                      disableAppeal && date1 - date.getTime() < 1 * 60000
+                      disableAppeal && date1 - date.getTime() < 15 * 60000
                     }
                     onClick={() => setShowModalAppeal(true)}
                     className="btnAppeal"
                   >
-                    {disableAppeal && date1 - date.getTime() < 1 * 60000 && (
+                    {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
                       <Countdown
                         value={
-                          Date.now() + 1 * 60000 - (date1 - date.getTime())
+                          Date.now() + 15 * 60000 - (date1 - date.getTime())
                         }
                         onFinish={finishCdAppeal}
                       ></Countdown>
@@ -669,12 +669,14 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 </Button>
                 <Button
                   className="btnTransaction"
-                  disabled={disableAppeal && date1 - date.getTime() < 1 * 60000}
+                  disabled={
+                    disableAppeal && date1 - date.getTime() < 15 * 60000
+                  }
                   onClick={() => setShowModalAppeal(true)}
                 >
-                  {disableAppeal && date1 - date.getTime() < 1 * 60000 && (
+                  {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
                     <Countdown
-                      value={Date.now() + 1 * 60000 - (date1 - date.getTime())}
+                      value={Date.now() + 15 * 60000 - (date1 - date.getTime())}
                       onFinish={finishCdAppeal}
                     ></Countdown>
                   )}
