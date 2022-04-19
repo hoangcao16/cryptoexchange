@@ -23,6 +23,7 @@ export const StyledNavLink = styled(Nav.Link)`
     display: none;
   }
   margin: 0 4px;
+  color: ${({ theme }) => theme.grayColor} !important;
 `;
 export const AuthGroup = styled.div`
   margin: 0 16px;

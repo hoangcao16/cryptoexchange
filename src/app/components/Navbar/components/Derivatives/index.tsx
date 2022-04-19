@@ -18,7 +18,7 @@ const DerivativesNav = () => {
   const [show, setShow] = useState(false);
   const { t } = useTranslation();
   const showDropdown = e => {
-    setShow(!show);
+    // setShow(!show);
   };
   const hideDropdown = e => {
     setShow(false);
@@ -74,6 +74,7 @@ const DerivativesNav = () => {
       show={show}
       onMouseEnter={showDropdown}
       onMouseLeave={hideDropdown}
+      disabled
     >
       <DropdownItemGroup>
         {data.map((item, index) => {

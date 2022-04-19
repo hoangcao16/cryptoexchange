@@ -119,6 +119,7 @@ const ProductNav = () => {
       show={show}
       onMouseEnter={showDropdown}
       onMouseLeave={hideDropdown}
+      disabled
     >
       <DropdownItemGroup>
         {data.map((item, index) => {
