@@ -30,7 +30,7 @@ export const tabOrderDetailService = {
   getListAppealReason() {
     return apiClient.request({
       method: 'GET',
-      url: 'p2p-api/api/v1/appeal',
+      url: 'p2p-api/api/v1/p2p-appeal-reason',
     });
   },
 
@@ -63,6 +63,40 @@ export const tabOrderDetailService = {
     return apiClient.request({
       method: 'GET',
       url: `p2p-api/api/v1/p2pPayment/${params}`,
+    });
+  },
+
+  uploadFile(data) {
+    return apiClient.request({
+      method: 'POST',
+      url: 'api-svc/file/uploadFile',
+      data: data,
+    });
+  },
+
+  updateAppealStatus(params) {
+    return apiClient.request({
+      method: 'POST',
+      url: `p2p-api/api/v1/appeal/${params?.id}`,
+      params: {
+        status: params?.status,
+      },
+    });
+  },
+
+  createAppeal(data) {
+    return apiClient.request({
+      method: 'POST',
+      url: 'p2p-api/api/v1/appeal',
+      data: data,
+    });
+  },
+
+  getAppealByTradeId(params) {
+    return apiClient.request({
+      method: 'GET',
+      url: 'p2p-api/api/v1/appeal/p2PAppealByTrade',
+      params: params,
     });
   },
 };

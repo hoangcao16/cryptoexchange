@@ -59,7 +59,6 @@ function NavbarTradeP2P(props: Props) {
       .then(res => {
         if (res.data.rc === 0) {
           setListTradeProcess(res.data.rows.reverse());
-          console.log(res.data.rows);
           setLoadingNotify(false);
         } else {
           console.log(res.data.rd);
@@ -121,6 +120,9 @@ function NavbarTradeP2P(props: Props) {
                       {item?.buyerStatus === 'NOT_PAID' &&
                         'Pending payment ...'}
                       {item?.buyerStatus === 'PAID' && 'Checking payment ...'}
+                      {(item?.buyerStatus === 'APPEAL' ||
+                        item?.sellerStatus === 'APPEAL') &&
+                        'Appealing...'}
                     </span>
                   </p>
                   <p>
@@ -140,7 +142,8 @@ function NavbarTradeP2P(props: Props) {
                     <span>
                       Crypto amount{' '}
                       <b className="amount">
-                        {item.amount} {item?.order?.token?.assetName}
+                        {item.amount?.toFixed(5)}{' '}
+                        {item?.order?.token?.assetName}
                       </b>
                     </span>
                     <span className="total">

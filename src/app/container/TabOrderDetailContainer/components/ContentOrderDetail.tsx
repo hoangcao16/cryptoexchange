@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Steps, Button, Radio, Tooltip, Input, Tag, Checkbox } from 'antd';
-import { Modal } from 'react-bootstrap';
+import { Col, Modal, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import { Collapse } from 'antd';
@@ -17,6 +17,10 @@ import ChatBox from 'app/components/ChatBox';
 import QRCode from 'react-qr-code';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import Countdown from 'antd/lib/statistic/Countdown';
+import { IoMdChatbubbles } from 'react-icons/io';
+import { BsHeadset } from 'react-icons/bs';
+import FormAppeal from './FormAppeal';
+import AppealBlock from './Appeal';
 const baseURLWs = process.env.REACT_APP_BASE_WEBSOCKET_URL;
 
 const ContentOrderDetail = ({ trade, reload }) => {
@@ -40,11 +44,12 @@ const ContentOrderDetail = ({ trade, reload }) => {
     useState(false);
   const [showModalAppeal, setShowModalAppeal] = useState(false);
   const [reCallMessage, setReCallMessage]: any = useState(false);
-  const [countDowntTimeValue, setCountDownTimeValue] = useState(0);
+  const [beforeAppeal, setBeforeAppeal] = useState(true);
 
   const TabOrderDetailState: TabOrderDetailState =
     useSelector(selectTabOrderDetail);
-  const tradaType = TabOrderDetailState.tradeType;
+  const { tradeType, buyerStatus, sellerStatus, tradeStatus } =
+    TabOrderDetailState;
 
   const {
     updateTradeById,
@@ -256,7 +261,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
 
       socket.onmessage = message => {
         const res = JSON.parse(message.data);
-        if ([1, 2, 3, 4].includes(res?.key)) {
+        if (res?.key) {
           reload();
           setReCallMessage(!reCallMessage);
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -334,25 +339,25 @@ const ContentOrderDetail = ({ trade, reload }) => {
   }, [TabOrderDetailState]);
   return (
     <Wrapper>
-      <div className="mainContent">
+      <Row className="mainContent">
         {trade?.status === 'PROCESSING' && (
-          <div className="col-8 orderStep">
+          <Col className="orderStep" lg={8}>
             <div className="firstStep">
               <Steps
                 className="st1Step"
                 size="small"
                 current={currentFirstSteps}
               >
-                {tradaType === 'Buy' &&
+                {tradeType === 'Buy' &&
                   stepBuy.map((step, index) => (
                     <Step key={index} description={step.title} />
                   ))}
-                {tradaType === 'Sell' &&
+                {tradeType === 'Sell' &&
                   stepSell.map((step, index) => (
                     <Step key={index} description={step.title} />
                   ))}
               </Steps>
-              {visibleNote && tradaType === 'Buy' && (
+              {visibleNote && tradeType === 'Buy' && (
                 <div className="note">
                   <span>
                     <span>
@@ -399,7 +404,8 @@ const ContentOrderDetail = ({ trade, reload }) => {
                       <div className="count">
                         <p>Quantity</p>
                         <h5>
-                          {trade?.amount} {trade?.order?.token?.assetName}
+                          {trade?.amount?.toFixed(5)}{' '}
+                          {trade?.order?.token?.assetName}
                         </h5>
                       </div>
                     </div>
@@ -605,30 +611,30 @@ const ContentOrderDetail = ({ trade, reload }) => {
                     </div>
                   }
                 />
-                {tradaType === 'Buy' && (
+                {tradeType === 'Buy' && (
                   <Step title='After transferring the money, click the button "Transferred, notify the seller"' />
                 )}
                 {TabOrderDetailState.buyerStatus === 'PAID' &&
-                  tradaType === 'Sell' && (
+                  tradeType === 'Sell' && (
                     <Step title='After transferring the payment, be sure to click the "Payment received" button.' />
                   )}
               </Steps>
             </div>
-            {tradaType === 'Buy' && (
+            {tradeType === 'Buy' && (
               <div className="btnGroup">
-                {TabOrderDetailState.buyerStatus === 'PAID' ? (
+                {buyerStatus === 'PAID' ? (
                   <Button
                     type="primary"
                     disabled={
-                      disableAppeal && date1 - date.getTime() < 15 * 60000
+                      disableAppeal && date1 - date.getTime() < 1 * 60000
                     }
                     onClick={() => setShowModalAppeal(true)}
                     className="btnAppeal"
                   >
-                    {disableAppeal && date1 - date.getTime() < 15 * 60000 && (
+                    {disableAppeal && date1 - date.getTime() < 1 * 60000 && (
                       <Countdown
                         value={
-                          Date.now() + 15 * 60000 - (date1 - date.getTime())
+                          Date.now() + 1 * 60000 - (date1 - date.getTime())
                         }
                         onFinish={finishCdAppeal}
                       ></Countdown>
@@ -652,24 +658,34 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 </Button>
               </div>
             )}
-
-            {tradaType === 'Sell' &&
-              TabOrderDetailState.buyerStatus === 'PAID' && (
-                <div>
-                  <Button
-                    className="btnTransferred"
-                    type="primary"
-                    onClick={() => handelConfirmTransfer()}
-                  >
-                    Payment received
-                  </Button>
-                  <Button className="btnCancelOrder">Transaction issue</Button>
-                </div>
-              )}
-          </div>
+            {tradeType === 'Sell' && buyerStatus === 'PAID' && (
+              <div className="btnGroupConfirm">
+                <Button
+                  className="btnTransferred"
+                  type="primary"
+                  onClick={() => handelConfirmTransfer()}
+                >
+                  Payment received
+                </Button>
+                <Button
+                  className="btnTransaction"
+                  disabled={disableAppeal && date1 - date.getTime() < 1 * 60000}
+                  onClick={() => setShowModalAppeal(true)}
+                >
+                  {disableAppeal && date1 - date.getTime() < 1 * 60000 && (
+                    <Countdown
+                      value={Date.now() + 1 * 60000 - (date1 - date.getTime())}
+                      onFinish={finishCdAppeal}
+                    ></Countdown>
+                  )}
+                  Transaction issue, appeal after
+                </Button>
+              </div>
+            )}
+          </Col>
         )}
         {trade?.status === 'CANCEL' && (
-          <div className="col-8 cancelOrderContent">
+          <Col className=" cancelOrderContent" lg={8}>
             <h6 className="orderInfoTitle">Order info</h6>
             <div className="descriptionStep1">
               <div className="amount">
@@ -687,7 +703,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
               <div className="count">
                 <p>Quantity</p>
                 <h5>
-                  {trade?.amount} {trade?.order?.token?.assetName}
+                  {trade?.amount?.toFixed(5)} {trade?.order?.token?.assetName}
                 </h5>
               </div>
             </div>
@@ -696,11 +712,11 @@ const ContentOrderDetail = ({ trade, reload }) => {
               Payment method can't be displayed for this order
             </p>
             <h6 className="haq">Have A Question</h6>
-          </div>
+          </Col>
         )}
 
         {trade?.status === 'DONE' && (
-          <div className="col-8 cancelOrderContent">
+          <Col className=" cancelOrderContent" lg={8}>
             <h6 className="orderInfoTitle">Order info</h6>
             <div className="descriptionStep1">
               <div className="amount">
@@ -718,7 +734,7 @@ const ContentOrderDetail = ({ trade, reload }) => {
               <div className="count">
                 <p>Quantity</p>
                 <h5>
-                  {trade?.amount} {trade?.order?.token?.assetName}
+                  {trade?.amount?.toFixed(5)} {trade?.order?.token?.assetName}
                 </h5>
               </div>
             </div>
@@ -738,12 +754,248 @@ const ContentOrderDetail = ({ trade, reload }) => {
                 })}
             </p>
             <h6 className="haq">Have A Question</h6>
-          </div>
+          </Col>
         )}
-        <div className="chat">
+
+        {tradeStatus === 'APPEAL' && (
+          <Col className=" orderStep" lg={8}>
+            <div className="secondStep">
+              <Steps progressDot current={2} direction="vertical">
+                <Step
+                  title="Confirm order information"
+                  description={
+                    <div className="descriptionStep1">
+                      <div className="amount">
+                        <p>Amount</p>
+                        <h5>
+                          {trade?.order?.fiat?.symbol} {trade?.total}
+                        </h5>
+                      </div>
+                      <div className="price">
+                        <p>Price</p>
+                        <h5>
+                          {trade?.order?.fiat?.symbol} {trade?.order?.price}
+                        </h5>
+                      </div>
+                      <div className="count">
+                        <p>Quantity</p>
+                        <h5>
+                          {trade?.amount?.toFixed(5)}{' '}
+                          {trade?.order?.token?.assetName}
+                        </h5>
+                      </div>
+                    </div>
+                  }
+                />
+                <Step
+                  title="Transfer funds to the account provided below"
+                  description={
+                    <div>
+                      <Tabs
+                        type="card"
+                        tabPosition="left"
+                        className="paymentTab"
+                        defaultActiveKey={trade?.paymentId}
+                        onChange={handleChangeTabPayment}
+                      >
+                        {trade?.order?.orderType === 1
+                          ? trade?.order?.payments?.map(payment => {
+                              return (
+                                <TabPane
+                                  key={payment?.id}
+                                  tab={
+                                    <div>
+                                      <span
+                                        className="tabIcon"
+                                        style={{
+                                          color:
+                                            payment?.paymentMethod?.colorCode,
+                                        }}
+                                      >
+                                        |{' '}
+                                      </span>{' '}
+                                      {payment?.paymentMethod?.name}
+                                    </div>
+                                  }
+                                >
+                                  <p className="paymentTitle">Name</p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.fullName}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.fullName)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">
+                                    Bank account number
+                                  </p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.accountNumber}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.accountNumber)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">Bank name</p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.bankName}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.bankName)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                  <p className="paymentTitle">
+                                    Account opening branch
+                                  </p>
+                                  <span className="paymentDesc">
+                                    <span>{payment?.bankBranch}</span>
+                                    <Tooltip
+                                      title="Copied"
+                                      trigger="click"
+                                      placement="right"
+                                    >
+                                      <FaCopy
+                                        className="copyIcon"
+                                        onClick={() =>
+                                          handleCopy(payment?.bankBranch)
+                                        }
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                </TabPane>
+                              );
+                            })
+                          : paymentSeller
+                              .filter(x => {
+                                return x.id === trade?.paymentId;
+                              })
+                              .map(payment => {
+                                return (
+                                  <TabPane
+                                    key={payment?.id}
+                                    tab={
+                                      <div>
+                                        <span
+                                          className="tabIcon"
+                                          style={{
+                                            color:
+                                              payment?.paymentMethod?.colorCode,
+                                          }}
+                                        >
+                                          |{' '}
+                                        </span>{' '}
+                                        {payment?.paymentMethod?.name}
+                                      </div>
+                                    }
+                                  >
+                                    <p className="paymentTitle">Name</p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.fullName}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.fullName)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">
+                                      Bank account number
+                                    </p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.accountNumber}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.accountNumber)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">Bank name</p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.bankName}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.bankName)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                    <p className="paymentTitle">
+                                      Account opening branch
+                                    </p>
+                                    <span className="paymentDesc">
+                                      <span>{payment?.bankBranch}</span>
+                                      <Tooltip
+                                        title="Copied"
+                                        trigger="click"
+                                        placement="right"
+                                      >
+                                        <FaCopy
+                                          className="copyIcon"
+                                          onClick={() =>
+                                            handleCopy(payment?.bankBranch)
+                                          }
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                  </TabPane>
+                                );
+                              })}
+                      </Tabs>
+                    </div>
+                  }
+                />
+              </Steps>
+            </div>
+            <AppealBlock trade={trade} cancelOrder={handleCancelOrder} />
+          </Col>
+        )}
+        <Col className="chat" lg={4}>
           <ChatBox email={trade?.partner?.email} data={trade} />
-        </div>
-      </div>
+        </Col>
+      </Row>
       <div className="faq">
         <h5 className="faq-title">FAQ</h5>
         <Collapse
@@ -925,9 +1177,64 @@ const ContentOrderDetail = ({ trade, reload }) => {
         show={showModalAppeal}
       >
         <ModalAppeal.Header closeButton>
-          <span>Appeal</span>
+          {beforeAppeal ? <span>Tips</span> : <span>Appeal</span>}
         </ModalAppeal.Header>
-        <ModalAppeal.Body></ModalAppeal.Body>
+        <ModalAppeal.Body>
+          {beforeAppeal ? (
+            <div className="beforeAppeal">
+              <h6>Before appeal</h6>
+              <div className="firstContent">
+                <IoMdChatbubbles className="appealIcon" />
+                <span>
+                  You can upload proof of payment and account info in the
+                  chatbox to help both sides to verifi the payment
+                </span>
+              </div>
+              <div className="secondContent">
+                <div className="content">
+                  <BsHeadset className="appealIcon" />
+                  <span>
+                    If you can reach the buyer/seller, or reach an agreement
+                    with the other user, please file an appeal
+                  </span>
+                </div>
+                <div className="btnAppealModal">
+                  <Button type="link" onClick={() => setBeforeAppeal(false)}>
+                    Appeal
+                  </Button>
+                  <Button
+                    type="link"
+                    onClick={() => setShowModalAppeal(false)}
+                    className="btnCancelAppeal"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="appeal">
+              <div className="appealRcm">
+                <p>
+                  1. Reason for appeal and proofs are visible to both parties
+                  and CS. Please avoid including any private or sensitive info
+                </p>
+                <p>
+                  2. Baseless appeal request can result in banning of the
+                  account
+                </p>
+              </div>
+
+              <div className="contentAppeal">
+                <FormAppeal
+                  cancel={() => setShowModalAppeal(false)}
+                  type={TabOrderDetailState.tradeType}
+                  tradeId={trade?.tradeId}
+                />
+              </div>
+            </div>
+          )}
+        </ModalAppeal.Body>
       </ModalAppeal>
     </Wrapper>
   );
@@ -937,23 +1244,21 @@ export default ContentOrderDetail;
 
 const Wrapper = styled.div`
   .mainContent {
-    display: flex;
+    position: relative;
   }
   .orderStep {
     padding-top: 30px;
-    /* flex: 7; */
 
     .firstStep {
       padding-bottom: 20px;
       border-bottom: 2px solid ${({ theme }) => theme.p2pGrayLight};
-
+      margin-bottom: 20px;
       .ant-steps-item-container {
         display: flex;
         flex-direction: column;
       }
       .ant-steps-item-description {
         margin-top: 10px;
-        width: 120%;
       }
 
       .ant-steps-item-title {
@@ -997,6 +1302,10 @@ const Wrapper = styled.div`
     }
 
     .secondStep {
+      .ant-steps-item-content {
+        max-width: 90% !important;
+        width: inherit !important;
+      }
       .ant-steps-icon-dot {
         background-color: ${({ theme }) => theme.p2pBackground};
         border: 1px solid ${({ theme }) => theme.primary};
@@ -1007,12 +1316,22 @@ const Wrapper = styled.div`
           background-color: ${({ theme }) => theme.primary};
         }
       }
-      padding-top: 20px;
 
       .paymentTab {
         border-radius: 3px;
         transition: all 0.25s linear;
         border: 1px solid ${({ theme }) => theme.brightGrayColor};
+        .ant-tabs-nav {
+          max-width: 40%;
+
+          .ant-tabs-tab-btn {
+            div {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
 
         .paymentTitle {
           color: ${({ theme }) => theme.darkGrayColor};
@@ -1072,12 +1391,37 @@ const Wrapper = styled.div`
       font-weight: bold;
     }
 
+    .btnGroupConfirm {
+      display: flex;
+    }
+
     .btnTransferred {
       font-weight: bold;
+      margin-right: 20px;
+    }
+
+    .btnTransaction {
+      display: flex;
+      color: ${({ theme }) => theme.primary};
+      font-weight: bold;
+      .ant-statistic {
+        height: 100%;
+
+        &-content {
+          height: 100%;
+        }
+        &-content-value {
+          height: 100%;
+          font-size: 16px;
+          font-weight: bold;
+          color: ${({ theme }) => theme.primary};
+          transform: translateY(-12px);
+          margin-right: 10px;
+        }
+      }
     }
   }
   .chat {
-    flex: 3;
     margin-top: 30px;
   }
 
@@ -1092,7 +1436,6 @@ const Wrapper = styled.div`
     .plusIcon {
       color: ${({ theme }) => theme.primary};
       font-size: 16px;
-      transform: translateY(3px);
     }
 
     .ant-collapse {
@@ -1124,7 +1467,6 @@ const Wrapper = styled.div`
 
   .cancelOrderContent {
     padding-top: 45px;
-    flex: 7;
     border-bottom: 2px solid ${({ theme }) => theme.p2pGrayLight};
     padding-bottom: 40px;
 
@@ -1177,6 +1519,79 @@ const Wrapper = styled.div`
         color: ${({ theme }) => theme.primary};
         transform: translateY(-12px);
         margin-right: 10px;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 1200px) {
+    .orderStep,
+    .cancelOrderContent {
+      /* width: 100%; */
+    }
+  }
+
+  @media only screen and (max-width: 991px) {
+    .faq {
+      width: 100%;
+    }
+
+    .firstStep {
+      .ant-steps {
+        width: 100% !important;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 575px) {
+    .firstStep {
+      .ant-steps-item-content {
+        transform: translate(30px, -70%);
+      }
+    }
+
+    .btnGroupConfirm {
+      flex-direction: column;
+
+      button {
+        margin: 10px 0 !important;
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+      }
+    }
+    .descriptionStep1 {
+      & > div {
+        margin-right: 10px;
+      }
+    }
+
+    .ant-steps-item-content {
+      width: 80% !important;
+    }
+
+    .ant-tabs-nav {
+      .ant-tabs-tab-btn {
+        div {
+          width: 80px;
+        }
+      }
+    }
+
+    .ant-tabs-tabpane {
+      padding-left: 8px !important;
+    }
+
+    .paymentTitle {
+      text-align: left;
+    }
+
+    .btnGroup {
+      flex-direction: column;
+      button {
+        margin: 10px 0 !important;
+        display: flex;
+        justify-content: center;
       }
     }
   }
@@ -1401,4 +1816,90 @@ const ModalVerification = styled(Modal)`
   }
 `;
 
-const ModalAppeal = styled(Modal)``;
+const ModalAppeal = styled(Modal)`
+  color: ${({ theme }) => theme.p2pText};
+
+  .modal-header {
+    span {
+      font-size: 20px;
+    }
+
+    .btn-close {
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 0;
+    .appealIcon {
+      font-size: 50px;
+      color: ${({ theme }) => theme.primary};
+    }
+
+    .beforeAppeal {
+      padding: 16px;
+      .firstContent {
+        display: flex;
+        align-items: center;
+        padding: 12px 10px;
+        border: 1px solid ${({ theme }) => theme.brightGrayColor};
+        border-radius: 5px;
+
+        .appealIcon {
+          flex: 1;
+          margin-right: 10px;
+        }
+
+        span {
+          flex: 7;
+        }
+      }
+
+      .secondContent {
+        padding: 12px 10px;
+        border: 1px solid ${({ theme }) => theme.brightGrayColor};
+        border-radius: 5px;
+        margin-top: 20px;
+        .content {
+          display: flex;
+          align-items: center;
+
+          .appealIcon {
+            flex: 1;
+            margin-right: 10px;
+          }
+
+          span {
+            flex: 7;
+          }
+        }
+
+        .btnAppealModal {
+          width: 100%;
+          text-align: right;
+
+          .btnCancelAppeal {
+            color: inherit;
+          }
+        }
+      }
+    }
+
+    .appeal {
+      .appealRcm {
+        padding: 16px 20px 0.1px 20px;
+        background-color: ${({ theme }) => theme.primaryBlur};
+        color: ${({ theme }) => theme.grayColor};
+        p {
+          margin-bottom: 16px;
+        }
+      }
+
+      .contentAppeal {
+        padding: 16px 20px;
+      }
+    }
+  }
+`;

@@ -80,6 +80,14 @@ export const Table = styled.div`
     &:hover {
       border-top: 1px dashed ${({ theme }) => theme.grayColor};
     }
+
+    .markOpen {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform: translate(30%, -5%);
+      opacity: 0.5;
+    }
   }
 
   &[data-type='mini'] {

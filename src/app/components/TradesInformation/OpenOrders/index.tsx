@@ -13,6 +13,7 @@ import { selectGetopenOrder } from './slice/selectors';
 import { useWebsocketSlice } from 'app/container/HomeContainer/slice';
 import { useSellspotlimitSlice } from 'app/components/OrderForm/components/LimitForm/components/SellForm/slice';
 import { useBuyspotlimitSlice } from 'app/components/OrderForm/components/LimitForm/components/BuyForm/slice';
+import { useOrderbookSlice } from 'app/components/OrderBook/slice';
 
 interface stateProps {
   order_id?: string;
@@ -29,6 +30,7 @@ const Orders = () => {
   const dataSell: any = useSelector(selectSellspotlimit);
   const dataOrders: any = useSelector(selectGetopenOrder);
   const [dataOpenOrders, setDataOpenOrders] = useState<stateProps[]>([]);
+  const setOpeningOrder = useOrderbookSlice().actions;
 
   useEffect(() => {
     if (getToken()) {
@@ -107,6 +109,20 @@ const Orders = () => {
       }
     }
   }, [dataSocket]);
+
+  useEffect(() => {
+    if (dataOpenOrders?.length > 0 && dataOpenOrders?.length <= 5) {
+      dispatch(setOpeningOrder.setOpenOrder(dataOpenOrders));
+    } else if (dataOpenOrders?.length > 5) {
+      dispatch(
+        setOpeningOrder.setOpenOrder(
+          dataOpenOrders?.reverse()?.filter((_, i) => i <= 4),
+        ),
+      );
+    } else {
+      dispatch(setOpeningOrder.setOpenOrder([]));
+    }
+  }, [dataOpenOrders]);
 
   return (
     <>

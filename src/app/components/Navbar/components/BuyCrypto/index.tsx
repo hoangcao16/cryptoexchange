@@ -28,7 +28,7 @@ const BuyCryptoNav = () => {
   const [show, setShow] = useState(false);
   const { t } = useTranslation();
   const showDropdown = e => {
-    setShow(!show);
+    // setShow(!show);
   };
   const hideDropdown = e => {
     setShow(false);
@@ -68,6 +68,7 @@ const BuyCryptoNav = () => {
 
   return (
     <StyledNavDropdown
+      disabled
       title={<Title />}
       id="collasible-nav-dropdown"
       show={show}
@@ -78,7 +79,7 @@ const BuyCryptoNav = () => {
       <DropdownItemGroup>
         {data.map((item, index) => {
           return (
-            <NavDropdown.Item href="#action/3.1" key={index}>
+            <NavDropdown.Item disabled href="#action/3.1" key={index}>
               <item.icon
                 style={{
                   fontSize: '24px',

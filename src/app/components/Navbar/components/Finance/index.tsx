@@ -15,7 +15,7 @@ const FinanceNav = () => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const showDropdown = e => {
-    setShow(!show);
+    // setShow(!show);
   };
   const hideDropdown = e => {
     setShow(false);
@@ -48,6 +48,7 @@ const FinanceNav = () => {
       show={show}
       onMouseEnter={showDropdown}
       onMouseLeave={hideDropdown}
+      disabled
     >
       <DropdownItemGroup>
         {data.map((item, index) => {

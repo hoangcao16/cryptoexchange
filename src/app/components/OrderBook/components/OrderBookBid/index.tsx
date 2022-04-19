@@ -16,6 +16,9 @@ import { useOrderbookSlice } from '../../slice';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { darkTheme } from 'theme/theme';
+import { OrderbookState } from '../../slice/types';
+import { selectOrderbook } from '../../slice/selectors';
+import { Badge } from 'antd';
 
 const OrderBookBid = ({ dataSocket, miniTable }: any) => {
   const { t } = useTranslation();
@@ -38,6 +41,11 @@ const OrderBookBid = ({ dataSocket, miniTable }: any) => {
   const changeFormatPair = `${pair?.substring(0, findIndex)}/${pair?.substring(
     findIndex + 1,
   )}`;
+
+  const OrderbookState: OrderbookState = useSelector(selectOrderbook);
+  const openOrderBuy = OrderbookState?.openOrder
+    ?.filter(order => order?.side === 'BUY')
+    .map(order => order?.price);
 
   useEffect(() => {
     const index: any = pairData?.data?.rows?.findIndex((item: any) => {
@@ -264,6 +272,9 @@ const OrderBookBid = ({ dataSocket, miniTable }: any) => {
                       : 'inherit',
                 }}
               >
+                {openOrderBuy.includes(Number(item?.price)) && (
+                  <Badge status="warning" className="markOpen" />
+                )}
                 <Price>{numeral(item.price).format('0,0.000')}</Price>
                 <Amount>
                   {numeral(Math.abs(item.quantity)).format('0,0.00000')}

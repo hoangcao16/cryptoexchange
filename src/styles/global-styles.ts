@@ -7,6 +7,8 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.text};
     transition: all .5s linear;
     box-sizing: border-box;
+
+  
   }
   .navbar-dark .navbar-nav .nav-link {
     color: ${({ theme }) => theme.text};
@@ -55,5 +57,29 @@ export const GlobalStyles = createGlobalStyle`
     /* @media screen and (min-width: 1700px) {
       max-width: 1680px;
     } */
+
+    
+  }
+  .ant-drawer-content-wrapper{
+    display: flex;
+    align-items: center;
+    width: auto !important;
+    box-shadow: none !important;
+    .ant-drawer-header{
+      display: none;
+    }
+
+  }
+  .ant-drawer-content{
+    width: 382px !important;
+    border-radius: 5px;
+  }
+
+  .ant-drawer-body{
+    padding:  0;
+
+    &>div{
+      margin-bottom: 0;
+    }
   }
   `;

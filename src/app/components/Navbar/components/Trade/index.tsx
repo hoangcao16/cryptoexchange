@@ -14,6 +14,7 @@ import { BsPeople } from 'react-icons/bs';
 import { AiOutlineLineChart } from 'react-icons/ai';
 import { AiOutlineSwap } from 'react-icons/ai';
 import { BiBarChartAlt2 } from 'react-icons/bi';
+import { darkTheme } from 'theme/theme';
 
 const TradeNav = () => {
   const { t } = useTranslation();
@@ -30,6 +31,7 @@ const TradeNav = () => {
       icon: SiConvertio,
       name: t('convert'),
       description: t('easiest-way-to-trade'),
+      disable: true,
     },
     {
       id: 2,
@@ -37,18 +39,21 @@ const TradeNav = () => {
       name: t('classic'),
       description: t('classic-sub'),
       url: '/',
+      disable: false,
     },
     {
       id: 3,
       icon: RiLayoutGridLine,
       name: t('advanced'),
       description: t('advanced-sub'),
+      disable: true,
     },
     {
       id: 4,
       icon: AiOutlineArrowUp,
       name: t('margin'),
       description: t('increase-your-profits'),
+      disable: true,
     },
     {
       id: 5,
@@ -56,24 +61,28 @@ const TradeNav = () => {
       name: 'P2P',
       description: t('p2p-trading-subtitle'),
       url: '/trade-p2p/p2p',
+      disable: false,
     },
     {
       id: 6,
       icon: AiOutlineLineChart,
       name: t('strategy-trading'),
       description: t('strategy-trading-sub'),
+      disable: true,
     },
     {
       id: 7,
       icon: AiOutlineSwap,
       name: t('swap-farming'),
       description: t('swap-farming-sub'),
+      disable: true,
     },
     {
       id: 8,
       icon: BiBarChartAlt2,
       name: t('fan-token'),
       description: t('fan-token-sub'),
+      disable: true,
     },
   ];
 
@@ -91,11 +100,12 @@ const TradeNav = () => {
             <NavDropdown.Item
               href={item.url ? item.url : '#action/3.1'}
               key={index}
+              disabled={item?.disable}
             >
               <item.icon
                 style={{
                   fontSize: '24px',
-                  color: '#10afff',
+                  color: !item?.disable ? '#10afff' : darkTheme.grayColor,
                   marginRight: '16px',
                 }}
               />

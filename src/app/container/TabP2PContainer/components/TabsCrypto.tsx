@@ -1,5 +1,7 @@
+import { Select } from 'antd';
 import openNotification from 'app/components/NotificationAntd';
 import React, { useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { tabP2PService } from 'services/tabP2PServices';
@@ -18,6 +20,8 @@ function TabsCrypto() {
     P2PSearchParams.crypto ? P2PSearchParams.crypto : listCrypto[0]?.assetName,
   );
 
+  const { Option } = Select;
+
   const onClickButton = (name: string) => {
     if (name === currentCrypto) {
       return;
@@ -35,6 +39,11 @@ function TabsCrypto() {
       })
 
       .catch(() => openNotification('Error', 'Something went wrong!'));
+  };
+
+  const handleChangeSelect = value => {
+    console.log(value);
+    onClickButton(value);
   };
 
   useEffect(() => {
@@ -64,6 +73,47 @@ function TabsCrypto() {
             {c.assetName}
           </TabsCryptoButton>
         ))}
+      <div className="tabCryptoRes">
+        <Select
+          defaultValue="BTC"
+          style={{ width: 120 }}
+          onChange={handleChangeSelect}
+        >
+          {listCrypto
+            .filter(c => c.allowBuySell === 1)
+            .map((c, i) => (
+              <Option
+                key={i}
+                value={c.assetName}
+                onClick={() => {
+                  onClickButton(c.assetName);
+                }}
+              >
+                {c.assetName}
+              </Option>
+            ))}
+        </Select>
+        {/* <Form.Select aria-label="Default select example">
+          {listCrypto
+            .filter(c => c.allowBuySell === 1)
+            .map((c, i) => (
+              <option
+                key={i}
+                value={c.assetName}
+                onChange={handleChangeSelect}
+                onClick={() => {
+                  onClickButton(c.assetName);
+                }}
+              >
+                {c.assetName}
+              </option>
+            ))}
+          <option>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </Form.Select> */}
+      </div>
     </Wrapper>
   );
 }
@@ -71,12 +121,22 @@ function TabsCrypto() {
 export default TabsCrypto;
 
 const Wrapper = styled.div`
-  height: 60px;
   margin-left: 20px;
+  height: 60px;
+  .tabCryptoRes {
+    display: none;
+    margin-top: 13px;
+  }
+
+  @media only screen and (max-width: 735px) {
+    .tabCryptoRes {
+      display: block;
+    }
+  }
 `;
 
 const TabsCryptoButton = styled.button`
-  height: 100%;
+  height: 100% !important;
   background: transparent;
   color: ${({ theme }) => theme.body};
   border: 2px solid transparent;
@@ -97,5 +157,14 @@ const TabsCryptoButton = styled.button`
     border-bottom: 2px solid ${({ theme }) => theme.primary};
     color: ${({ theme }) => theme.primary};
     font-weight: bold;
+  }
+
+  @media only screen and (max-width: 735px) {
+    /* margin-right: 0px;
+    border-left: 0;
+    border-right: 0;
+    padding: 1px 0; */
+    /* height: 50% !important; */
+    display: none;
   }
 `;

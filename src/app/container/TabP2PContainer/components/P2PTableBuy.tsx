@@ -37,7 +37,7 @@ function P2PTableBuy() {
       title: 'Advertisers',
       key: 'Advertisers',
       dataIndex: 'account',
-      width: 400,
+      width: 350,
       render: (text: any, record: any, index: any) => {
         if (!openOrders.includes(index)) {
           return (
@@ -59,6 +59,38 @@ function P2PTableBuy() {
                   {text.rateComplete.toFixed(2)} % completed
                 </span>
               </div>
+
+              <ColPayment className="paymentRes">
+                <span className="paymentRes__title">Payments method:</span>
+                {record?.payments?.length === 0 ? (
+                  <h6>Unknow payment!</h6>
+                ) : (
+                  record?.payments?.map((payment, index) => {
+                    if (payment) {
+                      return (
+                        <Tag key={index} className="paymentTag">
+                          <img src={payment.paymentMethod.icon} alt="#" />{' '}
+                          <span
+                            style={{
+                              color: `${payment.paymentMethod.colorCode}`,
+                            }}
+                          >
+                            {payment.paymentMethod.name}
+                          </span>
+                        </Tag>
+                      );
+                    } else return null;
+                  })
+                )}
+              </ColPayment>
+              <ButtonSell
+                className="btnOpenOrder"
+                onClick={() => {
+                  setOpenOrders([...openOrders, index]);
+                }}
+              >
+                <span>Buy {record.token.assetName}</span>
+              </ButtonSell>
             </ColAdvertisers>
           );
         } else {
@@ -90,10 +122,32 @@ function P2PTableBuy() {
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.price - b.price,
       width: 200,
-      render: (text: any, record: any) => {
+      render: (_, record: any) => {
         return (
           <ColPrice>
-            {record.price} <span> {record.fiat?.name}</span>
+            <span className="priceSpan">{record.price} </span>
+            {record.fiat?.name}
+            <ColLimitAvailable className="avaiRes">
+              <div className="rowLimitAvailable available">
+                <div className="col1">
+                  <span>Avai</span>
+                </div>
+                <div className="col2">
+                  {record?.available?.toFixed(5)}{' '}
+                  <span>{TabP2PState.searchParam?.crypto}</span>
+                </div>
+              </div>
+              <div className="rowLimitAvailable limit">
+                <div className="col1">Limit</div>
+                <div className="col2">
+                  {record?.fiat?.symbol} {record?.orderLowerBound?.toFixed(2)}{' '}
+                  <span> - </span>
+                </div>
+                <div className="col3">
+                  {record?.fiat?.symbol} {record?.orderUpperBound?.toFixed(2)}
+                </div>
+              </div>
+            </ColLimitAvailable>
           </ColPrice>
         );
       },
@@ -104,7 +158,6 @@ function P2PTableBuy() {
     {
       title: 'Limit/Available',
       key: 'Limit/Available',
-      // dataIndex: 'limit',
       width: 300,
       render: (text: any, record: any) => (
         <ColLimitAvailable>
@@ -113,10 +166,11 @@ function P2PTableBuy() {
               <span>Available</span>
             </div>
             <div className="col2">
-              {record?.available} <span>{TabP2PState.searchParam?.crypto}</span>
+              {record?.available?.toFixed(5)}{' '}
+              <span>{TabP2PState.searchParam?.crypto}</span>
             </div>
           </div>
-          <div className="rowLimitAvailable">
+          <div className="rowLimitAvailable limit">
             <div className="col1">Limit</div>
             <div className="col2">
               {record?.fiat?.symbol} {record?.orderLowerBound?.toFixed(2)}{' '}
@@ -131,6 +185,7 @@ function P2PTableBuy() {
       onCell: (_, index) => ({
         colSpan: openOrders.includes(index) ? 0 : 1,
       }),
+      responsive: ['md'],
     },
     {
       title: 'Payments',
@@ -163,6 +218,7 @@ function P2PTableBuy() {
           </ColPayment>
         );
       },
+      responsive: ['lg'],
       onCell: (_, index) => ({
         colSpan: openOrders.includes(index) ? 0 : 1,
       }),
@@ -183,10 +239,12 @@ function P2PTableBuy() {
               setOpenOrders([...openOrders, index]);
             }}
           >
-            Buy {record.token.assetName}
+            <span>Buy </span>
+            <span>{record.token.assetName}</span>
           </ButtonSell>
         );
       },
+      responsive: ['sm'],
       onCell: (_, index) => ({
         colSpan: openOrders.includes(index) ? 0 : 1,
       }),
@@ -341,6 +399,16 @@ const Wrapper = styled.div`
         opacity: 0.3;
       }
     }
+    .ant-table-tbody {
+      .ant-table-cell {
+        vertical-align: top;
+      }
+    }
+    @media only screen and (max-width: 1150px) {
+      .ant-table-cell {
+        padding: 16px 8px;
+      }
+    }
   }
   @keyframes spining {
     0% {
@@ -394,13 +462,91 @@ const ColAdvertisers = styled.div`
       border-left: 1px solid #ccc;
     }
   }
+
+  .paymentRes {
+    display: none;
+    flex-direction: column;
+    text-align: left;
+    margin-left: 28px;
+    margin-top: 10px;
+    color: ${({ theme }) => theme.grayColor};
+
+    &__title {
+      margin-bottom: 5px;
+      display: block;
+    }
+  }
+
+  .btnOpenOrder {
+    margin-top: 20px;
+    display: none;
+    span {
+      width: 100%;
+      text-align: center !important;
+    }
+  }
+  @media only screen and (max-width: 991px) {
+    .paymentRes {
+      display: block;
+    }
+  }
+
+  @media only screen and (max-width: 425px) {
+    .firstCharacter {
+      display: none;
+    }
+
+    .advertisers {
+      margin-left: 0 !important;
+      font-weight: bold;
+    }
+    .row2 {
+      margin-left: 0;
+    }
+
+    .paymentRes {
+      margin-left: 0;
+    }
+
+    .checked {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 575px) {
+    .btnOpenOrder {
+      display: block;
+    }
+  }
 `;
 
 const ColPrice = styled.div`
-  font-size: 20px;
+  .priceSpan {
+    font-size: 20px;
+  }
 
   span {
     font-size: 12px;
+  }
+  .avaiRes {
+    display: none;
+
+    .available {
+      margin-top: 10px;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .avaiRes {
+      display: block;
+    }
+
+    .priceSpan {
+      font-size: 16px;
+      font-weight: bold;
+    }
   }
 `;
 
@@ -419,6 +565,14 @@ const ColLimitAvailable = styled.div`
 
     .col3 {
       margin-left: 2px;
+    }
+  }
+  @media only screen and (max-width: 1150px) {
+    .limit {
+      .col1 {
+        width: 100%;
+      }
+      flex-wrap: wrap;
     }
   }
 `;
@@ -470,6 +624,20 @@ const ButtonSell = styled(Button)`
   width: 80%;
   display: block;
   margin: 0 auto;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 0;
+  text-align: center;
+  span {
+    margin-top: 3px;
+    margin-right: 4px;
+    width: calc(50% - 2px);
+    text-align: right;
+
+    &:last-child {
+      text-align: left;
+    }
+  }
 
   &:hover,
   &:focus,
@@ -483,5 +651,9 @@ const ButtonSell = styled(Button)`
   &:hover,
   &:focus {
     opacity: 0.6;
+  }
+
+  @media only screen and (max-width: 1150px) {
+    width: 100% !important;
   }
 `;

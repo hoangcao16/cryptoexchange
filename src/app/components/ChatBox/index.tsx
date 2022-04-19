@@ -307,7 +307,9 @@ const Chatpage = ({ email, data }) => {
             </div>
             <div className="item">
               <div className="item-title">30d Completion Rate</div>
-              <div className="item-value">{data?.partner?.rateComplete} %</div>
+              <div className="item-value">
+                {data?.partner?.rateComplete?.toFixed(2)} %
+              </div>
             </div>
             <div></div>
           </div>
