@@ -35,7 +35,7 @@ const FiatSpotTable = ({ dataSource }) => {
       sorter: (a, b) => a.assetName.localeCompare(b.assetName),
       render: (text: any, record: any) => {
         return (
-          <Space size="middle">
+          <Space size="middle" className="colCoin">
             <div>
               <img className="coin-icon" src={record.icon} alt="coin" />
             </div>
@@ -58,7 +58,19 @@ const FiatSpotTable = ({ dataSource }) => {
       },
       render: (text: any, record: any) => {
         return (
-          <Space size="middle">{numeral(text).format('0,0.000000')}</Space>
+          <Space
+            size="middle"
+            style={{ display: 'flex', flexDirection: 'column' }}
+            className="spaceTotal"
+          >
+            <div className="spanTotal">
+              {numeral(text).format('0,0.000000')}
+            </div>
+            <div className="avaiOrderRes">
+              <p>Avai: {numeral(record?.available).format('0,0.000000')}</p>
+              <p>In order: {numeral(record?.inOrder).format('0,0.000000')}</p>
+            </div>
+          </Space>
         );
       },
     },
@@ -74,6 +86,7 @@ const FiatSpotTable = ({ dataSource }) => {
           <Space size="middle">{numeral(text).format('0,0.000000')}</Space>
         );
       },
+      responsive: ['md'],
     },
     {
       title: t('frozen'),
@@ -87,6 +100,7 @@ const FiatSpotTable = ({ dataSource }) => {
           <Space size="middle">{numeral(text).format('0,0.000000')}</Space>
         );
       },
+      responsive: ['md'],
     },
     {
       title: t('action'),
@@ -94,7 +108,7 @@ const FiatSpotTable = ({ dataSource }) => {
       dataIndex: 'action',
       render: (record: any) => {
         return (
-          <Space size="middle">
+          <Space size="middle" style={{ display: 'flex', flexWrap: 'wrap' }}>
             <span className="coin-action">{t('deposit')}</span>
             <span className="coin-action">{t('withdraw')}</span>
             <span className="coin-action">{t('convert')}</span>

@@ -58,6 +58,7 @@ export const Wrapper = styled.div`
     &--des {
       max-width: 600px;
       text-align: center;
+      padding: 10px;
     }
   }
 `;
