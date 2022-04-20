@@ -109,15 +109,12 @@ const Orders = () => {
       }
     }
   }, [dataSocket]);
-
   useEffect(() => {
     if (dataOpenOrders?.length > 0 && dataOpenOrders?.length <= 5) {
       dispatch(setOpeningOrder.setOpenOrder(dataOpenOrders));
     } else if (dataOpenOrders?.length > 5) {
       dispatch(
-        setOpeningOrder.setOpenOrder(
-          dataOpenOrders?.reverse()?.filter((_, i) => i <= 4),
-        ),
+        setOpeningOrder.setOpenOrder(dataOpenOrders?.filter((o, i) => i <= 4)),
       );
     } else {
       dispatch(setOpeningOrder.setOpenOrder([]));
