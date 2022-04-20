@@ -14,6 +14,7 @@ export const Container = styled.div`
   .wrapper {
     display: flex;
     flex-wrap: wrap;
+    z-index: 1;
   }
 
   @media only screen and (max-width: 700px) {
